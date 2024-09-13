@@ -1,0 +1,95 @@
+1. Create Next 14 App và shadcn
+- ShadCN/UI là một thư viện giao diện người dùng (UI) cho React, cung cấp các thành phần UI được thiết kế sẵn và dễ sử dụng. 
+- Install: https://ui.shadcn.com/docs/installation/next
+- Component: https://ui.shadcn.com/docs/components
+- Tìm hiểu về cấu trúc thư mục của NextJS Project:
+https://nextjs.org/docs/getting-started/project-structure
+- NextJs nó hỗ trợ cơ chế để tạo route
+2. Clerk Auth
+- Clerk Auth hỗ trợ nhiều phương thức đăng nhập, bao gồm email, mật khẩu, OAuth, và các phương thức xác thực hai yếu tố (2FA)
+- Hỗ trợ lun cả Expo
+- Create project and install follow step: https://dashboard.clerk.com/
+- ignore ".env" trong ".gitignore" file
+
+3. Thư viện React Icon
+- Install: npm install lucide-react
+- Example: 
+import { Mail } from 'lucide-react';
+<Mail className="w-6 h-6 text-blue-500" />
+
+4. README Skill Icons
+https://github.com/tandpfun/skill-icons#readme
+https://github.com/alexandresanlim/Badges4-README.md-Profile
+
+5. PlanetScale Database (not free)
+https://app.planetscale.com/buitranthienan1111/welcome
+
+6. Free Postgresql Database Server (free) 
+https://console.neon.tech/
+
+7. Prisma 
+- Install: 
+npm i prisma
+npm i @prisma/client
+npx prisma init
+
+- Sau khi thiết lập model và relationship
+npx prisma generate
+npx prisma db push
+
+- Xem data đã được push lên DB hay chưa:
+npx prisma studio để mở dashboard
+
+8. Uploadthing
+- Công cụ upload Image
+- Document: https://docs.uploadthing.com/
+- Install & setup follow step: https://docs.uploadthing.com/getting-started/appdir
+- Config core.ts, thay thế phần auth() trong file mẫu của docs Uploadthing, khi sử dụng Clerk
+import { auth } from "@clerk/nextjs/server";
+import { createUploadthing, type FileRouter } from "uploadthing/next";
+import { UploadThingError } from "uploadthing/server";
+const f = createUploadthing();
+export const ourFileRouter = {
+  imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
+    .middleware(async ({ req }) => {
+      const { userId } = auth();
+      if (!userId) throw new UploadThingError("Unauthorized");
+      return { userId };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("Upload complete for userId:", metadata.userId);
+      console.log("file url", file.url);
+      return { uploadedBy: metadata.userId };
+    }),
+} satisfies FileRouter;
+export type OurFileRouter = typeof ourFileRouter;
+
+9. Country & State
+- npm i country-state-city
+
+10. Kinh nghiệm fix lỗi 01
+Solve: Khi dùng Show Dialog, khi nhét Button vào DialogTrigger nhớ thêm "asChild" không thì sẽ bị lỗi sau: Hydration failed because the initial UI does not match what was rendered on the server.
+
+<DialogTrigger asChild>
+  <Button type="submit" className="flex flex-row gap-3">
+  <HousePlus h-4 w-4 />
+    Thêm phòng
+  </Button>
+</DialogTrigger>
+
+11. Kinh nghiệm fix lỗi 02
+Lỗi bạn gặp phải liên quan đến tính năng bảo vệ của GitHub gọi là Push Protection. Nó phát hiện thấy có thông tin nhạy cảm (như API keys hoặc mật khẩu) trong các commit của bạn và từ chối cho phép đẩy các thay đổi lên remote.
+
+Solve: Truy cập GitHub Secret Scanning à nhấn Allow
+
+11. Loading Libraries 
+npm install nextjs-toploader
+
+12. Kinh nghiệm 03
+Thêm border-2 và border-secondary cho Button primary để cho 2 cái button ở dưới nó bằng nhau
+<Button className="flex flex-row gap-3 border-2 border-secondary">
+<Button className="flex flex-row gap-3 " variant="outline">
+
+
+
+      

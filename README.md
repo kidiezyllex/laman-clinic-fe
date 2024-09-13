@@ -26,7 +26,7 @@
 
 ```
 git init
-git clone https://github.com/kidiezyllex/booking-hotel-webapp.git
+git clone https://github.com/kidiezyllex/KLTN_FE.git
 ```
 
 2. Install packages
@@ -48,12 +48,6 @@ DATABASE_URL=
 
 UPLOADTHING_SECRET=
 UPLOADTHING_APP_ID=
-```
-
-4. Create ".env" file in root folder
-
-```
-DATABASE_URL=
 ```
 
 5. Run application

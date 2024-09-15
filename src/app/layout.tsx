@@ -14,6 +14,7 @@ import Container from "@/components/Container";
 import NextTopLoader from "nextjs-toploader";
 import Hero from "@/components/layout/Hero";
 import Section from "@/components/layout/Section";
+import Footer from "@/components/layout/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -46,6 +47,7 @@ export default function RootLayout({
               <section className="flex flex-grow">
                 <Container>{children}</Container>
               </section>
+              <Footer></Footer>
             </main>
           </ThemeProvider>
         </body>

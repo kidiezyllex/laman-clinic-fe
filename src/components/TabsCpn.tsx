@@ -15,7 +15,7 @@ interface TabsProps {
 
 export function TabsCpn({ items }: TabsProps) {
   return (
-    <Tabs defaultValue="service1" className="pr-5 w-full overflow-hidden">
+    <Tabs defaultValue="service1" className="w-full overflow-hidden">
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger className="text-xs" value="service1">
           Khám tổng quát

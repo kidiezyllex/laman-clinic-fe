@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { PieChartCpn } from "../PieChartCpn";
 import { TabsCpn } from "../TabsCpn";
 import { DoctorsCpn } from "../DoctorsCpn";
+import HuggingFaceAssistant from "../HuggingFaceAssistant";
 
 const treatments = [
   {
@@ -116,6 +117,12 @@ const doctors = [
 export default function Section() {
   return (
     <div className="w-full mt-3">
+      <Container>
+        <p className="font-bold text-2xl my-5 text-blue-400">
+          Chat với trợ lý ảo
+        </p>
+        <HuggingFaceAssistant></HuggingFaceAssistant>
+      </Container>
       <Separator></Separator>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">

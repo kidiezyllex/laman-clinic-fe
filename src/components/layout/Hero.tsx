@@ -24,6 +24,7 @@ import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
+import HuggingFaceAssistant from "../HuggingFaceAssistant";
 
 const chartData = [
   { month: "January", desktop: 50000 },

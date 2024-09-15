@@ -6,8 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "./ui/button";
+
 interface DoctorsProps {
   items: any[];
 }
@@ -23,17 +22,15 @@ export function DoctorsCpn({ items }: DoctorsProps) {
             </Avatar>
             <div className="flex flex-col gap-2">
               <CardTitle className="text-lg">{doctor.name}</CardTitle>
-              <CardDescription>
-                <div className="p-1 px-2 flex flex-row items-center justify-center bg-slate-700 rounded-full w-fit ">
-                  <p className="text-xs font-semibold text-zinc-100">
-                    {doctor.specialty}
-                  </p>
-                </div>
-              </CardDescription>
+              <div className="p-1 px-2 flex flex-row items-center justify-center bg-slate-700 rounded-full w-fit">
+                {doctor.specialty}
+              </div>
             </div>
           </CardHeader>
           <CardContent>
-            <p className="italic text-zinc-400">{doctor.description}</p>
+            <CardDescription className="italic text-zinc-400">
+              {doctor.description}
+            </CardDescription>
           </CardContent>
         </Card>
       ))}

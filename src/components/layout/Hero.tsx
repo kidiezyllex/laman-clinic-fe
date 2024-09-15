@@ -24,7 +24,6 @@ import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
-import AIChatBox from "../AIChatBox";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -161,7 +160,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-      <AIChatBox></AIChatBox>
     </Container>
   ) : null;
 }

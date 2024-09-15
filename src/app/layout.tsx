@@ -13,7 +13,6 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Container from "@/components/Container";
 import NextTopLoader from "nextjs-toploader";
 import Hero from "@/components/layout/Hero";
-import AIChatBox from "@/components/AIChatBox";
 import Section from "@/components/layout/Section";
 
 const inter = Inter({ subsets: ["latin"] });

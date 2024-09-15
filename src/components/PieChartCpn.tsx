@@ -52,7 +52,7 @@ export function PieChartCpn() {
           Phân Bổ Dịch Vụ Tại Phòng Khám Đa Khoa Laman Clinic
         </CardDescription>
       </CardHeader>
-      <CardContent className="flex-1 pb-0 ">
+      <CardContent className="h-full flex pb-0 items-center justify-center">
         <ChartContainer
           config={chartConfig}
           className="w-full mx-auto aspect-square max-h-[250px] pb-0 [&_.recharts-pie-label-text]:fill-foreground"

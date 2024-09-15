@@ -22,10 +22,9 @@ import {
 import Container from "../Container";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import HotelList from "../hotel/HotelList";
-import { getHotels } from "@/actions/getHotels";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
+import AIChatBox from "../AIChatBox";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -65,10 +64,11 @@ export default function Hero() {
           <TextFlip />
 
           <p className="text-1xl text-zinc-400 italic">
-            Dễ dàng đặt phòng khách sạn và đăng ký thông tin khách sạn của bạn.
-            Chúng tôi cung cấp một nền tảng đơn giản và tiện lợi để bạn tìm kiếm
-            và lựa chọn các khách sạn phù hợp nhất cho kỳ nghỉ của mình, cùng
-            với các tùy chọn đăng ký khách sạn dễ dàng và nhanh chóng.
+            Laman Clinic là một nền tảng trực tuyến giúp người dùng dễ dàng đặt
+            lịch hẹn tại các phòng khám đa khoa uy tín. Với giao diện thân thiện
+            và quy trình đặt lịch nhanh chóng, Laman Clinic mang đến trải nghiệm
+            tiện lợi, giúp khách hàng dễ dàng tìm kiếm và lựa chọn các dịch vụ y
+            tế phù hợp với nhu cầu.
           </p>
           <div className="flex flex-row gap-5 mt-10">
             <Button
@@ -82,7 +82,7 @@ export default function Hero() {
             </Button>
             <Button className="flex flex-row gap-3 " variant="outline">
               <Hotel h-4 w-4 />
-              Đặt khách sạn
+              Đặt lịch khám
             </Button>
           </div>
           {/* chart */}
@@ -93,14 +93,16 @@ export default function Hero() {
             <div className="w-full h-52 flex items-center justify-center py-4 relative">
               <Image
                 layout="fill"
-                src="https://static.designboom.com/wp-content/uploads/2023/01/portrait-firenze-bedroom-designboom.jpg"
+                src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726219677/learning-webdev-blog/clinic/874555dfd40775f94b1c514fbab9d9f2_uzbdlz.jpg"
                 alt="Hotel Image"
                 className="object-cover rounded-md"
               />
             </div>
             <Card className="w-[100%]">
               <CardHeader>
-                <CardDescription>Lượt khách ghé thăm năm 2024</CardDescription>
+                <CardDescription>
+                  Lượt bệnh nhân đặt khám năm 2024
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ChartContainer config={chartConfig}>
@@ -143,7 +145,7 @@ export default function Hero() {
             <div className="w-full h-56 flex items-center justify-center py-4 relative mt-3">
               <Image
                 layout="fill"
-                src="https://static.designboom.com/wp-content/uploads/2023/01/hall-portrait-firenze-designboom.jpg"
+                src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726219677/learning-webdev-blog/clinic/c94e2a7ccc336fe17a498d5daaf73c23_h0grxp.jpg"
                 alt="Hotel Image"
                 className="object-cover rounded-md"
               />
@@ -151,7 +153,7 @@ export default function Hero() {
             <div className="w-full h-60 flex items-center justify-center py-4 relative">
               <Image
                 layout="fill"
-                src="https://static.designboom.com/wp-content/uploads/2023/01/Portrait-Firenze-bathroom-designboom.jpg"
+                src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726219677/learning-webdev-blog/clinic/dab4d9594682ce732ebb40c4187c83d7_oqs8e6.jpg"
                 alt="Hotel Image"
                 className="object-cover rounded-md"
               />
@@ -159,6 +161,7 @@ export default function Hero() {
           </div>
         </div>
       </div>
+      <AIChatBox></AIChatBox>
     </Container>
   ) : null;
 }

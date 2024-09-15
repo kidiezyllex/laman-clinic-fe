@@ -21,11 +21,8 @@ export default function CursorTracker() {
   return (
     <div
       ref={divRef}
-      className="group absolute h-full w-full right-0 cursor-non p-6 text-violet-800"
+      className="group absolute h-full w-full right-0 cursor-non p-6 text-violet-800 z-50"
     >
-      {/* Actual content */}
-
-      {/* Cursor tracker */}
       <div
         ref={infoRef}
         style={{

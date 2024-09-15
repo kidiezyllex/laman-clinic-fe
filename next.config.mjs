@@ -6,7 +6,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["utfs.io", "static.designboom.com"],
+    domains: [
+      "utfs.io",
+      "static.designboom.com",
+      "res.cloudinary.com",
+      "benhvienjw.vn",
+    ],
   },
 };
 

@@ -1,5 +1,5 @@
 {
-  "name": "hotel-booking-web",
+  "name": "clinic-management",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/openai": "^0.0.59",
     "@clerk/nextjs": "^5.2.11",
     "@hookform/resolvers": "^3.9.0",
     "@prisma/client": "^5.17.0",
@@ -22,16 +23,19 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@uploadthing/react": "^6.7.2",
+    "ai": "^3.3.35",
     "axios": "^1.7.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "country-state-city": "^3.2.1",
-    "embla-carousel-react": "^8.1.8",
+    "embla-carousel-autoplay": "^8.3.0",
+    "embla-carousel-react": "^8.3.0",
     "framer-motion": "^11.5.4",
     "lucide-react": "^0.419.0",
     "next": "14.2.5",
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.6.15",
+    "openai": "^4.60.0",
     "prisma": "^5.17.0",
     "react": "^18",
     "react-dom": "^18",

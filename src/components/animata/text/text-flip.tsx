@@ -5,10 +5,10 @@ import { useEffect, useMemo, useRef } from "react";
 export default function TextFlip() {
   const words = useMemo(
     () => [
-      "Quảng bá khách sạn!",
-      "Đặt phòng nhanh chóng!",
-      "Trải nghiệm nghỉ dưỡng!",
-      "Tìm kiếm dễ dàng!",
+      "Đặt khám dễ dàng!",
+      "Bác sĩ uy tín!",
+      "Tra cứu nhanh chóng!",
+      "Hỗ trợ tận tình!",
       "Thanh toán an toàn!",
     ],
     []
@@ -39,9 +39,6 @@ export default function TextFlip() {
 
   return (
     <div className="box-content flex gap-4 text-3xl font-semibold">
-      {/* <p className="font-bold text-5xl tracking-wide leading-snug ">
-            Đăng ký và đặt khách sạn mọi lúc!
-          </p> */}
       <div
         ref={tallestRef}
         className="flex flex-col overflow-hidden text-blue-400 text-4xl tracking-wide leading-snug"

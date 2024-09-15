@@ -50,13 +50,13 @@ UPLOADTHING_SECRET=
 UPLOADTHING_APP_ID=
 ```
 
-5. Run application
+4. Run application
 
 ```
 npm run dev
 ```
 
-6. Start Prisma Studio
+5. Start Prisma Studio
 
 ```
 npx prisma studio

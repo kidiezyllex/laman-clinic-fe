@@ -13,6 +13,8 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Container from "@/components/Container";
 import NextTopLoader from "nextjs-toploader";
 import Hero from "@/components/layout/Hero";
+import AIChatBox from "@/components/AIChatBox";
+import Section from "@/components/layout/Section";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +43,7 @@ export default function RootLayout({
             <main className="flex flex-col min-h-screen bg-secondary">
               <NavBar></NavBar>
               <Hero></Hero>
+              <Section></Section>
               <section className="flex flex-grow">
                 <Container>{children}</Container>
               </section>

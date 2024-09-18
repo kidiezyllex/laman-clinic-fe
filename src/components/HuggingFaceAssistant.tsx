@@ -12,6 +12,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import Image from "next/image";
+import TypingText from "./animata/text/typing-text";
 
 const hf = new HfInference(process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
 
@@ -40,6 +41,9 @@ export default function HuggingFaceAssistant() {
   return (
     <Card className="w-[100%] mx-auto grid md:grid-cols-2 gap:5 bg-slate-700">
       <CardContent>
+        {/* <div className="min-w-96 max-w-96 rounded-sm bg-gray-800 px-4 py-2 text-yellow-400 shadow-lg">
+          <TypingText text="> yarn add @animata/awesomeness" />
+        </div> */}
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <Input
             type="text"
@@ -57,7 +61,7 @@ export default function HuggingFaceAssistant() {
         {answer && (
           <div className="flex flex-col justify-start">
             <h3 className="font-semibold">Câu trả lời:</h3>
-            <p>{answer}</p>
+            <TypingText text={answer}></TypingText>
           </div>
         )}
       </CardFooter>

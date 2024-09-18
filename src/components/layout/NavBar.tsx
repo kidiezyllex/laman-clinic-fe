@@ -13,9 +13,9 @@ import Link from "next/link";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
-
+  console.log(userId);
   return (
-    <Card className="sticky top-0 border border-b-primary/10 bg-secondary z-50 rounded-none">
+    <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
       <Container>
         <div className="items-stretch justify-between grid grid-cols-3 gap-10">
           {/* Logo */}

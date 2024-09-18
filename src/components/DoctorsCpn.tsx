@@ -25,7 +25,9 @@ export function DoctorsCpn({ items }: DoctorsProps) {
               <AvatarImage src={doctor.image} alt={doctor.name} />
             </Avatar>
             <div className="flex flex-col gap-2">
-              <CardTitle className="text-lg">{doctor.name}</CardTitle>
+              <CardTitle className="text-lg text-slate-800 dark:text-slate-50">
+                {doctor.name}
+              </CardTitle>
               <div className="flex flex-row gap-1">
                 <Button className="w-fit px-2 rounded-full h-6">
                   <p className="text-xs font-medium">{doctor.specialty}</p>
@@ -42,10 +44,10 @@ export function DoctorsCpn({ items }: DoctorsProps) {
             </CardDescription>
           </CardContent>
           <CardFooter className="flex flex-row justify-between gap-2 px-12">
-            <Instagram h-2 w-2 />
-            <Facebook h-2 w-2 />
-            <Linkedin h-2 w-2 />
-            <Mail h-2 w-2 />
+            <Instagram h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+            <Facebook h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+            <Linkedin h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+            <Mail h-2 w-2 className="dark:text-slate-50 text-slate-800" />
           </CardFooter>
         </GithubCardShiny>
       ))}

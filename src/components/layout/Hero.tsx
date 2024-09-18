@@ -38,7 +38,7 @@ const chartData = [
 const chartConfig = {
   desktop: {
     label: "Desktop",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(217.2 91.2% 59.8%)",
   },
 } satisfies ChartConfig;
 
@@ -138,7 +138,7 @@ export default function Hero() {
                       <LabelList
                         position="top"
                         offset={10}
-                        className="fill-foreground"
+                        className="fill-foreground bg-blue-400"
                         fontSize={12}
                       />
                     </Bar>

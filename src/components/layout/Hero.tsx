@@ -19,12 +19,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import Container from "../Container";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
-import HuggingFaceAssistant from "../HuggingFaceAssistant";
+import ContainerDarkMode from "../ContainerDarkMode";
+import ArrowButton from "../animata/button/arrow-button";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -55,8 +55,8 @@ export default function Hero() {
   const isHomePage = pathname === "/";
   const router = useRouter();
   return isHomePage ? (
-    <Container>
-      <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%]  gap-5 items-center">
+    <ContainerDarkMode>
+      <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%] gap-5 items-center">
         <div className="w-full flex flex-col gap-3">
           {/* <p className="font-bold text-5xl tracking-wide leading-snug ">
             Đăng ký và đặt khách sạn mọi lúc!
@@ -71,7 +71,7 @@ export default function Hero() {
             tế phù hợp với nhu cầu.
           </p>
           <div className="flex flex-row gap-5 mt-10">
-            <Button
+            {/* <Button
               className="flex flex-row gap-3 border-2 border-secondary"
               onClick={() => {
                 router.push("/sign-up");
@@ -79,7 +79,13 @@ export default function Hero() {
             >
               <Pencil h-4 w-4 />
               Đăng ký ngay
-            </Button>
+            </Button> */}
+            <ArrowButton
+              text={"Đăng ký ngay"}
+              onClick={() => {
+                router.push("/sign-up");
+              }}
+            ></ArrowButton>
             <Button className="flex flex-row gap-3 " variant="outline">
               <Hotel h-4 w-4 />
               Đặt lịch khám
@@ -161,6 +167,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-    </Container>
+    </ContainerDarkMode>
   ) : null;
 }

@@ -8,19 +8,18 @@ import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SheetToggle } from "../SheetToggle";
+import { Card } from "../ui/card";
+import Link from "next/link";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
 
   return (
-    <div className="sticky top-0 border border-b-primary/10 bg-secondary z-50">
+    <Card className="sticky top-0 border border-b-primary/10 bg-secondary z-50 rounded-none">
       <Container>
         <div className="items-stretch justify-between grid grid-cols-3 gap-10">
           {/* Logo */}
-          <div
-            className="flex flex-row items-center gap-3"
-            onClick={() => router.push("/")}
-          >
+          <Link className="flex flex-row items-center gap-3" href={"/"}>
             <Avatar>
               <AvatarImage
                 src={
@@ -30,7 +29,7 @@ export default function NavBar() {
               />
             </Avatar>
             <div className="font-bold text-xl">Laman Clinic</div>
-          </div>
+          </Link>
           {/* Search Field */}
           <div className="flex flex-row gap-2">
             <Input type="text" placeholder="Search" />
@@ -43,22 +42,12 @@ export default function NavBar() {
           {/* Sign in & Sign up & Avatar*/}
           {!userId ? (
             <div className="flex flex-row gap-3 justify-end">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  router.push("/sign-up");
-                }}
-              >
-                Đăng ký
-              </Button>
-              <Button
-                className="border-2 border-secondary"
-                onClick={() => {
-                  router.push("/sign-in");
-                }}
-              >
-                Đăng nhập
-              </Button>
+              <Link href={"/sign-up"}>
+                <Button variant="outline">Đăng ký</Button>
+              </Link>
+              <Link href={"/sign-in"}>
+                <Button className="border-2 border-secondary">Đăng nhập</Button>
+              </Link>
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
             </div>
@@ -75,6 +64,6 @@ export default function NavBar() {
           )}
         </div>
       </Container>
-    </div>
+    </Card>
   );
 }

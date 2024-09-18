@@ -33,7 +33,7 @@ export function SheetToggle() {
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
-          <SheetTitle>Khách sạn của bạn</SheetTitle>
+          <SheetTitle>Công cụ</SheetTitle>
         </SheetHeader>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
@@ -43,7 +43,7 @@ export function SheetToggle() {
           }}
         >
           <Hotel h-4 w-4 />
-          Xem Khách sạn của bạn
+          Đặt lịch khám
         </Button>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
@@ -53,24 +53,38 @@ export function SheetToggle() {
           }}
         >
           <FilePen h-4 w-4 />
-          Đăng ký Khách sạn của bạn
+          Xem lịch khám/ buồng khám
         </Button>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
         >
-          <FilePen h-4 w-4 /> Cập nhật thông tin Khách sạn
+          <FilePen h-4 w-4 /> Xem thông báo, thư
         </Button>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
         >
           <MessageSquareText h-4 w-4 />
-          Xem đánh giá từ Khách hàng
+          Xem lịch sử khám bệnh
         </Button>
         <SheetHeader>
-          <SheetTitle>Đặt phòng</SheetTitle>
+          <SheetTitle>Tìm bác sĩ</SheetTitle>
         </SheetHeader>
+        <Button
+          className="w-full my-5 flex flex-row justify-start gap-3"
+          variant="outline"
+        >
+          <MessageSquareText h-4 w-4 />
+          Chuyên ngành
+        </Button>
+        <Button
+          className="w-full my-5 flex flex-row justify-start gap-3"
+          variant="outline"
+        >
+          <MessageSquareText h-4 w-4 />
+          Các bệnh thường gặp
+        </Button>
       </SheetContent>
     </Sheet>
   );

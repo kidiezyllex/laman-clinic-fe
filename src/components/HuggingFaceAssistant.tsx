@@ -11,6 +11,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
+import Image from "next/image";
 
 const hf = new HfInference(process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
 
@@ -37,7 +38,7 @@ export default function HuggingFaceAssistant() {
   };
 
   return (
-    <Card className="w-[100%] mx-auto grid md:grid-cols-2 gap:5 ">
+    <Card className="w-[100%] mx-auto grid md:grid-cols-2 gap:5 bg-slate-700">
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <Input

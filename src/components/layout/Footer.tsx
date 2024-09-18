@@ -1,3 +1,5 @@
+"use client";
+
 import { Separator } from "@/components/ui/separator";
 import {
   Phone,
@@ -11,9 +13,13 @@ import {
 import Link from "next/link";
 import Container from "../Container";
 import { Card } from "../ui/card";
+import { usePathname, useRouter } from "next/navigation";
 
 export default function Footer() {
-  return (
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const router = useRouter();
+  return isHomePage ? (
     <Container>
       <Card className="container mx-auto px-4 p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -107,5 +113,5 @@ export default function Footer() {
         </div>
       </Card>
     </Container>
-  );
+  ) : null;
 }

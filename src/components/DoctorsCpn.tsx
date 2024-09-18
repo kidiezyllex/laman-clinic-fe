@@ -2,10 +2,14 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
+import GithubCardShiny from "./animata/card/github-card-shiny";
 
 interface DoctorsProps {
   items: any[];
@@ -13,17 +17,22 @@ interface DoctorsProps {
 
 export function DoctorsCpn({ items }: DoctorsProps) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
       {items.map((doctor, index) => (
-        <Card key={index} className="flex flex-col">
+        <GithubCardShiny key={index} className="flex flex-col ">
           <CardHeader className="flex-row gap-4 items-center">
             <Avatar className="h-20 w-20">
               <AvatarImage src={doctor.image} alt={doctor.name} />
             </Avatar>
             <div className="flex flex-col gap-2">
               <CardTitle className="text-lg">{doctor.name}</CardTitle>
-              <div className="p-1 px-2 flex flex-row items-center justify-center bg-slate-700 rounded-full w-fit">
-                {doctor.specialty}
+              <div className="flex flex-row gap-1">
+                <Button className="w-fit px-2 rounded-full h-6">
+                  <p className="text-xs font-medium">{doctor.specialty}</p>
+                </Button>
+                <Button className="w-fit px-2 rounded-full h-6">
+                  <p className="text-xs font-medium">20 năm kinh nghiệm</p>
+                </Button>
               </div>
             </div>
           </CardHeader>
@@ -32,7 +41,13 @@ export function DoctorsCpn({ items }: DoctorsProps) {
               {doctor.description}
             </CardDescription>
           </CardContent>
-        </Card>
+          <CardFooter className="flex flex-row justify-between gap-2 px-12">
+            <Instagram h-2 w-2 />
+            <Facebook h-2 w-2 />
+            <Linkedin h-2 w-2 />
+            <Mail h-2 w-2 />
+          </CardFooter>
+        </GithubCardShiny>
       ))}
     </div>
   );

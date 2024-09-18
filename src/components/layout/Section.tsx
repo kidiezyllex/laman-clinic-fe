@@ -8,6 +8,7 @@ import { PieChartCpn } from "../PieChartCpn";
 import { TabsCpn } from "../TabsCpn";
 import { DoctorsCpn } from "../DoctorsCpn";
 import HuggingFaceAssistant from "../HuggingFaceAssistant";
+import { usePathname, useRouter } from "next/navigation";
 
 const treatments = [
   {
@@ -115,7 +116,10 @@ const doctors = [
 ];
 
 export default function Section() {
-  return (
+  const pathname = usePathname();
+  const isHomePage = pathname === "/";
+  const router = useRouter();
+  return isHomePage ? (
     <div className="w-full mt-3">
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">
@@ -123,7 +127,6 @@ export default function Section() {
         </p>
         <HuggingFaceAssistant></HuggingFaceAssistant>
       </Container>
-      <Separator></Separator>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">
           Chúng tôi có những ưu đãi
@@ -142,9 +145,9 @@ export default function Section() {
       </Container>
       <Separator></Separator>
       <Container>
-        <p className="font-bold text-2xl my-5 text-blue-400">Đội ngũ bác sĩ</p>
+        <p className="font-bold text-2xl my-5 text-blue-400">Tìm bác sĩ</p>
         <DoctorsCpn items={doctors}></DoctorsCpn>
       </Container>
     </div>
-  );
+  ) : null;
 }

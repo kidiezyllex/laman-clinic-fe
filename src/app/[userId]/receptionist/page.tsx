@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import Dashboard from "@/components/receptionist/dashboard";
+import Messages from "@/components/receptionist/messages";
 export default function page() {
   const [activeSection, setActiveSection] = useState("dashboard");
   const renderMainContent = () => {
@@ -27,15 +28,7 @@ export default function page() {
           </div>
         );
       case "messages":
-        return (
-          <div className="flex flex-col items-center gap-4 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">Your Messages</h3>
-            <p className="text-sm text-muted-foreground">
-              You have new messages.
-            </p>
-            <Button className="mt-4">Open Inbox</Button>
-          </div>
-        );
+        return <Messages></Messages>;
       default:
         return null;
     }

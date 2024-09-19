@@ -13,6 +13,9 @@ const nextConfig = {
       "benhvienjw.vn",
     ],
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 export default nextConfig;

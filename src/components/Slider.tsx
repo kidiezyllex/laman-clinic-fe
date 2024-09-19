@@ -39,13 +39,13 @@ export default function Slider({ items }: SliderProps) {
               <p className="text-base text-primary mb-4 uppercase italic">
                 {item.text}
               </p>
-              <Card className="relative w-full h-72 rounded-3xl">
+              <Card className="relative w-full h-72 rounded-xl">
                 {/* Card có kích thước toàn bộ container */}
                 <CardContent className="flex items-center justify-center p-6 rounded-2xl relative w-full h-full">
                   <Image
                     src={item.image}
                     alt={"image" + item.id}
-                    className="object-cover rounded-3xl"
+                    className="object-cover rounded-xl"
                     layout="fill" // Đảm bảo hình ảnh sẽ phủ kín Card
                   />
                 </CardContent>

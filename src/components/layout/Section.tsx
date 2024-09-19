@@ -9,6 +9,7 @@ import { TabsCpn } from "../TabsCpn";
 import { DoctorsCpn } from "../DoctorsCpn";
 import HuggingFaceAssistant from "../HuggingFaceAssistant";
 import { usePathname, useRouter } from "next/navigation";
+import Specialties from "../Specialties";
 
 const treatments = [
   {
@@ -129,6 +130,13 @@ export default function Section() {
           Chúng tôi có những ưu đãi
         </p>
         <Slider items={treatments}></Slider>
+      </Container>
+      <Separator></Separator>
+      <Container>
+        <p className="font-bold text-2xl my-5 text-blue-400">
+          Các chuyên ngành
+        </p>
+        <Specialties></Specialties>
       </Container>
       <Separator></Separator>
       <Container>

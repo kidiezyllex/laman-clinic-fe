@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Facebook, Instagram, Linkedin, Mail } from "lucide-react";
 import GithubCardShiny from "./animata/card/github-card-shiny";
+import ArrowButton from "./animata/button/arrow-button";
 
 interface DoctorsProps {
   items: any[];
@@ -19,7 +20,7 @@ export function DoctorsCpn({ items }: DoctorsProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch">
       {items.map((doctor, index) => (
-        <GithubCardShiny key={index} className="flex flex-col ">
+        <GithubCardShiny key={index} className="flex flex-col pb-12">
           <CardHeader className="flex-row gap-4 items-center">
             <Avatar className="h-20 w-20">
               <AvatarImage src={doctor.image} alt={doctor.name} />
@@ -38,16 +39,26 @@ export function DoctorsCpn({ items }: DoctorsProps) {
               </div>
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="flex flex-col gap-6">
             <CardDescription className="italic text-zinc-400">
               {doctor.description}
             </CardDescription>
+            <div className="w-full flex flex-row justify-between gap-2 px-12 ">
+              <Instagram
+                h-2
+                w-2
+                className="dark:text-slate-50 text-slate-800"
+              />
+              <Facebook h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+              <Linkedin h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+              <Mail h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+            </div>
           </CardContent>
-          <CardFooter className="flex flex-row justify-between gap-2 px-12">
-            <Instagram h-2 w-2 className="dark:text-slate-50 text-slate-800" />
-            <Facebook h-2 w-2 className="dark:text-slate-50 text-slate-800" />
-            <Linkedin h-2 w-2 className="dark:text-slate-50 text-slate-800" />
-            <Mail h-2 w-2 className="dark:text-slate-50 text-slate-800" />
+          <CardFooter className="flex flex-col gap-6 absolute bottom-0 translate-x-[50%]">
+            <ArrowButton
+              text={"Đặt lịch khám"}
+              className="w-fit px-12"
+            ></ArrowButton>
           </CardFooter>
         </GithubCardShiny>
       ))}

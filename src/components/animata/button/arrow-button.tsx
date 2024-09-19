@@ -30,7 +30,7 @@ export default function ArrowButton({
       style={{ borderColor: borderColor }}
       {...props}
       className={cn(
-        "group relative inline-flex items-center justify-center px-10 bg-slate-950 overflow-hidden font-medium shadow-md transition duration-300 ease-out",
+        "group relative inline-flex items-center justify-center px-10 bg-background overflow-hidden font-medium shadow-md transition duration-300 ease-out",
         className
       )}
     >

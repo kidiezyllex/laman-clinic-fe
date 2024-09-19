@@ -13,12 +13,17 @@ import {
 } from "@/components/ui/sheet";
 import { useAuth } from "@clerk/nextjs";
 import {
+  Accessibility,
   FilePen,
   Hotel,
   HotelIcon,
   Menu,
   MessageSquareText,
+  ShieldHalf,
+  Stethoscope,
+  Syringe,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export function SheetToggle() {
@@ -42,8 +47,8 @@ export function SheetToggle() {
             router.push(`/${userId}/hotel/list`);
           }}
         >
-          <Hotel h-4 w-4 />
-          Đặt lịch khám
+          <Accessibility h-4 w-4 />
+          Bệnh nhân Dashboard
         </Button>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
@@ -52,38 +57,26 @@ export function SheetToggle() {
             router.push(`/${userId}/hotel/0`);
           }}
         >
-          <FilePen h-4 w-4 />
-          Xem lịch khám/ buồng khám
+          <Syringe h-4 w-4 />
+          Bác sĩ Dashboard
         </Button>
+        {/* onClick={() => {
+                        router.push(`/${userId}/patient/medical-history`);
+                        router.refresh();
+                      }} */}
+        <Link href={`/${userId}/receptionist/dashboard`}>
+          <Button
+            className="w-full my-5 flex flex-row justify-start gap-3"
+            variant="outline"
+          >
+            <Stethoscope h-4 w-4 /> Tiếp tân Dashboard
+          </Button>
+        </Link>
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
         >
-          <FilePen h-4 w-4 /> Xem thông báo, thư
-        </Button>
-        <Button
-          className="w-full my-5 flex flex-row justify-start gap-3"
-          variant="outline"
-        >
-          <MessageSquareText h-4 w-4 />
-          Xem lịch sử khám bệnh
-        </Button>
-        <SheetHeader>
-          <SheetTitle>Tìm bác sĩ</SheetTitle>
-        </SheetHeader>
-        <Button
-          className="w-full my-5 flex flex-row justify-start gap-3"
-          variant="outline"
-        >
-          <MessageSquareText h-4 w-4 />
-          Chuyên ngành
-        </Button>
-        <Button
-          className="w-full my-5 flex flex-row justify-start gap-3"
-          variant="outline"
-        >
-          <MessageSquareText h-4 w-4 />
-          Các bệnh thường gặp
+          <ShieldHalf h-4 w-4 /> Admin Dashboard
         </Button>
       </SheetContent>
     </Sheet>

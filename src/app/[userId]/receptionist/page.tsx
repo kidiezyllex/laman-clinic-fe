@@ -1,20 +1,21 @@
 "use client";
 import { useAuth } from "@clerk/nextjs";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { CalendarDays, Home, MessageCircleMore } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import Dashboard from "@/components/receptionist/dashboard";
 import Messages from "@/components/receptionist/messages";
-export default function page() {
+
+export default function Page() {
   const [activeSection, setActiveSection] = useState("dashboard");
+
   const renderMainContent = () => {
     switch (activeSection) {
       case "dashboard":
-        return <Dashboard></Dashboard>;
+        return <Dashboard />;
       case "appointments":
         return (
           <div className="flex flex-col items-center gap-4 text-center">
@@ -28,7 +29,7 @@ export default function page() {
           </div>
         );
       case "messages":
-        return <Messages></Messages>;
+        return <Messages />;
       default:
         return null;
     }

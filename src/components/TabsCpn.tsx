@@ -34,7 +34,7 @@ export function TabsCpn({ items }: TabsProps) {
         </TabsTrigger>
       </TabsList>
       {items.map((item, index) => (
-        <TabsContent value={"service" + item.id}>
+        <TabsContent value={"service" + item.id} key={index}>
           <Card>
             <CardHeader>
               <CardTitle>{item.text2}</CardTitle>

@@ -25,6 +25,7 @@ import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
 import ContainerDarkMode from "../ContainerDarkMode";
 import ArrowButton from "../animata/button/arrow-button";
+import AvatarList from "../animata/list/avatar-list";
 
 const chartData = [
   { month: "January", desktop: 50000 },
@@ -42,14 +43,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-interface HomeProps {
-  searchParams: {
-    title: string;
-    country: string;
-    state: string;
-    city: string;
-  };
-}
 export default function Hero() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
@@ -58,9 +51,6 @@ export default function Hero() {
     <ContainerDarkMode>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%] gap-5 items-center">
         <div className="w-full flex flex-col gap-3">
-          {/* <p className="font-bold text-5xl tracking-wide leading-snug ">
-            Đăng ký và đặt khách sạn mọi lúc!
-          </p> */}
           <TextFlip />
 
           <p className="text-1xl text-zinc-400 italic">
@@ -71,15 +61,6 @@ export default function Hero() {
             tế phù hợp với nhu cầu.
           </p>
           <div className="flex flex-row gap-5 mt-10">
-            {/* <Button
-              className="flex flex-row gap-3 border-2 border-secondary"
-              onClick={() => {
-                router.push("/sign-up");
-              }}
-            >
-              <Pencil h-4 w-4 />
-              Đăng ký ngay
-            </Button> */}
             <ArrowButton
               text={"Đăng ký ngay"}
               onClick={() => {
@@ -91,6 +72,8 @@ export default function Hero() {
               Đặt lịch khám
             </Button>
           </div>
+          <AvatarList />
+
           {/* chart */}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-5">

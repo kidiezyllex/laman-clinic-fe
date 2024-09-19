@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SheetToggle } from "../SheetToggle";
 import { Card } from "../ui/card";
 import Link from "next/link";
+import SplitText from "../animata/text/split-text";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
@@ -19,16 +20,19 @@ export default function NavBar() {
       <Container>
         <div className="items-stretch justify-between grid grid-cols-3 gap-10">
           {/* Logo */}
-          <Link className="flex flex-row items-center gap-3" href={"/"}>
-            <Avatar>
+          <Link
+            className="flex flex-row items-center gap-3 justify-start"
+            href={"/"}
+          >
+            <Avatar className=" border-blue-500 border-4">
               <AvatarImage
                 src={
-                  "https://res.cloudinary.com/drqbhj6ft/image/upload/v1722756627/Skyline_a3z8ck.png"
+                  "https://res.cloudinary.com/drqbhj6ft/image/upload/v1726685609/learning-webdev-blog/clinic/medical-care-logo-icon-design-vector-22560842_j6xhlk.jpg"
                 }
                 alt="Laman Clinic"
               />
             </Avatar>
-            <div className="font-bold text-xl">Laman Clinic</div>
+            <SplitText text="LAMAN Clinic" />
           </Link>
           {/* Search Field */}
           <div className="flex flex-row gap-2">

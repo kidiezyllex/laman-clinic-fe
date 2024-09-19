@@ -122,9 +122,6 @@ export default function Section() {
   return isHomePage ? (
     <div className="w-full mt-3">
       <Container>
-        <p className="font-bold text-2xl my-5 text-blue-400">
-          Chat với trợ lý ảo
-        </p>
         <HuggingFaceAssistant></HuggingFaceAssistant>
       </Container>
       <Container>

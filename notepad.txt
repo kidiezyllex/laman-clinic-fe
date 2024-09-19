@@ -105,3 +105,12 @@ Bệnh nhân duyệt/tìm Bác sĩ bằng các cách:
 + Popular Diseases: Bệnh thường gặp
 + Symptoms: Triệu chứng
 + Quiz: Hỏi đáp
+
+
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "postinstall": "prisma generate"
+  },

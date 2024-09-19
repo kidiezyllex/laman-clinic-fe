@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useImperativeHandle,
   useRef,
+  useEffect,
 } from "react";
 import { motion, useAnimation } from "framer-motion";
 
@@ -11,13 +12,7 @@ import { useMousePosition } from "../../../../hook/useMousePosition";
 import { getDistance, lerp } from "../../../../lib/utils";
 
 interface AnimatedImageRef {
-  show: ({
-    x,
-    y,
-    newX,
-    newY,
-    zIndex,
-  }: {
+  show: (params: {
     x: number;
     y: number;
     zIndex: number;
@@ -48,10 +43,9 @@ const AnimatedImage = forwardRef<AnimatedImageRef, { src: string }>(
         newX: number;
         newY: number;
       }) => {
-        const rect = imgRef.current?.getBoundingClientRect();
-        if (!rect) {
-          return;
-        }
+        if (!imgRef.current) return;
+
+        const rect = imgRef.current.getBoundingClientRect();
 
         const center = (posX: number, posY: number) => {
           const coords = {
@@ -92,6 +86,13 @@ const AnimatedImage = forwardRef<AnimatedImageRef, { src: string }>(
         isRunning.current = false;
       },
     }));
+
+    useEffect(() => {
+      // Animation controls setup after component mounts
+      return () => {
+        controls.stop();
+      };
+    }, [controls]);
 
     return (
       <motion.img

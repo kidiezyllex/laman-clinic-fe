@@ -3,7 +3,7 @@ import { useAuth, UserButton } from "@clerk/nextjs";
 import Container from "../Container";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { Search } from "lucide-react";
+import { DotIcon, History, HistoryIcon, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -14,7 +14,6 @@ import SplitText from "../animata/text/split-text";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
-  console.log(userId);
   return (
     <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
       <Container>
@@ -23,6 +22,7 @@ export default function NavBar() {
           <Link
             className="flex flex-row items-center gap-3 justify-start"
             href={"/"}
+            onClick={() => router.push("/")}
           >
             <Avatar className=" border-blue-500 border-4">
               <AvatarImage
@@ -58,7 +58,18 @@ export default function NavBar() {
           ) : (
             <div className="flex flex-row gap-3 justify-end">
               <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
-                <UserButton afterSignOutUrl="/" />
+                <UserButton afterSignOutUrl="/">
+                  <UserButton.MenuItems>
+                    <UserButton.Action
+                      label="Xem lịch sử khám"
+                      labelIcon={<HistoryIcon className="h-4 w-4" />}
+                      onClick={() => {
+                        router.push(`/${userId}/patient/medical-history`);
+                        router.refresh();
+                      }}
+                    />
+                  </UserButton.MenuItems>
+                </UserButton>
               </div>
 
               {/* Dark Mode */}

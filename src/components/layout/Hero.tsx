@@ -1,5 +1,4 @@
 "use client";
-
 import { Hotel, Pencil, TrendingUp } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import React from "react";

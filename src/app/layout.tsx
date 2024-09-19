@@ -15,8 +15,14 @@ import NextTopLoader from "nextjs-toploader";
 import Hero from "@/components/layout/Hero";
 import Section from "@/components/layout/Section";
 import Footer from "@/components/layout/Footer";
+import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
+
+const LocomotiveScrollWrapper = dynamic(
+  () => import("./LocomotiveScrollWrapper"),
+  { ssr: false }
+);
 
 export const metadata: Metadata = {
   title: "Laman Clinic",
@@ -40,15 +46,17 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <main className="flex flex-col min-h-screen bg-secondary">
-              <NavBar></NavBar>
-              <section className="flex flex-grow">
-                <Container>{children}</Container>
-              </section>
-              <Hero></Hero>
-              <Section></Section>
-              <Footer></Footer>
-            </main>
+            <NavBar />
+            <LocomotiveScrollWrapper>
+              <main className="flex flex-col min-h-screen bg-secondary">
+                <section className="flex flex-grow">
+                  <Container>{children}</Container>
+                </section>
+                <Hero />
+                <Section />
+                <Footer />
+              </main>
+            </LocomotiveScrollWrapper>
           </ThemeProvider>
         </body>
       </html>

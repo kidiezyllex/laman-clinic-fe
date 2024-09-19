@@ -70,7 +70,10 @@ export default function HuggingFaceAssistant() {
       <Card className="w-full border-blue-500">
         <CardHeader className="bg-blue-500 text-white rounded-t-md p-4">
           <CardTitle className="text-xl font-bold">
-            <TypingText text={"Chat với trợ lý ảo"} repeat={true}></TypingText>
+            <TypingText
+              text={"Chat với trợ lý ảo 💬🖥️⚙️🦾"}
+              repeat={true}
+            ></TypingText>
           </CardTitle>
         </CardHeader>
         <CardContent className="p-6">

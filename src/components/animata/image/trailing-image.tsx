@@ -109,7 +109,6 @@ const AnimatedImage = forwardRef<AnimatedImageRef, { src: string }>(
 AnimatedImage.displayName = "AnimatedImage";
 
 const images = [
-  //   "https://assets.lummi.ai/assets/Qma1aBRXFsApFohRJrpJczE5QXGY6HhHKz24ybuw1khbou?auto=format&w=500",
   "https://res.cloudinary.com/drqbhj6ft/image/upload/v1726090242/learning-webdev-blog/booking-hotel/2_dvsk6q.png",
   "https://res.cloudinary.com/drqbhj6ft/image/upload/v1726090242/learning-webdev-blog/booking-hotel/6_gp0qee.png",
   "https://res.cloudinary.com/drqbhj6ft/image/upload/v1726090242/learning-webdev-blog/booking-hotel/1_ixfrfp.png",
@@ -185,11 +184,6 @@ const TrailingImage = () => {
           src={images[index % images.length]}
         />
       ))}
-      {/* <div className="absolute top-0 bg-slate-600 flex w-full flex-1 items-center justify-center p-4 text-center text-sm text-foreground md:text-3xl">
-        <div className="max-w-sm">
-          Move your mouse over this element to see the effect
-        </div>
-      </div> */}
     </div>
   );
 };

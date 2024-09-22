@@ -43,27 +43,19 @@ export function SheetToggle() {
         <Button
           className="w-full my-5 flex flex-row justify-start gap-3"
           variant="outline"
-          onClick={() => {
-            router.push(`/${userId}/hotel/list`);
-          }}
         >
           <Accessibility h-4 w-4 />
           Bệnh nhân Dashboard
         </Button>
-        <Button
-          className="w-full my-5 flex flex-row justify-start gap-3"
-          variant="outline"
-          onClick={() => {
-            router.push(`/${userId}/hotel/0`);
-          }}
-        >
-          <Syringe h-4 w-4 />
-          Bác sĩ Dashboard
-        </Button>
-        {/* onClick={() => {
-                        router.push(`/${userId}/patient/medical-history`);
-                        router.refresh();
-                      }} */}
+        <Link href={`/${userId}/doctor/dashboard`}>
+          <Button
+            className="w-full my-5 flex flex-row justify-start gap-3"
+            variant="outline"
+          >
+            <Syringe h-4 w-4 />
+            Bác sĩ Dashboard
+          </Button>
+        </Link>
         <Link href={`/${userId}/receptionist/dashboard`}>
           <Button
             className="w-full my-5 flex flex-row justify-start gap-3"

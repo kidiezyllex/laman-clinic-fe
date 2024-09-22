@@ -41,7 +41,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <NavBar />
-            <LocomotiveScrollWrapper>
+            {/* <LocomotiveScrollWrapper> */}
               <main className="flex flex-col min-h-screen bg-secondary">
                 <section className="flex flex-grow">
                   <Container>{children}</Container>
@@ -50,7 +50,7 @@ export default function RootLayout({
                 <Section />
                 <Footer />
               </main>
-            </LocomotiveScrollWrapper>
+            {/* </LocomotiveScrollWrapper> */}
           </ThemeProvider>
         </body>
       </html>

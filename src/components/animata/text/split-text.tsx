@@ -18,11 +18,10 @@ export default function SplitText({
   return (
     <div
       className={cn(
-        "relative cursor-sword font-black uppercase text-blue-500 text-2xl",
+        "relative cursor-sword font-black uppercase text-blue-500 text-xl",
         className
       )}
     >
-      {/** add hidden text so that we maintain the size for any text */}
       <div className="invisible leading-none">{text}</div>
       <div className="absolute top-0 flex h-full">
         {text.split("").map((letter, index) => (
@@ -41,7 +40,6 @@ export default function SplitText({
             key={index}
             className="relative inline-flex h-full cursor-sword flex-col leading-none"
           >
-            {/** top half */}
             <span
               className={cn(letterClassName, {
                 "-translate-y-5": index === activeIndex,
@@ -56,7 +54,6 @@ export default function SplitText({
               {letter}
             </span>
 
-            {/** bottom half */}
             <span
               className={cn(letterClassName, {
                 "translate-y-5": index === activeIndex,

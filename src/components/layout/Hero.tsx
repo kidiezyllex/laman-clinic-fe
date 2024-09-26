@@ -22,7 +22,7 @@ import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
 import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
-import ContainerDarkMode from "../ContainerDarkMode";
+import Container from "../Container";
 import ArrowButton from "../animata/button/arrow-button";
 import AvatarList from "../animata/list/avatar-list";
 
@@ -47,7 +47,7 @@ export default function Hero() {
   const isHomePage = pathname === "/";
   const router = useRouter();
   return isHomePage ? (
-    <ContainerDarkMode>
+    <Container>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%] gap-5 items-center">
         <div className="w-full flex flex-col gap-3">
           <TextFlip />
@@ -149,6 +149,6 @@ export default function Hero() {
           </div>
         </div>
       </div>
-    </ContainerDarkMode>
+    </Container>
   ) : null;
 }

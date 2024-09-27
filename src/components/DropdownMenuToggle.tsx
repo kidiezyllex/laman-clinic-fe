@@ -1,17 +1,14 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu } from "lucide-react";
+import { Calendar, CreditCard, Menu, User, UserPlus } from "lucide-react";
 
-export default function DropdownMenuToggle() {
+export default function UserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -21,15 +18,21 @@ export default function DropdownMenuToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mt-2" align="end">
         <DropdownMenuItem className="px-4 py-2">
-          ĐẶT LỊCH THEO BÁC SĨ
+          <UserPlus className="mr-2 h-4 w-4" />
+          <span>Đặt khám theo bác sĩ</span>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-4 py-2">
-          ĐẶT LỊCH THEO NGÀY
+          <Calendar className="mr-2 h-4 w-4" />
+          <span>Đặt khám theo ngày</span>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-4 py-2">
-          XEM LỊCH TÁI KHÁM
+          <User className="mr-2 h-4 w-4" />
+          <span>Quản lý tài khoản</span>
         </DropdownMenuItem>
-        <DropdownMenuItem className="px-4 py-2">THANH TOÁN</DropdownMenuItem>
+        <DropdownMenuItem className="px-4 py-2">
+          <CreditCard className="mr-2 h-4 w-4" />
+          <span>Thanh toán</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -59,12 +59,14 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "calendarSelector":
-        // return <CalendarSelector setActiveSection={setActiveSection} />;
+        return <CalendarSelector setActiveSection={setActiveSection} />;
+
+      case "specialtySelector":
+        return <SpecialtySelector setActiveSection={setActiveSection} />;
+      case "roomSelector":
         return (
           <RoomSelector setActiveSection={setActiveSection}></RoomSelector>
         );
-      case "specialtySelector":
-        return <SpecialtySelector setActiveSection={setActiveSection} />;
       case "messages":
         return <Messages />;
       default:

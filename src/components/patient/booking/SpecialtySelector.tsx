@@ -119,7 +119,7 @@ export default function SpecialtySelector({
           className="w-fit"
           text={"Tiếp tục"}
           onClick={() => {
-            setActiveSection("specialtySelector");
+            setActiveSection("roomSelector");
           }}
         ></ArrowButton>
       </div>

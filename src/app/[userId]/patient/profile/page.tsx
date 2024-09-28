@@ -57,7 +57,6 @@ export default function CreatePatientProfile() {
         const response = await axios.get(
           `http://localhost:3000/patients/by-account/${userId}`
         );
-        console.log(response.data);
         setPatient(response.data);
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -103,79 +102,82 @@ export default function CreatePatientProfile() {
           <CardTitle className="text-2xl font-bold text-blue-500 mb-4">
             HỒ SƠ BỆNH NHÂN
           </CardTitle>
-          <div className="p-4 border border-blue-500 rounded-md flex flex-col gap-3">
-            <h3 className="text-lg font-semibold text-blue-500 self-start">
-              HỒ SƠ HIỆN TẠI
-            </h3>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="col-span-1 flex items-center space-x-3 border rounded-md p-4">
-                <Avatar className="w-14 h-14 border-white">
-                  <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="text-base font-semibold text-start">
-                    {patient.fullName}
-                  </p>
-                  <p className="text-slate-500 text-start">
-                    CCCD: {patient.numberId}
-                  </p>
+          {Object.keys(patient).length !== 0 && (
+            <div className="p-4 border border-blue-500 rounded-md flex flex-col gap-3">
+              <h3 className="text-lg font-semibold text-blue-500 self-start">
+                HỒ SƠ HIỆN TẠI
+              </h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="col-span-1 flex items-center space-x-3 border rounded-md p-4">
+                  <Avatar className="w-14 h-14 border-white">
+                    <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-base font-semibold text-start">
+                      {patient.fullName}
+                    </p>
+                    <p className="text-slate-500 text-start">
+                      CCCD: {patient.numberId}
+                    </p>
+                  </div>
+                </div>
+                <div className="col-span-2 grid grid-cols-2 gap-3 border rounded-md p-4">
+                  <div className="flex items-center space-x-3">
+                    <CalendarIcon className="text-blue-500 h-4 w-4" />
+                    <span className="text-slate-600 text-sm">
+                      Ngày sinh: {formatDate(patient.dateOfBirth)}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <UserIcon className="text-blue-500 h-4 w-4" />
+                    <span className="text-slate-600 text-sm">
+                      Giới tính: {patient.gender}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <MapPinIcon className="text-blue-500 h-4 w-4" />
+                    <span className="text-slate-600 text-sm">
+                      Địa chỉ: {patient.address}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <PhoneIcon className="text-blue-500 h-4 w-4" />
+                    <span className="text-slate-600 text-sm">
+                      Phone: {patient.phone}
+                    </span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <MailIcon className="text-blue-500 h-4 w-4" />
+                    <span className="text-slate-600 text-sm">
+                      Email: {patient.email}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className="col-span-2 grid grid-cols-2 gap-3 border rounded-md p-4">
-                <div className="flex items-center space-x-3">
-                  <CalendarIcon className="text-blue-500 h-4 w-4" />
-                  <span className="text-slate-600 text-sm">
-                    Ngày sinh: {formatDate(patient.dateOfBirth)}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <UserIcon className="text-blue-500 h-4 w-4" />
-                  <span className="text-slate-600 text-sm">
-                    Giới tính: {patient.gender}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <MapPinIcon className="text-blue-500 h-4 w-4" />
-                  <span className="text-slate-600 text-sm">
-                    Địa chỉ: {patient.address}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <PhoneIcon className="text-blue-500 h-4 w-4" />
-                  <span className="text-slate-600 text-sm">
-                    Phone: {patient.phone}
-                  </span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <MailIcon className="text-blue-500 h-4 w-4" />
-                  <span className="text-slate-600 text-sm">
-                    Email: {patient.email}
-                  </span>
-                </div>
+              <div className="flex flex-row gap-4 items-center justify-center my-4">
+                <Link href={`/${userId}/patient/booking-by-date`}>
+                  <Button className="w-fit bg-blue-500">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    Đặt lịch khám theo ngày
+                  </Button>
+                </Link>
+                <Link href={`/${userId}/patient/booking-by-doctor`}>
+                  <Button className="w-fit bg-blue-500">
+                    <Stethoscope className="mr-2 h-4 w-4" />
+                    Đặt lịch khám theo bác sĩ
+                  </Button>
+                </Link>
               </div>
             </div>
-            <div className="flex flex-row gap-4 items-center justify-center my-4">
-              <Link href={`/${userId}/patient/booking-by-date`}>
-                <Button className="w-fit bg-blue-500">
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Đặt lịch khám theo ngày
-                </Button>
-              </Link>
-              <Link href={`/${userId}/patient/booking-by-doctor`}>
-                <Button className="w-fit bg-blue-500">
-                  <Stethoscope className="mr-2 h-4 w-4" />
-                  Đặt lịch khám theo bác sĩ
-                </Button>
-              </Link>
-            </div>
-          </div>
-          {!patient && (
+          )}
+
+          {Object.keys(patient).length === 0 && (
             <CardDescription>
               Bạn đã từng đặt khám tại Đa khoa Laman Clinic?
             </CardDescription>
           )}
         </CardHeader>
-        {!patient && (
+        {Object.keys(patient).length === 0 && (
           <CardContent className="space-y-4">
             <div className="flex justify-center space-x-4">
               <Button
@@ -219,7 +221,4 @@ export default function CreatePatientProfile() {
       </Card>
     </div>
   );
-}
-function fetchPatientByAccountId() {
-  throw new Error("Function not implemented.");
 }

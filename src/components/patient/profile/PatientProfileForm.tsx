@@ -28,7 +28,8 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),
   phone: z
@@ -126,7 +127,7 @@ export default function PatientProfileForm() {
       });
     } finally {
       setIsLoading(false);
-      router.push(`/${userId}/patient/dashboard`);
+      router.push(`/${userId}/patient/profile`);
     }
   };
 

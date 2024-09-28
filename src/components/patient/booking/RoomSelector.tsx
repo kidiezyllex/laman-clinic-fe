@@ -1,24 +1,48 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  AwaitedReactNode,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+} from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Clock, FileCog, Stethoscope, User, Warehouse } from "lucide-react";
+import ArrowButton from "@/components/animata/button/arrow-button";
 export default function RoomSelector({
   setActiveSection,
+  selectedSpe,
+  selectedDate,
 }: {
   setActiveSection: (section: string) => void;
+  selectedSpe: number | null;
+  selectedDate: Date;
 }) {
-  const [searchTerm, setSearchTerm] = useState("");
   const [doctorsBySpecialization, setDoctorsBySpecialization] = useState<[]>(
     []
   );
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      const response = await axios.get(`http://localhost:3000/doctors`);
-      console.log(response.data);
-      setDoctorsBySpecialization(response.data);
+      const response = await axios.get(
+        `http://localhost:3000/doctors?specialization=${selectedSpe}`
+      );
+      // response.data.filter((item)=> {item.})
+      const getDoctorsByDay = response.data.filter(
+        (doctor: { schedule: any[] }) =>
+          doctor.schedule.some(
+            (schedule: { dayOfWeek: string }) =>
+              schedule.dayOfWeek === getDayOfWeek(selectedDate)
+          )
+      );
+      console.log(getDoctorsByDay);
+      setDoctorsBySpecialization(getDoctorsByDay);
     };
 
     fetchDoctors();
@@ -46,10 +70,30 @@ export default function RoomSelector({
     return slots;
   }
 
+  function getDayOfWeek(date: Date) {
+    switch (date.getUTCDay()) {
+      case 6:
+        return "Sunday";
+      case 0:
+        return "Monday";
+      case 1:
+        return "Tuesday";
+      case 2:
+        return "Wednesday";
+      case 3:
+        return "Thursday";
+      case 4:
+        return "Friday";
+      case 5:
+        return "Saturday";
+      default:
+        return "Invalid day";
+    }
+  }
   return (
     <div className="w-full flex flex-col gap-4">
       <p className="text-base font-semibold text-blue-500">
-        VUI LÒNG CHỌN PHÒNG KHÁM, BÁC SĨ, GIỜ KHÁM
+        DANH SÁCH PHÒNG KHÁM, BÁC SĨ, GIỜ KHÁM BẠN SẼ VÀO
       </p>
       <div className="w-full gap-4">
         {doctorsBySpecialization.map((doctor) => (
@@ -79,32 +123,70 @@ export default function RoomSelector({
                 </div>
               </div>
               <div className="space-y-4 ">
-                {doctor.schedule.map((scheduleItem) => (
-                  <div key={scheduleItem._id} className="p-3 border ">
-                    <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                    </h3>
-                    <div className="grid grid-cols-4 gap-2 ">
-                      {generateTimeSlots(
-                        scheduleItem.startTime,
-                        scheduleItem.endTime
-                      ).map((slot) => (
-                        <Button
-                          key={slot}
-                          variant="outline"
-                          className="bg-white hover:bg-blue-200 text-blue-500 border-blue-500 rounded-sm"
-                        >
-                          {slot}
-                        </Button>
-                      ))}
+                {doctor.schedule.map(
+                  (scheduleItem: {
+                    _id: Key | null | undefined;
+                    dayOfWeek:
+                      | string
+                      | number
+                      | bigint
+                      | boolean
+                      | ReactElement<any, string | JSXElementConstructor<any>>
+                      | Iterable<ReactNode>
+                      | ReactPortal
+                      | Promise<AwaitedReactNode>
+                      | null
+                      | undefined;
+                    startTime: string;
+                    endTime: string;
+                  }) => (
+                    <div
+                      key={scheduleItem._id}
+                      className={
+                        scheduleItem.dayOfWeek === getDayOfWeek(selectedDate)
+                          ? "p-3 border-2 border-blue-500 "
+                          : "p-3 border"
+                      }
+                    >
+                      <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+                      </h3>
+                      <div className="grid grid-cols-4 gap-2 ">
+                        {generateTimeSlots(
+                          scheduleItem.startTime,
+                          scheduleItem.endTime
+                        ).map((slot) => (
+                          <Button key={slot} variant={"secondary"}>
+                            {slot}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             </div>
           </div>
         ))}
+      </div>
+      <div className="flex flex-row justify-between">
+        <Button
+          className="w-fit"
+          onClick={() => {
+            setActiveSection("specialtySelector");
+          }}
+          variant={"outline"}
+        >
+          Quay lại
+        </Button>
+        <ArrowButton
+          className="w-fit"
+          text={"Tiếp tục"}
+          onClick={() => {
+            setActiveSection("payment");
+          }}
+        ></ArrowButton>
       </div>
     </div>
   );

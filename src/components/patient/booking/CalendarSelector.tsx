@@ -6,8 +6,10 @@ import ArrowButton from "@/components/animata/button/arrow-button";
 
 export default function CalendarSelector({
   setActiveSection,
+  setSelectedDate,
 }: {
   setActiveSection: (section: string) => void;
+  setSelectedDate: (section: Date) => void;
 }) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const today = new Date();
@@ -16,6 +18,7 @@ export default function CalendarSelector({
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && selectedDate >= today) {
       setDate(selectedDate);
+      setSelectedDate(selectedDate);
     }
   };
 
@@ -29,7 +32,7 @@ export default function CalendarSelector({
         selected={date}
         onSelect={handleSelect}
         disabled={(date) => date < today}
-        className="rounded-md border bg-background dark:bg-slate-800 flex flex-row items-center justify-center"
+        className="rounded-md border bg-background flex flex-row items-center justify-center"
         styles={{
           head: {
             height: "30px",

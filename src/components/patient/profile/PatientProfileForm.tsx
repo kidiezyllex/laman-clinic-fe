@@ -127,7 +127,7 @@ export default function PatientProfileForm() {
       });
     } finally {
       setIsLoading(false);
-      router.push(`/${userId}/patient/profile`);
+      router.push(`/${userId}/patient/dashboard`);
     }
   };
 

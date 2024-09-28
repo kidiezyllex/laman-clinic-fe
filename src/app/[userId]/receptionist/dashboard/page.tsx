@@ -2,20 +2,37 @@
 import { useAuth } from "@clerk/nextjs";
 import React, { useState } from "react";
 import Link from "next/link";
-import { CalendarDays, Home, MessageCircleMore } from "lucide-react";
+import {
+  Bell,
+  Calendar,
+  CalendarDays,
+  ContactRound,
+  HistoryIcon,
+  Home,
+  MessageCircleMore,
+  NotepadText,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Dashboard from "@/components/receptionist/dashboard";
 import Messages from "@/components/receptionist/messages";
-
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import PatientProfile from "@/components/patient/profile/PatientProfile";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("dashboard");
+  const [activeSection, setActiveSection] = useState("patientProfile");
 
   const renderMainContent = () => {
     switch (activeSection) {
-      case "dashboard":
-        return <Dashboard />;
+      case "patientProfile":
+        return <PatientProfile />;
       case "appointments":
         return (
           <div className="flex flex-col items-center gap-4 text-center">
@@ -36,55 +53,99 @@ export default function Page() {
   };
 
   return (
-    <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-5">
-      <div className="hidden border bg-background md:block rounded-md">
-        <div className="flex h-full max-h-screen flex-col gap-2">
-          <div className="flex-1 pt-4">
-            <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-              <Link
-                href="#"
-                onClick={() => setActiveSection("dashboard")}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                  activeSection === "dashboard"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <Home className="h-4 w-4" />
-                Dashboard
-              </Link>
-              <Link
-                href="#"
-                onClick={() => setActiveSection("appointments")}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                  activeSection === "appointments"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <CalendarDays className="h-4 w-4" />
-                Lịch hẹn
-                <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                  6
-                </Badge>
-              </Link>
-              <Link
-                href="#"
-                onClick={() => setActiveSection("messages")}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                  activeSection === "messages"
-                    ? "bg-muted text-primary"
-                    : "text-muted-foreground"
-                }`}
-              >
-                <MessageCircleMore className="h-4 w-4" />
-                Tin nhắn
-              </Link>
-            </nav>
+    <div>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/" className="text-base">
+              TRANG CHỦ
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/components" className="text-base">
+              LỄ TÂN
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage className="text-base text-blue-500">
+              QUẢN LÝ LỊCH HẸN KHÁM
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-5 mt-8">
+        <div className="hidden h-[90%] border bg-background md:block rounded-md">
+          <div className="flex h-full max-h-screen flex-col gap-2">
+            <div className="flex-1 pt-4">
+              <nav className="grid items-start px-2 text-sm lg:px-4">
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("patientProfile")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "patientProfile"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Calendar className="h-4 w-4" />
+                  Lịch hẹn khám
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("medicalReport")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "medicalReport"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <NotepadText className="h-4 w-4" />
+                  Phiếu khám bệnh
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("messages")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "messages"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <MessageCircleMore className="h-4 w-4" />
+                  Tin nhắn
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("notification")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "notification"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Bell className="h-4 w-4" />
+                  Thông báo
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("medicalHistory")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "medicalHistory"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <HistoryIcon className="h-4 w-4" />
+                  Lịch sử khám bệnh
+                </Link>
+              </nav>
+            </div>
           </div>
         </div>
+        <div className="flex flex-col rounded-md">{renderMainContent()}</div>
       </div>
-      <div className="flex flex-col rounded-md">{renderMainContent()}</div>
     </div>
   );
 }

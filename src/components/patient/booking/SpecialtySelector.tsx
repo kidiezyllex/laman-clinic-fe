@@ -41,8 +41,10 @@ const specialties = [
 
 export default function SpecialtySelector({
   setActiveSection,
+  setSelectedSpe,
 }: {
   setActiveSection: (section: string) => void;
+  setSelectedSpe: (section: number) => void;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [specializations, setSpecializations] = useState<[]>([]);
@@ -96,7 +98,10 @@ export default function SpecialtySelector({
               </p>
             </div>
             <Button
-              onClick={() => setSelectedSpecialty(specialty)}
+              onClick={() => {
+                setSelectedSpecialty(specialty);
+                setSelectedSpe(specialty);
+              }}
               variant={selectedSpecialty === specialty ? "default" : "outline"}
             >
               Chọn

@@ -126,7 +126,6 @@ export default function Dashboard() {
 
   return (
     <div className="flex flex-1 flex-col gap-4 rounded-lg bg-background shadow-sm p-5">
-      <h1 className="text-2xl font-bold">Welcome, ThienAn</h1>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
         {dashboardItems.map((item, index) => (
           <Card key={index}>

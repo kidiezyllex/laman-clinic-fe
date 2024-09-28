@@ -20,9 +20,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import PatientProfileForm from "@/components/patient/profile/PatientProfileForm";
-export default function CreatePatientProfile() {
+export default function Page() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-
   return (
     <div>
       <Breadcrumb>
@@ -41,7 +40,7 @@ export default function CreatePatientProfile() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage className="text-base text-blue-500">
-              HỒ SƠ BỆNH NHÂN
+              CHỌN HỒ SƠ
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -50,7 +49,7 @@ export default function CreatePatientProfile() {
       <Card className="w-full mx-auto mt-8">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold text-blue-500">
-            TẠO HỒ SƠ BỆNH NHÂN
+            CHỌN HỒ SƠ BỆNH NHÂN
           </CardTitle>
           <CardDescription>
             Bạn đã từng đặt khám tại Đa khoa Laman Clinic?

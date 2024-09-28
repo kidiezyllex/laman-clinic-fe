@@ -25,7 +25,10 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-
+import { useAuth } from "@clerk/nextjs";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/router";
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),
   phone: z
@@ -34,7 +37,7 @@ const formSchema = z.object({
   birthDay: z.string().min(1, { message: "Vui lòng chọn ngày sinh" }),
   birthMonth: z.string().min(1, { message: "Vui lòng chọn tháng sinh" }),
   birthYear: z.string().min(1, { message: "Vui lòng chọn năm sinh" }),
-  gender: z.enum(["male", "female"], {
+  gender: z.enum(["Male", "Female"], {
     required_error: "Vui lòng chọn giới tính",
   }),
   idNumber: z.string().min(9, { message: "Số CMND không hợp lệ" }),
@@ -46,7 +49,10 @@ const formSchema = z.object({
 export default function PatientProfileForm() {
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
-
+  const { userId } = useAuth();
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -55,7 +61,7 @@ export default function PatientProfileForm() {
       birthDay: "",
       birthMonth: "",
       birthYear: "",
-      gender: "male",
+      gender: "Male",
       idNumber: "",
       email: "",
       province: "",
@@ -84,8 +90,44 @@ export default function PatientProfileForm() {
     }
   };
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    const payload = {
+      accountId: userId,
+      fullName: data.fullName,
+      dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
+      gender: data.gender,
+      address:
+        data.district.split("-").slice(1).join("-") +
+        "," +
+        data.province.split("-").slice(1).join("-"),
+      phone: data.phone.startsWith("0")
+        ? "+84" + data.phone.slice(1)
+        : data.phone,
+      email: data.email,
+      numberId: data.idNumber,
+      medicalHistory: [],
+      appointments: [],
+    };
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/patients",
+        payload
+      );
+      toast({
+        title: "Tạo hồ sơ thành công!",
+        description: "Hồ sơ bệnh nhân đã được tạo.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Tạo hồ sơ thất bại!",
+        description: "Đã xảy ra lỗi.",
+      });
+    } finally {
+      setIsLoading(false);
+      router.push(`/${userId}/patient/dashboard`);
+    }
   };
 
   return (
@@ -227,11 +269,11 @@ export default function PatientProfileForm() {
                     className="flex space-x-4"
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="male" id="male" />
+                      <RadioGroupItem value="Male" id="male" />
                       <Label htmlFor="male">Nam</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="female" id="female" />
+                      <RadioGroupItem value="Female" id="female" />
                       <Label htmlFor="female">Nữ</Label>
                     </div>
                   </RadioGroup>
@@ -341,8 +383,15 @@ export default function PatientProfileForm() {
             </div>
           </div>
 
-          <Button type="submit" className="w-fit">
-            Tạo hồ sơ
+          <Button type="submit" disabled={isLoading} className="w-fit">
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Đang xử lý...
+              </>
+            ) : (
+              "Tạo hồ sơ"
+            )}
           </Button>
         </form>
       </Form>

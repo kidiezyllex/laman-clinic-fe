@@ -8,24 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  CalendarDays,
-  FileText,
-  Pill,
-  Activity,
-  ChevronLeft,
-  ChevronRight,
-  User,
-  Cake,
-  Ruler,
-  Droplet,
-} from "lucide-react";
 import BioCard from "@/components/patient/medical-history/bio-card";
 import { getUserData } from "../../../../../actions/getUserData";
 import HealthMetricsCharts from "@/components/patient/medical-history/health-metrics-charts";
@@ -65,14 +48,9 @@ const medicalHistory = [
     notes:
       "Appendectomy performed. Surgery was successful with no complications.",
   },
-  // Add more medical history entries as needed
 ];
 
-export default function MedicalHistoryPage({
-  params,
-}: {
-  params: { userId: string };
-}) {
+export default function Page({ params }: { params: { userId: string } }) {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [patientData, setPatientData] = useState<PatientData>({
     name: "",

@@ -1,12 +1,5 @@
 "use client";
-import { useAuth } from "@clerk/nextjs";
-import React, { useState } from "react";
-import Link from "next/link";
-import { CalendarDays, Home, MessageCircleMore } from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Dashboard from "@/components/receptionist/dashboard";
+import React, { useEffect, useState } from "react";
 import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
@@ -18,9 +11,50 @@ import {
 } from "@/components/ui/breadcrumb";
 import CalendarSelector from "@/components/patient/booking/CalendarSelector";
 import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
+import { useAuth } from "@clerk/nextjs";
+import { format } from "date-fns";
+import axios from "axios";
+
+interface Patient {
+  numberId?: string;
+  fullName?: string;
+  dateOfBirth?: Date;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+}
 export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
+  const { userId } = useAuth();
+  const [patient, setPatient] = useState<Patient>({});
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "N/A";
+    return format(date, "dd/MM/yyyy");
+  };
+  useEffect(() => {
+    const fetchPatientByAccountId = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/patients/by-account/${userId}`
+        );
+        console.log(response.data);
+        setPatient(response.data);
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error("Axios error:", error.response?.data || error.message);
+        } else {
+          console.error("An unexpected error occurred:", error);
+        }
+      }
+    };
 
+    if (userId) {
+      fetchPatientByAccountId();
+    } else {
+      console.log("userId is not defined");
+    }
+  }, [userId]);
   const renderMainContent = () => {
     switch (activeSection) {
       case "calendarSelector":
@@ -61,12 +95,20 @@ export default function Page() {
         <div className="hidden md:block">
           <div className="border bg-background rounded-md p-4 flex flex-col gap-2">
             <p className="text-base font-semibold text-blue-500">
-              BÙI TRẦN THIÊN ÂN
+              {patient.fullName}
             </p>
             <p className="text-sm">
-              Địa chỉ: Tổ 3, Xã Nhơn Khánh, TX. An Nhơn, Bình Định
+              <span className="font-semibold">CCCD:</span> {patient.numberId}
             </p>
-            <p className="text-sm">SĐT: 033673***6</p>
+            <p className="text-sm">
+              <span className="font-semibold">Địa chỉ:</span> {patient.address}
+            </p>
+            <p className="text-sm">
+              <span className="font-semibold">SĐT:</span> {patient.phone}
+            </p>
+            <p className="text-sm">
+              <span className="font-semibold">Email:</span> {patient.email}
+            </p>
           </div>
         </div>
         <div className="flex flex-col rounded-md">
@@ -76,7 +118,7 @@ export default function Page() {
                 <BreadcrumbPage
                   className={
                     activeSection === "calendarSelector"
-                      ? "text-base text-blue-500"
+                      ? "text-base text-blue-500 dark:text-blue-500"
                       : "text-base"
                   }
                 >
@@ -88,7 +130,7 @@ export default function Page() {
                 <BreadcrumbPage
                   className={
                     activeSection === "specialtySelector"
-                      ? "text-base text-blue-500"
+                      ? "text-base text-blue-500 dark:text-blue-500"
                       : "text-base"
                   }
                 >

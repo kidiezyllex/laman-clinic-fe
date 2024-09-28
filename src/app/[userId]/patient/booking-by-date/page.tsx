@@ -14,6 +14,7 @@ import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
 import { useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import axios from "axios";
+import RoomSelector from "@/components/patient/booking/RoomSelector";
 
 interface Patient {
   numberId?: string;
@@ -58,7 +59,10 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "calendarSelector":
-        return <CalendarSelector setActiveSection={setActiveSection} />;
+        // return <CalendarSelector setActiveSection={setActiveSection} />;
+        return (
+          <RoomSelector setActiveSection={setActiveSection}></RoomSelector>
+        );
       case "specialtySelector":
         return <SpecialtySelector setActiveSection={setActiveSection} />;
       case "messages":

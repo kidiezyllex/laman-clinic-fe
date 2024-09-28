@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ArrowButton from "@/components/animata/button/arrow-button";
-
+import axios from "axios";
 const specialties = [
   { id: 1, name: "Nội Tổng quát", price: 250000 },
   { id: 2, name: "Nhi khoa", price: 300000 },
@@ -45,6 +45,7 @@ export default function SpecialtySelector({
   setActiveSection: (section: string) => void;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [specializations, setSpecializations] = useState<[]>([]);
   const [selectedSpecialty, setSelectedSpecialty] = useState<number | null>(
     null
   );
@@ -56,9 +57,19 @@ export default function SpecialtySelector({
     []
   );
 
-  const filteredSpecialties = specialties.filter((specialty) =>
-    specialty.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  useEffect(() => {
+    const fetchSpecializations = async () => {
+      const response = await axios.get(
+        `http://localhost:3000/doctors/specializations`
+      );
+      const filteredSpecialties = response.data.filter((specialty: string) =>
+        specialty.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSpecializations(filteredSpecialties);
+    };
+
+    fetchSpecializations();
+  }, [searchTerm]);
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -73,22 +84,20 @@ export default function SpecialtySelector({
         className="w-full"
       />
       <ScrollArea className="h-[400px] w-full rounded-md border p-4 bg-background">
-        {filteredSpecialties.map((specialty) => (
+        {specializations.map((specialty) => (
           <div
-            key={specialty.id}
+            key={specialty}
             className="flex justify-between items-center py-2 border-b"
           >
             <div>
-              <h3 className="font-medium">{specialty.name}</h3>
+              <h3 className="font-medium">{specialty}</h3>
               <p className="text-sm text-gray-500">
-                {specialty.price.toLocaleString("vi-VN")} VNĐ
+                {/* {specialty.price.toLocaleString("vi-VN")} VNĐ */}
               </p>
             </div>
             <Button
-              onClick={() => setSelectedSpecialty(specialty.id)}
-              variant={
-                selectedSpecialty === specialty.id ? "default" : "outline"
-              }
+              onClick={() => setSelectedSpecialty(specialty)}
+              variant={selectedSpecialty === specialty ? "default" : "outline"}
             >
               Chọn
             </Button>

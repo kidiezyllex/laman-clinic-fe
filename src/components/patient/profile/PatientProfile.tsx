@@ -19,6 +19,7 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { format } from "date-fns";
 interface Patient {
   numberId?: string;
   fullName?: string;
@@ -31,7 +32,10 @@ interface Patient {
 export default function PatientProfile() {
   const { userId } = useAuth();
   const [patient, setPatient] = useState<Patient>({});
-
+  const formatDate = (date: Date | undefined) => {
+    if (!date) return "N/A";
+    return format(date, "dd/MM/yyyy");
+  };
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       const response = await axios.get<Patient>(
@@ -49,12 +53,7 @@ export default function PatientProfile() {
       <p className="text-base font-semibold text-blue-500">HỒ SƠ BỆNH NHÂN</p>
       <div className="flex items-center space-x-4 border rounded-md p-4 ">
         <Avatar className="w-14 h-14 border-white">
-          <AvatarFallback className="text-base font-semibold bg-secondary">
-            {/* {patient.fullName
-              .split(" ")
-              .map((n) => n[0])
-              .join("")} */}
-          </AvatarFallback>
+          <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
         </Avatar>
         <div>
           <p className="text-base font-semibold">{patient.fullName}</p>
@@ -65,7 +64,7 @@ export default function PatientProfile() {
         <div className="flex items-center space-x-3">
           <CalendarIcon className="text-blue-500 h-4 w-4" />
           <span className="text-slate-600 text-base">
-            Date of Birth: {patient.dateOfBirth}
+            Ngày sinh: {formatDate(patient.dateOfBirth)}
           </span>
         </div>
         <div className="flex items-center space-x-3">

@@ -55,6 +55,11 @@ export default function NavBar() {
             </Link>
           </div>
 
+          {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
+          userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD"
+            ? router.push(`/${userId}/doctor/dashboard`)
+            : null}
+
           {/* Sign in & Sign up & Avatar*/}
           {!userId ? (
             <div className="flex flex-row gap-3 justify-end">
@@ -86,8 +91,13 @@ export default function NavBar() {
 
               {/* Dark Mode */}
               <ModeToggle></ModeToggle>
-              {/* <SheetToggle></SheetToggle> */}
-              <DropdownMenuToggle></DropdownMenuToggle>
+
+              {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
+              userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD" ? (
+                ""
+              ) : (
+                <DropdownMenuToggle></DropdownMenuToggle>
+              )}
             </div>
           )}
         </div>

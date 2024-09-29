@@ -10,6 +10,7 @@ import { DoctorsCpn } from "../DoctorsCpn";
 import HuggingFaceAssistant from "../HuggingFaceAssistant";
 import { usePathname, useRouter } from "next/navigation";
 import Specialties from "../Specialties";
+import TypingText from "../animata/text/typing-text";
 
 const treatments = [
   {
@@ -123,7 +124,23 @@ export default function Section() {
   return isHomePage ? (
     <div className="w-full mt-3">
       <Container>
-        <HuggingFaceAssistant></HuggingFaceAssistant>
+        <div className="font-bold text-2xl my-5 text-blue-400">
+          <TypingText
+            text={"Chat với trợ lý ảo 💬🖥️⚙️🦾"}
+            repeat={true}
+          ></TypingText>
+        </div>
+
+        <iframe
+          src="https://www.yeschat.ai/i/gpts-9t55kSYtH0D-AI-MD"
+          height="500"
+          style={{
+            maxWidth: "100%",
+            width: "100%",
+            borderRadius: 10,
+          }}
+        ></iframe>
+        {/* <HuggingFaceAssistant></HuggingFaceAssistant> */}
       </Container>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">

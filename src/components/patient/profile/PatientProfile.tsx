@@ -43,7 +43,9 @@ interface Patient {
 export default function PatientProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const { userId } = useAuth();
-  const [patient, setPatient] = useState<Patient>({});
+  // const [patient, setPatient] = useState<Patient>({});
+  const [patient, setPatient] = useState<Partial<Patient>>({});
+
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
@@ -70,7 +72,7 @@ export default function PatientProfile() {
     } else {
       console.log("userId is not defined");
     }
-  }, [userId, patient]);
+  }, [userId]);
 
   const handleDelete = async () => {
     try {

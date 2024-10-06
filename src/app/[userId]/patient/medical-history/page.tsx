@@ -70,7 +70,7 @@ export default function Page({ params }: { params: { userId: string } }) {
     };
 
     fetchUserData();
-  }, []);
+  }, [params.userId]);
 
   return (
     <div>

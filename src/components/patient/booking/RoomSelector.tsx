@@ -98,7 +98,7 @@ export default function RoomSelector({
       <div className="w-full gap-4">
         {doctorsBySpecialization.map((doctor) => (
           <div
-            key={doctor?._id}
+            key={(doctor as any)._id}
             className="overflow-hidden transition-shadow duration-300 rounded-md mb-4 bg-background border"
           >
             <div className="p-6">
@@ -106,24 +106,24 @@ export default function RoomSelector({
                 <div className="flex flex-row gap-3 items-center">
                   <Stethoscope className="w-6 h-6 text-blue-500" />
                   <p className="text-sm font-semibold">
-                    Bác sĩ: {doctor?.fullName}
+                    Bác sĩ: {(doctor as any)?.fullName}
                   </p>
                 </div>
                 <div className="flex flex-row gap-3 items-center">
                   <Warehouse className="w-6 h-6 text-blue-500" />
                   <p className="text-sm font-semibold">
-                    Phòng khám: {doctor?.roomNumber}
+                    Phòng khám: {(doctor as any)?.roomNumber}
                   </p>
                 </div>
                 <div className="flex flex-row gap-3 items-center">
                   <FileCog className="w-6 h-6 text-blue-500" />
                   <p className="text-sm font-semibold">
-                    Chuyên khoa: {doctor?.specialization}
+                    Chuyên khoa: {(doctor as any)?.specialization}
                   </p>
                 </div>
               </div>
               <div className="space-y-4 ">
-                {doctor.schedule.map(
+                {(doctor as any).schedule.map(
                   (scheduleItem: {
                     _id: Key | null | undefined;
                     dayOfWeek:

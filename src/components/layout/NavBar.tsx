@@ -1,6 +1,5 @@
 "use client";
 import { useAuth, UserButton } from "@clerk/nextjs";
-import Container from "../Container";
 import { Button } from "../ui/button";
 import { HistoryIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -13,11 +12,18 @@ import DropdownMenuToggle from "../DropdownMenuToggle";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
+  console.log(userId);
+  const navLinks = [
+    { href: "/", label: "TRANG CHỦ" },
+    { href: "/quy-trinh", label: "QUY TRÌNH" },
+    { href: "/huong-dan", label: "HƯỚNG DẪN" },
+    { href: "/hoi-dap", label: "HỎI ĐÁP" },
+    { href: "/lien-he", label: "LIÊN HỆ" },
+  ];
   return (
     <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
       <div className="max-w-[1920px] w-full mx-auto xl:px-20 px-4 py-4 dark:bg-slate-800 bg-white">
         <div className="items-center justify-between flex flex-row gap-10">
-          {/* Logo */}
           <Link
             className="flex flex-row items-center gap-3 justify-start"
             href={"/"}
@@ -36,30 +42,17 @@ export default function NavBar() {
               <SplitText text="LAMAN Clinic" />
             </div>
           </Link>
-          {/* Search Field */}
-          <div className="flex flex-row gap-4">
-            <Link href="" className="text-sm">
-              TRANG CHỦ
-            </Link>
-            <Link href="" className="text-sm">
-              QUY TRÌNH
-            </Link>
-            <Link href="" className="text-sm">
-              HƯỚNG DẪN
-            </Link>
-            <Link href="" className="text-sm">
-              HỎI ĐÁP
-            </Link>
-            <Link href="" className="text-sm">
-              LIÊN HỆ
-            </Link>
+          <div className="hidden md:flex items-center space-x-4">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="text-sm hover:text-primary"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
-
-          {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
-          userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD"
-            ? router.push(`/${userId}/doctor/dashboard`)
-            : null}
-
           {/* Sign in & Sign up & Avatar*/}
           {!userId ? (
             <div className="flex flex-row gap-3 justify-end">

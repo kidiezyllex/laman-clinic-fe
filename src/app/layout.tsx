@@ -42,14 +42,14 @@ export default function RootLayout({
           >
             <NavBar />
             {/* <LocomotiveScrollWrapper> */}
-              <main className="flex flex-col min-h-screen bg-secondary">
-                <section className="flex flex-grow">
-                  <Container>{children}</Container>
-                </section>
-                <Hero />
-                <Section />
-                <Footer />
-              </main>
+            <main className="flex flex-col min-h-screen bg-secondary">
+              <section className="flex flex-grow">
+                <Container>{children}</Container>
+              </section>
+              <Hero />
+              <Section />
+              <Footer />
+            </main>
             {/* </LocomotiveScrollWrapper> */}
           </ThemeProvider>
         </body>

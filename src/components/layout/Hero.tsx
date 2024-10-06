@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/chart";
 import { Button } from "../ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import TrailingImage from "../animata/image/trailing-image";
 import TextFlip from "../animata/text/text-flip";
 import Container from "../Container";
 import ArrowButton from "../animata/button/arrow-button";
@@ -77,7 +76,6 @@ export default function Hero() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-5">
           <div className="flex flex-col gap-5 w-full">
-            <TrailingImage />
             <div className="w-full h-52 flex items-center justify-center py-4 relative">
               <Image
                 layout="fill"

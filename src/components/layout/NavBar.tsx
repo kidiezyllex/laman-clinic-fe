@@ -2,7 +2,7 @@
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { HistoryIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
@@ -12,6 +12,7 @@ import DropdownMenuToggle from "../DropdownMenuToggle";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
+  const pathname = usePathname();
   console.log(userId);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
@@ -54,7 +55,7 @@ export default function NavBar() {
             ))}
           </div>
           {/* Sign in & Sign up & Avatar*/}
-          {!userId ? (
+          {!pathname.includes("doctor/dashboard") || !userId ? (
             <div className="flex flex-row gap-3 justify-end">
               <Link href={"/sign-up"}>
                 <Button variant="outline">Đăng ký</Button>

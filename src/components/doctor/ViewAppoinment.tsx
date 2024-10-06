@@ -75,10 +75,22 @@ export default function ViewAppointment() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get<Appointment[]>(
-          `http://localhost:3000/appointments`
+        const response = await axios.get(
+          "https://8705-171-252-188-90.ngrok-free.app/queue/000"
         );
-        setAppointments(response.data);
+        console.log(response.data);
+        // const response = await fetch(
+        //   "https://8705-171-252-188-90.ngrok-free.app/queue/000",
+        //   {
+        //     method: "GET",
+        //     headers: {
+        //       "Content-Type": "application/json", // Thiết lập Content-Type nếu cần
+        //     },
+        //   }
+        // );
+
+        const data = await response.json();
+        console.log(response);
       } catch (error) {
         if (axios.isAxiosError(error)) {
           console.error("Axios error:", error.response?.data || error.message);
@@ -169,7 +181,10 @@ export default function ViewAppointment() {
                 <div className="flex flex-col gap-3 p-2 ">
                   {appointments
                     .filter((appointment) =>
-                      isSameDay(parseISO(appointment.appointmentDate), day)
+                      isSameDay(
+                        parseISO((appointment as any).appointmentDate),
+                        day
+                      )
                     )
                     .map((appointment) => (
                       <div

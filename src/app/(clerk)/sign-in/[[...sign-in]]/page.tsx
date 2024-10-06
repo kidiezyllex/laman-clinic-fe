@@ -63,7 +63,7 @@ export default function Page() {
   };
 
   return (
-    <Card className="w-fit max-w-full">
+    <Card className="w-fit max-w-full ">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-blue-400">
           Đăng nhập vào Laman Clinic
@@ -74,7 +74,6 @@ export default function Page() {
           appearance={{
             elements: {
               formButtonPrimary: "hidden",
-              // footerActionLink: "text-slate-600 hover:text-slate-800",
               card: "shadow-none p-0 border-none",
               cardBox: "shadow-none p-0 border-none",
               header: "hidden",
@@ -83,6 +82,7 @@ export default function Page() {
               formField: "hidden",
               footer: "hidden",
               socialButtons: "p-2",
+              main: "bg-transparent",
             },
           }}
         />

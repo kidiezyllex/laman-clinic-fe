@@ -60,14 +60,27 @@ const PaymentForm = ({
   ];
 
   const handleBooking = async () => {
+    // const payload = {
+    //   patientId: { ...patient },
+    //   appointmentDate: selectedDate,
+    //   specialization: selectedSpe,
+    // };
+
     const payload = {
-      patientId: { ...patient },
-      appointmentDate: selectedDate,
+      id: patient.numberId,
+      appointmentDateByPatient: selectedDate,
       specialization: selectedSpe,
+      fullName: patient.fullName,
+      dateOfBirth: patient.dateOfBirth,
+      gender: patient.gender,
+      address: patient.address,
+      phone: patient.phone,
+      email: patient.email,
+      medicalHistory: [],
     };
     try {
       const response = await axios.post(
-        `http://localhost:3000/appointmentByPatient`,
+        `http://localhost:3001/api/appointment/appointment-by-patient`,
         payload
       );
     } catch (error) {

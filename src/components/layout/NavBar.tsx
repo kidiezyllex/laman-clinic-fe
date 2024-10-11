@@ -2,7 +2,7 @@
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
 import { HistoryIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
@@ -12,7 +12,7 @@ import DropdownMenuToggle from "../DropdownMenuToggle";
 export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
-  console.log(userId);
+  const userId2 = usePathname().split("/");
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/quy-trinh", label: "QUY TRÌNH" },

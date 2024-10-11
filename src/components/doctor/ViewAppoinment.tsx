@@ -1,7 +1,21 @@
 "use client";
-
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { format, addDays, startOfWeek, isSameDay, parseISO } from "date-fns";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Calendar,
   ChevronLeft,
@@ -13,7 +27,6 @@ import {
   Phone,
   User,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -30,6 +43,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Separator } from "../ui/separator";
+import { usePathname } from "next/navigation";
 
 interface MedicalHistory {
   _id: string;
@@ -57,13 +71,44 @@ interface Appointment {
   status: string;
 }
 
+const FormSchema = z.object({
+  roomNumber: z
+    .string()
+    .regex(/^\d+$/, { message: "Chỉ được nhập số." }) // Chỉ cho phép số
+    .min(3, { message: "Room number phải có ít nhất 3 ký tự." }) // Tối thiểu 3 ký tự
+    .max(3, { message: "Room number chỉ được tối đa 3 ký tự." }), // Tối đa 3 ký tự
+});
+
 export default function ViewAppointment() {
+  const { toast } = useToast();
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      roomNumber: "000",
+    },
+  });
+  const doctorId = usePathname().split("/")[1];
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    const response = await axios.patch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`,
+      {
+        roomNumber: data.roomNumber,
+      }
+    );
+    toast({
+      title: "Thành công!",
+      description: "Đã cập nhật số phòng!",
+    });
+    setIsOpen2(false);
+  }
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("Week");
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(true);
 
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
@@ -304,6 +349,31 @@ export default function ViewAppointment() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isOpen2} onOpenChange={setIsOpen2}>
+        <DialogContent className="max-w-[900px] w-[50%] h-fit">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-2/3 space-y-6"
+            >
+              <FormField
+                control={form.control}
+                name="roomNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Vui lòng nhập số phòng</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Ví dụ: 024, 210" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit">Cập nhật</Button>
+            </form>
+          </Form>
         </DialogContent>
       </Dialog>
     </div>

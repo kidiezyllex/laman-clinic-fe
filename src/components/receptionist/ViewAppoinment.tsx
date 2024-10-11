@@ -23,6 +23,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
 
 interface AppointmentByPatient {
   id: string;
@@ -38,6 +39,8 @@ interface AppointmentByPatient {
 }
 
 export default function ViewAppointment() {
+  const { toast } = useToast();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [appointmentByPatient, setAppointmentByPatient] = useState<
     AppointmentByPatient[]
@@ -108,6 +111,25 @@ export default function ViewAppointment() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
         payload
       );
+      if (response.status === 400) {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: response.data.message,
+        });
+      } else if (response.status === 202) {
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: response.data.message,
+        });
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: response.data.message,
+        });
+      }
     } catch (error) {
       console.error("Error during sign in:", error);
     } finally {
@@ -166,14 +188,17 @@ export default function ViewAppointment() {
             className="flex flex-col gap-6 justify-center items-center p-4"
           >
             <div className="flex flex-row gap-2 items-center w-full">
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
-                {appointment.gender.toLowerCase() === "male" ||
-                appointment.gender.toLowerCase() === "nam" ? (
+              {appointment.gender.toLowerCase() === "male" ||
+              appointment.gender.toLowerCase() === "nam" ? (
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                   <Dog className="text-blue-500" />
-                ) : (
-                  <Cat className="text-blue-500" />
-                )}
-              </div>
+                </div>
+              ) : (
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                  <Cat className="text-pink-500" />
+                </div>
+              )}
+
               <div>
                 <p className="text-base">
                   <span className="font-semibold text-base">Tên: </span>{" "}

@@ -76,7 +76,7 @@ export default function ViewAppointment() {
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
-          "https://8705-171-252-188-90.ngrok-free.app/queue/000"
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
         );
         console.log(response.data);
         // const response = await fetch(

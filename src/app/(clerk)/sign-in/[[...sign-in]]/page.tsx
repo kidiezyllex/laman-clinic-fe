@@ -28,10 +28,10 @@ export default function Page() {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-
+    console.log(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`);
     try {
       const response = await fetch(
-        "https://8705-171-252-188-90.ngrok-free.app/auth/login",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -46,9 +46,10 @@ export default function Page() {
       if (data.status === "success") {
         if (data.data?.role === "doctor")
           router.push(`/${data.data.id}/doctor/dashboard`);
-        else if (data.data?.role === "receptionist")
+        else if (data.data?.role === "receptionist") {
+          console.log(data.data?.role === "receptionist");
           router.push(`/${data.data.id}/receptionist/dashboard`);
-        else router.push("/");
+        } else router.push("/");
       }
     } catch (error) {
       console.error("Error during sign in:", error);

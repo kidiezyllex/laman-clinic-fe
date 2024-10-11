@@ -10,6 +10,7 @@ import Hero from "@/components/layout/Hero";
 import Section from "@/components/layout/Section";
 import Footer from "@/components/layout/Footer";
 import dynamic from "next/dynamic";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -50,6 +51,7 @@ export default function RootLayout({
               <Section />
               <Footer />
             </main>
+            <Toaster />
             {/* </LocomotiveScrollWrapper> */}
           </ThemeProvider>
         </body>

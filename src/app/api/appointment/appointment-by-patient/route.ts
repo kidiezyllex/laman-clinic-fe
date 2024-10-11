@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
 import prismadb from "../../../../../lib/prismadb";
+import Ably from "ably";
+const ably = new Ably.Realtime(process.env.NEXT_PUBLIC_ABLY_API_KEY as string);
 
 // CREATE (POST)
 export async function POST(req: Request) {

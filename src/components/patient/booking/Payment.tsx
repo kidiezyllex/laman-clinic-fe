@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
+import { usePathname } from "next/navigation";
 
 interface Patient {
   numberId?: string;
@@ -38,8 +39,9 @@ const PaymentForm = ({
   selectedSpe: number | null;
   patient: Patient;
 }) => {
-  const [selectedPayment, setSelectedPayment] = useState<string>(""); // quản lý state radio
+  const [selectedPayment, setSelectedPayment] = useState<string>("");
   const { toast } = useToast();
+  const pathname = usePathname();
 
   // Các phương thức thanh toán
   const paymentMethods = [
@@ -60,12 +62,6 @@ const PaymentForm = ({
   ];
 
   const handleBooking = async () => {
-    // const payload = {
-    //   patientId: { ...patient },
-    //   appointmentDate: selectedDate,
-    //   specialization: selectedSpe,
-    // };
-
     const payload = {
       id: patient.numberId,
       appointmentDateByPatient: selectedDate,
@@ -78,11 +74,13 @@ const PaymentForm = ({
       email: patient.email,
       medicalHistory: [],
     };
+    console.log(pathname);
     try {
       const response = await axios.post(
-        `http://localhost:3001/api/appointment/appointment-by-patient`,
+        `/api/appointment/appointment-by-patient`,
         payload
       );
+      console.log("res: ", response);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);

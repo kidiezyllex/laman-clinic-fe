@@ -10,7 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { CalendarIcon, Cat, Dog, SearchIcon } from "lucide-react";
+import { CalendarIcon, Cat, Dog, SearchIcon, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import {
@@ -61,7 +61,7 @@ export default function ViewAppointment() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `http://localhost:3001/api/appointment/appointment-by-patient`
+        `/api/appointment/appointment-by-patient`
       );
       setAppointmentByPatient(response.data);
     };
@@ -94,6 +94,7 @@ export default function ViewAppointment() {
 
   const handleSubmit = async () => {
     try {
+      setIsLoading(true);
       const payload = {
         patientId: {
           ...selectedAppointment,
@@ -104,17 +105,31 @@ export default function ViewAppointment() {
         specialization: selectedAppointment?.specialization,
       };
       const response = await axios.post(
-        `https://8705-171-252-188-90.ngrok-free.app/appointments`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
         payload
       );
     } catch (error) {
       console.error("Error during sign in:", error);
     } finally {
       setIsLoading(false);
-      // setIsDialogOpen(false);
-      setSelectedAppointment(null);
+      setIsDialogOpen(false);
       setIsEditing(false);
       setReason("");
+    }
+  };
+
+  const handleDeleteAppointmentByPatient = async (id: string) => {
+    try {
+      const response = await axios.delete(
+        `/api/appointment/appointment-by-patient/?id=${id}`
+      );
+      console.log("res: ", response);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Axios error:", error.response?.data || error.message);
+      } else {
+        console.error("An unexpected error occurred:", error);
+      }
     }
   };
 
@@ -144,7 +159,7 @@ export default function ViewAppointment() {
         />
       </div>
 
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
           <Card
             key={appointment.id}
@@ -174,12 +189,20 @@ export default function ViewAppointment() {
               <Badge variant={"secondary"}>Đang chờ</Badge>
               <Badge>{appointment.specialization}</Badge>
             </div>
-            <Button
-              className="w-fit bg-blue-500 hover:bg-blue-600"
-              onClick={() => handleCreateAppointment(appointment)}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám
-            </Button>
+            <div className="flex flex-row gap-2">
+              <Button
+                className="w-fit bg-blue-500 hover:bg-blue-600"
+                onClick={() => handleCreateAppointment(appointment)}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám
+              </Button>
+              {/* <Button
+                variant={"destructive"}
+                onClick={() => handleDeleteAppointmentByPatient(appointment.id)}
+              >
+                <Trash className="mr-2 h-4 w-4" /> Xoá
+              </Button> */}
+            </div>
           </Card>
         ))}
       </div>

@@ -80,6 +80,7 @@ const FormSchema = z.object({
 });
 
 export default function ViewAppointment() {
+  const [selectedRoomNumber, setSelectedRoomNumber] = useState("");
   const { toast } = useToast();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -120,28 +121,29 @@ export default function ViewAppointment() {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+        const response = await fetch(
+          "https://ae49-2402-800-63a8-b5e6-3904-6982-4f1-ce0f.ngrok-free.app/queue/123"
         );
-        console.log(response.data);
-        // const response = await fetch(
-        //   "https://8705-171-252-188-90.ngrok-free.app/queue/000",
-        //   {
-        //     method: "GET",
-        //     headers: {
-        //       "Content-Type": "application/json", // Thiết lập Content-Type nếu cần
-        //     },
-        //   }
-        // );
 
-        const data = await response.json();
-        console.log(response);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-        } else {
-          console.error("An unexpected error occurred:", error);
+        console.log("Status code:", response.status);
+        console.log(
+          "Response content-type:",
+          response.headers.get("content-type")
+        );
+
+        if (!response.ok) {
+          throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
         }
+
+        const contentType = response.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await response.json();
+          console.log(data);
+        } else {
+          console.error("Expected JSON but received:", await response.text());
+        }
+      } catch (error) {
+        console.error("Lấy dữ liệu cuộc hẹn thất bại:", error);
       }
     };
 

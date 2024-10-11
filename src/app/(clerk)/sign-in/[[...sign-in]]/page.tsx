@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { clerkClient } from "@clerk/nextjs/server";
+import { useToast } from "@/hooks/use-toast";
 interface LoginResponse {
   status: string;
   message: string;
@@ -21,14 +22,13 @@ export default function Page() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const { user } = useUser();
   const router = useRouter();
-  const { isLoaded, signIn, setActive } = useSignIn();
+  const { toast } = useToast();
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setIsLoading(true);
-    console.log(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
@@ -44,12 +44,27 @@ export default function Page() {
       const data: LoginResponse = await response.json();
 
       if (data.status === "success") {
-        if (data.data?.role === "doctor")
+        if (data.data?.role === "doctor") {
+          toast({
+            variant: "default",
+            title: data.message,
+            description: "Đăng nhập với quyền Bác sĩ",
+          });
           router.push(`/${data.data.id}/doctor/dashboard`);
-        else if (data.data?.role === "receptionist") {
-          console.log(data.data?.role === "receptionist");
+        } else if (data.data?.role === "receptionist") {
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: data.message,
+          });
           router.push(`/${data.data.id}/receptionist/dashboard`);
         } else router.push("/");
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: data.message,
+        });
       }
     } catch (error) {
       console.error("Error during sign in:", error);

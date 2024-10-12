@@ -112,7 +112,7 @@ export default function PatientProfileForm() {
     };
     try {
       const response = await axios.post(
-        "http://localhost:3000/patients",
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`,
         payload
       );
       toast({

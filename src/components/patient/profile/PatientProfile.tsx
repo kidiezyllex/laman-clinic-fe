@@ -51,27 +51,27 @@ export default function PatientProfile() {
     return format(date, "dd/MM/yyyy");
   };
   useEffect(() => {
-    const fetchPatientByAccountId = async () => {
+    const fetchData = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/patients/by-account/${userId}`
+        const response = await fetch(
+          "http://localhost:3000/patients/by-account/user_2ly0J33sb8EUylS3ZQ2OovfecCJ",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
         );
-        console.log(response.data);
-        setPatient(response.data);
+
+        const text = await response.text();
+        console.log("Response Text:", text); // Inspect HTML response
       } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-        } else {
-          console.error("An unexpected error occurred:", error);
-        }
+        console.error("Fetch error:", error);
       }
     };
 
-    if (userId) {
-      fetchPatientByAccountId();
-    } else {
-      console.log("userId is not defined");
-    }
+    fetchData();
   }, [userId]);
 
   const handleDelete = async () => {

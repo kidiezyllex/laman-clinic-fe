@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { clerkClient } from "@clerk/nextjs/server";
 import { useToast } from "@/hooks/use-toast";
 interface LoginResponse {
   status: string;
@@ -42,7 +41,8 @@ export default function Page() {
       );
 
       const data: LoginResponse = await response.json();
-
+      localStorage.setItem("email", email);
+      localStorage.setItem("password", password);
       if (data.status === "success") {
         if (data.data?.role === "doctor") {
           toast({

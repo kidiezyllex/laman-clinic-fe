@@ -1,7 +1,7 @@
 "use client";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
-import { HistoryIcon } from "lucide-react";
+import { Calendar, HistoryIcon, LogOut, User, SquareUser } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -9,10 +9,19 @@ import { Card } from "../ui/card";
 import Link from "next/link";
 import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 export default function NavBar() {
+  const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
-  const userId2 = usePathname().split("/");
+  const userId2 = usePathname().split("/")[1];
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/quy-trinh", label: "QUY TRÌNH" },
@@ -20,6 +29,128 @@ export default function NavBar() {
     { href: "/hoi-dap", label: "HỎI ĐÁP" },
     { href: "/lien-he", label: "LIÊN HỆ" },
   ];
+  const handleLogOut = async () => {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/logout`,
+        {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      if (data.status === "success") {
+        localStorage.removeItem("email");
+        localStorage.removeItem("password");
+
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: data.message,
+        });
+
+        // router.push("/login");
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: data.message || "Đăng xuất không thành công",
+        });
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: "Có lỗi xảy ra trong quá trình đăng xuất.",
+      });
+    }
+  };
+  const renderNavBar = () => {
+    // Nếu có id của User login bằng GG/GH
+    if (userId)
+      return (
+        <div className="flex flex-row gap-3 justify-end">
+          <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
+            <UserButton afterSignOutUrl="/">
+              <UserButton.MenuItems>
+                <UserButton.Action
+                  label="Xem lịch sử khám"
+                  labelIcon={<HistoryIcon className="h-4 w-4" />}
+                  onClick={() => {
+                    router.push(`/${userId}/patient/medical-history`);
+                    router.refresh();
+                  }}
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          </div>
+
+          {/* Dark Mode */}
+          <ModeToggle></ModeToggle>
+
+          {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
+          userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD" ? (
+            ""
+          ) : (
+            <DropdownMenuToggle></DropdownMenuToggle>
+          )}
+        </div>
+      );
+    if (userId2 && userId2 !== "sign-in" && userId2 !== "sign-up")
+      return (
+        <div className="flex flex-row gap-3 justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full bg-secondary"
+              >
+                <User className="h-[1.2rem] w-[1.2rem]" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56 mt-2" align="end">
+              <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between ">
+                <div onClick={() => handleLogOut()}>
+                  <span>Đăng xuất</span>
+                </div>
+                <LogOut className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+              <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between ">
+                <Link href={`/${userId}/patient/dashboard`}>
+                  <span>Quản lý tài khoản</span>
+                </Link>
+                <SquareUser className="mr-2 h-4 w-4" />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <ModeToggle></ModeToggle>
+        </div>
+      );
+    // Nếu có id của User login tài khoản của phòng khám
+    return (
+      <div className="flex flex-row gap-3 justify-end">
+        <Link href={"/sign-up"}>
+          <Button variant="outline">Đăng ký</Button>
+        </Link>
+        <Link href={"/sign-in"}>
+          <Button className="border-2 border-secondary">Đăng nhập</Button>
+        </Link>
+        {/* Dark Mode */}
+        <ModeToggle></ModeToggle>
+      </div>
+    );
+  };
   return (
     <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
       <div className="max-w-[1920px] w-full mx-auto xl:px-20 px-4 py-4 dark:bg-slate-800 bg-white">
@@ -53,46 +184,7 @@ export default function NavBar() {
               </Link>
             ))}
           </div>
-          {/* Sign in & Sign up & Avatar*/}
-          {!userId ? (
-            <div className="flex flex-row gap-3 justify-end">
-              <Link href={"/sign-up"}>
-                <Button variant="outline">Đăng ký</Button>
-              </Link>
-              <Link href={"/sign-in"}>
-                <Button className="border-2 border-secondary">Đăng nhập</Button>
-              </Link>
-              {/* Dark Mode */}
-              <ModeToggle></ModeToggle>
-            </div>
-          ) : (
-            <div className="flex flex-row gap-3 justify-end">
-              <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
-                <UserButton afterSignOutUrl="/">
-                  <UserButton.MenuItems>
-                    <UserButton.Action
-                      label="Xem lịch sử khám"
-                      labelIcon={<HistoryIcon className="h-4 w-4" />}
-                      onClick={() => {
-                        router.push(`/${userId}/patient/medical-history`);
-                        router.refresh();
-                      }}
-                    />
-                  </UserButton.MenuItems>
-                </UserButton>
-              </div>
-
-              {/* Dark Mode */}
-              <ModeToggle></ModeToggle>
-
-              {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
-              userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD" ? (
-                ""
-              ) : (
-                <DropdownMenuToggle></DropdownMenuToggle>
-              )}
-            </div>
-          )}
+          {renderNavBar()}
         </div>
       </div>
     </Card>

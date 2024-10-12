@@ -18,9 +18,11 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   Calendar,
+  Cat,
   ChevronLeft,
   ChevronRight,
   Clock,
+  Dog,
   FileText,
   Mail,
   MapPin,
@@ -105,7 +107,26 @@ export default function ViewAppointment() {
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("Week");
-  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  // const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const appointments = [
+    {
+      patientId: {
+        id: "566777722918",
+        appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
+        specialization: "Cardiology",
+        fullName: "Bui Tran Thien An",
+        dateOfBirth: "2004-09-10T17:00:00.000Z",
+        gender: "Male",
+        address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+        phone: "+84904548277",
+        email: "benhnhan1@gmail.com",
+        medicalHistory: [],
+      },
+      appointmentDate: "2024-10-11T16:11:50.261Z",
+      reason: "Gặp bác sĩ 123",
+      specialization: "Cardiology",
+    },
+  ];
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -120,31 +141,12 @@ export default function ViewAppointment() {
 
   useEffect(() => {
     const fetchAppointments = async () => {
-      try {
-        const response = await fetch(
-          "https://ae49-2402-800-63a8-b5e6-3904-6982-4f1-ce0f.ngrok-free.app/queue/123"
-        );
-
-        console.log("Status code:", response.status);
-        console.log(
-          "Response content-type:",
-          response.headers.get("content-type")
-        );
-
-        if (!response.ok) {
-          throw new Error(`Lỗi: ${response.status} - ${response.statusText}`);
-        }
-
-        const contentType = response.headers.get("content-type");
-        if (contentType && contentType.includes("application/json")) {
-          const data = await response.json();
-          console.log(data);
-        } else {
-          console.error("Expected JSON but received:", await response.text());
-        }
-      } catch (error) {
-        console.error("Lấy dữ liệu cuộc hẹn thất bại:", error);
-      }
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      );
+   
+      const data = await response.json();
+      console.log("render data::", data);
     };
 
     fetchAppointments();
@@ -239,9 +241,20 @@ export default function ViewAppointment() {
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
-                        <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
+                        {/* <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
                           <User className="text-blue-500 h-6 w-6" />
-                        </div>
+                        </div> */}
+                        {appointment.patientId.gender.toLowerCase() ===
+                          "male" ||
+                        appointment.patientId.gender.toLowerCase() === "nam" ? (
+                          <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                            <Dog className="text-blue-500" />
+                          </div>
+                        ) : (
+                          <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                            <Cat className="text-pink-500" />
+                          </div>
+                        )}
                         <p className="text-xs font-semibold">
                           {appointment.patientId.fullName}
                         </p>

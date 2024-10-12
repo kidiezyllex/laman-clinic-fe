@@ -15,7 +15,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 export default function NavBar() {
   const { toast } = useToast();
@@ -58,7 +57,7 @@ export default function NavBar() {
           description: data.message,
         });
 
-        // router.push("/login");
+        router.push("/sign-in");
       } else {
         toast({
           variant: "destructive",

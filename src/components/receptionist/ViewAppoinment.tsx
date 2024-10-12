@@ -3,13 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { CalendarIcon, Cat, Dog, SearchIcon, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -52,9 +46,15 @@ export default function ViewAppointment() {
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const filteredAppointments = appointmentByPatient.filter((appointment) =>
-    appointment.fullName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredAppointments = appointmentByPatient.filter((appointment) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return (
+      appointment.fullName.toLowerCase().includes(searchTermLower) ||
+      (appointment.phone && appointment.phone.includes(searchTerm)) ||
+      (appointment.email &&
+        appointment.email.toLowerCase().includes(searchTermLower))
+    );
+  });
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
@@ -174,7 +174,7 @@ export default function ViewAppointment() {
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
           type="search"
-          placeholder="Search appointments..."
+          placeholder="Nhập tên, hoặc sđt, hoặc email"
           className="pl-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -332,7 +332,7 @@ export default function ViewAppointment() {
               selectedAppointment?.appointmentDateByPatient as Date
             ) >= 1 ? (
               <div className="w-full p-4 bg-blue-400 rounded-md border">
-                <p>
+                <p className="text-white">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}
                   {getHoursBetweenDates(
                     selectedAppointment?.appointmentDateByPatient as Date

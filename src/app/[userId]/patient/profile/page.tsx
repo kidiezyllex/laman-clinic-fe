@@ -55,7 +55,7 @@ export default function CreatePatientProfile() {
     const fetchPatientByAccountId = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/patients/by-account/${userId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/by-account/${userId}`
         );
         setPatient(response.data);
       } catch (error) {

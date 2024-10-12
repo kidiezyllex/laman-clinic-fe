@@ -80,7 +80,6 @@ const PaymentForm = ({
         `/api/appointment/appointment-by-patient`,
         payload
       );
-      console.log("res: ", response);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);

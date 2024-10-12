@@ -1,22 +1,7 @@
 "use client";
-import { useAuth } from "@clerk/nextjs";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  CalendarDays,
-  ContactRound,
-  HistoryIcon,
-  Home,
-  MessageCircleMore,
-  NotepadText,
-  User,
-} from "lucide-react";
-
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import Dashboard from "@/components/receptionist/dashboard";
-import Messages from "@/components/receptionist/messages";
+import { Bell, ContactRound, User } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,29 +10,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import PatientProfile from "@/components/patient/profile/PatientProfile";
 import ViewAppointment from "@/components/receptionist/ViewAppoinment";
+import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
+import Notification from "@/components/receptionist/Notification";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("patientProfile");
+  const [activeSection, setActiveSection] = useState("appoinments");
 
   const renderMainContent = () => {
     switch (activeSection) {
-      case "patientProfile":
+      case "appoinments":
         return <ViewAppointment />;
-      case "appointments":
-        return (
-          <div className="flex flex-col items-center gap-4 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              Your Appointments
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              You have 6 upcoming appointments.
-            </p>
-            <Button className="mt-4">Manage Appointments</Button>
-          </div>
-        );
-      case "messages":
-        return <Messages />;
+      case "profile":
+        return <ReceptionistProfile />;
+      case "notification":
+        return <Notification />;
       default:
         return null;
     }
@@ -83,9 +59,9 @@ export default function Page() {
               <nav className="grid items-start px-2 text-sm lg:px-4">
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("patientProfile")}
+                  onClick={() => setActiveSection("appoinments")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "patientProfile"
+                    activeSection === "appoinments"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
@@ -107,9 +83,9 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("account")}
+                  onClick={() => setActiveSection("profile")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "account"
+                    activeSection === "profile"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}

@@ -1,10 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
@@ -16,7 +10,6 @@ import {
   Trash2Icon,
   PencilIcon,
 } from "lucide-react";
-import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
@@ -30,7 +23,8 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
-interface Patient {
+import { usePathname } from "next/navigation";
+interface Receptionist {
   _id: String;
   numberId?: string;
   fullName?: string;
@@ -40,11 +34,10 @@ interface Patient {
   phone?: string;
   email?: string;
 }
-export default function PatientProfile() {
+export default function ReceptionistProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const { userId } = useAuth();
-  // const [patient, setPatient] = useState<Patient>({});
-  const [patient, setPatient] = useState<Partial<Patient>>({});
+  const userId = usePathname().split("/")[1];
+  const [receptionist, setReceptionist] = useState<Partial<Receptionist>>({});
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
@@ -53,9 +46,9 @@ export default function PatientProfile() {
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/by-account/${userId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user/${userId}`
       );
-      setPatient(response.data);
+      setReceptionist(response.data);
     };
 
     if (userId) {
@@ -65,71 +58,55 @@ export default function PatientProfile() {
     }
   }, [userId]);
 
-  const handleDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:3000/patients/${patient._id}`
-      );
-      setPatient(response.data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data || error.message);
-      } else {
-        console.error("An unexpected error occurred:", error);
-      }
-    }
-    setIsAlertOpen(false);
-  };
-
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[90%]">
-      <p className="text-base font-semibold text-blue-500">HỒ SƠ BỆNH NHÂN</p>
-      {Object.keys(patient).length !== 0 && (
+      <p className="text-base font-semibold text-blue-500">HỒ SƠ LỄ TÂN</p>
+      {Object.keys(receptionist).length !== 0 && (
         <div className="flex items-center space-x-4 border rounded-md p-4 ">
           <Avatar className="w-14 h-14 border-white">
             <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
           </Avatar>
           <div>
-            <p className="text-base font-semibold">{patient.fullName}</p>
-            <p className="text-slate-500">ID: {patient.numberId}</p>
+            <p className="text-base font-semibold">{receptionist.fullName}</p>
+            <p className="text-slate-500">ID: {receptionist.numberId}</p>
           </div>
         </div>
       )}
-      {Object.keys(patient).length !== 0 && (
+      {Object.keys(receptionist).length !== 0 && (
         <CardContent className="mt-6 space-y-4">
           <div className="flex items-center space-x-3">
             <CalendarIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Ngày sinh: {formatDate(patient.dateOfBirth)}
+              Ngày sinh: {formatDate(receptionist.dateOfBirth)}
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <UserIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Gender: {patient.gender}
+              Gender: {receptionist.gender}
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <MapPinIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Address: {patient.address}
+              Address: {receptionist.address}
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <PhoneIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Phone: {patient.phone}
+              Phone: {receptionist.phone}
             </span>
           </div>
           <div className="flex items-center space-x-3">
             <MailIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Email: {patient.email}
+              Email: {receptionist.email}
             </span>
           </div>
         </CardContent>
       )}
-      {Object.keys(patient).length !== 0 && (
+      {Object.keys(receptionist).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
             variant="destructive"
@@ -160,9 +137,7 @@ export default function PatientProfile() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Huỷ</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Xác nhận xoá
-            </AlertDialogAction>
+            <AlertDialogAction>Xác nhận xoá</AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

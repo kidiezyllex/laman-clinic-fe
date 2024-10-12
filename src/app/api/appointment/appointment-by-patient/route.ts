@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import prismadb from "../../../../../lib/prismadb";
-import Ably from "ably";
-const ably = new Ably.Realtime(process.env.NEXT_PUBLIC_ABLY_API_KEY as string);
-
+import { pusher } from "../../../../../lib/pusher";
 // CREATE (POST)
 export async function POST(req: Request) {
   try {
@@ -11,6 +9,11 @@ export async function POST(req: Request) {
       data: {
         ...body,
       },
+    });
+    // Gửi thông báo qua Pusher
+    await pusher.trigger("appointments", "new-appointment", {
+      appointment: appointment,
+      date: new Date(),
     });
     return NextResponse.json(appointment);
   } catch (error) {

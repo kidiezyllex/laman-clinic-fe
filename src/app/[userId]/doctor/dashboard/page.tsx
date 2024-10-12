@@ -15,7 +15,7 @@ import {
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Dashboard from "@/components/receptionist/dashboard";
+import Dashboard from "@/components/receptionist/Dashboard";
 import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,

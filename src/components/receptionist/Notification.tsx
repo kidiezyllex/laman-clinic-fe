@@ -86,27 +86,19 @@ export default function Notification() {
           <Badge>đã đọc</Badge>
         </div>
       </div>
-      <ScrollArea className="h-96 w-full rounded-md border p-4">
+      <ScrollArea className="h-[90%] w-full rounded-md border p-4">
         {notifications.map((nt) => (
           <div
             key={nt.id}
             className="mb-4 border p-4 rounded-md flex flex-row justify-between bg-blue-50"
           >
-            <p className="text-base font-semibold text-gray-700">
-              {nt.message}
-            </p>
+            <p className="text-base text-gray-700">{nt.message}</p>
             <Badge className="w-fit" variant={"default"}>
-              Khoảng {getTimeDifference(nt.createdAt, new Date())} trước
+              Khoảng {getTimeDifference(nt?.createdAt, new Date())} trước
             </Badge>
           </div>
         ))}
       </ScrollArea>
-      <div className="p-4 bg-muted flex justify-between items-center">
-        <Button>Clear All</Button>
-        <Button className="text-primary">
-          View All <ChevronRight className="ml-1 h-4 w-4" />
-        </Button>
-      </div>
     </div>
   );
 }

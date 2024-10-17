@@ -5,11 +5,18 @@ import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { format, addDays, startOfWeek, isSameDay, parseISO } from "date-fns";
+import {
+  format,
+  addDays,
+  startOfWeek,
+  isSameDay,
+  parseISO,
+  subMonths,
+  addMonths,
+} from "date-fns";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,16 +43,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import axios from "axios";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "../ui/separator";
 import { usePathname } from "next/navigation";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface MedicalHistory {
   _id: string;
@@ -80,17 +82,86 @@ const FormSchema = z.object({
     .min(3, { message: "Room number phải có ít nhất 3 ký tự." }) // Tối thiểu 3 ký tự
     .max(3, { message: "Room number chỉ được tối đa 3 ký tự." }), // Tối đa 3 ký tự
 });
+const appointments = [
+  {
+    patientId: {
+      id: "566777722918",
+      appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
+      specialization: "Cardiology",
+      fullName: "Bui Tran Thien An",
+      dateOfBirth: "2004-09-10T17:00:00.000Z",
+      gender: "Male",
+      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+      phone: "+84904548277",
+      email: "benhnhan1@gmail.com",
+      medicalHistory: [],
+    },
+    appointmentDate: "2024-10-11T16:11:50.261Z",
+    reason: "Gặp bác sĩ 123",
+    specialization: "Cardiology",
+  },
+  {
+    patientId: {
+      id: "566777729999",
+      appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
+      specialization: "Cardiology",
+      fullName: "Bui Tran Thien An",
+      dateOfBirth: "2004-09-10T17:00:00.000Z",
+      gender: "Female",
+      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+      phone: "+84904548277",
+      email: "benhnhan1@gmail.com",
+      medicalHistory: [],
+    },
+    appointmentDate: "2024-10-11T16:11:50.261Z",
+    reason: "Gặp bác sĩ 123",
+    specialization: "Cardiology",
+  },
+  {
+    patientId: {
+      id: "566777729999",
+      appointmentDateByPatient: "2024-10-12T17:00:00.000Z",
+      specialization: "Cardiology",
+      fullName: "Bui Tran Thien An",
+      dateOfBirth: "2004-09-10T17:00:00.000Z",
+      gender: "Female",
+      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+      phone: "+84904548277",
+      email: "benhnhan1@gmail.com",
+      medicalHistory: [],
+    },
+    appointmentDate: "2024-10-12T16:11:50.261Z",
+    reason: "Gặp bác sĩ 123",
+    specialization: "Cardiology",
+  },
+];
+
+const formatDate = (dateString: string) => {
+  return format(parseISO(dateString), "dd/MM/yyyy");
+};
 
 export default function ViewAppointment() {
   const [selectedRoomNumber, setSelectedRoomNumber] = useState("");
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState("Week");
+  const doctorId = usePathname().split("/")[1];
   const { toast } = useToast();
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
+  const [isCreatePrescription, setIsCreatePrescription] = useState(false);
+
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       roomNumber: "000",
     },
   });
-  const doctorId = usePathname().split("/")[1];
+
+  // Handle submit cập nhật Phòng
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const response = await axios.patch(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`,
@@ -105,51 +176,20 @@ export default function ViewAppointment() {
     setIsOpen2(false);
   }
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState("Week");
-  // const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const appointments = [
-    {
-      patientId: {
-        id: "566777722918",
-        appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
-        specialization: "Cardiology",
-        fullName: "Bui Tran Thien An",
-        dateOfBirth: "2004-09-10T17:00:00.000Z",
-        gender: "Male",
-        address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-        phone: "+84904548277",
-        email: "benhnhan1@gmail.com",
-        medicalHistory: [],
-      },
-      appointmentDate: "2024-10-11T16:11:50.261Z",
-      reason: "Gặp bác sĩ 123",
-      specialization: "Cardiology",
-    },
-  ];
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(true);
-
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-
-  const formatDate = (dateString: string) => {
-    return format(parseISO(dateString), "dd/MM/yyyy");
-  };
-
+  // Fecth Appointments 1 lần
   useEffect(() => {
     const fetchAppointments = async () => {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
       );
-   
+
       const data = await response.json();
       console.log("render data::", data);
     };
 
     fetchAppointments();
+    // getData Bác sĩ, nếu room khác mặc định thì set True
+    setIsOpen2(false);
   }, []);
 
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
@@ -172,32 +212,28 @@ export default function ViewAppointment() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="September 2024">September 2024</SelectItem>
-              <SelectItem value="October 2024">October 2024</SelectItem>
-              <SelectItem value="November 2024">November 2024</SelectItem>
+              <SelectItem
+                value={format(subMonths(currentDate, 1), "MMMM yyyy")}
+              >
+                {format(subMonths(currentDate, 1), "MMMM yyyy")}
+              </SelectItem>
+              <SelectItem value={format(currentDate, "MMMM yyyy")}>
+                {format(currentDate, "MMMM yyyy")}
+              </SelectItem>
+              <SelectItem
+                value={format(addMonths(currentDate, 1), "MMMM yyyy")}
+              >
+                {format(addMonths(currentDate, 1), "MMMM yyyy")}
+              </SelectItem>
             </SelectContent>
           </Select>
           <div className="flex space-x-1">
             <Button
-              variant={view === "Day" ? "secondary" : "outline"}
+              variant={view === "today" ? "secondary" : "outline"}
               size="sm"
-              onClick={() => setView("Day")}
+              onClick={() => setCurrentDate(new Date())}
             >
-              Day
-            </Button>
-            <Button
-              variant={view === "Week" ? "secondary" : "outline"}
-              size="sm"
-              onClick={() => setView("Week")}
-            >
-              Week
-            </Button>
-            <Button
-              variant={view === "Month" ? "secondary" : "outline"}
-              size="sm"
-              onClick={() => setView("Month")}
-            >
-              Month
+              Hôm nay
             </Button>
           </div>
         </div>
@@ -210,16 +246,22 @@ export default function ViewAppointment() {
           </Button>
         </div>
       </div>
-      <div className="border rounded-md h-full">
+      <div className="border rounded-md h-full ">
         <div className="inline-block min-w-full h-full">
           <div className="w-full grid grid-cols-7 h-full">
             {days.map((day, index) => (
-              <div key={index} className="flex flex-col gap-2 border-r-2">
+              <div
+                key={index}
+                className="flex flex-col gap-2 border-r-2"
+                onClick={() => {
+                  console.log("");
+                }}
+              >
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
                     className={`w-8 h-6 flex justify-center items-center rounded-md ${
-                      isSameDay(day, currentDate)
+                      isSameDay(day, new Date())
                         ? "bg-blue-500 text-white"
                         : "text-foreground"
                     }`}
@@ -255,7 +297,7 @@ export default function ViewAppointment() {
                             <Cat className="text-pink-500" />
                           </div>
                         )}
-                        <p className="text-xs font-semibold">
+                        <p className="text-xs font-semibold text-center">
                           {appointment.patientId.fullName}
                         </p>
                       </div>
@@ -364,6 +406,15 @@ export default function ViewAppointment() {
               </div>
             </div>
           )}
+          <div className="flex flex-row gap-3 justify-end items-end flex-grow">
+            <Button
+              variant={"outline"}
+              onClick={() => setIsCreatePrescription(true)}
+            >
+              Tạo đơn thuốc
+            </Button>
+            <Button variant={"secondary"}>Hoàn thành khám</Button>
+          </div>
         </DialogContent>
       </Dialog>
       <Dialog open={isOpen2} onOpenChange={setIsOpen2}>

@@ -12,6 +12,8 @@ import Link from "next/link";
 
 export default function UserMenu() {
   const { userId } = useAuth();
+  const currentId = localStorage.getItem("currentId") || userId;
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -22,13 +24,13 @@ export default function UserMenu() {
       <DropdownMenuContent className="w-56 mt-2" align="end">
         <DropdownMenuItem className="px-4 py-2">
           <Calendar className="mr-2 h-4 w-4" />
-          <Link href={`/${userId}/patient/profile`}>
+          <Link href={`/${currentId}/patient/profile`}>
             <span>Đặt lịch khám</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="px-4 py-2">
           <User className="mr-2 h-4 w-4" />
-          <Link href={`/${userId}/patient/dashboard`}>
+          <Link href={`/${currentId}/patient/dashboard`}>
             <span>Quản lý tài khoản</span>
           </Link>
         </DropdownMenuItem>

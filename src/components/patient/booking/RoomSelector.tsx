@@ -31,7 +31,7 @@ export default function RoomSelector({
   useEffect(() => {
     const fetchDoctors = async () => {
       const response = await axios.get(
-        `http://localhost:3000/doctors?specialization=${selectedSpe}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors?specialization=${selectedSpe}`
       );
       // response.data.filter((item)=> {item.})
       const getDoctorsByDay = response.data.filter(

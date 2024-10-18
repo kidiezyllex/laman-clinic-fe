@@ -1,20 +1,15 @@
 "use client";
-import { useAuth } from "@clerk/nextjs";
 import React, { useState } from "react";
 import Link from "next/link";
 import {
   Bell,
-  CalendarDays,
   ContactRound,
   HistoryIcon,
-  Home,
   MessageCircleMore,
   NotepadText,
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Dashboard from "@/components/receptionist/Dashboard";
 import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,

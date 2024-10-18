@@ -48,6 +48,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "../ui/separator";
 import { usePathname } from "next/navigation";
 import { ScrollArea } from "../ui/scroll-area";
+import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
 
 interface MedicalHistory {
   _id: string;
@@ -160,6 +162,11 @@ export default function ViewAppointment() {
       roomNumber: "000",
     },
   });
+  const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+
+  const togglePrescriptionForm = () => {
+    setShowPrescriptionForm(!showPrescriptionForm);
+  };
 
   // Handle submit cập nhật Phòng
   async function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -310,7 +317,7 @@ export default function ViewAppointment() {
       </div>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%]">
+        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           {selectedAppointment && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
@@ -319,10 +326,10 @@ export default function ViewAppointment() {
                   {selectedAppointment.patientId.fullName}
                 </h2>
               </div>
-              <Separator></Separator>
+              <Separator />
               <div className="grid md:grid-cols-2 mb-2">
                 <div className="grid gap-3">
-                  <h3 className="text-md font-semibold">Thông tin lịch hẹn</h3>
+                  <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
@@ -389,7 +396,7 @@ export default function ViewAppointment() {
                   </div>
                 </div>
               </div>
-              <Separator></Separator>
+              <Separator />
               <div className="grid gap-3">
                 <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
                 {selectedAppointment.patientId.medicalHistory.map((history) => (
@@ -404,17 +411,75 @@ export default function ViewAppointment() {
                   </div>
                 ))}
               </div>
+              {showPrescriptionForm && (
+                <div className="">
+                  <h3 className="text-md font-semibold mb-4">Tạo đơn thuốc</h3>
+                  <form className="space-y-4 border p-4 rounded-md">
+                    <div>
+                      <Label
+                        htmlFor="medication"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Thuốc
+                      </Label>
+                      <Input
+                        type="text"
+                        id="medication"
+                        name="medication"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="dosage"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Liều lượng
+                      </Label>
+                      <Input
+                        type="text"
+                        id="dosage"
+                        name="dosage"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <div>
+                      <Label
+                        htmlFor="instructions"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Hướng dẫn sử dụng
+                      </Label>
+                      <Textarea
+                        id="instructions"
+                        name="instructions"
+                        rows={3}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+                      />
+                    </div>
+                    <Button type="submit" variant="default">
+                      Lưu đơn thuốc
+                    </Button>
+                  </form>
+                </div>
+              )}
+              <div className="flex flex-row gap-3 justify-end items-end flex-grow">
+                {showPrescriptionForm ? (
+                  <Button
+                    variant="destructive"
+                    onClick={togglePrescriptionForm}
+                  >
+                    Huỷ
+                  </Button>
+                ) : (
+                  <Button variant="outline" onClick={togglePrescriptionForm}>
+                    Tạo đơn thuốc
+                  </Button>
+                )}
+                <Button variant="secondary">Hoàn thành khám</Button>
+              </div>
             </div>
           )}
-          <div className="flex flex-row gap-3 justify-end items-end flex-grow">
-            <Button
-              variant={"outline"}
-              onClick={() => setIsCreatePrescription(true)}
-            >
-              Tạo đơn thuốc
-            </Button>
-            <Button variant={"secondary"}>Hoàn thành khám</Button>
-          </div>
         </DialogContent>
       </Dialog>
       <Dialog open={isOpen2} onOpenChange={setIsOpen2}>

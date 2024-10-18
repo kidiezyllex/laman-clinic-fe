@@ -62,7 +62,7 @@ export default function SpecialtySelector({
   useEffect(() => {
     const fetchSpecializations = async () => {
       const response = await axios.get(
-        `http://localhost:3000/doctors/specializations`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/specializations`
       );
       const filteredSpecialties = response.data.filter((specialty: string) =>
         specialty.toLowerCase().includes(searchTerm.toLowerCase())

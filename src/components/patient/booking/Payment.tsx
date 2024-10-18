@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
-import { CreditCard, Banknote, CircleSlashIcon, Wallet } from "lucide-react"; // react-icons for icons
+import { Loader2 } from "lucide-react"; // react-icons for icons
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import ArrowButton from "@/components/animata/button/arrow-button";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { usePathname } from "next/navigation";
 
 interface Patient {
-  numberId?: string;
+  _id?: string;
   fullName?: string;
   dateOfBirth?: Date;
   gender?: string;
@@ -42,7 +41,7 @@ const PaymentForm = ({
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const { toast } = useToast();
   const pathname = usePathname();
-
+  const [isLoading, setIsLoading] = useState(false);
   // Các phương thức thanh toán
   const paymentMethods = [
     {
@@ -62,30 +61,41 @@ const PaymentForm = ({
   ];
 
   const handleBooking = async () => {
+    setIsLoading(true);
     const payload = {
-      id: patient.numberId,
+      id: patient._id,
       appointmentDateByPatient: selectedDate,
       specialization: selectedSpe,
       fullName: patient.fullName,
-      dateOfBirth: patient.dateOfBirth,
-      gender: patient.gender,
-      address: patient.address,
-      phone: patient.phone,
+      dateOfBirth: patient.dateOfBirth || new Date(),
+      gender: patient.gender || "",
+      address: patient.address || "",
+      phone: patient.phone || "",
       email: patient.email,
       medicalHistory: [],
     };
-    console.log(pathname);
+
     try {
       const response = await axios.post(
         `/api/appointment/appointment-by-patient`,
         payload
       );
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Lịch khám đang chờ xác nhận!",
+      });
     } catch (error) {
       if (axios.isAxiosError(error)) {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: "Trùng hồ sơ. Vui lòng dùng hồ sơ khác!",
+        });
         console.error("Axios error:", error.response?.data || error.message);
-      } else {
-        console.error("An unexpected error occurred:", error);
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -184,13 +194,21 @@ const PaymentForm = ({
         >
           Quay lại
         </Button>
-        <ArrowButton
+        <Button
+          type="submit"
+          disabled={isLoading}
           className="w-fit"
-          text={"Hoàn tất"}
-          onClick={() => {
-            handleBooking();
-          }}
-        ></ArrowButton>
+          onClick={() => handleBooking()}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Đang xử lý...
+            </>
+          ) : (
+            "Tạo hồ sơ"
+          )}
+        </Button>
       </div>
     </div>
   );

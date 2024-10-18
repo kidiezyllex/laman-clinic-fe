@@ -1,5 +1,5 @@
 "use client";
-import { SignIn, useSignIn, useSignUp, useUser } from "@clerk/nextjs";
+import { SignIn } from "@clerk/nextjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -41,8 +41,12 @@ export default function Page() {
       );
 
       const data: LoginResponse = await response.json();
-      localStorage.setItem("email", email);
-      localStorage.setItem("password", password);
+
+      // Lưu currentId (để navigate) và token (để đăng xuất)
+      localStorage.setItem("currentId", (data as any)?.data?.id);
+      localStorage.setItem("token", (data as any)?.token);
+      localStorage.setItem("currentEmail", email);
+
       if (data.status === "success") {
         if (data.data?.role === "doctor") {
           toast({

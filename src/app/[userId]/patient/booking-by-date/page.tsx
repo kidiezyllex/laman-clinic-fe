@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import CalendarSelector from "@/components/patient/booking/CalendarSelector";
 import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
-import { useAuth } from "@clerk/nextjs";
 import { format } from "date-fns";
 import axios from "axios";
 import RoomSelector from "@/components/patient/booking/RoomSelector";
@@ -19,6 +17,7 @@ import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import Payment from "@/components/patient/booking/Payment";
 
 interface Patient {
+  _id: String;
   numberId?: string;
   fullName?: string;
   dateOfBirth?: Date;
@@ -31,35 +30,28 @@ export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
-  const { userId } = useAuth();
-  const [patient, setPatient] = useState<Patient>({});
+  const [patient, setPatient] = useState<Partial<Patient>>({});
+  const currentEmail = localStorage.getItem("currentEmail");
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
   };
+  // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:3000/patients/by-account/${userId}`
-        );
-        console.log(response.data);
-        setPatient(response.data);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-        } else {
-          console.error("An unexpected error occurred:", error);
-        }
-      }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+      );
+
+      setPatient(response.data[0]);
     };
 
-    if (userId) {
+    if (currentEmail) {
       fetchPatientByAccountId();
     } else {
-      console.log("userId is not defined");
+      console.log("Email is not defined");
     }
-  }, [userId]);
+  }, []);
   const renderMainContent = () => {
     switch (activeSection) {
       case "calendarSelector":

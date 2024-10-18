@@ -1,12 +1,5 @@
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CalendarIcon,
   MapPinIcon,
@@ -15,6 +8,8 @@ import {
   UserIcon,
   Trash2Icon,
   PencilIcon,
+  Dog,
+  Cat,
 } from "lucide-react";
 import { useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
@@ -43,32 +38,36 @@ interface Patient {
 export default function PatientProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const { userId } = useAuth();
-  // const [patient, setPatient] = useState<Patient>({});
   const [patient, setPatient] = useState<Partial<Patient>>({});
-
+  const currentId = localStorage.getItem("currentId") || userId;
+  const currentEmail = localStorage.getItem("currentEmail");
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
   };
+
+  // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/by-account/${userId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
       );
-      setPatient(response.data);
+
+      setPatient(response.data[0]);
     };
 
-    if (userId) {
+    if (currentEmail) {
       fetchPatientByAccountId();
     } else {
-      console.log("userId is not defined");
+      console.log("Email is not defined");
     }
-  }, [userId]);
+  }, []);
 
+  // Xoá hồ sơ bệnh nhân
   const handleDelete = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/patients/${patient._id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
       );
       setPatient(response.data);
     } catch (error) {
@@ -86,12 +85,18 @@ export default function PatientProfile() {
       <p className="text-base font-semibold text-blue-500">HỒ SƠ BỆNH NHÂN</p>
       {Object.keys(patient).length !== 0 && (
         <div className="flex items-center space-x-4 border rounded-md p-4 ">
-          <Avatar className="w-14 h-14 border-white">
-            <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
-          </Avatar>
+          {patient.gender?.toLocaleLowerCase() === "male" ? (
+            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+              <Dog className="text-blue-500" />
+            </div>
+          ) : (
+            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+              <Cat className="text-pink-500" />
+            </div>
+          )}
           <div>
             <p className="text-base font-semibold">{patient.fullName}</p>
-            <p className="text-slate-500">ID: {patient.numberId}</p>
+            <p className="text-slate-500">Mã bệnh nhân: {patient._id}</p>
           </div>
         </div>
       )}
@@ -106,7 +111,8 @@ export default function PatientProfile() {
           <div className="flex items-center space-x-3">
             <UserIcon className="text-blue-500 h-4 w-4" />
             <span className="text-slate-600 text-base">
-              Gender: {patient.gender}
+              Gender:{" "}
+              {patient.gender?.toLocaleLowerCase() === "female" ? "Nữ" : "Nam"}
             </span>
           </div>
           <div className="flex items-center space-x-3">

@@ -16,11 +16,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
+import { useEffect, useState } from "react";
 export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
-  const userId2 = usePathname().split("/")[1];
+  const [currentId, setCurrentId] = useState("");
+  useEffect(() => setCurrentId(localStorage.getItem("currentId") || ""), []);
+
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/quy-trinh", label: "QUY TRÌNH" },
@@ -37,19 +40,22 @@ export default function NavBar() {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            // Authorization: `Bearer ${token}`,
           },
         }
       );
-
       if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
+        const errorData = await res.json();
+        throw new Error(
+          errorData.message || `HTTP error! status: ${res.status}`
+        );
       }
 
       const data = await res.json();
 
       if (data.status === "success") {
-        localStorage.removeItem("email");
-        localStorage.removeItem("password");
+        localStorage.removeItem("currentId");
+        localStorage.removeItem("token");
 
         toast({
           variant: "default",
@@ -96,16 +102,11 @@ export default function NavBar() {
 
           {/* Dark Mode */}
           <ModeToggle></ModeToggle>
-
-          {(userId && userId === "user_2mhwov955PdUhVgruqpERpKsFI3") ||
-          userId === "user_2mQagC8cN1qekfGHPefv3QRKkYD" ? (
-            ""
-          ) : (
-            <DropdownMenuToggle></DropdownMenuToggle>
-          )}
+          <DropdownMenuToggle></DropdownMenuToggle>
         </div>
       );
-    if (userId2 && userId2 !== "sign-in" && userId2 !== "sign-up")
+    // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
+    if (currentId)
       return (
         <div className="flex flex-row gap-3 justify-end">
           <DropdownMenu>
@@ -134,9 +135,9 @@ export default function NavBar() {
             </DropdownMenuContent>
           </DropdownMenu>
           <ModeToggle></ModeToggle>
+          <DropdownMenuToggle></DropdownMenuToggle>
         </div>
       );
-    // Nếu có id của User login tài khoản của phòng khám
     return (
       <div className="flex flex-row gap-3 justify-end">
         <Link href={"/sign-up"}>

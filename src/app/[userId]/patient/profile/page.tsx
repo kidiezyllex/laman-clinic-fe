@@ -24,6 +24,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Calendar,
   CalendarIcon,
+  Cat,
+  Dog,
   MailIcon,
   MapPinIcon,
   PhoneIcon,
@@ -34,6 +36,7 @@ import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { format } from "date-fns";
 interface Patient {
+  _id: String;
   numberId?: string;
   fullName?: string;
   dateOfBirth?: Date;
@@ -44,35 +47,29 @@ interface Patient {
 }
 export default function CreatePatientProfile() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [patient, setPatient] = useState<Patient>({});
+  const [patient, setPatient] = useState<Partial<Patient>>({});
   const { userId } = useAuth();
+  const currentEmail = localStorage.getItem("currentEmail");
 
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
   };
+  // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/by-account/${userId}`
-        );
-        setPatient(response.data);
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error("Axios error:", error.response?.data || error.message);
-        } else {
-          console.error("An unexpected error occurred:", error);
-        }
-      }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+      );
+      setPatient(response.data[0]);
     };
 
-    if (userId) {
+    if (currentEmail) {
       fetchPatientByAccountId();
     } else {
-      console.log("userId is not defined");
+      console.log("Email is not defined");
     }
-  }, [userId]);
+  }, []);
   return (
     <div>
       <Breadcrumb>
@@ -109,15 +106,21 @@ export default function CreatePatientProfile() {
               </h3>
               <div className="grid grid-cols-3 gap-4">
                 <div className="col-span-1 flex items-center space-x-3 border rounded-md p-4">
-                  <Avatar className="w-14 h-14 border-white">
-                    <AvatarFallback className="text-base font-semibold bg-secondary"></AvatarFallback>
-                  </Avatar>
+                  {patient.gender?.toLocaleLowerCase() === "male" ? (
+                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                      <Dog className="text-blue-500" />
+                    </div>
+                  ) : (
+                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                      <Cat className="text-pink-500" />
+                    </div>
+                  )}
                   <div>
                     <p className="text-base font-semibold text-start">
                       {patient.fullName}
                     </p>
                     <p className="text-slate-500 text-start">
-                      CCCD: {patient.numberId}
+                      Mã bệnh nhân: {patient._id}
                     </p>
                   </div>
                 </div>

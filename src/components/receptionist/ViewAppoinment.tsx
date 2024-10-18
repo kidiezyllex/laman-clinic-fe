@@ -99,12 +99,9 @@ export default function ViewAppointment() {
     try {
       setIsLoading(true);
       const payload = {
-        patientId: {
-          ...selectedAppointment,
-        },
+        patientId: selectedAppointment?.id,
         appointmentDate: new Date(),
         reason,
-        status: "Scheduled",
         specialization: selectedAppointment?.specialization,
       };
       const response = await axios.post(
@@ -189,7 +186,7 @@ export default function ViewAppointment() {
           >
             <div className="flex flex-row gap-2 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
-              appointment.gender.toLowerCase() === "nam" ? (
+                appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
@@ -271,7 +268,7 @@ export default function ViewAppointment() {
                 id="gender"
                 value={
                   selectedAppointment?.gender.toLowerCase() === "male" ||
-                  selectedAppointment?.gender.toLowerCase() === "nam"
+                    selectedAppointment?.gender.toLowerCase() === "nam"
                     ? "Nam"
                     : "Nữ"
                 }
@@ -328,9 +325,9 @@ export default function ViewAppointment() {
           </div>
           <div>
             {selectedAppointment?.appointmentDateByPatient &&
-            getHoursBetweenDates(
-              selectedAppointment?.appointmentDateByPatient as Date
-            ) >= 1 ? (
+              getHoursBetweenDates(
+                selectedAppointment?.appointmentDateByPatient as Date
+              ) >= 1 ? (
               <div className="w-full p-4 bg-blue-400 rounded-md border">
                 <p className="text-white">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}

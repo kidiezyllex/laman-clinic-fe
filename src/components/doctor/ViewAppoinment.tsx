@@ -70,7 +70,7 @@ interface Patient {
 }
 
 interface Appointment {
-  _id: string;
+  id: string;
   patientId: Patient;
   appointmentDate: string;
   reason: string;
@@ -84,59 +84,59 @@ const FormSchema = z.object({
     .min(3, { message: "Room number phải có ít nhất 3 ký tự." }) // Tối thiểu 3 ký tự
     .max(3, { message: "Room number chỉ được tối đa 3 ký tự." }), // Tối đa 3 ký tự
 });
-const appointments = [
-  {
-    patientId: {
-      id: "566777722918",
-      appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
-      specialization: "Cardiology",
-      fullName: "Bui Tran Thien An",
-      dateOfBirth: "2004-09-10T17:00:00.000Z",
-      gender: "Male",
-      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-      phone: "+84904548277",
-      email: "benhnhan1@gmail.com",
-      medicalHistory: [],
-    },
-    appointmentDate: "2024-10-11T16:11:50.261Z",
-    reason: "Gặp bác sĩ 123",
-    specialization: "Cardiology",
-  },
-  {
-    patientId: {
-      id: "566777729999",
-      appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
-      specialization: "Cardiology",
-      fullName: "Bui Tran Thien An",
-      dateOfBirth: "2004-09-10T17:00:00.000Z",
-      gender: "Female",
-      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-      phone: "+84904548277",
-      email: "benhnhan1@gmail.com",
-      medicalHistory: [],
-    },
-    appointmentDate: "2024-10-11T16:11:50.261Z",
-    reason: "Gặp bác sĩ 123",
-    specialization: "Cardiology",
-  },
-  {
-    patientId: {
-      id: "566777729999",
-      appointmentDateByPatient: "2024-10-12T17:00:00.000Z",
-      specialization: "Cardiology",
-      fullName: "Bui Tran Thien An",
-      dateOfBirth: "2004-09-10T17:00:00.000Z",
-      gender: "Female",
-      address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-      phone: "+84904548277",
-      email: "benhnhan1@gmail.com",
-      medicalHistory: [],
-    },
-    appointmentDate: "2024-10-12T16:11:50.261Z",
-    reason: "Gặp bác sĩ 123",
-    specialization: "Cardiology",
-  },
-];
+// const appointments = [
+//   {
+//     patientId: {
+//       id: "566777722918",
+//       appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
+//       specialization: "Cardiology",
+//       fullName: "Bui Tran Thien An",
+//       dateOfBirth: "2004-09-10T17:00:00.000Z",
+//       gender: "Male",
+//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+//       phone: "+84904548277",
+//       email: "benhnhan1@gmail.com",
+//       medicalHistory: [],
+//     },
+//     appointmentDate: "2024-10-11T16:11:50.261Z",
+//     reason: "Gặp bác sĩ 123",
+//     specialization: "Cardiology",
+//   },
+//   {
+//     patientId: {
+//       id: "566777729999",
+//       appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
+//       specialization: "Cardiology",
+//       fullName: "Bui Tran Thien An",
+//       dateOfBirth: "2004-09-10T17:00:00.000Z",
+//       gender: "Female",
+//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+//       phone: "+84904548277",
+//       email: "benhnhan1@gmail.com",
+//       medicalHistory: [],
+//     },
+//     appointmentDate: "2024-10-11T16:11:50.261Z",
+//     reason: "Gặp bác sĩ 123",
+//     specialization: "Cardiology",
+//   },
+//   {
+//     patientId: {
+//       id: "566777729999",
+//       appointmentDateByPatient: "2024-10-12T17:00:00.000Z",
+//       specialization: "Cardiology",
+//       fullName: "Bui Tran Thien An",
+//       dateOfBirth: "2004-09-10T17:00:00.000Z",
+//       gender: "Female",
+//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
+//       phone: "+84904548277",
+//       email: "benhnhan1@gmail.com",
+//       medicalHistory: [],
+//     },
+//     appointmentDate: "2024-10-12T16:11:50.261Z",
+//     reason: "Gặp bác sĩ 123",
+//     specialization: "Cardiology",
+//   },
+// ];
 
 const formatDate = (dateString: string) => {
   return format(parseISO(dateString), "dd/MM/yyyy");
@@ -150,6 +150,8 @@ export default function ViewAppointment() {
   const { toast } = useToast();
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
+  const [appointments, setAppointments] =
+    useState<Appointment[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [isOpen2, setIsOpen2] = useState(false);
   const [isCreatePrescription, setIsCreatePrescription] = useState(false);
@@ -191,7 +193,8 @@ export default function ViewAppointment() {
       );
 
       const data = await response.json();
-      console.log("render data::", data);
+      console.log("render data::", data.data);
+      setAppointments(data.data)
     };
 
     fetchAppointments();
@@ -267,11 +270,10 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
-                      isSameDay(day, new Date())
-                        ? "bg-blue-500 text-white"
-                        : "text-foreground"
-                    }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
+                      ? "bg-blue-500 text-white"
+                      : "text-foreground"
+                      }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
@@ -286,16 +288,16 @@ export default function ViewAppointment() {
                     )
                     .map((appointment) => (
                       <div
-                        key={appointment._id}
+                        key={appointment.id}
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
                         {/* <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
                           <User className="text-blue-500 h-6 w-6" />
                         </div> */}
-                        {appointment.patientId.gender.toLowerCase() ===
+                        {/* {appointment.patientId.gender.toLowerCase() ===
                           "male" ||
-                        appointment.patientId.gender.toLowerCase() === "nam" ? (
+                          appointment.patientId.gender.toLowerCase() === "nam" ? (
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                             <Dog className="text-blue-500" />
                           </div>
@@ -303,9 +305,9 @@ export default function ViewAppointment() {
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
                             <Cat className="text-pink-500" />
                           </div>
-                        )}
+                        )} */}
                         <p className="text-xs font-semibold text-center">
-                          {appointment.patientId.fullName}
+                          {appointment.reason}
                         </p>
                       </div>
                     ))}

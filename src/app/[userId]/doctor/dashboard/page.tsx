@@ -1,21 +1,9 @@
 "use client";
-import { useAuth } from "@clerk/nextjs";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  CalendarDays,
-  ContactRound,
-  HistoryIcon,
-  Home,
-  MessageCircleMore,
-  NotepadText,
-  User,
-} from "lucide-react";
+import { Bell, ContactRound, User } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Dashboard from "@/components/receptionist/Dashboard";
 import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
@@ -25,7 +13,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import PatientProfile from "@/components/patient/profile/PatientProfile";
 import ViewAppointment from "@/components/doctor/ViewAppoinment";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("patientProfile");

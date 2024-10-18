@@ -17,16 +17,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
+import { getUserData } from "../../../actions/getUserData";
 export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
   const [currentId, setCurrentId] = useState("");
   const [role, setRole] = useState("");
+  const [token, setToken] = useState("");
+
   useEffect(() => {
     setCurrentId(localStorage.getItem("currentId") || "");
-    console.log(localStorage.getItem("role"));
     setRole(localStorage.getItem("role") || "");
+    setToken(localStorage.getItem("token") || "");
   }, []);
 
   const navLinks = [
@@ -36,6 +39,7 @@ export default function NavBar() {
     { href: "/hoi-dap", label: "HỎI ĐÁP" },
     { href: "/lien-he", label: "LIÊN HỆ" },
   ];
+
   const handleLogOut = async () => {
     try {
       const res = await fetch(
@@ -45,7 +49,7 @@ export default function NavBar() {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            // Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
@@ -81,7 +85,7 @@ export default function NavBar() {
       toast({
         variant: "destructive",
         title: "Thất bại!",
-        description: "Có lỗi xảy ra trong quá trình đăng xuất.",
+        description: error + "",
       });
     }
   };
@@ -94,11 +98,11 @@ export default function NavBar() {
             <UserButton afterSignOutUrl="/">
               <UserButton.MenuItems>
                 <UserButton.Action
-                  label="Xem lịch sử khám"
+                  label="Cập nhật tài khoản"
                   labelIcon={<HistoryIcon className="h-4 w-4" />}
-                  onClick={() => {
-                    router.push(`/${userId}/patient/medical-history`);
-                    router.refresh();
+                  onClick={async () => {
+                    const user = await getUserData(userId);
+                    console.log(user);
                   }}
                 />
               </UserButton.MenuItems>

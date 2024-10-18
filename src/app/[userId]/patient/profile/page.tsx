@@ -35,6 +35,7 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { format } from "date-fns";
+import { usePathname } from "next/navigation";
 interface Patient {
   _id: String;
   numberId?: string;
@@ -49,6 +50,7 @@ export default function CreatePatientProfile() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [patient, setPatient] = useState<Partial<Patient>>({});
   const { userId } = useAuth();
+  const idByClerk = usePathname().split("/")[1];
   const currentEmail = localStorage.getItem("currentEmail");
 
   const formatDate = (date: Date | undefined) => {
@@ -63,8 +65,8 @@ export default function CreatePatientProfile() {
       );
       setPatient(response.data[0]);
     };
-
-    if (currentEmail) {
+    if (idByClerk === "undefined") setPatient({});
+    else if (currentEmail) {
       fetchPatientByAccountId();
     } else {
       console.log("Email is not defined");

@@ -46,6 +46,7 @@ export default function Page() {
       localStorage.setItem("currentId", (data as any)?.data?.id);
       localStorage.setItem("token", (data as any)?.token);
       localStorage.setItem("currentEmail", email);
+      localStorage.setItem("role", (data as any)?.data?.role);
 
       if (data.status === "success") {
         if (data.data?.role === "doctor") {

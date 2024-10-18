@@ -33,7 +33,6 @@ export default function RoomSelector({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors?specialization=${selectedSpe}`
       );
-      // response.data.filter((item)=> {item.})
       const getDoctorsByDay = response.data.filter(
         (doctor: { schedule: any[] }) =>
           doctor.schedule.some(

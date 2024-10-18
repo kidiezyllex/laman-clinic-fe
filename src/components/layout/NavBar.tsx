@@ -22,7 +22,12 @@ export default function NavBar() {
   const router = useRouter();
   const { userId } = useAuth();
   const [currentId, setCurrentId] = useState("");
-  useEffect(() => setCurrentId(localStorage.getItem("currentId") || ""), []);
+  const [role, setRole] = useState("");
+  useEffect(() => {
+    setCurrentId(localStorage.getItem("currentId") || "");
+    console.log(localStorage.getItem("role"));
+    setRole(localStorage.getItem("role") || "");
+  }, []);
 
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
@@ -135,7 +140,9 @@ export default function NavBar() {
             </DropdownMenuContent>
           </DropdownMenu>
           <ModeToggle></ModeToggle>
-          <DropdownMenuToggle></DropdownMenuToggle>
+          {role === "patient" ? (
+            <DropdownMenuToggle></DropdownMenuToggle>
+          ) : null}
         </div>
       );
     return (

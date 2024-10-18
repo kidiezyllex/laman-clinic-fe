@@ -58,9 +58,30 @@ export default function Notification() {
 
     const channel = pusher.subscribe("appointments");
     channel.bind("new-appointment", async (data: any) => {
+      // fetch data cũ --> sort data cũ --> push thêm data mới
+      const res = await axios.get(`/api/notification`);
+      setNotifications([
+        {
+          message: data.appointment.fullName + " đã đăng ký hẹn khám.",
+          createdAt: data.date,
+        },
+        ...res.data.sort(
+          (a: { createdAt: string }, b: { createdAt: string }) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        ),
+      ]);
+      console.log([
+        {
+          message: data.appointment.fullName + " đã đăng ký hẹn khám.",
+          createdAt: data.date,
+        },
+        ...res.data,
+      ]);
+
+      // sau đó mới post sau
       await axios.post(`/api/notification`, {
         message: data.appointment.fullName + " đã đăng ký hẹn khám.",
-        timestamp: data.timestamp,
+        createdAt: data.date,
       });
     });
 
@@ -72,7 +93,12 @@ export default function Notification() {
   useEffect(() => {
     const fecthData = async () => {
       const res = await axios.get(`/api/notification`);
-      setNotifications(res.data);
+      setNotifications(
+        res.data.sort(
+          (a: { createdAt: string }, b: { createdAt: string }) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        )
+      );
       console.log(res.data);
     };
     fecthData();
@@ -80,12 +106,9 @@ export default function Notification() {
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <div className="border rounded-md p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2">
-          <Badge>{unreadCount} chưa đọc</Badge>
-          <Badge>đã đọc</Badge>
-        </div>
-      </div>
+      <p className="text-base font-semibold text-blue-500">
+        LỊCH SỬ ĐĂNG KÝ / HUỶ KHÁM
+      </p>
       <ScrollArea className="h-[90%] w-full rounded-md border p-4">
         {notifications.map((nt) => (
           <div
@@ -94,7 +117,8 @@ export default function Notification() {
           >
             <p className="text-base text-gray-700">{nt.message}</p>
             <Badge className="w-fit" variant={"default"}>
-              Khoảng {getTimeDifference(nt?.createdAt, new Date())} trước
+              Khoảng {getTimeDifference(nt?.createdAt as Date, new Date())}{" "}
+              trước
             </Badge>
           </div>
         ))}

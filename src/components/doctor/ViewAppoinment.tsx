@@ -189,7 +189,7 @@ export default function ViewAppointment() {
           specialization: "Cardiology",
         },
         {
-          patientId: "566777722918",
+          patientId: "BN-JCXX2B",
           appointmentDate: "2024-10-18T18:54:06.403Z",
           reason: "benh ho",
           specialization: "Cardiology",
@@ -228,7 +228,7 @@ export default function ViewAppointment() {
         medications: rows,
         dateIssued: new Date(),
       };
-      console.log(payload);
+      // console.log(payload);
       const response3 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
         payload

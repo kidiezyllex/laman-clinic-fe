@@ -46,12 +46,20 @@ interface Medication {
   instructions: string;
   _id: string;
 }
+
+interface Patient {
+  _id: String;
+  fullName?: string;
+  phone?: string;
+  email?: string;
+}
 interface Prescription {
   _id: string;
   patientId: string;
   doctorId: string;
   medications: Medication[];
   dateIssued: Date;
+  patient: Patient;
 }
 
 export default function ViewPrescription() {
@@ -81,6 +89,15 @@ export default function ViewPrescription() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
       );
+      // const response2 = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?_id=${selectedAppointment?.patientId}`
+      // );
+      // patient: {
+      //   _id: response2.data[0]._id,
+      //   fullName: response2.data[0].fullName,
+      //   phone: response2.data[0].phone,
+      //   email: response2.data[0].email,
+      // }
       setPrescriptions(response.data);
     };
 
@@ -152,7 +169,7 @@ export default function ViewPrescription() {
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (
           <Card key={prescription._id} className="mb-6">
-            <div className="flex items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
+            <div className="grid grid-cols-3 items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
               <p className="flex items-center text-base">
                 <Calendar className="h-4 w-4 mr-2" />
                 {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
@@ -169,21 +186,19 @@ export default function ViewPrescription() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Tên thuốc</TableHead>
+                  <TableHead>Tên thuốc</TableHead>
                   <TableHead>Liều lượng</TableHead>
                   <TableHead>Số lượng</TableHead>
-                  <TableHead className="text-right">Cách dùng</TableHead>
+                  <TableHead>Cách dùng</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {prescription.medications.map((medication) => (
                   <TableRow key={medication._id}>
-                    <TableCell className="font-medium">
-                      {medication.medicationName}
-                    </TableCell>
+                    <TableCell>{medication.medicationName}</TableCell>
                     <TableCell>{medication.dose}</TableCell>
                     <TableCell>{medication.quantity}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="w-[45%]">
                       {medication.instructions}
                     </TableCell>
                   </TableRow>

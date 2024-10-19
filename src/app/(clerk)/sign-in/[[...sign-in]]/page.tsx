@@ -63,6 +63,13 @@ export default function Page() {
             description: data.message,
           });
           router.push(`/${data.data.id}/receptionist/dashboard`);
+        } else if (data.data?.role === "pharmacist") {
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: data.message,
+          });
+          router.push(`/${data.data.id}/pharmacist/dashboard`);
         } else router.push("/");
       } else {
         toast({

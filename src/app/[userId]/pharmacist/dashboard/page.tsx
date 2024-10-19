@@ -2,9 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Bell, ContactRound, User } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,19 +10,20 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ViewAppointment from "@/components/doctor/ViewAppoinment";
-import DoctorProfile from "@/components/doctor/DoctorProfile";
+import ViewPrescription from "@/components/pharmacist/ViewPrescription";
+// import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
+// import Notification from "@/components/pharmacist/Notification";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
 
   const renderMainContent = () => {
     switch (activeSection) {
       case "appoinments":
-        return <ViewAppointment />;
+        return <ViewPrescription />;
       case "profile":
-        return <DoctorProfile />;
+      // return <PharmacistProfile />;
       // case "notification":
-      // return <Notification />;
+      //   return <Notification />;
       default:
         return null;
     }
@@ -43,7 +41,7 @@ export default function Page() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink href="/components" className="text-base">
-              BÁC SĨ
+              DƯỢC SĨ
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
@@ -54,8 +52,8 @@ export default function Page() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[200px_1fr] gap-3 mt-8">
-        <div className="hidden h-full border bg-background md:block rounded-md">
+      <div className="grid w-full md:grid-cols-[220px_1fr] lg:grid-cols-[200px_1fr] gap-3 mt-8">
+        <div className="hidden min-h-full h-full border bg-background md:block rounded-md">
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
@@ -71,30 +69,6 @@ export default function Page() {
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
                 </Link>
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicalReport")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalReport"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <NotepadText className="h-4 w-4" />
-                  Phiếu khám bệnh
-                </Link> */}
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("messages")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "messages"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <MessageCircleMore className="h-4 w-4" />
-                  Tin nhắn
-                </Link> */}
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
@@ -119,18 +93,6 @@ export default function Page() {
                   <User className="h-4 w-4" />
                   Tài khoản
                 </Link>
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicalHistory")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalHistory"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <HistoryIcon className="h-4 w-4" />
-                  Lịch sử khám bệnh
-                </Link> */}
               </nav>
             </div>
           </div>

@@ -30,6 +30,10 @@ export default function NavBar() {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");
     setToken(localStorage.getItem("token") || "");
+    console.log(
+      localStorage.getItem("role"),
+      localStorage.getItem("currentEmail")
+    );
   }, []);
 
   const navLinks = [

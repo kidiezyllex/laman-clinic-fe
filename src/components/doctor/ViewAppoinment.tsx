@@ -1,10 +1,10 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
   format,
   addDays,
@@ -28,7 +28,6 @@ import {
   Cat,
   ChevronLeft,
   ChevronRight,
-  Clock,
   Dog,
   FileText,
   Mail,
@@ -50,7 +49,7 @@ import { usePathname } from "next/navigation";
 import { ScrollArea } from "../ui/scroll-area";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-
+import { medicationData } from "./medicationData";
 interface MedicalHistory {
   _id: string;
   disease: string;
@@ -58,157 +57,165 @@ interface MedicalHistory {
   treatment: string;
 }
 
-interface Patient {
-  _id: string;
-  fullName: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  phone: string;
+interface Appointment {
+  patientId: string;
+  appointmentDate: string;
+  reason: string;
+  specialization: string;
   email: string;
+  fullName: string;
+  gender: string;
+  phone: string;
   medicalHistory: MedicalHistory[];
 }
 
-interface Appointment {
-  id: string;
-  patientId: Patient;
-  appointmentDate: string;
-  reason: string;
-  status: string;
+interface MedicationRow {
+  id: number;
+  medicationName: string;
+  dose: string;
+  quantity: number;
+  instructions: string;
 }
-
-const FormSchema = z.object({
-  roomNumber: z
-    .string()
-    .regex(/^\d+$/, { message: "Chỉ được nhập số." }) // Chỉ cho phép số
-    .min(3, { message: "Room number phải có ít nhất 3 ký tự." }) // Tối thiểu 3 ký tự
-    .max(3, { message: "Room number chỉ được tối đa 3 ký tự." }), // Tối đa 3 ký tự
-});
-// const appointments = [
-//   {
-//     patientId: {
-//       id: "566777722918",
-//       appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
-//       specialization: "Cardiology",
-//       fullName: "Bui Tran Thien An",
-//       dateOfBirth: "2004-09-10T17:00:00.000Z",
-//       gender: "Male",
-//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-//       phone: "+84904548277",
-//       email: "benhnhan1@gmail.com",
-//       medicalHistory: [],
-//     },
-//     appointmentDate: "2024-10-11T16:11:50.261Z",
-//     reason: "Gặp bác sĩ 123",
-//     specialization: "Cardiology",
-//   },
-//   {
-//     patientId: {
-//       id: "566777729999",
-//       appointmentDateByPatient: "2024-10-11T17:00:00.000Z",
-//       specialization: "Cardiology",
-//       fullName: "Bui Tran Thien An",
-//       dateOfBirth: "2004-09-10T17:00:00.000Z",
-//       gender: "Female",
-//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-//       phone: "+84904548277",
-//       email: "benhnhan1@gmail.com",
-//       medicalHistory: [],
-//     },
-//     appointmentDate: "2024-10-11T16:11:50.261Z",
-//     reason: "Gặp bác sĩ 123",
-//     specialization: "Cardiology",
-//   },
-//   {
-//     patientId: {
-//       id: "566777729999",
-//       appointmentDateByPatient: "2024-10-12T17:00:00.000Z",
-//       specialization: "Cardiology",
-//       fullName: "Bui Tran Thien An",
-//       dateOfBirth: "2004-09-10T17:00:00.000Z",
-//       gender: "Female",
-//       address: "Huyện Hàm Yên,Tỉnh Tuyên Quang",
-//       phone: "+84904548277",
-//       email: "benhnhan1@gmail.com",
-//       medicalHistory: [],
-//     },
-//     appointmentDate: "2024-10-12T16:11:50.261Z",
-//     reason: "Gặp bác sĩ 123",
-//     specialization: "Cardiology",
-//   },
-// ];
 
 const formatDate = (dateString: string) => {
   return format(parseISO(dateString), "dd/MM/yyyy");
 };
+const medicationSchema = z.object({
+  medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
+  dose: z.string().min(1, "Liều lượng không được để trống"),
+  quantity: z.coerce.number().min(1, "Số lượng phải lớn hơn 0"),
+  instructions: z.string().optional(),
+});
 
+const formSchema = z.object({
+  medications: z.array(medicationSchema),
+});
 export default function ViewAppointment() {
-  const [selectedRoomNumber, setSelectedRoomNumber] = useState("");
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState("Week");
-  const doctorId = usePathname().split("/")[1];
+  // built-in functions
   const { toast } = useToast();
-  const [selectedAppointment, setSelectedAppointment] =
-    useState<Appointment | null>(null);
-  const [appointments, setAppointments] =
-    useState<Appointment[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isOpen2, setIsOpen2] = useState(false);
-  const [isCreatePrescription, setIsCreatePrescription] = useState(false);
-
-  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
-  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      roomNumber: "000",
+      medications: [
+        { medicationName: "", dose: "", quantity: 0, instructions: "" },
+      ],
     },
   });
+  // state
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState("Week");
+  const [rows, setRows] = useState<MedicationRow[]>([
+    { id: 1, medicationName: "", dose: "", quantity: 0, instructions: "" },
+  ]);
+  const [selectedAppointment, setSelectedAppointment] =
+    useState<Appointment | null>(null);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
+  const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
+  const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-  const togglePrescriptionForm = () => {
+  // Toggle Form tạo đơn thuốc
+  const handleCanclePrescription = () => {
+    setRows([
+      { id: 1, medicationName: "", dose: "", quantity: 0, instructions: "" },
+    ]);
     setShowPrescriptionForm(!showPrescriptionForm);
   };
 
-  // Handle submit cập nhật Phòng
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
-    const response = await axios.patch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`,
-      {
-        roomNumber: data.roomNumber,
-      }
-    );
-    toast({
-      title: "Thành công!",
-      description: "Đã cập nhật số phòng!",
-    });
-    setIsOpen2(false);
-  }
+  // Thêm 1 row
+  const addRow = () => {
+    const newRow: MedicationRow = {
+      id: rows.length + 1,
+      medicationName: "",
+      dose: "",
+      quantity: 0,
+      instructions: "",
+    };
+    setRows([...rows, newRow]);
+  };
 
-  // Fecth Appointments 1 lần
+  // Cập nhật row
+  const updateRow = (
+    id: number,
+    field: keyof MedicationRow,
+    value: string | number
+  ) => {
+    setRows(
+      rows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
+    );
+  };
+
+  // Tạo đơn thuốc
+  const handleCreatePrescription = () => {
+    console.log(rows);
+    console.log("hello");
+  };
+
+  const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
+  const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
+
+  // Fill value trên các row
+  const handleSelectMedicationName = (value: string, rowId: number) => {
+    const findMedication = medicationData.find(
+      (item) => item.medicationName === value
+    );
+    setRows(
+      rows.map((row) =>
+        row.id === rowId ? { ...row, ...findMedication } : row
+      )
+    );
+  };
+
+  // Toggle chi tiết lịch hẹn
+  const openAppointmentDetails = (appointment: Appointment) => {
+    setSelectedAppointment(appointment);
+    setIsOpen(true);
+  };
+
+  // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      // const response = await fetch(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      // );
+
+      // const data = await response.json();
+      // setAppointments(data.data);
+
+      // thay sampleData bằng data.data
+      const sampleData = [
+        {
+          patientId: "BN-JCXX2B",
+          appointmentDate: "2024-10-18T18:55:05.587Z",
+          reason: "benh xxx",
+          specialization: "Cardiology",
+        },
+        {
+          patientId: "566777722918",
+          appointmentDate: "2024-10-18T18:54:06.403Z",
+          reason: "benh ho",
+          specialization: "Cardiology",
+        },
+      ];
+      const newAppointments = await Promise.all(
+        sampleData.map(async (appointment) => {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?_id=${appointment.patientId}`
+          );
+          const patientData = response.data[0];
+          return { ...appointment, ...patientData };
+        })
       );
 
-      const data = await response.json();
-      console.log("render data::", data.data);
-      setAppointments(data.data)
+      setAppointments(newAppointments);
     };
 
     fetchAppointments();
     // getData Bác sĩ, nếu room khác mặc định thì set True
     setIsOpen2(false);
   }, []);
-
-  const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
-  const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
-
-  const openAppointmentDetails = (appointment: Appointment) => {
-    setSelectedAppointment(appointment);
-    setIsOpen(true);
-  };
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
@@ -270,10 +277,11 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
-                      ? "bg-blue-500 text-white"
-                      : "text-foreground"
-                      }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
+                      isSameDay(day, new Date())
+                        ? "bg-blue-500 text-white"
+                        : "text-foreground"
+                    }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
@@ -288,16 +296,11 @@ export default function ViewAppointment() {
                     )
                     .map((appointment) => (
                       <div
-                        key={appointment.id}
+                        key={appointment.patientId}
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
-                        {/* <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
-                          <User className="text-blue-500 h-6 w-6" />
-                        </div> */}
-                        {/* {appointment.patientId.gender.toLowerCase() ===
-                          "male" ||
-                          appointment.patientId.gender.toLowerCase() === "nam" ? (
+                        {appointment.gender.toLowerCase() === "male" ? (
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                             <Dog className="text-blue-500" />
                           </div>
@@ -305,9 +308,12 @@ export default function ViewAppointment() {
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
                             <Cat className="text-pink-500" />
                           </div>
-                        )} */}
+                        )}
                         <p className="text-xs font-semibold text-center">
-                          {appointment.reason}
+                          {appointment.fullName}
+                        </p>
+                        <p className="text-xs font-semibold text-center text-slate-500">
+                          Lý do: {appointment.reason}
                         </p>
                       </div>
                     ))}
@@ -323,9 +329,17 @@ export default function ViewAppointment() {
           {selectedAppointment && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-500 text-white rounded-full"></div>
+                {selectedAppointment.gender.toLowerCase() === "male" ? (
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                    <Dog className="text-blue-500" />
+                  </div>
+                ) : (
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                    <Cat className="text-pink-500" />
+                  </div>
+                )}
                 <h2 className="text-md font-semibold">
-                  {selectedAppointment.patientId.fullName}
+                  {selectedAppointment.fullName}
                 </h2>
               </div>
               <Separator />
@@ -335,65 +349,58 @@ export default function ViewAppointment() {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Ngày sinh:{" "}
-                      {formatDate(selectedAppointment.patientId.dateOfBirth)}
+                      Ngày sinh:
+                      {/* {formatDate(selectedAppointment.dateOfBirth)} */}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Gender: {selectedAppointment.patientId.gender}
+                      Giới tính:{" "}
+                      {selectedAppointment.gender.toLowerCase() === "female"
+                        ? "Nữ"
+                        : "Nam"}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Address: {selectedAppointment.patientId.address}
+                      Địa chỉ:
+                      {/* {selectedAppointment.patientId.address} */}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Phone className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Phone: {selectedAppointment.patientId.phone}
+                      Số ĐT: {selectedAppointment.phone}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Email: {selectedAppointment.patientId.email}
+                      Email: {selectedAppointment.email}
                     </span>
                   </div>
                 </div>
                 <div className="grid gap-3">
-                  <h3 className="text-md font-semibold">Thông tin lịch hẹn</h3>
+                  <p className="text-md font-semibold">Thông tin lịch hẹn</p>
                   <div className="grid gap-2">
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-5 text-blue-500" />
                       <span className="text-sm">
-                        Date: {formatDate(selectedAppointment.appointmentDate)}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-5 text-blue-500" />
-                      <span className="text-sm">
-                        Time:{" "}
-                        {format(
-                          parseISO(selectedAppointment.appointmentDate),
-                          "HH:mm"
-                        )}
+                        Ngày hẹn khám:{" "}
+                        {formatDate(selectedAppointment.appointmentDate)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-5 text-blue-500" />
                       <span className="text-sm">
-                        Reason: {selectedAppointment.reason}
+                        Lý do khám: {selectedAppointment.reason}
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-5 text-blue-500" />
-                      <span className="text-sm">
-                        Status: {selectedAppointment.status}
-                      </span>
+                      <span className="text-sm">Trạng thái: Đang chờ khám</span>
                     </div>
                   </div>
                 </div>
@@ -401,84 +408,134 @@ export default function ViewAppointment() {
               <Separator />
               <div className="grid gap-3">
                 <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
-                {selectedAppointment.patientId.medicalHistory.map((history) => (
-                  <div key={history._id} className="grid gap-3">
-                    <span className="text-sm">Disease: {history.disease}</span>
-                    <span className="text-sm">
-                      Diagnosis Date: {formatDate(history.diagnosisDate)}
-                    </span>
-                    <span className="text-sm">
-                      Treatment: {history.treatment}
-                    </span>
-                  </div>
-                ))}
+                {selectedAppointment.medicalHistory.length === 0 ? (
+                  <p className="text-slate-500 text-sm">
+                    Chưa có lịch sử khám bệnh
+                  </p>
+                ) : (
+                  selectedAppointment.medicalHistory.map((history) => (
+                    <div key={history._id} className="grid gap-3">
+                      <span className="text-sm">
+                        Disease: {history.disease}
+                      </span>
+                      <span className="text-sm">
+                        Diagnosis Date: {formatDate(history.diagnosisDate)}
+                      </span>
+                      <span className="text-sm">
+                        Treatment: {history.treatment}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
               {showPrescriptionForm && (
                 <div className="">
                   <h3 className="text-md font-semibold mb-4">Tạo đơn thuốc</h3>
-                  <form className="space-y-4 border p-4 rounded-md">
-                    <div>
-                      <Label
-                        htmlFor="medication"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Thuốc
-                      </Label>
-                      <Input
-                        type="text"
-                        id="medication"
-                        name="medication"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="dosage"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Liều lượng
-                      </Label>
-                      <Input
-                        type="text"
-                        id="dosage"
-                        name="dosage"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor="instructions"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Hướng dẫn sử dụng
-                      </Label>
-                      <Textarea
-                        id="instructions"
-                        name="instructions"
-                        rows={3}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
-                      />
-                    </div>
-                    <Button type="submit" variant="default">
-                      Lưu đơn thuốc
-                    </Button>
-                  </form>
+                  <Form {...form}>
+                    <form className="space-y-4">
+                      <div className="grid grid-cols-4 gap-4 font-medium border p-3 rounded-md">
+                        <Label className="align-middle text-center">
+                          Tên thuốc
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Liều lượng
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Số lượng
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Hướng dẫn
+                        </Label>
+                      </div>
+                      {rows.map((row) => (
+                        <div key={row.id} className="grid grid-cols-4 gap-4">
+                          <Select
+                            onValueChange={(value) => {
+                              handleSelectMedicationName(value, row.id);
+                            }}
+                          >
+                            <FormControl>
+                              <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Chọn tên thuốc" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {medicationData.map((medication, index) => (
+                                <SelectItem
+                                  key={medication.medicationName}
+                                  value={medication.medicationName}
+                                >
+                                  {medication.medicationName}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <Input
+                            value={row.dose}
+                            onChange={(e) =>
+                              updateRow(row.id, "dose", e.target.value)
+                            }
+                            placeholder="Liều lượng"
+                          />
+                          <Input
+                            type="number"
+                            value={row.quantity}
+                            onChange={(e) =>
+                              updateRow(
+                                row.id,
+                                "quantity",
+                                parseInt(e.target.value)
+                              )
+                            }
+                            placeholder="Số lượng"
+                          />
+                          <Textarea
+                            value={row.instructions}
+                            onChange={(e) =>
+                              updateRow(row.id, "instructions", e.target.value)
+                            }
+                            placeholder="Hướng dẫn (có thể bỏ trống)"
+                          />
+                        </div>
+                      ))}
+                    </form>
+                  </Form>
                 </div>
               )}
-              <div className="flex flex-row gap-3 justify-end items-end flex-grow">
+              <div className="flex flex-row gap-3 justify-end items-end flex-grow mt-8">
                 {showPrescriptionForm ? (
-                  <Button
-                    variant="destructive"
-                    onClick={togglePrescriptionForm}
-                  >
-                    Huỷ
-                  </Button>
+                  <div className="flex flex-row gap-4 w-full justify-end">
+                    <Button
+                      type="button"
+                      onClick={addRow}
+                      variant="outline"
+                      className="self-start"
+                    >
+                      Thêm dòng
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleCanclePrescription()}
+                    >
+                      Huỷ đơn thuốc
+                    </Button>
+                    <Button onClick={() => handleCreatePrescription()}>
+                      Tạo đơn thuốc
+                    </Button>
+                  </div>
                 ) : (
-                  <Button variant="outline" onClick={togglePrescriptionForm}>
-                    Tạo đơn thuốc
-                  </Button>
+                  <div className="flex flex-row gap-4">
+                    <Button
+                      variant="outline"
+                      onClick={() =>
+                        setShowPrescriptionForm(!showPrescriptionForm)
+                      }
+                    >
+                      Tạo đơn thuốc
+                    </Button>
+                    <Button variant="secondary">Hoàn thành khám</Button>
+                  </div>
                 )}
-                <Button variant="secondary">Hoàn thành khám</Button>
               </div>
             </div>
           )}
@@ -486,12 +543,8 @@ export default function ViewAppointment() {
       </Dialog>
       <Dialog open={isOpen2} onOpenChange={setIsOpen2}>
         <DialogContent className="max-w-[900px] w-[50%] h-fit">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="w-2/3 space-y-6"
-            >
-              <FormField
+          <form className="w-2/3 space-y-6">
+            {/* <FormField
                 control={form.control}
                 name="roomNumber"
                 render={({ field }) => (
@@ -503,10 +556,9 @@ export default function ViewAppointment() {
                     <FormMessage />
                   </FormItem>
                 )}
-              />
-              <Button type="submit">Cập nhật</Button>
-            </form>
-          </Form>
+              /> */}
+            <Button type="submit">Cập nhật</Button>
+          </form>
         </DialogContent>
       </Dialog>
     </div>

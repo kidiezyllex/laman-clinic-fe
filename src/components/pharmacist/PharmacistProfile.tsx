@@ -43,7 +43,7 @@ interface Schedule {
   endTime: string;
   _id: string;
 }
-interface Receptionist {
+interface Pharmacist {
   _id: String;
   numberId?: string;
   fullName?: string;
@@ -54,10 +54,10 @@ interface Receptionist {
   email?: string;
   schedule?: Schedule[];
 }
-export default function ReceptionistProfile() {
+export default function PharmacistProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const userId = usePathname().split("/")[1];
-  const [receptionist, setReceptionist] = useState<Partial<Receptionist>>({});
+  const [pharmacist, setPharmacist] = useState<Partial<Pharmacist>>({});
   const currentEmail = localStorage.getItem("currentEmail");
   function generateTimeSlots(startTime: string, endTime: string) {
     const slots = [];
@@ -106,13 +106,13 @@ export default function ReceptionistProfile() {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
   };
-  // Fetch Data Lễ tân
+  // Fetch Data Dược sĩ
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${currentEmail}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${currentEmail}`
       );
-      setReceptionist(response.data[0]);
+      setPharmacist(response.data[0]);
     };
 
     if (currentEmail) {
@@ -124,11 +124,11 @@ export default function ReceptionistProfile() {
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <p className="text-base font-semibold text-blue-500">HỒ SƠ LỄ TÂN</p>
-      {Object.keys(receptionist).length !== 0 && (
+      <p className="text-base font-semibold text-blue-500">HỒ SƠ DƯỢC SĨ</p>
+      {Object.keys(pharmacist).length !== 0 && (
         <div className="flex flex-col border rounded-md p-4 gap-3">
           <div className="flex gap-3 items-center">
-            {receptionist.gender?.toLocaleLowerCase() === "male" ? (
+            {pharmacist.gender?.toLocaleLowerCase() === "male" ? (
               <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                 <Dog className="text-blue-500" />
               </div>
@@ -139,7 +139,7 @@ export default function ReceptionistProfile() {
             )}
             <div>
               <p className="text-base font-semibold">
-                Lễ tân: {receptionist.fullName}
+                Dược sĩ: {pharmacist.fullName}
               </p>
             </div>
           </div>
@@ -147,19 +147,19 @@ export default function ReceptionistProfile() {
             <div className="flex items-center space-x-3">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
               <span className="text-slate-600 text-base">
-                Ngày sinh: {formatDate(receptionist.dateOfBirth)}
+                Ngày sinh: {formatDate(pharmacist.dateOfBirth)}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
               <span className="text-slate-600 text-base">
-                Số ĐT: {receptionist.phone}
+                Số ĐT: {pharmacist.phone}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <MailIcon className="text-blue-500 h-4 w-4" />
               <span className="text-slate-600 text-base">
-                Email: {receptionist.email}
+                Email: {pharmacist.email}
               </span>
             </div>
           </div>
@@ -167,8 +167,8 @@ export default function ReceptionistProfile() {
       )}
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
       <div className="flex flex-col gap-3">
-        {Object.keys(receptionist).length !== 0 &&
-          (receptionist as any).schedule.map(
+        {Object.keys(pharmacist).length !== 0 &&
+          (pharmacist as any).schedule.map(
             (scheduleItem: {
               _id: Key | null | undefined;
               dayOfWeek:
@@ -204,7 +204,7 @@ export default function ReceptionistProfile() {
             )
           )}
       </div>
-      {Object.keys(receptionist).length !== 0 && (
+      {Object.keys(pharmacist).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
             variant="destructive"

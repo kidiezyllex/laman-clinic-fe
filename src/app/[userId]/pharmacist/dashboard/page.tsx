@@ -1,7 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, ContactRound, User } from "lucide-react";
+import {
+  Bell,
+  BriefcaseMedical,
+  ContactRound,
+  Newspaper,
+  Pill,
+  User,
+} from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,7 +18,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import ViewPrescription from "@/components/pharmacist/ViewPrescription";
-// import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
+import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 // import Notification from "@/components/pharmacist/Notification";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
@@ -21,8 +28,8 @@ export default function Page() {
       case "appoinments":
         return <ViewPrescription />;
       case "profile":
-      // return <PharmacistProfile />;
-      // case "notification":
+        return <PharmacistProfile />;
+      // case "manage":
       //   return <Notification />;
       default:
         return null;
@@ -66,20 +73,32 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <ContactRound className="h-4 w-4" />
-                  Lịch hẹn
+                  <Pill className="h-4 w-4" />
+                  Đơn thuốc
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("notification")}
+                  onClick={() => setActiveSection("manage")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "notification"
+                    activeSection === "manage"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
+                  <BriefcaseMedical className="h-4 w-4" />
+                  Kho thuốc
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("report")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "report"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Newspaper className="h-4 w-4" />
+                  Báo cáo
                 </Link>
                 <Link
                   href="#"

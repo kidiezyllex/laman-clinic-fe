@@ -76,6 +76,7 @@ interface MedicationRow {
   dose: string;
   quantity: number;
   instructions: string;
+  price: number;
 }
 
 const formatDate = (dateString: string) => {
@@ -107,7 +108,14 @@ export default function ViewAppointment() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState("Week");
   const [rows, setRows] = useState<MedicationRow[]>([
-    { id: 1, medicationName: "", dose: "", quantity: 0, instructions: "" },
+    {
+      id: 1,
+      medicationName: "",
+      dose: "",
+      quantity: 0,
+      instructions: "",
+      price: 0,
+    },
   ]);
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
@@ -121,7 +129,14 @@ export default function ViewAppointment() {
   // Toggle Form tạo đơn thuốc
   const handleCanclePrescription = () => {
     setRows([
-      { id: 1, medicationName: "", dose: "", quantity: 0, instructions: "" },
+      {
+        id: 1,
+        medicationName: "",
+        dose: "",
+        quantity: 0,
+        instructions: "",
+        price: 0,
+      },
     ]);
     setShowPrescriptionForm(!showPrescriptionForm);
   };
@@ -133,6 +148,7 @@ export default function ViewAppointment() {
       medicationName: "",
       dose: "",
       quantity: 0,
+      price: 0,
       instructions: "",
     };
     setRows([...rows, newRow]);
@@ -456,7 +472,7 @@ export default function ViewAppointment() {
                   <h3 className="text-md font-semibold mb-4">Tạo đơn thuốc</h3>
                   <Form {...form}>
                     <form className="space-y-4">
-                      <div className="grid grid-cols-4 gap-4 font-medium border p-3 rounded-md">
+                      <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md">
                         <Label className="align-middle text-center">
                           Tên thuốc
                         </Label>
@@ -467,11 +483,14 @@ export default function ViewAppointment() {
                           Số lượng
                         </Label>
                         <Label className="align-middle text-center">
+                          Đơn giá (VNĐ)
+                        </Label>
+                        <Label className="align-middle text-center">
                           Hướng dẫn
                         </Label>
                       </div>
                       {rows.map((row) => (
-                        <div key={row.id} className="grid grid-cols-4 gap-4">
+                        <div key={row.id} className="grid grid-cols-5 gap-4">
                           <Select
                             onValueChange={(value) => {
                               handleSelectMedicationName(value, row.id);
@@ -511,6 +530,13 @@ export default function ViewAppointment() {
                               )
                             }
                             placeholder="Số lượng"
+                          />
+                          <Input
+                            value={row.price}
+                            onChange={(e) =>
+                              updateRow(row.id, "price", e.target.value)
+                            }
+                            placeholder="Đơn giá"
                           />
                           <Textarea
                             value={row.instructions}

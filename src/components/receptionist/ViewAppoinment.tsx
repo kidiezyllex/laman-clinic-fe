@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { CalendarIcon, Cat, Dog, SearchIcon, Trash } from "lucide-react";
+import {
+  CalendarIcon,
+  Cat,
+  Dog,
+  Loader2,
+  SearchIcon,
+  Trash,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import {
@@ -186,7 +193,7 @@ export default function ViewAppointment() {
           >
             <div className="flex flex-row gap-2 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
-                appointment.gender.toLowerCase() === "nam" ? (
+              appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
@@ -268,7 +275,7 @@ export default function ViewAppointment() {
                 id="gender"
                 value={
                   selectedAppointment?.gender.toLowerCase() === "male" ||
-                    selectedAppointment?.gender.toLowerCase() === "nam"
+                  selectedAppointment?.gender.toLowerCase() === "nam"
                     ? "Nam"
                     : "Nữ"
                 }
@@ -325,9 +332,9 @@ export default function ViewAppointment() {
           </div>
           <div>
             {selectedAppointment?.appointmentDateByPatient &&
-              getHoursBetweenDates(
-                selectedAppointment?.appointmentDateByPatient as Date
-              ) >= 1 ? (
+            getHoursBetweenDates(
+              selectedAppointment?.appointmentDateByPatient as Date
+            ) >= 1 ? (
               <div className="w-full p-4 bg-blue-400 rounded-md border">
                 <p className="text-white">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}
@@ -346,7 +353,14 @@ export default function ViewAppointment() {
               {isEditing ? "Hủy" : "Chỉnh sửa"}
             </Button>
             <Button onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? "Loading..." : "Xác nhận"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Đang xử lý...
+                </>
+              ) : (
+                "Xác nhận"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

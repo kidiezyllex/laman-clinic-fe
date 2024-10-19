@@ -106,7 +106,7 @@ export default function ReceptionistProfile() {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
   };
-  // Fetch Data Bệnh nhân
+  // Fetch Data Lễ tân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       const response = await axios.get(

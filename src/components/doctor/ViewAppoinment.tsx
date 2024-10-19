@@ -30,6 +30,7 @@ import {
   ChevronRight,
   Dog,
   FileText,
+  Loader2,
   Mail,
   MapPin,
   Phone,
@@ -115,7 +116,8 @@ export default function ViewAppointment() {
   const [isOpen2, setIsOpen2] = useState(false);
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-
+  const currentEmail = localStorage.getItem("currentEmail");
+  const [isLoading, setIsLoading] = useState(false);
   // Toggle Form tạo đơn thuốc
   const handleCanclePrescription = () => {
     setRows([
@@ -145,12 +147,6 @@ export default function ViewAppointment() {
     setRows(
       rows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
     );
-  };
-
-  // Tạo đơn thuốc
-  const handleCreatePrescription = () => {
-    console.log(rows);
-    console.log("hello");
   };
 
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
@@ -217,6 +213,33 @@ export default function ViewAppointment() {
     setIsOpen2(false);
   }, []);
 
+  // Tạo đơn thuốc
+  const handleCreatePrescription = async () => {
+    try {
+      setIsLoading(true);
+      // Lấy data bác sĩ
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
+      );
+      const doctorData = response2.data[0];
+      const payload = {
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorData._id,
+        medications: rows,
+        dateIssued: new Date(),
+      };
+      console.log(payload);
+      const response3 = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
+        payload
+      );
+      // console.log("hello");
+    } catch (error) {
+      console.error("Error during sign in:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <div className="flex justify-between items-center mb-2">
@@ -519,8 +542,18 @@ export default function ViewAppointment() {
                     >
                       Huỷ đơn thuốc
                     </Button>
-                    <Button onClick={() => handleCreatePrescription()}>
-                      Tạo đơn thuốc
+                    <Button
+                      onClick={() => handleCreatePrescription()}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Đang xử lý...
+                        </>
+                      ) : (
+                        "Tạo đơn thuốc"
+                      )}
                     </Button>
                   </div>
                 ) : (

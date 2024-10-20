@@ -68,6 +68,7 @@ interface Appointment {
   gender: string;
   phone: string;
   medicalHistory: MedicalHistory[];
+  priority?: boolean;
 }
 
 interface MedicationRow {
@@ -189,43 +190,61 @@ export default function ViewAppointment() {
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      // );
+      const response = {
+        success: true,
+        data: [
+          {
+            patientId: "BN-PMQ7TS",
+            appointmentDate: "2024-10-20T10:27:40.521Z",
+            reason: "benh",
+            specialization: "Cardiology",
+            priority: true,
+          },
+          {
+            patientId: "BN-5C662W",
+            appointmentDate: "2024-10-20T05:09:19.661Z",
+            reason: "benh ho",
+            specialization: "Cardiology",
+          },
+          {
+            patientId: "BN-CODQ3H",
+            appointmentDate: "2024-10-20T10:34:32.233Z",
+            reason: "benhss",
+            specialization: "Cardiology",
+            priority: false,
+          },
+        ],
+      };
+
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
-
-      const data = await response.json();
-      setAppointments(data.data);
-
-      // thay sampleData bằng data.data
-      // const sampleData = [
-      //   {
-      //     patientId: "BN-JCXX2B",
-      //     appointmentDate: "2024-10-18T18:55:05.587Z",
-      //     reason: "benh xxx",
-      //     specialization: "Cardiology",
-      //   },
-      //   {
-      //     patientId: "BN-JCXX2B",
-      //     appointmentDate: "2024-10-18T18:54:06.403Z",
-      //     reason: "benh ho",
-      //     specialization: "Cardiology",
-      //   },
-      // ];
-      const newAppointments = await Promise.all(
-        data.data.map(async (appointment: Appointment) => {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?_id=${appointment.patientId}`
+      const mergeAppointments = (): Appointment[] => {
+        return response.data.map((app: any) => {
+          const patient = response2.data.find(
+            (p: { _id: string }) => p._id === app.patientId
           );
-          const patientData = response.data[0];
-          return { ...appointment, ...patientData };
-        })
-      );
-
-      setAppointments(newAppointments);
+          if (patient) {
+            return {
+              ...app,
+              email: patient.email,
+              fullName: patient.fullName,
+              gender: patient.gender,
+              phone: patient.phone,
+              medicalHistory: patient.medicalHistory,
+            };
+          }
+          return app as Appointment;
+        });
+      };
+      console.log(mergeAppointments());
+      setAppointments(mergeAppointments());
     };
 
     fetchAppointments();
-    // getData Bác sĩ, nếu room khác mặc định thì set True
     setIsOpen2(false);
   }, []);
 
@@ -316,10 +335,11 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
-                      ? "bg-blue-500 text-white"
-                      : "text-foreground"
-                      }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
+                      isSameDay(day, new Date())
+                        ? "bg-blue-500 text-white"
+                        : "text-foreground"
+                    }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>

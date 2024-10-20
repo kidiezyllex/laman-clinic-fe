@@ -42,7 +42,8 @@ export default function Page() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
       );
-
+      console.log(currentEmail);
+      console.log(response.data[0]);
       setPatient(response.data[0]);
     };
 

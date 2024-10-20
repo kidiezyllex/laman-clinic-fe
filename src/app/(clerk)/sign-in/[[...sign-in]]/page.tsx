@@ -45,7 +45,7 @@ export default function Page() {
       // Lưu currentId (để navigate) và token (để đăng xuất)
       localStorage.setItem("currentId", (data as any)?.data?.id);
       localStorage.setItem("token", (data as any)?.token);
-      localStorage.setItem("currentEmail", email);
+      localStorage.setItem("currentEmail", (data as any)?.data?.email);
       localStorage.setItem("role", (data as any)?.data?.role);
       console.log((data as any)?.token);
       if (data.status === "success") {

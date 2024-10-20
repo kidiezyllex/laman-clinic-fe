@@ -63,7 +63,7 @@ const PaymentForm = ({
   const handleBooking = async () => {
     setIsLoading(true);
     const payload = {
-      id: patient._id,
+      id: patient._id + "",
       appointmentDateByPatient: selectedDate,
       specialization: selectedSpe,
       fullName: patient.fullName,
@@ -74,10 +74,11 @@ const PaymentForm = ({
       email: patient.email,
       medicalHistory: [],
     };
+    console.log(patient._id + "");
 
     try {
       const response = await axios.post(
-        `/api/appointment/appointment-by-patient`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
         payload
       );
       toast({

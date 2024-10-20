@@ -71,9 +71,10 @@ export default function ViewAppointment() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `/api/appointment/appointment-by-patient`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
       );
       setAppointmentByPatient(response.data);
+      console.log(response.data);
     };
 
     fetchData();
@@ -193,7 +194,7 @@ export default function ViewAppointment() {
           >
             <div className="flex flex-row gap-2 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
-              appointment.gender.toLowerCase() === "nam" ? (
+                appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
@@ -275,7 +276,7 @@ export default function ViewAppointment() {
                 id="gender"
                 value={
                   selectedAppointment?.gender.toLowerCase() === "male" ||
-                  selectedAppointment?.gender.toLowerCase() === "nam"
+                    selectedAppointment?.gender.toLowerCase() === "nam"
                     ? "Nam"
                     : "Nữ"
                 }
@@ -332,9 +333,9 @@ export default function ViewAppointment() {
           </div>
           <div>
             {selectedAppointment?.appointmentDateByPatient &&
-            getHoursBetweenDates(
-              selectedAppointment?.appointmentDateByPatient as Date
-            ) >= 1 ? (
+              getHoursBetweenDates(
+                selectedAppointment?.appointmentDateByPatient as Date
+              ) >= 1 ? (
               <div className="w-full p-4 bg-blue-400 rounded-md border">
                 <p className="text-white">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}

@@ -87,7 +87,7 @@ export default function ViewPrescription() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions`
       );
       // const response2 = await axios.get(
       //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?_id=${selectedAppointment?.patientId}`
@@ -98,7 +98,7 @@ export default function ViewPrescription() {
       //   phone: response2.data[0].phone,
       //   email: response2.data[0].email,
       // }
-      setPrescriptions(response.data);
+      setPrescriptions(response.data.data);
     };
 
     fetchData();

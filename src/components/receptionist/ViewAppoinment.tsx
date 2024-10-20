@@ -162,20 +162,10 @@ export default function ViewAppointment() {
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <div className="flex flex-row items-center justify-between">
-        <div className="flex flex-row gap-2 items-center justify-center">
-          <p className="font-semibold text-base">Trạng thái: </p>
-          <Badge variant={"destructive"}>Đã huỷ</Badge>
-          <Badge variant={"secondary"}>Đang chờ</Badge>
-          <Badge className="bg-blue-500 dark:text-white">Đã lên lịch</Badge>
-          <Badge className="bg-green-500 dark:text-white">Hoàn thành</Badge>
-        </div>
-        <Button className="bg-blue-500 hover:bg-blue-600">
-          <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám mới
-        </Button>
-      </div>
-
-      <div className="relative mb-6">
+      <p className="text-base font-semibold text-blue-500">
+        DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEB, ỨNG DỤNG
+      </p>
+      <div className="relative">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
           type="search"
@@ -185,7 +175,13 @@ export default function ViewAppointment() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
+      <div className="flex flex-row gap-2 justify-end">
+        <p className="font-semibold text-base">Trạng thái: </p>
+        <Badge variant={"destructive"}>Đã huỷ</Badge>
+        <Badge variant={"secondary"}>Đang chờ</Badge>
+        <Badge className="bg-blue-500 dark:text-white">Đã lên lịch</Badge>
+        <Badge className="bg-green-500 dark:text-white">Hoàn thành</Badge>
+      </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
           <Card
@@ -194,7 +190,7 @@ export default function ViewAppointment() {
           >
             <div className="flex flex-row gap-2 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
-                appointment.gender.toLowerCase() === "nam" ? (
+              appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
@@ -276,7 +272,7 @@ export default function ViewAppointment() {
                 id="gender"
                 value={
                   selectedAppointment?.gender.toLowerCase() === "male" ||
-                    selectedAppointment?.gender.toLowerCase() === "nam"
+                  selectedAppointment?.gender.toLowerCase() === "nam"
                     ? "Nam"
                     : "Nữ"
                 }
@@ -333,9 +329,9 @@ export default function ViewAppointment() {
           </div>
           <div>
             {selectedAppointment?.appointmentDateByPatient &&
-              getHoursBetweenDates(
-                selectedAppointment?.appointmentDateByPatient as Date
-              ) >= 1 ? (
+            getHoursBetweenDates(
+              selectedAppointment?.appointmentDateByPatient as Date
+            ) >= 1 ? (
               <div className="w-full p-4 bg-blue-400 rounded-md border">
                 <p className="text-white">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}

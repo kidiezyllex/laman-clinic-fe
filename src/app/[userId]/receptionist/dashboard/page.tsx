@@ -13,13 +13,16 @@ import {
 import ViewAppointment from "@/components/receptionist/ViewAppoinment";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
 import Notification from "@/components/receptionist/Notification";
+import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("appoinments");
+  const [activeSection, setActiveSection] = useState("online");
 
   const renderMainContent = () => {
     switch (activeSection) {
-      case "appoinments":
+      case "online":
         return <ViewAppointment />;
+      case "offline":
+        return <DirectAppoinment />;
       case "profile":
         return <ReceptionistProfile />;
       case "notification":
@@ -59,15 +62,27 @@ export default function Page() {
               <nav className="grid items-start px-2 text-sm lg:px-4">
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("appoinments")}
+                  onClick={() => setActiveSection("online")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "appoinments"
+                    activeSection === "online"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
                   <ContactRound className="h-4 w-4" />
-                  Lịch hẹn
+                  Lịch hẹn Online
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("offline")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "offline"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <ContactRound className="h-4 w-4" />
+                  Lịch hẹn trực tiếp
                 </Link>
                 <Link
                   href="#"
@@ -97,7 +112,9 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col rounded-md">{renderMainContent()}</div>
+        <div className="flex flex-col rounded-md min-h-screen">
+          {renderMainContent()}
+        </div>
       </div>
     </div>
   );

@@ -69,26 +69,6 @@ export default function ViewPrescription() {
     return format(date, "dd/MM/yyyy");
   };
 
-  // const exportAsImage = async () => {
-  //   const element = document.getElementById("invoice");
-  //   if (element) {
-  //     const canvas = await Html2CanvasOptions(element);
-  //     const image = canvas.toDataURL("image/png", 1.0);
-  //     downloadImage(image, "invoice.png");
-  //   }
-  // };
-
-  // const exportAsPDF = async () => {
-  //   const element = document.getElementById("invoice");
-  //   if (element) {
-  //     const canvas = await html2canvas(element);
-  //     const imgData = canvas.toDataURL("image/png");
-  //     const pdf = new jsPDF();
-  //     pdf.addImage(imgData, "PNG", 0, 0);
-  //     pdf.save("invoice.pdf");
-  //   }
-  // };
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(

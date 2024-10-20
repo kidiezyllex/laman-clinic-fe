@@ -116,7 +116,9 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col rounded-md">{renderMainContent()}</div>
+        <div className="flex flex-col rounded-md min-h-screen">
+          {renderMainContent()}
+        </div>
       </div>
     </div>
   );

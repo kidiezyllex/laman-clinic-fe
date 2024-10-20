@@ -41,13 +41,17 @@ const formSchema = z.object({
   gender: z.enum(["Male", "Female"], {
     required_error: "Vui lòng chọn giới tính",
   }),
-  idNumber: z.string().min(9, { message: "Số CMND không hợp lệ" }),
+  password: z.string().min(7, { message: "Password ít nhất 7 kí tự" }),
   email: z.string().email({ message: "Email không hợp lệ" }),
-  province: z.string().min(1, { message: "Vui lòng chọn tỉnh/thành phố" }),
-  district: z.string().min(1, { message: "Vui lòng chọn quận/huyện" }),
 });
 
-export default function PatientProfileForm() {
+export default function PatientProfileForm({
+  setSearchTerm,
+  setShowCreatePatientProfile,
+}: {
+  setSearchTerm: (section: string) => void;
+  setShowCreatePatientProfile: (section: boolean) => void;
+}) {
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
   const { userId } = useAuth();
@@ -63,52 +67,51 @@ export default function PatientProfileForm() {
       birthMonth: "",
       birthYear: "",
       gender: "Male",
-      idNumber: "",
+      password: "",
       email: "",
-      province: "",
-      district: "",
+      // province: "",
+      // district: "",
     },
   });
 
-  useEffect(() => {
-    const fetchProvinces = async () => {
-      const response = await axios.get(
-        "https://provinces.open-api.vn/api/?depth=2"
-      );
-      setProvincesList(response.data);
-    };
+  // useEffect(() => {
+  //   const fetchProvinces = async () => {
+  //     const response = await axios.get(
+  //       "https://provinces.open-api.vn/api/?depth=2"
+  //     );
+  //     setProvincesList(response.data);
+  //   };
 
-    fetchProvinces();
-  }, []);
+  //   fetchProvinces();
+  // }, []);
 
-  const handleFetchDistricts = async (provinceName: string) => {
-    const provinceCode = parseInt(provinceName?.match(/\d+/)?.[0] || "0");
-    const provinceByCode = provincesList.find(
-      (item) => item.code === provinceCode
-    );
-    if (provinceByCode) {
-      setDistrictsList(provinceByCode.districts);
-    }
-  };
+  // const handleFetchDistricts = async (provinceName: string) => {
+  //   const provinceCode = parseInt(provinceName?.match(/\d+/)?.[0] || "0");
+  //   const provinceByCode = provincesList.find(
+  //     (item) => item.code === provinceCode
+  //   );
+  //   if (provinceByCode) {
+  //     setDistrictsList(provinceByCode.districts);
+  //   }
+  // };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("hel");
     setIsLoading(true);
     const payload = {
-      accountId: userId,
       fullName: data.fullName,
-      dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
       gender: data.gender,
-      address:
-        data.district.split("-").slice(1).join("-") +
-        "," +
-        data.province.split("-").slice(1).join("-"),
+      password: data.password,
       phone: data.phone.startsWith("0")
         ? "+84" + data.phone.slice(1)
         : data.phone,
       email: data.email,
-      numberId: data.idNumber,
       medicalHistory: [],
-      appointments: [],
+      // dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
+      // address:
+      //   data.district.split("-").slice(1).join("-") +
+      //   "," +
+      //   data.province.split("-").slice(1).join("-"),
     };
     try {
       const response = await axios.post(
@@ -127,14 +130,16 @@ export default function PatientProfileForm() {
       });
     } finally {
       setIsLoading(false);
-      router.push(`/${userId}/patient/dashboard`);
+      setSearchTerm(data.email);
+      setShowCreatePatientProfile(false);
+      // router.push(`/${userId}/patient/dashboard`);
     }
   };
 
   return (
     <div className="mt-4 p-4 border border-blue-500 rounded-md">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
-        NHẬP THÔNG TIN BỆNH NHÂN
+        TẠO HỒ SƠ BỆNH NHÂN
       </h3>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -286,20 +291,6 @@ export default function PatientProfileForm() {
 
           <FormField
             control={form.control}
-            name="idNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Số CMND</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nhập số CMND" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -315,8 +306,21 @@ export default function PatientProfileForm() {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input placeholder="Nhập password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <FormField
                 control={form.control}
@@ -382,9 +386,9 @@ export default function PatientProfileForm() {
                 )}
               />
             </div>
-          </div>
+          </div> */}
 
-          <Button type="submit" disabled={isLoading} className="w-fit">
+          <Button type="submit" className="w-fit">
             {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -398,4 +402,7 @@ export default function PatientProfileForm() {
       </Form>
     </div>
   );
+}
+function setSearchTerm(email: any) {
+  throw new Error("Function not implemented.");
 }

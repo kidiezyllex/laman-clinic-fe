@@ -189,30 +189,30 @@ export default function ViewAppointment() {
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      // const response = await fetch(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
-      // );
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      );
 
-      // const data = await response.json();
-      // setAppointments(data.data);
+      const data = await response.json();
+      setAppointments(data.data);
 
       // thay sampleData bằng data.data
-      const sampleData = [
-        {
-          patientId: "BN-JCXX2B",
-          appointmentDate: "2024-10-18T18:55:05.587Z",
-          reason: "benh xxx",
-          specialization: "Cardiology",
-        },
-        {
-          patientId: "BN-JCXX2B",
-          appointmentDate: "2024-10-18T18:54:06.403Z",
-          reason: "benh ho",
-          specialization: "Cardiology",
-        },
-      ];
+      // const sampleData = [
+      //   {
+      //     patientId: "BN-JCXX2B",
+      //     appointmentDate: "2024-10-18T18:55:05.587Z",
+      //     reason: "benh xxx",
+      //     specialization: "Cardiology",
+      //   },
+      //   {
+      //     patientId: "BN-JCXX2B",
+      //     appointmentDate: "2024-10-18T18:54:06.403Z",
+      //     reason: "benh ho",
+      //     specialization: "Cardiology",
+      //   },
+      // ];
       const newAppointments = await Promise.all(
-        sampleData.map(async (appointment) => {
+        data.data.map(async (appointment: Appointment) => {
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?_id=${appointment.patientId}`
           );
@@ -246,7 +246,7 @@ export default function ViewAppointment() {
       };
       // console.log(payload);
       const response3 = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
         payload
       );
       // console.log("hello");
@@ -316,11 +316,10 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
-                      isSameDay(day, new Date())
-                        ? "bg-blue-500 text-white"
-                        : "text-foreground"
-                    }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
+                      ? "bg-blue-500 text-white"
+                      : "text-foreground"
+                      }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
@@ -339,7 +338,7 @@ export default function ViewAppointment() {
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
-                        {appointment.gender.toLowerCase() === "male" ? (
+                        {appointment.gender === "Male" ? (
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                             <Dog className="text-blue-500" />
                           </div>

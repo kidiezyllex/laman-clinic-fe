@@ -55,6 +55,9 @@ export default function DirectAppoinment() {
   const handleSearchPatientProfile = () => {
     const filteredP = patients.filter((patient) => {
       const searchTermLower = searchTerm.toLowerCase();
+      if (searchTermLower === "") {
+        return;
+      }
       return (
         patient.fullName?.toLowerCase().includes(searchTermLower) ||
         (patient.phone && patient.phone.includes(searchTerm)) ||

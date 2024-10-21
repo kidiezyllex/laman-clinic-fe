@@ -142,7 +142,9 @@ const PaymentForm = ({
                 className="mr-2 border-blue-500 focus:ring-blue-500"
               />
               <label htmlFor={method.id} className="flex items-center ">
-                <span className="ml-2 text-slate-700">{method.label}</span>
+                <span className="ml-2 text-slate-700 dark:text-slate-300">
+                  {method.label}
+                </span>
               </label>
             </div>
           ))}

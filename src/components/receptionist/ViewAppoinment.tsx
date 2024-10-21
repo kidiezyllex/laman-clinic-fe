@@ -5,12 +5,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import {
+  Calendar,
   CalendarIcon,
   Cat,
   Dog,
+  FileText,
   Loader2,
+  Mail,
+  MapPin,
+  Phone,
   SearchIcon,
   Trash,
+  User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -25,6 +31,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface AppointmentByPatient {
   id: string;
@@ -234,106 +248,101 @@ export default function ViewAppointment() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>
-              Bệnh nhân:{" "}
-              <span className="text-blue-500">
+        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+          <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
+            {selectedAppointment?.gender?.toLowerCase() === "male" ? (
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                <Dog className="text-blue-500" />
+              </div>
+            ) : (
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                <Cat className="text-pink-500" />
+              </div>
+            )}
+            <div>
+              <p className="text-base font-semibold">
                 {selectedAppointment?.fullName}
-              </span>
-            </DialogTitle>
-          </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 w-full">
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">CCCD</Label>
-              <Input
-                id="id"
-                value={selectedAppointment?.id || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-3">
-              <Label htmlFor="dob">Ngày sinh</Label>
-              <Input
-                id="dob"
-                value={
-                  formatDate(
-                    selectedAppointment?.dateOfBirth as unknown as Date
-                  ) || ""
-                }
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-3">
-              <Label htmlFor="gender">Giới tính</Label>
-              <Input
-                id="gender"
-                value={
-                  selectedAppointment?.gender.toLowerCase() === "male" ||
-                  selectedAppointment?.gender.toLowerCase() === "nam"
-                    ? "Nam"
-                    : "Nữ"
-                }
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">Email</Label>
-              <Input
-                id="email"
-                value={selectedAppointment?.email || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">Phone</Label>
-              <Input
-                id="phone"
-                value={selectedAppointment?.phone || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="specialization">Khoa</Label>
-              <Input
-                id="specialization"
-                value={selectedAppointment?.specialization || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-3">
-              <Label htmlFor="address">Địa chỉ</Label>
-              <Textarea
-                id="address"
-                value={selectedAppointment?.address || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
+              </p>
+              <p className="text-slate-500">
+                Mã bệnh nhân: {selectedAppointment?.id}
+              </p>
             </div>
           </div>
-          <div className="grid grid-cols-8 items-center gap-3">
-            <Label htmlFor="reason">Lý do</Label>
-            <Textarea
+          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4">
+            <div className="flex flex-col gap-3">
+              <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Ngày sinh:
+                  {/* {formatDate(selectedAppointment?.dateOfBirth)} */}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Giới tính:{" "}
+                  {selectedAppointment?.gender.toLowerCase() === "female"
+                    ? "Nữ"
+                    : "Nam"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Địa chỉ:
+                  {/* {selectedAppointment.patientId.address} */}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Số ĐT: {selectedAppointment?.phone}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Email: {selectedAppointment?.email}
+                </span>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3 ">
+              <p className="text-md font-semibold">
+                Thông tin lịch hẹn đăng ký
+              </p>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-5 text-blue-500" />
+                <span className="text-sm">
+                  Ngày hẹn khám:{" "}
+                  {formatDate(selectedAppointment?.appointmentDateByPatient)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <FileText className="w-4 h-5 text-blue-500" />
+                <span className="text-sm">Trạng thái: Đang chờ duyệt</span>
+              </div>
+            </div>
+          </div>
+          <h3 className="text-md font-semibold">
+            Vui lòng nhập lý do hẹn khám
+          </h3>
+          <div className="mr-4">
+            <Input
               id="reason"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="col-span-7"
               placeholder="Nhập lý do hẹn khám"
             />
           </div>
-          <div>
+
+          <div className="mr-4">
             {selectedAppointment?.appointmentDateByPatient &&
             getHoursBetweenDates(
               selectedAppointment?.appointmentDateByPatient as Date
             ) >= 1 ? (
-              <div className="w-full p-4 bg-blue-400 rounded-md border">
-                <p className="text-white">
+              <div className="w-full p-4 bg-secondary rounded-md border">
+                <p>
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}
                   {getHoursBetweenDates(
                     selectedAppointment?.appointmentDateByPatient as Date

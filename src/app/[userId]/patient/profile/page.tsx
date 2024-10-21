@@ -48,11 +48,12 @@ interface Patient {
 }
 export default function CreatePatientProfile() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
-  const [patient, setPatient] = useState<Partial<Patient>>({});
+  const [patient, setPatient] = useState<Patient | null>(null);
+  const pathname = usePathname();
   const { userId } = useAuth();
   const idByClerk = usePathname().split("/")[1];
   const currentEmail = localStorage.getItem("currentEmail");
-
+  const [loading, setLoading] = useState(true);
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
@@ -60,17 +61,28 @@ export default function CreatePatientProfile() {
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
-      );
-      setPatient(response.data[0]);
+      try {
+        setLoading(true);
+        if (!pathname.split("_").includes("/user")) {
+          const currentEmail = localStorage.getItem("currentEmail");
+          if (!currentEmail) {
+            throw new Error("No email found in localStorage");
+          }
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+          );
+          setPatient(response.data);
+        } else {
+          setPatient(null);
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
-    if (idByClerk === "undefined") setPatient({});
-    else if (currentEmail) {
-      fetchPatientByAccountId();
-    } else {
-      console.log("Email is not defined");
-    }
+
+    fetchPatientByAccountId();
   }, []);
   return (
     <div>
@@ -101,7 +113,7 @@ export default function CreatePatientProfile() {
           <CardTitle className="text-2xl font-bold text-blue-500 mb-4">
             HỒ SƠ BỆNH NHÂN
           </CardTitle>
-          {Object.keys(patient).length !== 0 && (
+          {patient && (
             <div className="p-4 border border-blue-500 rounded-md flex flex-col gap-3">
               <h3 className="text-lg font-semibold text-blue-500 self-start">
                 HỒ SƠ HIỆN TẠI
@@ -160,13 +172,13 @@ export default function CreatePatientProfile() {
                 </div>
               </div>
               <div className="flex flex-row gap-4 items-center justify-center my-4">
-                <Link href={`/${userId}/patient/booking-by-date`}>
+                <Link href={`/${patient._id}/patient/booking-by-date`}>
                   <Button className="w-fit bg-blue-500">
                     <Calendar className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo ngày
                   </Button>
                 </Link>
-                <Link href={`/${userId}/patient/booking-by-doctor`}>
+                <Link href={`/${patient._id}/patient/booking-by-doctor`}>
                   <Button className="w-fit bg-blue-500">
                     <Stethoscope className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo bác sĩ
@@ -176,13 +188,13 @@ export default function CreatePatientProfile() {
             </div>
           )}
 
-          {Object.keys(patient).length === 0 && (
+          {!patient && (
             <CardDescription>
               Bạn đã từng đặt khám tại Đa khoa Laman Clinic?
             </CardDescription>
           )}
         </CardHeader>
-        {Object.keys(patient).length === 0 && (
+        {!patient && (
           <CardContent className="space-y-4">
             <div className="flex justify-center space-x-4">
               <Button
@@ -219,7 +231,14 @@ export default function CreatePatientProfile() {
             )}
 
             {selectedOption === "new" && (
-              <PatientProfileForm></PatientProfileForm>
+              <PatientProfileForm
+                setSearchTerm={function (section: string): void {
+                  throw new Error("Function not implemented.");
+                }}
+                setShowCreatePatientProfile={function (section: boolean): void {
+                  throw new Error("Function not implemented.");
+                }}
+              ></PatientProfileForm>
             )}
           </CardContent>
         )}

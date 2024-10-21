@@ -15,6 +15,7 @@ import axios from "axios";
 import RoomSelector from "@/components/patient/booking/RoomSelector";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import Payment from "@/components/patient/booking/Payment";
+import { usePathname } from "next/navigation";
 
 interface Patient {
   _id: String;
@@ -30,8 +31,9 @@ export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
-  const [patient, setPatient] = useState<Partial<Patient>>({});
-  const currentEmail = localStorage.getItem("currentEmail");
+  const pathname = usePathname();
+  const [patient, setPatient] = useState<Patient | null>(null);
+  const [loading, setLoading] = useState(true);
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
@@ -39,19 +41,28 @@ export default function Page() {
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
-      );
-      console.log(currentEmail);
-      console.log(response.data[0]);
-      setPatient(response.data[0]);
+      try {
+        setLoading(true);
+        if (!pathname.split("_").includes("/user")) {
+          const currentEmail = localStorage.getItem("currentEmail");
+          if (!currentEmail) {
+            throw new Error("No email found in localStorage");
+          }
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+          );
+          setPatient(response.data);
+        } else {
+          setPatient(null);
+        }
+      } catch (error) {
+        console.error("Error fetching patient data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    if (currentEmail) {
-      fetchPatientByAccountId();
-    } else {
-      console.log("Email is not defined");
-    }
+    fetchPatientByAccountId();
   }, []);
   const renderMainContent = () => {
     switch (activeSection) {
@@ -83,7 +94,7 @@ export default function Page() {
             setActiveSection={setActiveSection}
             selectedSpe={selectedSpe}
             selectedDate={selectedDate}
-            patient={patient}
+            patient={patient as any}
           ></Payment>
         );
       default:
@@ -125,23 +136,37 @@ export default function Page() {
                 Thông tin bệnh nhân
               </p>
             </div>
-            <div className="flex flex-col gap-2 p-3">
-              <p className="text-sm dark:text-slate-500">
-                <span className="font-semibold">Tên:</span> {patient.fullName}
-              </p>
-              <p className="text-sm dark:text-slate-500">
-                <span className="font-semibold">CCCD:</span> {patient.numberId}
-              </p>
-              <p className="text-sm dark:text-slate-500">
-                <span className="font-semibold">Địa chỉ:</span>{" "}
-                {patient.address}
-              </p>
-              <p className="text-sm dark:text-slate-500">
-                <span className="font-semibold">SĐT:</span> {patient.phone}
-              </p>
-              <p className="text-sm dark:text-slate-500">
-                <span className="font-semibold">Email:</span> {patient.email}
-              </p>
+            <div className="flex flex-col dark:text-slate-300">
+              <div className="text-sm grid grid-cols-2 border p-2 px-3">
+                <span className="font-semibold dark:text-slate-500">
+                  Mã BN:
+                </span>{" "}
+                {patient?._id}
+              </div>
+              <div className="text-sm grid grid-cols-2 border p-2 px-3">
+                <span className="font-semibold dark:text-slate-500">Tên:</span>{" "}
+                {patient?.fullName}
+              </div>
+
+              <div className="text-sm grid grid-cols-2 border p-2 px-3">
+                <span className="font-semibold dark:text-slate-500">
+                  {" "}
+                  Giới tính:
+                </span>{" "}
+                {patient?.gender?.toLocaleLowerCase() === "female"
+                  ? "Nữ"
+                  : "Nam"}
+              </div>
+              <div className="text-sm grid grid-cols-2 border p-2 px-3">
+                <span className="font-semibold dark:text-slate-500">SĐT:</span>{" "}
+                {patient?.phone}
+              </div>
+              <div className="text-sm grid grid-cols-2 border p-2 px-3">
+                <span className="font-semibold dark:text-slate-500">
+                  Email:
+                </span>{" "}
+                {patient?.email}
+              </div>
             </div>
           </div>
           <div className="border bg-background flex flex-col">

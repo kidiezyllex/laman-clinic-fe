@@ -168,7 +168,10 @@ export default function DirectAppoinment() {
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredPatients.map((patient) => (
-          <Card className="flex flex-col gap-6 justify-center items-center p-4">
+          <Card
+            key={patient?._id + ""}
+            className="flex flex-col gap-6 justify-center items-center p-4"
+          >
             <div className="flex flex-row gap-2 items-center w-full">
               {patient?.gender?.toLowerCase() === "male" ||
               patient?.gender?.toLowerCase() === "nam" ? (

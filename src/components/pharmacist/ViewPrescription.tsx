@@ -74,7 +74,6 @@ export default function ViewPrescription() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
         // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
-
       );
       setPrescriptions(
         response.data.data.sort(
@@ -276,10 +275,10 @@ export default function ViewPrescription() {
                     <Separator className="bg-slate-500"></Separator>
                     <div className="p-4 flex flex-col gap-2">
                       <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-                        Họ tên người mua (Customer's name):
+                        Họ tên người mua (CustomerName):
                       </p>
                       <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-                        Tên đơn vị (Company's name):
+                        Tên đơn vị (CompanyName):
                       </p>
                       <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
                         Mã số thuế (Tax code):

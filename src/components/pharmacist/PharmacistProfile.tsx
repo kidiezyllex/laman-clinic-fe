@@ -58,7 +58,7 @@ export default function PharmacistProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const userId = usePathname().split("/")[1];
   const [pharmacist, setPharmacist] = useState<Partial<Pharmacist>>({});
-  const currentEmail = localStorage.getItem("currentEmail");
+
   function generateTimeSlots(startTime: string, endTime: string) {
     const slots = [];
     let currentTime = new Date(`2000-01-01T${startTime}:00`);
@@ -109,17 +109,13 @@ export default function PharmacistProfile() {
   // Fetch Data Dược sĩ
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
+      const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${currentEmail}`
       );
       setPharmacist(response.data[0]);
     };
-
-    if (currentEmail) {
-      fetchPatientByAccountId();
-    } else {
-      console.log("Email is not defined");
-    }
+    fetchPatientByAccountId();
   }, []);
 
   return (

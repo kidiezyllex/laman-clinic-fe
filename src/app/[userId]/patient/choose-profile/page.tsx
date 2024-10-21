@@ -91,7 +91,14 @@ export default function Page() {
           )}
 
           {selectedOption === "new" && (
-            <PatientProfileForm></PatientProfileForm>
+            <PatientProfileForm
+              setSearchTerm={function (section: string): void {
+                throw new Error("Function not implemented.");
+              }}
+              setShowCreatePatientProfile={function (section: boolean): void {
+                throw new Error("Function not implemented.");
+              }}
+            ></PatientProfileForm>
           )}
         </CardContent>
       </Card>

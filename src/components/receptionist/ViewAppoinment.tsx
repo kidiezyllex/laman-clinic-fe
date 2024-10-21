@@ -99,21 +99,28 @@ export default function ViewAppointment() {
   };
 
   const getHoursBetweenDates = (
-    date2: Date | string | undefined
+    date2: Date | string | number | undefined
   ): number | null => {
     const date1 = new Date();
 
-    if (!date2) return null;
+    if (date2 === undefined) return null;
+
     let parsedDate2: Date;
+
     if (typeof date2 === "string") {
+      parsedDate2 = new Date(date2);
+    } else if (typeof date2 === "number") {
       parsedDate2 = new Date(date2);
     } else {
       parsedDate2 = date2;
     }
+
     if (isNaN(parsedDate2.getTime())) {
       return null;
     }
-    return parseInt(Math.abs(parsedDate2.getTime() - date1.getTime()) / 36e5);
+
+    const timeDifference = Math.abs(parsedDate2.getTime() - date1.getTime());
+    return Math.floor(timeDifference / (1000 * 60 * 60));
   };
 
   const handleSubmit = async () => {
@@ -335,15 +342,12 @@ export default function ViewAppointment() {
           </div>
 
           <div className="mr-4">
-            {selectedAppointment?.appointmentDateByPatient &&
-            getHoursBetweenDates(
-              selectedAppointment?.appointmentDateByPatient as Date
-            ) >= 1 ? (
+            {selectedAppointment?.appointmentDateByPatient ? (
               <div className="w-full p-4 bg-secondary rounded-md border">
                 <p>
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}
                   {getHoursBetweenDates(
-                    selectedAppointment?.appointmentDateByPatient as Date
+                    selectedAppointment.appointmentDateByPatient
                   )}{" "}
                   giờ
                 </p>

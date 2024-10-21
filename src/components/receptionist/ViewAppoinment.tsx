@@ -88,7 +88,6 @@ export default function ViewAppointment() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
       );
       setAppointmentByPatient(response.data);
-      console.log(response.data);
     };
 
     fetchData();
@@ -164,7 +163,6 @@ export default function ViewAppointment() {
       const response = await axios.delete(
         `/api/appointment/appointment-by-patient/?id=${id}`
       );
-      console.log("res: ", response);
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.error("Axios error:", error.response?.data || error.message);

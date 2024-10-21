@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { cookies } from "next/headers";
+import { getCookie } from "../../../../../actions/getCookie";
 interface LoginResponse {
   status: string;
   message: string;
@@ -47,7 +49,9 @@ export default function Page() {
       localStorage.setItem("token", (data as any)?.token);
       localStorage.setItem("currentEmail", (data as any)?.data?.email);
       localStorage.setItem("role", (data as any)?.data?.role);
-      console.log((data as any)?.token);
+      const token = await getCookie("jwt");
+      console.log(token);
+
       if (data.status === "success") {
         if (data.data?.role === "doctor") {
           toast({

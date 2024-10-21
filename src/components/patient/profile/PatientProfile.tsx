@@ -54,16 +54,14 @@ export default function PatientProfile() {
     const fetchPatientByAccountId = async () => {
       try {
         setLoading(true);
-        if (!pathname.split("_").includes("user")) {
+        if (!pathname.split("_").includes("/user")) {
           const currentEmail = localStorage.getItem("currentEmail");
-          console.log(currentEmail);
           if (!currentEmail) {
             throw new Error("No email found in localStorage");
           }
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
           );
-          console.log(response.data);
           setPatient(response.data);
         } else {
           setPatient(null);

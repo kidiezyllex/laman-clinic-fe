@@ -25,7 +25,6 @@ export default function NavBar() {
   const [currentId, setCurrentId] = useState("");
   const [role, setRole] = useState("");
   const [token, setToken] = useState("");
-
   useEffect(() => {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");

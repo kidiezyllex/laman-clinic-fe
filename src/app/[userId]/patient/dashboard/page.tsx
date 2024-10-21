@@ -70,7 +70,7 @@ export default function Page() {
         </BreadcrumbList>
       </Breadcrumb>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-5 mt-8">
-        <div className="hidden h-[90%] border bg-background md:block rounded-md">
+        <div className="hidden h-full border bg-background md:block rounded-md">
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">

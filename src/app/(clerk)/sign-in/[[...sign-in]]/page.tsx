@@ -91,7 +91,7 @@ export default function Page() {
   };
 
   return (
-    <Card className="w-fit max-w-full ">
+    <Card className="w-fit max-w-full bg-white">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-blue-400">
           Đăng nhập vào Laman Clinic
@@ -110,28 +110,30 @@ export default function Page() {
               formField: "hidden",
               footer: "hidden",
               socialButtons: "p-2",
-              main: "bg-transparent",
+              socialButtonsBlockButton: "zIndex: 100",
             },
           }}
         />
         <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-2 text-black">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
               placeholder="Enter your email"
+              className="dark:bg-primary border border-slate-200"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={isLoading}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 text-black">
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
               type="password"
+              className="dark:bg-primary border border-slate-200"
               placeholder="Enter your password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -139,7 +141,12 @@ export default function Page() {
               disabled={isLoading}
             />
           </div>
-          <Button type="submit" className="w-full" disabled={isLoading}>
+          <Button
+            type="submit"
+            className="w-full border bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white"
+            disabled={isLoading}
+            variant={"default"}
+          >
             {isLoading ? "Loading..." : "Continue"}
           </Button>
         </form>

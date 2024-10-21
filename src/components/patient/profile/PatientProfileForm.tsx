@@ -28,7 +28,7 @@ import {
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),
@@ -58,6 +58,7 @@ export default function PatientProfileForm({
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,8 +97,8 @@ export default function PatientProfileForm({
   // };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("hel");
     setIsLoading(true);
+    const pathName = pathname.split("/");
     const payload = {
       fullName: data.fullName,
       gender: data.gender,
@@ -107,6 +108,7 @@ export default function PatientProfileForm({
         : data.phone,
       email: data.email,
       medicalHistory: [],
+      clerkId: pathName[1],
       // dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
       // address:
       //   data.district.split("-").slice(1).join("-") +
@@ -132,7 +134,16 @@ export default function PatientProfileForm({
       setIsLoading(false);
       setSearchTerm(data.email);
       setShowCreatePatientProfile(false);
-      // router.push(`/${userId}/patient/dashboard`);
+      if (
+        pathname.split("/").includes("patient") &&
+        pathname.split("/").includes("dashboard")
+      ) {
+        localStorage.setItem("currentEmail", data.email);
+        const response2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
+        );
+        router.push(`/${(response2?.data as any)._id}/patient/dashboard`);
+      }
     }
   };
 

@@ -190,40 +190,40 @@ export default function ViewAppointment() {
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
-      // );
-      const response = {
-        success: true,
-        data: [
-          {
-            patientId: "BN-PMQ7TS",
-            appointmentDate: "2024-10-20T10:27:40.521Z",
-            reason: "benh",
-            specialization: "Cardiology",
-            priority: true,
-          },
-          {
-            patientId: "BN-5C662W",
-            appointmentDate: "2024-10-20T05:09:19.661Z",
-            reason: "benh ho",
-            specialization: "Cardiology",
-          },
-          {
-            patientId: "BN-CODQ3H",
-            appointmentDate: "2024-10-20T10:34:32.233Z",
-            reason: "benhss",
-            specialization: "Cardiology",
-            priority: false,
-          },
-        ],
-      };
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
+      );
+      // const response = {
+      //   success: true,
+      //   data: [
+      //     {
+      //       patientId: "BN-PMQ7TS",
+      //       appointmentDate: "2024-10-20T10:27:40.521Z",
+      //       reason: "benh",
+      //       specialization: "Cardiology",
+      //       priority: true,
+      //     },
+      //     {
+      //       patientId: "BN-5C662W",
+      //       appointmentDate: "2024-10-20T05:09:19.661Z",
+      //       reason: "benh ho",
+      //       specialization: "Cardiology",
+      //     },
+      //     {
+      //       patientId: "BN-CODQ3H",
+      //       appointmentDate: "2024-10-20T10:34:32.233Z",
+      //       reason: "benhss",
+      //       specialization: "Cardiology",
+      //       priority: false,
+      //     },
+      //   ],
+      // };
 
       const response2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
       const mergeAppointments = (): Appointment[] => {
-        return response.data.map((app: any) => {
+        return response.data.data.map((app: any) => {
           const patient = response2.data.find(
             (p: { _id: string }) => p._id === app.patientId
           );

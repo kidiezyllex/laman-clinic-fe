@@ -7,13 +7,32 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
 import { Calendar, CreditCard, Menu, User, UserPlus } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function UserMenu() {
   const { userId } = useAuth();
-  const currentId = localStorage.getItem("currentId") || userId;
-
+  const [currentId, setCurrentId] = useState("");
+  useEffect(() => {
+    // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
+    if (userId) {
+      setCurrentId(userId);
+    }
+    // Còn nếu đăng nhập bằng tài khoản thì userId 0 có data, currentId vẫn sẽ có data trong localStorage
+    else {
+      const setId = async () => {
+        const currentEmail = localStorage.getItem("currentEmail");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+        );
+        console.log(response.data._id);
+        setCurrentId(response.data._id || "");
+      };
+      setId();
+    }
+  }, [userId]);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -33,10 +52,6 @@ export default function UserMenu() {
           <Link href={`/${currentId}/patient/dashboard`}>
             <span>Quản lý tài khoản</span>
           </Link>
-        </DropdownMenuItem>
-        <DropdownMenuItem className="px-4 py-2">
-          <CreditCard className="mr-2 h-4 w-4" />
-          <span>Thanh toán</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

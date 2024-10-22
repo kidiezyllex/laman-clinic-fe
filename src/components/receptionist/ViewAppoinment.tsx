@@ -20,25 +20,11 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 
 interface AppointmentByPatient {
   id: string;
@@ -82,14 +68,13 @@ export default function ViewAppointment() {
     return format(date, "dd/MM/yyyy");
   };
 
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
+    );
+    setAppointmentByPatient(response.data);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
-      );
-      setAppointmentByPatient(response.data);
-    };
-
     fetchData();
   }, []);
 
@@ -132,6 +117,8 @@ export default function ViewAppointment() {
         reason,
         specialization: selectedAppointment?.specialization,
       };
+
+      // Post lịch hẹn khám chính thức
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
         payload
@@ -148,6 +135,13 @@ export default function ViewAppointment() {
           title: "Thành công!",
           description: response.data.message,
         });
+
+        // Xoá khỏi lịch hẹn khám tạm
+        const response2 = await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?id=${selectedAppointment?.id}`
+        );
+        // Fetch lại data
+        fetchData();
       } else {
         toast({
           variant: "destructive",

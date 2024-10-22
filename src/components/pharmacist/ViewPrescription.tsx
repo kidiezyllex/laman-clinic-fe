@@ -203,6 +203,7 @@ export default function ViewPrescription() {
                   Xem hoá đơn
                 </Button>
               )}
+              <Button variant={"secondary"}>Hoàn thành đơn</Button>
             </div>
             {showInvoice.id === prescription._id && showInvoice.isShow && (
               <div>

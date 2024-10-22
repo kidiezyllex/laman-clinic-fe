@@ -1,6 +1,4 @@
-import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CalendarIcon,
   MapPinIcon,
@@ -58,7 +56,7 @@ export default function DoctorProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const userId = usePathname().split("/")[1];
   const [doctor, setDoctor] = useState<Partial<Doctor>>({});
-  const currentEmail = localStorage.getItem("currentEmail");
+
   function generateTimeSlots(startTime: string, endTime: string) {
     const slots = [];
     let currentTime = new Date(`2000-01-01T${startTime}:00`);
@@ -108,18 +106,14 @@ export default function DoctorProfile() {
   };
   // Fetch Data Lễ tân
   useEffect(() => {
-    const fetchPatientByAccountId = async () => {
+    const fetchDoctor = async () => {
+      const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
       );
       setDoctor(response.data[0]);
     };
-
-    if (currentEmail) {
-      fetchPatientByAccountId();
-    } else {
-      console.log("Email is not defined");
-    }
+    fetchDoctor();
   }, []);
 
   return (

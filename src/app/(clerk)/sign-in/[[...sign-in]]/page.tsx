@@ -7,8 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { cookies } from "next/headers";
-import { getCookie } from "../../../../../actions/getCookie";
+import { getCookie, getSession } from "../../../../../actions/getCookie";
+import axios from "axios";
 interface LoginResponse {
   status: string;
   message: string;
@@ -45,10 +45,11 @@ export default function Page() {
       const data: LoginResponse = await response.json();
 
       // Lưu currentId (để navigate) và token (để đăng xuất)
-      localStorage.setItem("currentId", (data as any)?.data?.id);
+
       localStorage.setItem("token", (data as any)?.token);
       localStorage.setItem("currentEmail", (data as any)?.data?.email);
       localStorage.setItem("role", (data as any)?.data?.role);
+
       const token = await getCookie("jwt");
       console.log(token);
 
@@ -59,21 +60,39 @@ export default function Page() {
             title: data.message,
             description: "Đăng nhập với quyền Bác sĩ",
           });
-          router.push(`/${data.data.id}/doctor/dashboard`);
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${
+              (data as any)?.data?.email
+            }`
+          );
+          router.push(`/${res.data[0]._id}/doctor/dashboard`);
+          localStorage.setItem("currentId", res.data[0]._id);
         } else if (data.data?.role === "receptionist") {
           toast({
             variant: "default",
             title: "Thành công!",
             description: data.message,
           });
-          router.push(`/${data.data.id}/receptionist/dashboard`);
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${
+              (data as any)?.data?.email
+            }`
+          );
+          router.push(`/${res.data._id}/receptionist/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
         } else if (data.data?.role === "pharmacist") {
           toast({
             variant: "default",
             title: "Thành công!",
             description: data.message,
           });
-          router.push(`/${data.data.id}/pharmacist/dashboard`);
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${
+              (data as any)?.data?.email
+            }`
+          );
+          router.push(`/${res.data._id}/pharmacist/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
         } else router.push("/");
       } else {
         toast({

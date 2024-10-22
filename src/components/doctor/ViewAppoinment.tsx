@@ -57,6 +57,7 @@ import { Separator } from "../ui/separator";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { medicationData } from "./medicationData";
+import { usePathname } from "next/navigation";
 interface MedicalHistory {
   _id: string;
   disease: string;
@@ -205,38 +206,46 @@ export default function ViewAppointment() {
     setSelectedAppointment(appointment);
     setIsOpen(true);
   };
+  const pathname = usePathname()
+
+
 
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/000`
-      // );
-      const response = {
-        success: true,
-        data: [
-          {
-            patientId: "BN-PMQ7TS",
-            appointmentDate: "2024-10-22T10:27:40.521Z",
-            reason: "benh",
-            specialization: "Cardiology",
-            priority: true,
-          },
-          {
-            patientId: "BN-5C662W",
-            appointmentDate: "2024-10-22T05:09:19.661Z",
-            reason: "benh ho",
-            specialization: "Cardiology",
-          },
-          {
-            patientId: "BN-CODQ3H",
-            appointmentDate: "2024-10-22T10:34:32.233Z",
-            reason: "benhss",
-            specialization: "Cardiology",
-            priority: false,
-          },
-        ],
-      };
+      // const currentEmail = localStorage.getItem("currentEmail");
+
+      const response1 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${pathname.split("/")[1]}`
+      );
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
+      );
+      // const response = {
+      //   success: true,
+      //   data: [
+      //     {
+      //       patientId: "BN-PMQ7TS",
+      //       appointmentDate: "2024-10-22T10:27:40.521Z",
+      //       reason: "benh",
+      //       specialization: "Cardiology",
+      //       priority: true,
+      //     },
+      //     {
+      //       patientId: "BN-5C662W",
+      //       appointmentDate: "2024-10-22T05:09:19.661Z",
+      //       reason: "benh ho",
+      //       specialization: "Cardiology",
+      //     },
+      //     {
+      //       patientId: "BN-CODQ3H",
+      //       appointmentDate: "2024-10-22T10:34:32.233Z",
+      //       reason: "benhss",
+      //       specialization: "Cardiology",
+      //       priority: false,
+      //     },
+      //   ],
+      // };
       // setAppointments(response?.data as any);
 
       const response2 = await axios.get(
@@ -244,7 +253,7 @@ export default function ViewAppointment() {
       );
       // thay bằng response.data.data khi mở comment
       const mergeAppointments = (): Appointment[] => {
-        return response.data.map((app: any) => {
+        return response.data.data.map((app: any) => {
           const patient = response2.data.find(
             (p: { _id: string }) => p._id === app.patientId
           );
@@ -423,11 +432,10 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
-                      isSameDay(day, new Date())
-                        ? "bg-blue-500 text-white"
-                        : "text-foreground"
-                    }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
+                      ? "bg-blue-500 text-white"
+                      : "text-foreground"
+                      }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>

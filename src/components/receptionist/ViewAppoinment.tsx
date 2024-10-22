@@ -356,7 +356,7 @@ export default function ViewAppointment() {
               ""
             )}
           </div>
-          <DialogFooter>
+          <DialogFooter className="mr-4 mt-4">
             <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
               {isEditing ? "Hủy" : "Chỉnh sửa"}
             </Button>

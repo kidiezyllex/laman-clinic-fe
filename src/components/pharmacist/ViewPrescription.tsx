@@ -76,7 +76,7 @@ export default function ViewPrescription() {
         // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
       );
       setPrescriptions(
-        response.data.data.sort(
+        response.data.sort(
           (a: { dateIssued: Date }, b: { dateIssued: Date }) =>
             new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
         )

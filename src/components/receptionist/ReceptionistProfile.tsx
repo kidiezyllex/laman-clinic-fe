@@ -108,14 +108,14 @@ export default function ReceptionistProfile() {
   };
   // Fetch Data Lễ tân
   useEffect(() => {
-    const fetchPatientByAccountId = async () => {
+    const fetchReceptionist = async () => {
       const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${currentEmail}`
       );
-      setReceptionist(response.data[0]);
+      setReceptionist(response.data);
     };
-    fetchPatientByAccountId();
+    fetchReceptionist();
   }, []);
 
   return (

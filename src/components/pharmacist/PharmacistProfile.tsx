@@ -108,14 +108,14 @@ export default function PharmacistProfile() {
   };
   // Fetch Data Dược sĩ
   useEffect(() => {
-    const fetchPatientByAccountId = async () => {
+    const fetchPharmacist = async () => {
       const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${currentEmail}`
       );
-      setPharmacist(response.data[0]);
+      setPharmacist(response.data);
     };
-    fetchPatientByAccountId();
+    fetchPharmacist();
   }, []);
 
   return (

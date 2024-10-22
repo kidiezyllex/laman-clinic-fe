@@ -52,7 +52,6 @@ export default function CreatePatientProfile() {
   const pathname = usePathname();
   const { userId } = useAuth();
   const idByClerk = usePathname().split("/")[1];
-  const currentEmail = localStorage.getItem("currentEmail");
   const [loading, setLoading] = useState(true);
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
@@ -114,7 +113,7 @@ export default function CreatePatientProfile() {
             HỒ SƠ BỆNH NHÂN
           </CardTitle>
           {patient && (
-            <div className="p-4 border border-blue-500 rounded-md flex flex-col gap-3">
+            <div className="p-4 border rounded-md flex flex-col gap-3">
               <h3 className="text-lg font-semibold text-blue-500 self-start">
                 HỒ SƠ HIỆN TẠI
               </h3>
@@ -173,13 +172,13 @@ export default function CreatePatientProfile() {
               </div>
               <div className="flex flex-row gap-4 items-center justify-center my-4">
                 <Link href={`/${patient._id}/patient/booking-by-date`}>
-                  <Button className="w-fit bg-blue-500">
+                  <Button className="w-fit bg-blue-500" variant={"secondary"}>
                     <Calendar className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo ngày
                   </Button>
                 </Link>
                 <Link href={`/${patient._id}/patient/booking-by-doctor`}>
-                  <Button className="w-fit bg-blue-500">
+                  <Button className="w-fit bg-blue-500" variant={"secondary"}>
                     <Stethoscope className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo bác sĩ
                   </Button>

@@ -1,4 +1,3 @@
-import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   CalendarIcon,
@@ -23,10 +22,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { format } from "date-fns";
 import PatientProfileForm from "./PatientProfileForm";
 import { usePathname } from "next/navigation";
-
+interface MedicalHistory {
+  disease: string;
+  diagnosisDate: Date;
+  treatment: string;
+  _id: string;
+}
 interface Patient {
   _id: string;
   numberId?: string;
@@ -36,6 +48,7 @@ interface Patient {
   address?: string;
   phone?: string;
   email?: string;
+  medicalHistory?: MedicalHistory[];
 }
 
 export default function PatientProfile() {
@@ -117,39 +130,69 @@ export default function PatientProfile() {
               <p className="text-slate-500">Mã bệnh nhân: {patient._id}</p>
             </div>
           </div>
-          <CardContent className="mt-6 space-y-4">
+          <div className="space-y-4 border rounded-md p-4">
             <div className="flex items-center space-x-3">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
+              <span className=" text-base">
                 Ngày sinh: {formatDate(patient.dateOfBirth)}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <UserIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
-                Gender:{" "}
+              <span className=" text-base">
+                Giới tính:{" "}
                 {patient.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <MapPinIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
-                Address: {patient.address}
-              </span>
+              <span className=" text-base">Địa chỉ: {patient.address}</span>
             </div>
             <div className="flex items-center space-x-3">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
-                Phone: {patient.phone}
-              </span>
+              <span className=" text-base">Số ĐT: {patient.phone}</span>
             </div>
             <div className="flex items-center space-x-3">
               <MailIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
-                Email: {patient.email}
-              </span>
+              <span className=" text-base">Email: {patient.email}</span>
             </div>
-          </CardContent>
+          </div>
+          <div className="w-full border rounded-md p-4">
+            <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
+            {(patient as any).medicalHistory.length === 0 ? (
+              <p className="text-slate-500 text-sm">
+                Chưa có lịch sử khám bệnh
+              </p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Ngày khám</TableHead>
+                    <TableHead>Tiền sử bệnh</TableHead>
+                    <TableHead>Chẩn đoán bệnh</TableHead>
+                    <TableHead>Kết quả xét nghiệm (nếu có)</TableHead>
+                    <TableHead>Điều trị</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(patient as any).medicalHistory.map((history: any) => (
+                    <TableRow key={history.diagnosisDate}>
+                      <TableCell>
+                        {formatDate(history?.diagnosisDate)}
+                      </TableCell>
+                      <TableCell>{history.disease.split("_")[1]}</TableCell>
+                      <TableCell>{history.disease.split("_")[0]}</TableCell>
+                      <TableCell>{history.disease.split("_")[2]}</TableCell>
+                      <TableCell>
+                        {history.treatment.split("_")[0] +
+                          history.treatment.split("_")[1]}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </div>
           <div className="flex justify-end space-x-4">
             <Button
               variant="destructive"

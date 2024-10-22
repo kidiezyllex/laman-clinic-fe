@@ -130,7 +130,7 @@ export default function NavBar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-full bg-secondary"
+                className="rounded-full bg-secondary dark:bg-background border dark:border-slate-950"
               >
                 <User className="h-[1.2rem] w-[1.2rem]" />
               </Button>

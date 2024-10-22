@@ -242,6 +242,7 @@ export default function ViewAppointment() {
       const response2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
+      // thay bằng response.data.data khi mở comment
       const mergeAppointments = (): Appointment[] => {
         return response.data.map((app: any) => {
           const patient = response2.data.find(

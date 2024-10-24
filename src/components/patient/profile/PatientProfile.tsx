@@ -30,26 +30,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { format } from "date-fns";
 import PatientProfileForm from "./PatientProfileForm";
 import { usePathname } from "next/navigation";
-interface MedicalHistory {
-  disease: string;
-  diagnosisDate: Date;
-  treatment: string;
-  _id: string;
-}
-interface Patient {
-  _id: string;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  medicalHistory?: MedicalHistory[];
-}
+import { Patient } from "../../../../lib/entity-types";
+import { formatDate } from "../../../../lib/utils";
 
 export default function PatientProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -57,11 +41,6 @@ export default function PatientProfile() {
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(new Date(date), "dd/MM/yyyy");
-  };
 
   useEffect(() => {
     const fetchPatientByAccountId = async () => {

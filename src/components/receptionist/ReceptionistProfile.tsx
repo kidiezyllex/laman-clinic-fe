@@ -37,23 +37,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { usePathname } from "next/navigation";
-interface Schedule {
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  _id: string;
-}
-interface Receptionist {
-  _id: String;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  schedule?: Schedule[];
-}
+import { Receptionist } from "../../../lib/entity-types";
+
 export default function ReceptionistProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const userId = usePathname().split("/")[1];

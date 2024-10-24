@@ -15,39 +15,7 @@ import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
 import { formatDate } from "../../../lib/utils";
-
-interface Medication {
-  medicationName: string;
-  dose: string;
-  quantity: number;
-  price: number;
-  instructions: string;
-  _id: string;
-}
-
-interface Patient {
-  _id: String;
-  fullName?: string;
-  phone?: string;
-  email?: string;
-  medicalHistory: MedicalHistory[];
-}
-
-interface Prescription {
-  _id: string;
-  patientId: string;
-  doctorId: string;
-  medications: Medication[];
-  dateIssued: Date;
-  patient: Patient;
-}
-
-interface MedicalHistory {
-  _id: string;
-  disease: string;
-  diagnosisDate: string;
-  treatment: string;
-}
+import { Medication, Patient, Prescription } from "../../../lib/entity-types";
 
 export default function ViewPrescription() {
   const [showCheckboxes, setShowCheckboxes] = useState({

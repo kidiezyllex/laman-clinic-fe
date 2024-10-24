@@ -414,6 +414,3 @@ export default function PatientProfileForm({
     </div>
   );
 }
-function setSearchTerm(email: any) {
-  throw new Error("Function not implemented.");
-}

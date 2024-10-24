@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import ViewPrescription from "@/components/pharmacist/ViewPrescription";
 import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
+import Visitor from "@/components/pharmacist/Visitor";
 // import Notification from "@/components/pharmacist/Notification";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
@@ -29,6 +30,8 @@ export default function Page() {
         return <ViewPrescription />;
       case "profile":
         return <PharmacistProfile />;
+      case "visitor":
+        return <Visitor />;
       // case "manage":
       //   return <Notification />;
       default:
@@ -75,6 +78,18 @@ export default function Page() {
                 >
                   <Pill className="h-4 w-4" />
                   Đơn thuốc
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("visitor")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "visitor"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Pill className="h-4 w-4" />
+                  Khách vãng lai
                 </Link>
                 <Link
                   href="#"

@@ -14,28 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { formatDate } from "../../../../lib/utils";
-
-interface Medication {
-  medicationName: string;
-  dose: string;
-  quantity: number;
-  price: number;
-  instructions: string;
-  _id: string;
-}
-
-interface Prescription {
-  _id: string;
-  patientId: string;
-  doctorId: string;
-  medications: Medication[];
-  dateIssued: Date;
-}
-
-interface PatientPrescriptionInvoiceProps {
-  prescription: Prescription;
-  newMedication: Medication[];
-}
+import { PatientPrescriptionInvoiceProps } from "../../../../lib/entity-types";
 
 export default function PatientPrescriptionInvoice({
   prescription,

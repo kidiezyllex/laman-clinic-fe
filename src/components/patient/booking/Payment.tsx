@@ -11,22 +11,14 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react"; // react-icons for icons
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { usePathname } from "next/navigation";
+import { Patient } from "../../../../lib/entity-types";
 
-interface Patient {
-  _id?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
 const PaymentForm = ({
   setActiveSection,
   selectedDate,

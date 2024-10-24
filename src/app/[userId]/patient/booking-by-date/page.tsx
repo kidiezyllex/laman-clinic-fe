@@ -16,17 +16,8 @@ import RoomSelector from "@/components/patient/booking/RoomSelector";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import Payment from "@/components/patient/booking/Payment";
 import { usePathname } from "next/navigation";
+import { Patient } from "../../../../../lib/entity-types";
 
-interface Patient {
-  _id: String;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
 export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());

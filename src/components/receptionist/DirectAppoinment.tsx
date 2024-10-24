@@ -26,16 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-interface Patient {
-  _id: String;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
+import { Patient } from "../../../lib/entity-types";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();

@@ -22,14 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Calendar,
@@ -53,43 +46,13 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Separator } from "../ui/separator";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { medicationData } from "./medicationData";
 import { usePathname } from "next/navigation";
-interface MedicalHistory {
-  _id: string;
-  disease: string;
-  diagnosisDate: string;
-  treatment: string;
-}
+import { formatDate } from "../../../lib/utils";
+import { Appointment, MedicationRow } from "../../../lib/entity-types";
 
-interface Appointment {
-  patientId: string;
-  appointmentDate: string;
-  reason: string;
-  specialization: string;
-  email: string;
-  fullName: string;
-  gender: string;
-  phone: string;
-  medicalHistory: MedicalHistory[];
-  priority: boolean;
-}
-
-interface MedicationRow {
-  id: number;
-  medicationName: string;
-  dose: string;
-  quantity: number;
-  instructions: string;
-  price: number;
-}
-
-const formatDate = (dateString: string) => {
-  return format(parseISO(dateString), "dd/MM/yyyy");
-};
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
   dose: z.string().min(1, "Liều lượng không được để trống"),
@@ -552,7 +515,9 @@ export default function ViewAppointment() {
                     <Calendar className="w-4 h-5 text-blue-500" />
                     <span className="text-sm">
                       Ngày hẹn khám:{" "}
-                      {formatDate(selectedAppointment?.appointmentDate)}
+                      {formatDate(
+                        new Date(selectedAppointment?.appointmentDate)
+                      )}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -583,7 +548,7 @@ export default function ViewAppointment() {
                         {selectedAppointment.medicalHistory.map((history) => (
                           <TableRow key={history.diagnosisDate}>
                             <TableCell>
-                              {formatDate(history?.diagnosisDate)}
+                              {formatDate(new Date(history?.diagnosisDate))}
                             </TableCell>
                             <TableCell>
                               {history.disease.split("_")[1]}

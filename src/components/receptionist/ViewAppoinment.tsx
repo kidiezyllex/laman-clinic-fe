@@ -15,29 +15,14 @@ import {
   MapPin,
   Phone,
   SearchIcon,
-  Trash,
   User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
-
-interface AppointmentByPatient {
-  id: string;
-  appointmentDateByPatient: Date;
-  specialization: string;
-  fullName: string;
-  dateOfBirth: string;
-  gender: string;
-  address: string;
-  phone: string;
-  email: string;
-  medicalHistory: Array<string>;
-}
+import { formatDate } from "../../../lib/utils";
+import { AppointmentByPatient } from "../../../lib/entity-types";
 
 export default function ViewAppointment() {
   const { toast } = useToast();
@@ -62,11 +47,6 @@ export default function ViewAppointment() {
         appointment.email.toLowerCase().includes(searchTermLower))
     );
   });
-
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
 
   const fetchData = async () => {
     const response = await axios.get(

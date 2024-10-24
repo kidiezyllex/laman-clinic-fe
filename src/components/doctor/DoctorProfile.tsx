@@ -35,23 +35,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { usePathname } from "next/navigation";
-interface Schedule {
-  dayOfWeek: string;
-  startTime: string;
-  endTime: string;
-  _id: string;
-}
-interface Doctor {
-  _id: String;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  schedule?: Schedule[];
-}
+import { Doctor, Schedule } from "../../../lib/entity-types";
+
 export default function DoctorProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const userId = usePathname().split("/")[1];
@@ -162,41 +147,24 @@ export default function DoctorProfile() {
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
       <div className="flex flex-col gap-3">
         {Object.keys(doctor).length !== 0 &&
-          (doctor as any).schedule.map(
-            (scheduleItem: {
-              _id: Key | null | undefined;
-              dayOfWeek:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<any, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<AwaitedReactNode>
-                | null
-                | undefined;
-              startTime: string;
-              endTime: string;
-            }) => (
-              <div key={scheduleItem._id} className="p-3 border">
-                <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                </h3>
-                <div className="grid grid-cols-4 gap-2 ">
-                  {generateTimeSlots(
-                    scheduleItem.startTime,
-                    scheduleItem.endTime
-                  ).map((slot) => (
-                    <Button key={slot} variant={"secondary"}>
-                      {slot}
-                    </Button>
-                  ))}
-                </div>
+          (doctor as any).schedule.map((scheduleItem: Schedule) => (
+            <div key={scheduleItem._id} className="p-3 border">
+              <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+                <Clock className="w-4 h-4 mr-2" />
+                <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+              </h3>
+              <div className="grid grid-cols-4 gap-2 ">
+                {generateTimeSlots(
+                  scheduleItem.startTime,
+                  scheduleItem.endTime
+                ).map((slot) => (
+                  <Button key={slot} variant={"secondary"}>
+                    {slot}
+                  </Button>
+                ))}
               </div>
-            )
-          )}
+            </div>
+          ))}
       </div>
       {Object.keys(doctor).length !== 0 && (
         <div className="flex justify-end space-x-4">

@@ -50,9 +50,6 @@ export default function Page() {
       localStorage.setItem("currentEmail", (data as any)?.data?.email);
       localStorage.setItem("role", (data as any)?.data?.role);
 
-      const token = await getCookie("jwt");
-      console.log(token);
-
       if (data.status === "success") {
         if (data.data?.role === "doctor") {
           toast({

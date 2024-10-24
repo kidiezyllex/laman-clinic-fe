@@ -29,8 +29,7 @@ export default function NavBar() {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");
     setToken(localStorage.getItem("token") || "");
-    console.log(token);
-  }, [token]);
+  }, []);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/quy-trinh", label: "QUY TRÌNH" },
@@ -48,54 +47,6 @@ export default function NavBar() {
       description: "Đăng xuất thành công",
     });
     router.push("/");
-    // try {
-    //   localStorage.removeItem("token");
-    //   // const res = await fetch(
-    //   //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/logout`,
-    //   //   {
-    //   //     method: "GET",
-    //   //     credentials: "include",
-    //   //     headers: {
-    //   //       "Content-Type": "application/json",
-    //   //       Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //   //     },
-    //   //   }
-    //   // );
-    //   // if (!res.ok) {
-    //   //   const errorData = await res.json();
-    //   //   throw new Error(
-    //   //     errorData.message || `HTTP error! status: ${res.status}`
-    //   //   );
-    //   // }
-
-    //   // const data = await res.json();
-
-    //   if (data.status === "success") {
-    //     localStorage.removeItem("currentId");
-    //     localStorage.removeItem("token");
-
-    //     toast({
-    //       variant: "default",
-    //       title: "Thành công!",
-    //       description: data.message,
-    //     });
-
-    //     router.push("/sign-in");
-    //   } else {
-    //     toast({
-    //       variant: "destructive",
-    //       title: "Thất bại!",
-    //       description: data.message || "Đăng xuất không thành công",
-    //     });
-    //   }
-    // } catch (error) {
-    //   console.error("Logout error:", error);
-    //   toast({
-    //     variant: "destructive",
-    //     title: "Thất bại!",
-    //     description: error + "",
-    //   });
-    // }
   };
   const renderNavBar = () => {
     // Nếu có id của User login bằng GG/GH

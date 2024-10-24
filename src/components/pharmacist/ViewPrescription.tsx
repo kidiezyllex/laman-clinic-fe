@@ -53,10 +53,11 @@ export default function ViewPrescription() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
+        // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
       );
       setPrescriptions(
-        response.data.sort(
+        response.data.data.sort(
           (a: { dateIssued: Date }, b: { dateIssued: Date }) =>
             new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
         )

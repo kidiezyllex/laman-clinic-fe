@@ -14,6 +14,7 @@ import { Calendar, SearchIcon, Stethoscope, User } from "lucide-react";
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
+import { formatDate } from "../../../lib/utils";
 
 interface Medication {
   medicationName: string;
@@ -29,6 +30,7 @@ interface Patient {
   fullName?: string;
   phone?: string;
   email?: string;
+  medicalHistory: MedicalHistory[];
 }
 
 interface Prescription {
@@ -40,6 +42,13 @@ interface Prescription {
   patient: Patient;
 }
 
+interface MedicalHistory {
+  _id: string;
+  disease: string;
+  diagnosisDate: string;
+  treatment: string;
+}
+
 export default function ViewPrescription() {
   const [showCheckboxes, setShowCheckboxes] = useState({
     isShow: false,
@@ -49,6 +58,12 @@ export default function ViewPrescription() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
   const [newMedication, setNewMedication] = useState<Medication[]>([]);
   const [showInvoice, setShowInvoice] = useState({ isShow: false, id: "" });
+  const [selectedPatientId, setSelectedPatientId] = useState({
+    patientId: "",
+    id: "",
+  });
+  const [selectedPatientMedicalHistory, setSelectedPatientMedicalHistory] =
+    useState<Patient>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -67,6 +82,25 @@ export default function ViewPrescription() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId.patientId}`
+      );
+      console.log(response.data);
+      setSelectedPatientMedicalHistory(response.data);
+    };
+
+    fetchData();
+  }, [selectedPatientId]);
+
+  // const MedicalHistoryById = async () => {
+  //   const response = await axios.get(
+  //     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId}`
+  //   );
+  //   const patient = response.data;
+  //   return <p>{patient}</p>;
+  // };
   const filteredPrescriptions = prescriptions.filter((prescription) => {
     const searchTermLower = searchTerm.toLowerCase();
     return prescription.patientId.toLowerCase().includes(searchTermLower);
@@ -114,7 +148,7 @@ export default function ViewPrescription() {
               </p>
               <p className="flex items-center text-base">
                 <Stethoscope className="h-4 w-4 mr-2" />
-                Mã Bác sĩ: {prescription.doctorId}
+                Mã Đơn thuốc: {prescription._id}
               </p>
             </div>
 
@@ -167,6 +201,12 @@ export default function ViewPrescription() {
             {/* Action buttons */}
             <div className="flex lfex-row gap-3 p-4 justify-end">
               <Button
+                onClick={() =>
+                  setSelectedPatientId({
+                    patientId: prescription.patientId,
+                    id: prescription._id,
+                  })
+                }
                 variant={"outline"}
                 className={
                   showCheckboxes.id === prescription._id &&
@@ -175,7 +215,7 @@ export default function ViewPrescription() {
                     : ""
                 }
               >
-                Xem lịch sử khám
+                Lịch sử bệnh lý
               </Button>
 
               {showCheckboxes.id === prescription._id &&
@@ -233,6 +273,60 @@ export default function ViewPrescription() {
                 prescription={prescription}
                 newMedication={newMedication}
               />
+            )}
+
+            {/* Lịch sử bệnh lý */}
+            {selectedPatientId.id === prescription._id &&
+            selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
+              <p className="text-slate-500 text-sm">
+                Chưa có lịch sử khám bệnh
+              </p>
+            ) : (
+              <Table>
+                <TableHeader>
+                  {selectedPatientId.id === prescription._id && (
+                    <TableRow>
+                      <TableHead>
+                        Tên bệnh nhân: {selectedPatientMedicalHistory?.fullName}
+                      </TableHead>
+                      <TableHead>
+                        {" "}
+                        Số ĐT: {selectedPatientMedicalHistory?.phone}
+                      </TableHead>
+                    </TableRow>
+                  )}
+                </TableHeader>
+                <TableHeader>
+                  {selectedPatientId.id === prescription._id && (
+                    <TableRow>
+                      <TableHead>Ngày khám</TableHead>
+                      <TableHead>Tiền sử bệnh</TableHead>
+                      <TableHead>Chẩn đoán bệnh</TableHead>
+                      <TableHead>Kết quả xét nghiệm (nếu có)</TableHead>
+                      <TableHead>Điều trị</TableHead>
+                    </TableRow>
+                  )}
+                </TableHeader>
+                <TableBody>
+                  {selectedPatientId.id === prescription._id &&
+                    selectedPatientMedicalHistory?.medicalHistory?.map(
+                      (history) => (
+                        <TableRow key={history.diagnosisDate}>
+                          <TableCell>
+                            {formatDate(new Date(history?.diagnosisDate))}
+                          </TableCell>
+                          <TableCell>{history.disease.split("_")[1]}</TableCell>
+                          <TableCell>{history.disease.split("_")[0]}</TableCell>
+                          <TableCell>{history.disease.split("_")[2]}</TableCell>
+                          <TableCell>
+                            {history.treatment.split("_")[0] +
+                              history.treatment.split("_")[1]}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
+                </TableBody>
+              </Table>
             )}
           </Card>
         ))}

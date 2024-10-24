@@ -206,9 +206,7 @@ export default function ViewAppointment() {
     setSelectedAppointment(appointment);
     setIsOpen(true);
   };
-  const pathname = usePathname()
-
-
+  const pathname = usePathname();
 
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
@@ -216,7 +214,9 @@ export default function ViewAppointment() {
       // const currentEmail = localStorage.getItem("currentEmail");
 
       const response1 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${pathname.split("/")[1]}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${
+          pathname.split("/")[1]
+        }`
       );
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
@@ -424,6 +424,8 @@ export default function ViewAppointment() {
           </Button>
         </div>
       </div>
+
+      {/* Hiển thị bệnh nhân chờ khám trên lịch */}
       <div className="border rounded-md h-full ">
         <div className="inline-block min-w-full h-full">
           <div className="w-full grid grid-cols-7 h-full">
@@ -432,10 +434,11 @@ export default function ViewAppointment() {
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
                   <div className="font-semibold">{format(day, "EEE")}</div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
-                      ? "bg-blue-500 text-white"
-                      : "text-foreground"
-                      }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
+                      isSameDay(day, new Date())
+                        ? "bg-blue-500 text-white"
+                        : "text-foreground"
+                    }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
@@ -478,6 +481,7 @@ export default function ViewAppointment() {
         </div>
       </div>
 
+      {/* Dialog chi tiết bệnh nhân */}
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           {selectedAppointment && (

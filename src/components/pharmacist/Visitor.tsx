@@ -174,7 +174,9 @@ export default function Visitor() {
 
   const handleCreatePrescription = () => {
     if (customerInfoForm.getValues().fullName.trim() !== "") {
+      // Post data khách hàng lên route patient
       console.log("Customer Information:", customerInfoForm.getValues());
+      // Post
       console.log("Prescription Information:", form.getValues());
     } else
       toast({
@@ -390,76 +392,80 @@ export default function Visitor() {
               ))}
             </form>
           </Form>
-          <div className="flex flex-row gap-3 w-full justify-end mt-6">
-            <Button
-              type="button"
-              onClick={() => {
-                setRows([
-                  {
-                    id: 0,
-                    medicationName: "",
-                    dose: "",
-                    quantity: 0,
-                    instructions: "",
-                    price: 0,
-                  },
-                ]);
-                setIsShow(false);
-                setShowInvoice(false);
-              }}
-              variant="destructive"
-              className={isShow ? "" : "hidden"}
-              // className="self-start "
-            >
-              Đặt lại
-            </Button>
-            <Button
-              type="button"
-              onClick={addRow}
-              variant="outline"
-              className="self-start"
-            >
-              Thêm dòng
-            </Button>
-            <Button
-              type="button"
-              onClick={() => {
-                if (rows[0].quantity !== 0) {
-                  setShowInvoice(true);
-                } else
-                  toast({
-                    variant: "destructive",
-                    title: "Thất bại!",
-                    description: "Hoá đơn rỗng. Vui lòng Tạo đơn thuốc!",
-                  });
-              }}
-              variant="default"
-              className="self-start"
-            >
-              Xem hoá đơn
-            </Button>
-            <Button
-              type="button"
-              onClick={handleCreatePrescription}
-              variant="default"
-              className="self-start"
-            >
-              Tạo đơn thuốc
-            </Button>
-          </div>
         </div>
       </div>
-      {showInvoice && (
-        <PatientPrescriptionInvoice
-          prescription={{
-            _id: "",
-            patientId: "",
-            doctorId: "",
-            medications: [],
-            dateIssued: new Date(),
+      <div className="flex flex-row gap-3 w-full justify-end mt-6">
+        <Button
+          type="button"
+          onClick={() => {
+            setRows([
+              {
+                id: 0,
+                medicationName: "",
+                dose: "",
+                quantity: 0,
+                instructions: "",
+                price: 0,
+              },
+            ]);
+            setIsShow(false);
+            setShowInvoice(false);
           }}
-          newMedication={[...rows] as any}
-        />
+          variant="destructive"
+          className={isShow ? "" : "hidden"}
+          // className="self-start "
+        >
+          Đặt lại
+        </Button>
+        <Button
+          type="button"
+          onClick={addRow}
+          variant="outline"
+          className="self-start"
+        >
+          Thêm dòng
+        </Button>
+        <Button
+          type="button"
+          onClick={() => {
+            if (rows[0].quantity !== 0) {
+              setShowInvoice(true);
+            } else
+              toast({
+                variant: "destructive",
+                title: "Thất bại!",
+                description: "Hoá đơn rỗng. Vui lòng Tạo đơn thuốc!",
+              });
+          }}
+          variant="default"
+          className="self-start"
+        >
+          Xem hoá đơn
+        </Button>
+        <Button
+          type="button"
+          onClick={handleCreatePrescription}
+          variant="default"
+          className="self-start"
+        >
+          Tạo đơn thuốc
+        </Button>
+      </div>
+      {showInvoice && (
+        <div className="border rounded-md">
+          <h3 className="text-md font-semibold text-blue-500 m-4">Hoá đơn</h3>
+
+          <PatientPrescriptionInvoice
+            prescription={{
+              _id: "",
+              patientId: "",
+              doctorId: "",
+              medications: [],
+              dateIssued: new Date(),
+            }}
+            newMedication={[...rows] as any}
+          />
+        </div>
       )}
     </div>
   );

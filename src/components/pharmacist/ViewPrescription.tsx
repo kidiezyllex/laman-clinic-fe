@@ -16,8 +16,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
 import { formatDate } from "../../../lib/utils";
 import { Medication, Patient, Prescription } from "../../../lib/entity-types";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ViewPrescription() {
+  const { toast } = useToast();
   const [showCheckboxes, setShowCheckboxes] = useState({
     isShow: false,
     id: "",
@@ -81,6 +83,26 @@ export default function ViewPrescription() {
       setNewMedication((prev) =>
         prev.filter((med) => med._id !== medication._id)
       );
+    }
+  };
+
+  const handleCompletePrescription = async (prescriptionId: string) => {
+    try {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/${prescriptionId}`,
+        { status: "Completed", dateIssued: new Date() }
+      );
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Hoàn thành đơn thuốc!",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: "Lỗi: " + error,
+      });
     }
   };
 
@@ -230,7 +252,10 @@ export default function ViewPrescription() {
                   Xem hoá đơn
                 </Button>
               )}
-              <Button className="bg-blue-500 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600">
+              <Button
+                className="bg-blue-500 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
+                onClick={() => handleCompletePrescription(prescription._id)}
+              >
                 Hoàn thành đơn
               </Button>
             </div>

@@ -87,7 +87,7 @@ export default function ViewPrescription() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        DANH SÁCH ĐƠN THUỐC CỦA BỆNH NHÂN ĐÃ KHÁM
+        DÀNH CHO BỆNH NHÂN ĐÃ KHÁM TẠI PHÒNG KHÁM
       </p>
 
       <div className="relative mb-6">

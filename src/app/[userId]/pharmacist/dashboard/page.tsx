@@ -22,7 +22,7 @@ import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 // import Notification from "@/components/pharmacist/Notification";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("appoinments");
+  const [activeSection, setActiveSection] = useState("visitor");
 
   const renderMainContent = () => {
     switch (activeSection) {

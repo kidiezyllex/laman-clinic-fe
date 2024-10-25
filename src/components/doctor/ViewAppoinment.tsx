@@ -48,7 +48,7 @@ import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { medicationData } from "./medicationData";
+import { medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
 import { Appointment, MedicationRow } from "../../../lib/entity-types";

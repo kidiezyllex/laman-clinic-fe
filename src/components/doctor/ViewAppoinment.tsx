@@ -1,7 +1,7 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, SetStateAction } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -48,7 +48,7 @@ import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { medicationData } from "../../../lib/hardcoded-data";
+import { labTestsData, medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
 import { Appointment, MedicationRow } from "../../../lib/entity-types";
@@ -81,6 +81,10 @@ export default function ViewAppointment() {
   });
   // state
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const [selectedSpecialization, setSelectedSpecialization] = useState("");
+  const [selectedTest, setSelectedTest] = useState(null);
+  const [showLabTestsForm, setShowLabTestsForm] = useState(false);
+  const [mainShow, setMainShow] = useState(true);
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
     useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -110,6 +114,21 @@ export default function ViewAppointment() {
     treatment: "",
     otherTreatment: "",
   });
+
+  const handleSpecializationChange = (value: any) => {
+    setSelectedSpecialization(value);
+    setSelectedTest(null);
+  };
+
+  const handleTestChange = (value: any) => {
+    const selectedSpecData = labTestsData.find(
+      (spec) => spec.specialization === selectedSpecialization
+    );
+    const testData = selectedSpecData?.labTests.find(
+      (test) => test.testName === value
+    );
+    setSelectedTest(testData as any);
+  };
   // Toggle Form tạo đơn thuốc
   const handleCanclePrescription = () => {
     setRows([
@@ -123,6 +142,7 @@ export default function ViewAppointment() {
       },
     ]);
     setShowPrescriptionForm(!showPrescriptionForm);
+    setMainShow(true);
   };
 
   // Thêm 1 row
@@ -181,42 +201,42 @@ export default function ViewAppointment() {
           pathname.split("/")[1]
         }`
       );
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
-      );
-      // const response = {
-      //   success: true,
-      //   data: [
-      //     {
-      //       patientId: "BN-PMQ7TS",
-      //       appointmentDate: "2024-10-22T10:27:40.521Z",
-      //       reason: "benh",
-      //       specialization: "Cardiology",
-      //       priority: true,
-      //     },
-      //     {
-      //       patientId: "BN-5C662W",
-      //       appointmentDate: "2024-10-22T05:09:19.661Z",
-      //       reason: "benh ho",
-      //       specialization: "Cardiology",
-      //     },
-      //     {
-      //       patientId: "BN-CODQ3H",
-      //       appointmentDate: "2024-10-22T10:34:32.233Z",
-      //       reason: "benhss",
-      //       specialization: "Cardiology",
-      //       priority: false,
-      //     },
-      //   ],
-      // };
-      // setAppointments(response?.data as any);
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
+      // );
+      const response = {
+        success: true,
+        data: [
+          {
+            patientId: "BN-PMQ7TS",
+            appointmentDate: "2024-10-22T10:27:40.521Z",
+            reason: "benh",
+            specialization: "Cardiology",
+            priority: true,
+          },
+          {
+            patientId: "BN-5C662W",
+            appointmentDate: "2024-10-22T05:09:19.661Z",
+            reason: "benh ho",
+            specialization: "Cardiology",
+          },
+          {
+            patientId: "BN-CODQ3H",
+            appointmentDate: "2024-10-22T10:34:32.233Z",
+            reason: "benhss",
+            specialization: "Cardiology",
+            priority: false,
+          },
+        ],
+      };
+      setAppointments(response?.data as any);
 
       const response2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
       // thay bằng response.data.data khi mở comment
       const mergeAppointments = (): Appointment[] => {
-        return response.data.data.map((app: any) => {
+        return response.data.map((app: any) => {
           const patient = response2.data.find(
             (p: { _id: string }) => p._id === app.patientId
           );
@@ -257,12 +277,10 @@ export default function ViewAppointment() {
         medications: rows,
         dateIssued: new Date(),
       };
-      // console.log(payload);
       const response3 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
         payload
       );
-      // console.log("hello");
     } catch (error) {
       console.error("Error during sign in:", error);
     } finally {
@@ -451,17 +469,25 @@ export default function ViewAppointment() {
             <div className="flex flex-col gap-4">
               <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
                 {selectedAppointment?.gender?.toLowerCase() === "male" ? (
-                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border-2 border-blue-500">
                     <Dog className="text-blue-500" />
                   </div>
                 ) : (
-                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200 border-2 border-pink-500">
                     <Cat className="text-pink-500" />
                   </div>
                 )}
                 <div>
-                  <p className="text-base font-semibold">
-                    {selectedAppointment?.fullName}
+                  <p className="text-base font-semibold ">
+                    {selectedAppointment?.gender?.toLowerCase() === "male" ? (
+                      <p className="text-blue-500">
+                        {selectedAppointment?.fullName}
+                      </p>
+                    ) : (
+                      <p className="text-pink-500">
+                        {selectedAppointment?.fullName}
+                      </p>
+                    )}
                   </p>
                   <p className="text-slate-500">
                     Mã bệnh nhân: {selectedAppointment?.patientId}
@@ -571,8 +597,8 @@ export default function ViewAppointment() {
                 </div>
               </div>
               {showPrescriptionForm && (
-                <div className="">
-                  <h3 className="text-md font-semibold mb-4">Tạo đơn thuốc</h3>
+                <div className="flex flex-col gap-4 h-full mr-4">
+                  <h3 className="text-md font-semibold">Tạo đơn thuốc</h3>
                   <Form {...form}>
                     <form className="space-y-4">
                       <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md">
@@ -652,12 +678,41 @@ export default function ViewAppointment() {
                       ))}
                     </form>
                   </Form>
+                  <div className="flex flex-row gap-4 w-full justify-end flex-grow ">
+                    <Button
+                      type="button"
+                      onClick={addRow}
+                      variant="outline"
+                      className="self-start"
+                    >
+                      Thêm dòng
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      onClick={() => handleCanclePrescription()}
+                    >
+                      Huỷ đơn thuốc
+                    </Button>
+                    <Button
+                      onClick={() => handleCreatePrescription()}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Đang xử lý...
+                        </>
+                      ) : (
+                        "Tạo đơn thuốc"
+                      )}
+                    </Button>
+                  </div>
                 </div>
               )}
 
               {showDiagnosticResultsForm && (
                 <div className="">
-                  <h3 className="text-md font-semibold mb-4">
+                  <h3 className="text-md font-semibold mb-4 mr-4">
                     Nhập thông tin khám bệnh/chẩn đoán bệnh
                   </h3>
                   <Form {...form}>
@@ -735,11 +790,12 @@ export default function ViewAppointment() {
                       <div className="flex flex-row gap-4 w-full justify-end">
                         <Button
                           variant="destructive"
-                          onClick={() =>
+                          onClick={() => {
                             setShowDiagnosticResultsForm(
                               !showDiagnosticResultsForm
-                            )
-                          }
+                            );
+                            setMainShow(true);
+                          }}
                         >
                           Huỷ
                         </Button>
@@ -762,32 +818,92 @@ export default function ViewAppointment() {
                   </Form>
                 </div>
               )}
-              <div
-                className={
-                  showDiagnosticResultsForm
-                    ? "hidden"
-                    : "flex flex-row gap-3 justify-end items-end flex-grow mt-8 mr-4"
-                }
-              >
-                <Button variant="outline">Tạo xét nghiệm</Button>
-                {showPrescriptionForm ? (
-                  <div className="flex flex-row gap-4 w-full justify-end">
-                    <Button
-                      type="button"
-                      onClick={addRow}
-                      variant="outline"
-                      className="self-start"
-                    >
-                      Thêm dòng
-                    </Button>
+
+              {showLabTestsForm && (
+                <div className="">
+                  <h3 className="text-md font-semibold mb-4 mr-4">
+                    Tạo xét nghiệm
+                  </h3>
+                  <Form {...form}>
+                    <form className="space-y-4">
+                      <div className="grid grid-cols-4 gap-4 font-medium border p-3 rounded-md">
+                        <Label className="align-middle text-center">
+                          Chuyên khoa
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Xét nghiệm
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Mô tả
+                        </Label>
+                        <Label className="align-middle text-center">
+                          Đơn giá (VNĐ)
+                        </Label>
+                      </div>
+                      <div className="grid grid-cols-4 gap-4 font-medium rounded-md">
+                        <Select onValueChange={handleSpecializationChange}>
+                          <SelectTrigger id="specialization">
+                            <SelectValue placeholder="Chọn chuyên khoa" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {labTestsData.map((spec) => (
+                              <SelectItem
+                                key={spec.specialization}
+                                value={spec.specialization}
+                              >
+                                {spec.specialization}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <Select
+                          onValueChange={handleTestChange}
+                          disabled={!selectedSpecialization}
+                        >
+                          <SelectTrigger id="labTest">
+                            <SelectValue placeholder="Chọn xét nghiệm" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {(labTestsData as any)
+                              ?.find(
+                                (spec: any) =>
+                                  spec.specialization === selectedSpecialization
+                              )
+                              ?.labTests.map((test: any) => (
+                                <SelectItem
+                                  key={test.testName}
+                                  value={test.testName}
+                                >
+                                  {test.testName}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                          <Input
+                            value={(selectedTest as any)?.testDescription}
+                            disabled
+                          ></Input>
+                          <Input
+                            value={(selectedTest as any)?.price.toLocaleString(
+                              "vi-VN"
+                            )}
+                            disabled
+                          ></Input>
+                        </Select>
+                      </div>
+                    </form>
+                  </Form>
+                  <div className="flex flex-row gap-4 w-full justify-end mt-4">
                     <Button
                       variant="destructive"
-                      onClick={() => handleCanclePrescription()}
+                      onClick={() => {
+                        setShowLabTestsForm(false);
+                        setMainShow(true);
+                      }}
                     >
-                      Huỷ đơn thuốc
+                      Huỷ xét nghiệm
                     </Button>
                     <Button
-                      onClick={() => handleCreatePrescription()}
+                      // onClick={() => handleCreatePrescription()}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -796,31 +912,43 @@ export default function ViewAppointment() {
                           Đang xử lý...
                         </>
                       ) : (
-                        "Tạo đơn thuốc"
+                        "Tạo xét nghiệm"
                       )}
                     </Button>
                   </div>
-                ) : (
-                  <div className="flex flex-row gap-4">
-                    <Button
-                      variant="outline"
-                      onClick={() =>
-                        setShowPrescriptionForm(!showPrescriptionForm)
-                      }
-                    >
-                      Tạo đơn thuốc
-                    </Button>
-                    <Button
-                      variant="secondary"
-                      onClick={() =>
-                        setShowDiagnosticResultsForm(!showDiagnosticResultsForm)
-                      }
-                    >
-                      Hoàn thành khám
-                    </Button>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
+              {mainShow && (
+                <div className="flex flex-row gap-4 mr-4 justify-end items-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowLabTestsForm(!showLabTestsForm);
+                      setMainShow(false);
+                    }}
+                  >
+                    Tạo xét nghiệm
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowPrescriptionForm(!showPrescriptionForm);
+                      setMainShow(false);
+                    }}
+                  >
+                    Tạo đơn thuốc
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    onClick={() => {
+                      setShowDiagnosticResultsForm(!showDiagnosticResultsForm);
+                      setMainShow(false);
+                    }}
+                  >
+                    Hoàn thành khám
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </DialogContent>

@@ -41,10 +41,15 @@ export default function ViewPrescription() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
         // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
       );
+      // setPrescriptions(
+      //   response.data.sort(
+      //     (a: { dateIssued: Date }, b: { dateIssued: Date }) =>
+      //       new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
+      //   )
+      // );
       setPrescriptions(
-        response.data.sort(
-          (a: { dateIssued: Date }, b: { dateIssued: Date }) =>
-            new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
+        response.data.filter(
+          (item: { status: string }) => item.status === "Scheduled"
         )
       );
     };

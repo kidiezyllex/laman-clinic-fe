@@ -87,10 +87,11 @@ export default function NavBar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 mt-2" align="end">
-              <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between ">
-                <div onClick={() => handleLogOut()}>
-                  <span>Đăng xuất</span>
-                </div>
+              <DropdownMenuItem
+                onClick={() => handleLogOut()}
+                className="px-4 py-2 flex flex-row justify-between"
+              >
+                <span>Đăng xuất</span>
                 <LogOut className="mr-2 h-4 w-4" />
               </DropdownMenuItem>
               <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between ">

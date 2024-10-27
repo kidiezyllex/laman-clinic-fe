@@ -1,7 +1,14 @@
 "use client";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
-import { Calendar, HistoryIcon, LogOut, User, SquareUser } from "lucide-react";
+import {
+  Calendar,
+  HistoryIcon,
+  LogOut,
+  User,
+  SquareUser,
+  CircleUser,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -18,17 +25,20 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { getUserData } from "../../../actions/getUserData";
+import { useAuthContext } from "@/app/auth-context";
 export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
   const [currentId, setCurrentId] = useState("");
   const [role, setRole] = useState("");
-  const [token, setToken] = useState("");
+  // const [token, setToken] = useState("");
+  const { token, setToken } = useAuthContext();
+
   useEffect(() => {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");
-    setToken(localStorage.getItem("token") || "");
+    // setToken(localStorage.getItem("token") || "");
   }, []);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
@@ -39,8 +49,7 @@ export default function NavBar() {
   ];
 
   const handleLogOut = async () => {
-    localStorage.setItem("token", "");
-    setToken("");
+    setToken(null);
     toast({
       variant: "default",
       title: "Thành công!",
@@ -73,7 +82,7 @@ export default function NavBar() {
         </div>
       );
     // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
-    if (token !== "")
+    if (token !== "" && token !== "undefined" && token !== null)
       return (
         <div className="flex flex-row gap-3 justify-end">
           <DropdownMenu>
@@ -81,9 +90,9 @@ export default function NavBar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-full bg-secondary dark:bg-background border dark:border-slate-950"
+                className="rounded-full bg-secondary dark:bg-background dark:border-blue-500 border border-blue-500"
               >
-                <User className="h-[1.2rem] w-[1.2rem]" />
+                <User className="h-[1.2rem] w-[1.2rem] text-blue-500" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56 mt-2" align="end">

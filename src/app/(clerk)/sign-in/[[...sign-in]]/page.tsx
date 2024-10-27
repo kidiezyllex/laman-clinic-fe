@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { getCookie, getSession } from "../../../../../actions/getCookie";
 import axios from "axios";
+import { useAuthContext } from "@/app/auth-context";
 interface LoginResponse {
   status: string;
   message: string;
@@ -25,6 +26,7 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { setToken } = useAuthContext();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,10 +45,9 @@ export default function Page() {
       );
 
       const data: LoginResponse = await response.json();
-
-      // Lưu currentId (để navigate) và token (để đăng xuất)
-
-      localStorage.setItem("token", (data as any)?.token);
+      const dummyToken =
+        "dummy_token_" + Math.random().toString(36).substr(2, 9);
+      setToken(dummyToken);
       localStorage.setItem("currentEmail", (data as any)?.data?.email);
       localStorage.setItem("role", (data as any)?.data?.role);
 

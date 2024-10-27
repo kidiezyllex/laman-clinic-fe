@@ -12,6 +12,7 @@ import Footer from "@/components/layout/Footer";
 import dynamic from "next/dynamic";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
+import { AuthProvider } from "./auth-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -44,16 +45,18 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Toaster />
-            <NavBar />
-            {/* <LocomotiveScrollWrapper> */}
-            <main className="flex flex-col min-h-screen bg-secondary">
-              <section className="flex flex-grow">
-                <Container>{children}</Container>
-              </section>
-              <Hero />
-              <Section />
-              <Footer />
-            </main>
+            <AuthProvider>
+              <NavBar />
+              {/* <LocomotiveScrollWrapper> */}
+              <main className="flex flex-col min-h-screen bg-secondary">
+                <section className="flex flex-grow">
+                  <Container>{children}</Container>
+                </section>
+                <Hero />
+                <Section />
+                <Footer />
+              </main>
+            </AuthProvider>
 
             {/* </LocomotiveScrollWrapper> */}
           </ThemeProvider>

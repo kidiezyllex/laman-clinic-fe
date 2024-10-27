@@ -319,105 +319,167 @@ export const labTestsData = [
     labTests: [
       {
         testName: "Tổng phân tích tế bào máu",
-        testDescription: "Kiểm tra số lượng và các thành phần của tế bào máu, hỗ trợ chẩn đoán các bệnh lý về máu.",
-        price: 300000
+        testDescription:
+          "Kiểm tra số lượng và các thành phần của tế bào máu, hỗ trợ chẩn đoán các bệnh lý về máu.",
+        price: 300000,
       },
       {
         testName: "Xét nghiệm nhóm máu",
         testDescription: "Xác định nhóm máu và yếu tố Rh của bệnh nhân.",
-        price: 120000
-      }
-    ]
+        price: 120000,
+      },
+    ],
   },
   {
     specialization: "Khoa Hóa sinh",
     labTests: [
       {
         testName: "Xét nghiệm chức năng gan",
-        testDescription: "Đánh giá các chỉ số AST, ALT, bilirubin để phát hiện các bệnh lý về gan.",
-        price: 400000
+        testDescription:
+          "Đánh giá các chỉ số AST, ALT, bilirubin để phát hiện các bệnh lý về gan.",
+        price: 400000,
       },
       {
         testName: "Xét nghiệm mỡ máu",
-        testDescription: "Đo các chỉ số cholesterol, triglyceride, giúp chẩn đoán nguy cơ mắc bệnh tim mạch.",
-        price: 200000
-      }
-    ]
+        testDescription:
+          "Đo các chỉ số cholesterol, triglyceride, giúp chẩn đoán nguy cơ mắc bệnh tim mạch.",
+        price: 200000,
+      },
+    ],
   },
   {
     specialization: "Khoa Vi sinh",
     labTests: [
       {
         testName: "Xét nghiệm viêm gan B",
-        testDescription: "Kiểm tra sự hiện diện của virus viêm gan B trong máu.",
-        price: 500000
+        testDescription:
+          "Kiểm tra sự hiện diện của virus viêm gan B trong máu.",
+        price: 500000,
       },
       {
         testName: "Xét nghiệm kháng sinh đồ",
-        testDescription: "Đánh giá độ nhạy cảm của vi khuẩn đối với các loại kháng sinh, giúp lựa chọn kháng sinh phù hợp.",
-        price: 300000
-      }
-    ]
+        testDescription:
+          "Đánh giá độ nhạy cảm của vi khuẩn đối với các loại kháng sinh, giúp lựa chọn kháng sinh phù hợp.",
+        price: 300000,
+      },
+    ],
   },
   {
     specialization: "Khoa Miễn dịch",
     labTests: [
       {
         testName: "Xét nghiệm CRP",
-        testDescription: "Đo nồng độ C-reactive protein trong máu, giúp đánh giá mức độ viêm nhiễm trong cơ thể.",
-        price: 250000
+        testDescription:
+          "Đo nồng độ C-reactive protein trong máu, giúp đánh giá mức độ viêm nhiễm trong cơ thể.",
+        price: 250000,
       },
       {
         testName: "Xét nghiệm ANA",
-        testDescription: "Kiểm tra sự hiện diện của các kháng thể tự miễn, hỗ trợ chẩn đoán bệnh tự miễn như lupus.",
-        price: 400000
-      }
-    ]
+        testDescription:
+          "Kiểm tra sự hiện diện của các kháng thể tự miễn, hỗ trợ chẩn đoán bệnh tự miễn như lupus.",
+        price: 400000,
+      },
+    ],
   },
   {
     specialization: "Khoa Di truyền học",
     labTests: [
       {
         testName: "Xét nghiệm gen BRCA",
-        testDescription: "Xác định đột biến gen BRCA1 và BRCA2, đánh giá nguy cơ ung thư vú và buồng trứng.",
-        price: 1200000
+        testDescription:
+          "Xác định đột biến gen BRCA1 và BRCA2, đánh giá nguy cơ ung thư vú và buồng trứng.",
+        price: 1200000,
       },
       {
         testName: "Xét nghiệm NIPT",
-        testDescription: "Xét nghiệm sàng lọc trước sinh không xâm lấn, giúp phát hiện các bất thường nhiễm sắc thể.",
-        price: 1000000
-      }
-    ]
+        testDescription:
+          "Xét nghiệm sàng lọc trước sinh không xâm lấn, giúp phát hiện các bất thường nhiễm sắc thể.",
+        price: 1000000,
+      },
+    ],
   },
   {
     specialization: "Khoa Sản",
     labTests: [
       {
         testName: "Xét nghiệm sàng lọc trước sinh",
-        testDescription: "Kiểm tra các dị tật bẩm sinh và bệnh lý di truyền cho thai nhi.",
-        price: 600000
+        testDescription:
+          "Kiểm tra các dị tật bẩm sinh và bệnh lý di truyền cho thai nhi.",
+        price: 600000,
       },
       {
         testName: "Xét nghiệm beta hCG",
-        testDescription: "Đo nồng độ beta hCG trong máu để xác định thai kỳ và đánh giá sức khỏe của thai nhi.",
-        price: 200000
-      }
-    ]
+        testDescription:
+          "Đo nồng độ beta hCG trong máu để xác định thai kỳ và đánh giá sức khỏe của thai nhi.",
+        price: 200000,
+      },
+    ],
   },
   {
     specialization: "Khoa Nội tiết",
     labTests: [
       {
         testName: "Xét nghiệm TSH",
-        testDescription: "Đo nồng độ hormone TSH để đánh giá chức năng tuyến giáp.",
-        price: 300000
+        testDescription:
+          "Đo nồng độ hormone TSH để đánh giá chức năng tuyến giáp.",
+        price: 300000,
       },
       {
         testName: "Xét nghiệm insulin",
-        testDescription: "Đo nồng độ insulin trong máu, hỗ trợ chẩn đoán và theo dõi bệnh tiểu đường.",
-        price: 350000
-      }
-    ]
-  }
+        testDescription:
+          "Đo nồng độ insulin trong máu, hỗ trợ chẩn đoán và theo dõi bệnh tiểu đường.",
+        price: 350000,
+      },
+    ],
+  },
 ];
 
+export const processSteps = [
+  {
+    title: "LÊN LỊCH HẸN KHÁM",
+    details: [
+      "Đăng ký sử dụng hệ thống đặt lịch hẹn trực tuyến.",
+      "Chọn hình thức khám: Theo ngày hoặc theo khung giờ.",
+      "Nhập thông tin bệnh nhân: Số hồ sơ bệnh án hoặc bệnh nhân mới.",
+      "Chọn thông tin khám: Chuyên khoa, bác sĩ, ngày khám, giờ khám (nếu có).",
+    ],
+  },
+  {
+    title: "THANH TOÁN PHÍ KHÁM",
+    details: [
+      "Chọn phương thức thanh toán: Thẻ bệnh viện, căn cước công dân, hoặc thẻ ATM, v.v.",
+      "Kiểm tra số tiền cần thanh toán, chọn phương thức thanh toán.",
+      "Nhập thông tin để hoàn tất thanh toán.",
+    ],
+  },
+  {
+    title: "XÁC NHẬN BỆNH NHÂN ĐẾN BỆNH VIỆN",
+    details: [
+      "Sau khi thanh toán thành công, xác nhận sẽ được gửi qua email, tin nhắn hoặc trên trang web.",
+      "Vào ngày khám:",
+      "Bệnh nhân không có hồ sơ bệnh án đến quầy tiếp nhận trước giờ hẹn 15-30 phút.",
+      "Bệnh nhân có hồ sơ bệnh án đến trước giờ hẹn 15-30 phút để xác nhận thông tin trước khi vào phòng khám.",
+    ],
+  },
+  {
+    title: "KHÁM VÀ XÉT NGHIỆM",
+    details: [
+      "Bệnh nhân được khám tại phòng khám chuyên khoa theo lịch hẹn.",
+      "Thực hiện các xét nghiệm và chẩn đoán hình ảnh (nếu có) theo chỉ định của bác sĩ.",
+      "Sau khi nhận kết quả xét nghiệm, bệnh nhân quay lại phòng khám để bác sĩ đánh giá và kê đơn điều trị.",
+    ],
+  },
+  {
+    title: "NHẬN THUỐC",
+    details: [
+      "Bệnh nhân có bảo hiểm y tế: Nhận thuốc tại quầy 17, 18, 19, 20 sau khi thanh toán phần chênh lệch (nếu có).",
+      "Bệnh nhân không có bảo hiểm y tế: Nhận thuốc tại quầy A hoặc B sau khi thanh toán tại quầy thu ngân hoặc chuyển khoản vào tài khoản thanh toán khám (nếu có).",
+    ],
+  },
+  {
+    title: "LÊN LỊCH TÁI KHÁM",
+    details: [
+      "Sử dụng hệ thống đặt lịch hẹn như ở BƯỚC 1 và BƯỚC 2 để nhận phiếu hẹn điện tử.",
+    ],
+  },
+];

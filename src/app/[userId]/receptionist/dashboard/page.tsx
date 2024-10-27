@@ -34,7 +34,7 @@ export default function Page() {
 
   return (
     <div>
-      <Breadcrumb>
+      <Breadcrumb className="mt-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="text-base">

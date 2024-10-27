@@ -66,8 +66,6 @@ const PaymentForm = ({
       email: patient.email,
       medicalHistory: [],
     };
-    console.log(patient._id + "");
-
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
@@ -201,7 +199,7 @@ const PaymentForm = ({
               Đang xử lý...
             </>
           ) : (
-            "Tạo hồ sơ"
+            "Đăng ký khám"
           )}
         </Button>
       </div>

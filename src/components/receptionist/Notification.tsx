@@ -1,9 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bell, Trash2, Eye, ChevronRight } from "lucide-react";
 import Pusher from "pusher-js";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -70,13 +68,6 @@ export default function Notification() {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         ),
       ]);
-      console.log([
-        {
-          message: data.appointment.fullName + " đã đăng ký hẹn khám.",
-          createdAt: data.date,
-        },
-        ...res.data,
-      ]);
 
       // sau đó mới post sau
       await axios.post(`/api/notification`, {
@@ -99,7 +90,6 @@ export default function Notification() {
             new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         )
       );
-      console.log(res.data);
     };
     fecthData();
   }, []);

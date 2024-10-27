@@ -44,11 +44,16 @@ export default function DirectAppoinment() {
   const [isLoading, setIsLoading] = useState(false);
   const [checked, setChecked] = useState(false);
   const handleSearchPatientProfile = () => {
+    const searchTermLower = searchTerm.toLowerCase();
+    if (searchTermLower === "") {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: "Vui lòng nhập mã bệnh nhân!",
+      });
+      return;
+    }
     const filteredP = patients.filter((patient) => {
-      const searchTermLower = searchTerm.toLowerCase();
-      if (searchTermLower === "") {
-        return;
-      }
       return (
         patient.fullName?.toLowerCase().includes(searchTermLower) ||
         (patient.phone && patient.phone.includes(searchTerm)) ||
@@ -59,7 +64,7 @@ export default function DirectAppoinment() {
     });
     if (filteredP.length === 0) {
       toast({
-        variant: "default",
+        variant: "destructive",
         title: "Không tìm thấy!",
         description: "Vui lòng Tạo hồ sơ bệnh nhân mới!",
       });

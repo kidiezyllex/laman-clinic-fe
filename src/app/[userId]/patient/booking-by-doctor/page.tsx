@@ -114,7 +114,7 @@ export default function Page() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage className="text-base text-blue-500">
-              ĐẶT KHÁM THEO NGÀY
+              ĐẶT KHÁM THEO BÁC SĨ
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
@@ -206,19 +206,7 @@ export default function Page() {
                       : "text-base"
                   }
                 >
-                  Ngày khám
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage
-                  className={
-                    activeSection === "specialtySelector"
-                      ? "text-base text-blue-500 dark:text-blue-500"
-                      : "text-base"
-                  }
-                >
-                  Chuyên khoa
+                  Bác sĩ & chuyên khoa
                 </BreadcrumbPage>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

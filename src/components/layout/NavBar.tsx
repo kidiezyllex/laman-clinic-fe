@@ -32,7 +32,7 @@ export default function NavBar() {
   const { userId } = useAuth();
   const [currentId, setCurrentId] = useState("");
   const [role, setRole] = useState("");
-  // const [token, setToken] = useState("");
+  const pathName = usePathname();
   const { token, setToken } = useAuthContext();
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export default function NavBar() {
   }, []);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
-    { href: "/quy-trinh", label: "QUY TRÌNH" },
+    { href: "/process", label: "QUY TRÌNH" },
     { href: "/huong-dan", label: "HƯỚNG DẪN" },
     { href: "/hoi-dap", label: "HỎI ĐÁP" },
     { href: "/lien-he", label: "LIÊN HỆ" },
@@ -153,15 +153,18 @@ export default function NavBar() {
             </div>
           </Link>
           <div className="hidden md:flex items-center space-x-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-sm hover:text-primary"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {!pathName.split("-")[0].includes("LT") &&
+              !pathName.split("-")[0].includes("BS") &&
+              !pathName.split("-")[0].includes("DS") &&
+              navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm hover:text-primary"
+                >
+                  {link.label}
+                </Link>
+              ))}
           </div>
           {renderNavBar()}
         </div>

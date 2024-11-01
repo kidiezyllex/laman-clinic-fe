@@ -16,10 +16,11 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 
 export default function Footer() {
   const pathname = usePathname();
-  const isHomePage = pathname === "/" || pathname === "/process";
+  const isHomePage =
+    pathname === "/" || pathname === "/process" || pathname === "/question";
   const router = useRouter();
   return isHomePage ? (
-    <div className="mx-auto p-8 dark:bg-slate-950 bg-secondary border">
+    <div className="mx-auto p-8 dark:bg-slate-950 bg-secondary border mt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="flex flex-row justify-center">
           <div>

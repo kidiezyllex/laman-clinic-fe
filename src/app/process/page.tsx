@@ -42,7 +42,7 @@ export default function Page() {
       <p className="text-base font-semibold text-blue-500 self-center">
         QUY TRÌNH ĐĂNG KÝ KHÁM BỆNH THEO HẸN
       </p>
-      <div className="space-y-8 mb-8">
+      <div className="space-y-8">
         {processSteps.map((step, index) => (
           <div
             key={index}

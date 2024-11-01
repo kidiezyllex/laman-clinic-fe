@@ -640,11 +640,11 @@ export default function ViewAppointment() {
                 </div>
               </div>
               {showPrescriptionForm && (
-                <div className="flex flex-col gap-4 h-full mr-4">
-                  <h3 className="text-md font-semibold">Tạo đơn thuốc</h3>
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                  <h3 className="text-md font-semibold self-center">Tạo đơn thuốc</h3>
                   <Form {...form}>
-                    <form className="space-y-4">
-                      <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md">
+                    <form className="space-y-2">
+                      <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md bg-secondary">
                         <Label className="align-middle text-center">
                           Tên thuốc
                         </Label>
@@ -662,7 +662,7 @@ export default function ViewAppointment() {
                         </Label>
                       </div>
                       {rows.map((row) => (
-                        <div key={row.id} className="grid grid-cols-5 gap-4">
+                        <div key={row.id} className="grid grid-cols-5 gap-2">
                           <Select
                             onValueChange={(value) => {
                               handleSelectMedicationName(value, row.id);
@@ -710,12 +710,12 @@ export default function ViewAppointment() {
                             }
                             placeholder="Đơn giá"
                           />
-                          <Textarea
+                          <Input
                             value={row.instructions}
                             onChange={(e) =>
                               updateRow(row.id, "instructions", e.target.value)
                             }
-                            placeholder="Hướng dẫn (có thể bỏ trống)"
+                            placeholder="Có thể bỏ trống..."
                           />
                         </div>
                       ))}
@@ -749,14 +749,14 @@ export default function ViewAppointment() {
               )}
 
               {showDiagnosticResultsForm && (
-                <div className="">
-                  <h3 className="text-md font-semibold mb-4 mr-4">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                  <h3 className="text-md font-semibold mr-4 self-center">
                     Nhập thông tin khám bệnh/chẩn đoán bệnh
                   </h3>
                   <Form {...form}>
                     <form
                       onSubmit={handleCreateDiagnosticResults}
-                      className="space-y-6 mr-4"
+                      className="space-y-4"
                     >
                       <div className="space-y-2">
                         <Label htmlFor="medicalHistory">Tiền sử bệnh</Label>
@@ -858,8 +858,8 @@ export default function ViewAppointment() {
               )}
 
               {showLabTestsForm && (
-                <div className="mr-4">
-                  <h3 className="text-md font-semibold mb-4">Tạo xét nghiệm</h3>
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                  <h3 className="text-md font-semibold self-center">Tạo xét nghiệm</h3>
                   <div className="">
                     <Input
                       type="search"
@@ -892,7 +892,7 @@ export default function ViewAppointment() {
                       <h3 className="text-sm font-semibold">
                         Các xét nghiệm đã chọn:
                       </h3>
-                      <div className="flex flex-row gap-2">
+                      <div className="flex flex-row flex-wrap gap-4">
                         {testType.map((test, index) => (
                          <Badge variant={"secondary"} key={index}>{test}</Badge>
                         ))}

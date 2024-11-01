@@ -60,6 +60,14 @@ export default function Page() {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
+              <div
+                  className={
+                    "flex items-center gap-3 rounded-md px-3 py-2"
+                  }
+                >
+                  <ContactRound className="h-4 w-4" />
+                  Lịch hẹn
+                </div>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("online")}
@@ -69,8 +77,7 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <ContactRound className="h-4 w-4" />
-                  Lịch hẹn Online
+                  <p className="ml-7">Online</p>
                 </Link>
                 <Link
                   href="#"
@@ -81,8 +88,7 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <ContactRound className="h-4 w-4" />
-                  Lịch hẹn trực tiếp
+                  <p className="ml-7">Trực tiếp</p>
                 </Link>
                 <Link
                   href="#"

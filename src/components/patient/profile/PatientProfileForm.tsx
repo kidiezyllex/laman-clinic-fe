@@ -153,7 +153,7 @@ export default function PatientProfileForm({
   };
 
   return (
-    <div className="mt-4 p-4 border border-blue-500 rounded-md">
+    <div className="mt-4 p-4 border rounded-md">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
         TẠO HỒ SƠ BỆNH NHÂN
       </h3>

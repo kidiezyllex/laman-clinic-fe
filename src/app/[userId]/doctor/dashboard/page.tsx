@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, ContactRound, User } from "lucide-react";
+import { Bell, CircleCheck, ContactRound, Database, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import Messages from "@/components/receptionist/messages";
@@ -70,6 +70,36 @@ export default function Page() {
                 >
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
+                </Link>
+                <div
+                  className={
+                    "flex items-center gap-3 rounded-md px-3 py-2"
+                  }
+                >
+                  <CircleCheck className="h-4 w-4" />
+                  Hoàn thành
+                </div>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("invoice")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "invoice"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <p className="ml-7">Lịch hẹn</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("completed")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "completed"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <p className="ml-7">Dịch vụ</p>
                 </Link>
                 {/* <Link
                   href="#"

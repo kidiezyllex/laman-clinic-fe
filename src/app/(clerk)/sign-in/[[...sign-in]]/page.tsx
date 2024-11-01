@@ -63,6 +63,7 @@ export default function Page() {
               (data as any)?.data?.email
             }`
           );
+          console.log(res.data[0]._id)
           router.push(`/${res.data[0]._id}/doctor/dashboard`);
           localStorage.setItem("currentId", res.data[0]._id);
         } else if (data.data?.role === "receptionist") {

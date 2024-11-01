@@ -57,6 +57,8 @@ export interface Appointment {
   phone: string;
   medicalHistory: MedicalHistory[];
   priority: boolean;
+  dateOfBirth?: Date;
+  address: string
 }
 
 export interface MedicationRow {

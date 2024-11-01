@@ -156,7 +156,7 @@ export default function ViewAppointment() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEB, ỨNG DỤNG
+        DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEB
       </p>
       <div className="relative">
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -200,13 +200,13 @@ export default function ViewAppointment() {
                 </p>
                 <p className="text-sm text-slate-500">
                   <span className="font-semibold text-sm">Giới tính: </span>{" "}
-                  {appointment.gender}
+                  {appointment.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
                 </p>
               </div>
             </div>
             <div className="flex flex-row gap-2 w-full">
               <Badge variant={"secondary"}>Đang chờ</Badge>
-              <Badge>{appointment.specialization}</Badge>
+              <Badge>Khoa: {appointment.specialization}</Badge>
             </div>
             <div className="flex flex-row gap-2">
               <Button

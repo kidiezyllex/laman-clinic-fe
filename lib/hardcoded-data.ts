@@ -314,125 +314,28 @@ export const medicationData = [
 ];
 
 export const labTestsData = [
-  {
-    specialization: "Khoa Huyết học",
-    labTests: [
-      {
-        testName: "Tổng phân tích tế bào máu",
-        testDescription:
-          "Kiểm tra số lượng và các thành phần của tế bào máu, hỗ trợ chẩn đoán các bệnh lý về máu.",
-        price: 300000,
-      },
-      {
-        testName: "Xét nghiệm nhóm máu",
-        testDescription: "Xác định nhóm máu và yếu tố Rh của bệnh nhân.",
-        price: 120000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Hóa sinh",
-    labTests: [
-      {
-        testName: "Xét nghiệm chức năng gan",
-        testDescription:
-          "Đánh giá các chỉ số AST, ALT, bilirubin để phát hiện các bệnh lý về gan.",
-        price: 400000,
-      },
-      {
-        testName: "Xét nghiệm mỡ máu",
-        testDescription:
-          "Đo các chỉ số cholesterol, triglyceride, giúp chẩn đoán nguy cơ mắc bệnh tim mạch.",
-        price: 200000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Vi sinh",
-    labTests: [
-      {
-        testName: "Xét nghiệm viêm gan B",
-        testDescription:
-          "Kiểm tra sự hiện diện của virus viêm gan B trong máu.",
-        price: 500000,
-      },
-      {
-        testName: "Xét nghiệm kháng sinh đồ",
-        testDescription:
-          "Đánh giá độ nhạy cảm của vi khuẩn đối với các loại kháng sinh, giúp lựa chọn kháng sinh phù hợp.",
-        price: 300000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Miễn dịch",
-    labTests: [
-      {
-        testName: "Xét nghiệm CRP",
-        testDescription:
-          "Đo nồng độ C-reactive protein trong máu, giúp đánh giá mức độ viêm nhiễm trong cơ thể.",
-        price: 250000,
-      },
-      {
-        testName: "Xét nghiệm ANA",
-        testDescription:
-          "Kiểm tra sự hiện diện của các kháng thể tự miễn, hỗ trợ chẩn đoán bệnh tự miễn như lupus.",
-        price: 400000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Di truyền học",
-    labTests: [
-      {
-        testName: "Xét nghiệm gen BRCA",
-        testDescription:
-          "Xác định đột biến gen BRCA1 và BRCA2, đánh giá nguy cơ ung thư vú và buồng trứng.",
-        price: 1200000,
-      },
-      {
-        testName: "Xét nghiệm NIPT",
-        testDescription:
-          "Xét nghiệm sàng lọc trước sinh không xâm lấn, giúp phát hiện các bất thường nhiễm sắc thể.",
-        price: 1000000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Sản",
-    labTests: [
-      {
-        testName: "Xét nghiệm sàng lọc trước sinh",
-        testDescription:
-          "Kiểm tra các dị tật bẩm sinh và bệnh lý di truyền cho thai nhi.",
-        price: 600000,
-      },
-      {
-        testName: "Xét nghiệm beta hCG",
-        testDescription:
-          "Đo nồng độ beta hCG trong máu để xác định thai kỳ và đánh giá sức khỏe của thai nhi.",
-        price: 200000,
-      },
-    ],
-  },
-  {
-    specialization: "Khoa Nội tiết",
-    labTests: [
-      {
-        testName: "Xét nghiệm TSH",
-        testDescription:
-          "Đo nồng độ hormone TSH để đánh giá chức năng tuyến giáp.",
-        price: 300000,
-      },
-      {
-        testName: "Xét nghiệm insulin",
-        testDescription:
-          "Đo nồng độ insulin trong máu, hỗ trợ chẩn đoán và theo dõi bệnh tiểu đường.",
-        price: 350000,
-      },
-    ],
-  },
+  { id: 1, name: "Xét nghiệm máu tổng quát", description: "Kiểm tra các chỉ số cơ bản trong máu." },
+  { id: 2, name: "Xét nghiệm đường huyết", description: "Đo lượng đường trong máu." },
+  { id: 3, name: "Xét nghiệm cholesterol", description: "Đánh giá mức độ cholesterol trong máu." },
+  { id: 4, name: "Xét nghiệm chức năng gan", description: "Kiểm tra sức khỏe của gan." },
+  { id: 5, name: "Xét nghiệm chức năng thận", description: "Đánh giá chức năng thận." },
+  { id: 6, name: "Xét nghiệm viêm gan B", description: "Kiểm tra sự hiện diện của virus viêm gan B." },
+  { id: 7, name: "Xét nghiệm viêm gan C", description: "Kiểm tra sự hiện diện của virus viêm gan C." },
+  { id: 8, name: "Xét nghiệm HIV", description: "Xét nghiệm virus HIV." },
+  { id: 9, name: "Xét nghiệm hormon tuyến giáp", description: "Kiểm tra các chỉ số hormon tuyến giáp." },
+  { id: 10, name: "Xét nghiệm nước tiểu", description: "Phân tích mẫu nước tiểu." },
+  { id: 11, name: "Xét nghiệm điện giải đồ", description: "Đo các điện giải trong máu." },
+  { id: 12, name: "Xét nghiệm nhóm máu", description: "Xác định nhóm máu của bệnh nhân." },
+  { id: 13, name: "Xét nghiệm kháng thể", description: "Kiểm tra các kháng thể trong cơ thể." },
+  { id: 14, name: "Xét nghiệm mỡ máu", description: "Đo mức triglycerides trong máu." },
+  { id: 15, name: "Xét nghiệm vi sinh", description: "Nuôi cấy vi sinh vật từ mẫu bệnh phẩm." },
+  { id: 16, name: "Xét nghiệm phản ứng viêm", description: "Đánh giá mức độ viêm trong cơ thể." },
+  { id: 17, name: "Xét nghiệm tinh dịch", description: "Phân tích mẫu tinh dịch." },
+  { id: 18, name: "Xét nghiệm dị ứng", description: "Kiểm tra phản ứng dị ứng." },
+  { id: 19, name: "Xét nghiệm ung thư", description: "Xét nghiệm các chỉ số liên quan đến ung thư." },
+  { id: 20, name: "Xét nghiệm COVID-19", description: "Kiểm tra sự hiện diện của virus COVID-19." }
 ];
+
 
 export const processSteps = [
   {

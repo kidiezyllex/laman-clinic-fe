@@ -52,6 +52,8 @@ import { labTestsData, medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
 import { Appointment, MedicationRow } from "../../../lib/entity-types";
+import { Checkbox } from "../ui/checkbox";
+import { Badge } from "../ui/badge";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
@@ -81,8 +83,6 @@ export default function ViewAppointment() {
   });
   // state
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
-  const [selectedSpecialization, setSelectedSpecialization] = useState("");
-  const [selectedTest, setSelectedTest] = useState(null);
   const [showLabTestsForm, setShowLabTestsForm] = useState(false);
   const [mainShow, setMainShow] = useState(true);
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
@@ -107,6 +107,10 @@ export default function ViewAppointment() {
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTests, setSelectedTests] = useState<number[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [reasonRequestTest, setReasonRequestTest] = useState("");
+  const [testType, setTestType] = useState<string[]>([]);
   const [formData, setFormData] = useState({
     medicalHistory: "",
     diagnosis: "",
@@ -115,20 +119,15 @@ export default function ViewAppointment() {
     otherTreatment: "",
   });
 
-  const handleSpecializationChange = (value: any) => {
-    setSelectedSpecialization(value);
-    setSelectedTest(null);
-  };
-
-  const handleTestChange = (value: any) => {
-    const selectedSpecData = labTestsData.find(
-      (spec) => spec.specialization === selectedSpecialization
-    );
-    const testData = selectedSpecData?.labTests.find(
-      (test) => test.testName === value
-    );
-    setSelectedTest(testData as any);
-  };
+  // const handleTestChange = (value: any) => {
+  //   const selectedSpecData = labTestsData.find(
+  //     (spec) => spec.specialization === selectedSpecialization
+  //   );
+  //   const testData = selectedSpecData?.labTests.find(
+  //     (test) => test.testName === value
+  //   );
+  //   setSelectedTest(testData as any);
+  // };
   // Toggle Form tạo đơn thuốc
   const handleCanclePrescription = () => {
     setRows([
@@ -194,12 +193,10 @@ export default function ViewAppointment() {
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      // const currentEmail = localStorage.getItem("currentEmail");
+      const currentEmail = localStorage.getItem("currentEmail");
 
       const response1 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${
-          pathname.split("/")[1]
-        }`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
       );
       // const response = await axios.get(
       //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
@@ -209,20 +206,20 @@ export default function ViewAppointment() {
         data: [
           {
             patientId: "BN-PMQ7TS",
-            appointmentDate: "2024-10-22T10:27:40.521Z",
+            appointmentDate: "2024-11-02T10:27:40.521Z",
             reason: "benh",
             specialization: "Cardiology",
             priority: true,
           },
           {
             patientId: "BN-5C662W",
-            appointmentDate: "2024-10-22T05:09:19.661Z",
+            appointmentDate: "2024-11-02T05:09:19.661Z",
             reason: "benh ho",
             specialization: "Cardiology",
           },
           {
             patientId: "BN-CODQ3H",
-            appointmentDate: "2024-10-22T10:34:32.233Z",
+            appointmentDate: "2024-11-02T10:34:32.233Z",
             reason: "benhss",
             specialization: "Cardiology",
             priority: false,
@@ -248,6 +245,8 @@ export default function ViewAppointment() {
               gender: patient.gender,
               phone: patient.phone,
               medicalHistory: patient.medicalHistory,
+              dateOfBirth: patient.dateOfBirth,
+              address: patient.address,
             };
           }
           return app as Appointment;
@@ -357,6 +356,52 @@ export default function ViewAppointment() {
         treatment: "",
         otherTreatment: "",
       });
+    }
+  };
+
+  useEffect(() => {
+    const selectedTestNames = labTestsData
+      .filter((test) => selectedTests.includes(test.id))
+      .map((test) => test.name);
+    setTestType(selectedTestNames);
+  }, [selectedTests]);
+
+  const filteredTests = labTestsData.filter((test) =>
+    test.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleTestToggle = (testId: number) => {
+    setSelectedTests((prev) =>
+      prev.includes(testId)
+        ? prev.filter((id) => id !== testId)
+        : [...prev, testId]
+    );
+  };
+
+  const handleRequestTest = async () => {
+    try {
+      setIsLoading(true);
+      // Lấy data bác sĩ
+      const currentEmail = localStorage.getItem("currentEmail");
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
+      );
+      const doctorData = response2.data[0];
+      const payload = {
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorData._id,
+        testType: testType,
+        reason: reasonRequestTest
+      };
+      console.log(payload)
+      // const response3 = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+      //   payload
+      // );
+    } catch (error) {
+      console.error("Error during sign in:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
   return (
@@ -500,8 +545,7 @@ export default function ViewAppointment() {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Ngày sinh:
-                      {/* {formatDate(selectedAppointment?.dateOfBirth)} */}
+                      Ngày sinh: {formatDate(selectedAppointment?.dateOfBirth)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -516,8 +560,7 @@ export default function ViewAppointment() {
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Địa chỉ:
-                      {/* {selectedAppointment.patientId.address} */}
+                      Địa chỉ: {selectedAppointment.address}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -678,13 +721,8 @@ export default function ViewAppointment() {
                       ))}
                     </form>
                   </Form>
-                  <div className="flex flex-row gap-4 w-full justify-end flex-grow ">
-                    <Button
-                      type="button"
-                      onClick={addRow}
-                      variant="outline"
-                      className="self-start"
-                    >
+                  <div className="flex flex-row gap-4 w-full justify-end items-end flex-grow">
+                    <Button type="button" onClick={addRow} variant="outline">
                       Thêm dòng
                     </Button>
                     <Button
@@ -820,90 +858,71 @@ export default function ViewAppointment() {
               )}
 
               {showLabTestsForm && (
-                <div className="">
-                  <h3 className="text-md font-semibold mb-4 mr-4">
-                    Tạo xét nghiệm
-                  </h3>
-                  <Form {...form}>
-                    <form className="space-y-4">
-                      <div className="grid grid-cols-4 gap-4 font-medium border p-3 rounded-md">
-                        <Label className="align-middle text-center">
-                          Chuyên khoa
-                        </Label>
-                        <Label className="align-middle text-center">
-                          Xét nghiệm
-                        </Label>
-                        <Label className="align-middle text-center">
-                          Mô tả
-                        </Label>
-                        <Label className="align-middle text-center">
-                          Đơn giá (VNĐ)
-                        </Label>
-                      </div>
-                      <div className="grid grid-cols-4 gap-4 font-medium rounded-md">
-                        <Select onValueChange={handleSpecializationChange}>
-                          <SelectTrigger id="specialization">
-                            <SelectValue placeholder="Chọn chuyên khoa" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {labTestsData.map((spec) => (
-                              <SelectItem
-                                key={spec.specialization}
-                                value={spec.specialization}
-                              >
-                                {spec.specialization}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <Select
-                          onValueChange={handleTestChange}
-                          disabled={!selectedSpecialization}
+                <div className="mr-4">
+                  <h3 className="text-md font-semibold mb-4">Tạo xét nghiệm</h3>
+                  <div className="">
+                    <Input
+                      type="search"
+                      placeholder="Tìm kiếm nhanh..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-[50%] mb-4"
+                    />
+                    <div className="rounded-md border p-4 grid grid-cols-2 gap-2 mb-4">
+                      {filteredTests.map((test) => (
+                        <div
+                          key={test.id}
+                          className="flex items-center space-x-2 mb-2 "
                         >
-                          <SelectTrigger id="labTest">
-                            <SelectValue placeholder="Chọn xét nghiệm" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {(labTestsData as any)
-                              ?.find(
-                                (spec: any) =>
-                                  spec.specialization === selectedSpecialization
-                              )
-                              ?.labTests.map((test: any) => (
-                                <SelectItem
-                                  key={test.testName}
-                                  value={test.testName}
-                                >
-                                  {test.testName}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                          <Input
-                            value={(selectedTest as any)?.testDescription}
-                            disabled
-                          ></Input>
-                          <Input
-                            value={(selectedTest as any)?.price.toLocaleString(
-                              "vi-VN"
-                            )}
-                            disabled
-                          ></Input>
-                        </Select>
+                          <Checkbox
+                            id={`test-${test.id}`}
+                            checked={selectedTests.includes(test.id)}
+                            onCheckedChange={() => handleTestToggle(test.id)}
+                          />
+                          <Label
+                            htmlFor={`test-${test.id}`}
+                            className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          >
+                            {test.name}
+                          </Label>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <h3 className="text-sm font-semibold">
+                        Các xét nghiệm đã chọn:
+                      </h3>
+                      <div className="flex flex-row gap-2">
+                        {testType.map((test, index) => (
+                         <Badge variant={"secondary"} key={index}>{test}</Badge>
+                        ))}
                       </div>
-                    </form>
-                  </Form>
-                  <div className="flex flex-row gap-4 w-full justify-end mt-4">
+                      <h3 className="text-sm font-semibold">
+                        Nhập lý do xét nghiệm:
+                      </h3>
+                      <Textarea
+                          id="reasonRequestTest"
+                          name="reasonRequestTest"
+                          value={reasonRequestTest}
+                          onChange={(e)=> setReasonRequestTest(e.target.value)}
+                          placeholder="Nhập lý do xét nghiệm..."
+                        />
+                    </div>
+                  </div>
+                  <div className="flex flex-row flex-grow gap-4 w-full justify-end mt-4 items-end">
                     <Button
                       variant="destructive"
                       onClick={() => {
                         setShowLabTestsForm(false);
                         setMainShow(true);
+                        setTestType([]);
+                        setSelectedTests([])
                       }}
                     >
                       Huỷ xét nghiệm
                     </Button>
                     <Button
-                      // onClick={() => handleCreatePrescription()}
+                      onClick={() => handleRequestTest()}
                       disabled={isLoading}
                     >
                       {isLoading ? (
@@ -919,7 +938,7 @@ export default function ViewAppointment() {
                 </div>
               )}
               {mainShow && (
-                <div className="flex flex-row gap-4 mr-4 justify-end items-end">
+                <div className="flex flex-row gap-4 mr-4 justify-end items-end flex-grow">
                   <Button
                     variant="outline"
                     onClick={() => {

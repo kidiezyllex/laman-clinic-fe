@@ -172,13 +172,13 @@ export default function CreatePatientProfile() {
               </div>
               <div className="flex flex-row gap-4 items-center justify-center my-4">
                 <Link href={`/${patient._id}/patient/booking-by-date`}>
-                  <Button className="w-fit bg-blue-500" variant={"secondary"}>
+                  <Button className="w-fit bg-blue-500 text-white hover:bg-blue-700" variant={"secondary"}>
                     <Calendar className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo ngày
                   </Button>
                 </Link>
                 <Link href={`/${patient._id}/patient/booking-by-doctor`}>
-                  <Button className="w-fit bg-blue-500" variant={"secondary"}>
+                  <Button className="w-fit bg-blue-500 text-white hover:bg-blue-700" variant={"secondary"}>
                     <Stethoscope className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo bác sĩ
                   </Button>

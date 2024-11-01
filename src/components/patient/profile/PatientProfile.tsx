@@ -34,18 +34,17 @@ import PatientProfileForm from "./PatientProfileForm";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../lib/entity-types";
 import { formatDate } from "../../../../lib/utils";
+import UpdateProfileForm from "./UpdateProfileForm";
 
 export default function PatientProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
   const pathname = usePathname();
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
-        setLoading(true);
         if (!pathname.split("_").includes("/user")) {
           const currentEmail = localStorage.getItem("currentEmail");
           if (!currentEmail) {
@@ -59,33 +58,21 @@ export default function PatientProfile() {
           setPatient(null);
         }
       } catch (error) {
-        console.error("Error fetching patient data:", error);
-        setError("Failed to fetch patient data");
-      } finally {
-        setLoading(false);
-      }
+        console.log(error);
+      } 
     };
 
     fetchPatientByAccountId();
-  }, []);
+  }, [showUpdateForm]);
 
   const handleDelete = async () => {
     try {
-      // Implement delete functionality here
       console.log("Delete functionality not implemented");
     } catch (error) {
       console.error("Error deleting patient:", error);
     }
     setIsAlertOpen(false);
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-full">
@@ -172,7 +159,7 @@ export default function PatientProfile() {
               </Table>
             )}
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className={showUpdateForm?"hidden":"flex justify-end space-x-4"}>
             <Button
               variant="destructive"
               className="flex items-center space-x-2"
@@ -184,9 +171,10 @@ export default function PatientProfile() {
             <Button
               variant="outline"
               className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+              onClick={() => setShowUpdateForm(true)}
             >
               <PencilIcon className="w-4 h-4" />
-              <span>Chỉnh sửa</span>
+              <span>Cập nhật</span>
             </Button>
           </div>
         </>
@@ -195,6 +183,11 @@ export default function PatientProfile() {
         <PatientProfileForm
           setSearchTerm={() => {}}
           setShowCreatePatientProfile={() => {}}
+        />
+      )}
+      {showUpdateForm && (
+        <UpdateProfileForm
+          setShowUpdateForm={setShowUpdateForm}
         />
       )}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>

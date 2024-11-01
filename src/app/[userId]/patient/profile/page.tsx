@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import PatientProfileForm from "@/components/patient/profile/PatientProfileForm";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Calendar,
   CalendarIcon,
@@ -32,36 +31,18 @@ import {
   Stethoscope,
   UserIcon,
 } from "lucide-react";
-import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
-import { format } from "date-fns";
 import { usePathname } from "next/navigation";
-interface Patient {
-  _id: String;
-  numberId?: string;
-  fullName?: string;
-  dateOfBirth?: Date;
-  gender?: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-}
+import { Patient } from "../../../../../lib/entity-types";
+import { formatDate } from "../../../../../lib/utils";
 export default function CreatePatientProfile() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const pathname = usePathname();
-  const { userId } = useAuth();
-  const idByClerk = usePathname().split("/")[1];
-  const [loading, setLoading] = useState(true);
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
-        setLoading(true);
         if (!pathname.split("_").includes("/user")) {
           const currentEmail = localStorage.getItem("currentEmail");
           if (!currentEmail) {
@@ -75,10 +56,8 @@ export default function CreatePatientProfile() {
           setPatient(null);
         }
       } catch (error) {
-        console.error("Error fetching patient data:", error);
-      } finally {
-        setLoading(false);
-      }
+        console.log(error);
+      } 
     };
 
     fetchPatientByAccountId();
@@ -94,7 +73,7 @@ export default function CreatePatientProfile() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/components" className="text-base">
+            <BreadcrumbLink href={`/${pathname.split("/")[1]}/patient/dashboard`} className="text-base">
               BỆNH NHÂN
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -147,7 +126,7 @@ export default function CreatePatientProfile() {
                   <div className="flex items-center space-x-3">
                     <UserIcon className="text-blue-500 h-4 w-4" />
                     <span className="text-slate-600 text-sm">
-                      Giới tính: {patient.gender}
+                      Giới tính: {patient.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -159,7 +138,7 @@ export default function CreatePatientProfile() {
                   <div className="flex items-center space-x-3">
                     <PhoneIcon className="text-blue-500 h-4 w-4" />
                     <span className="text-slate-600 text-sm">
-                      Phone: {patient.phone}
+                      Số ĐT: {patient.phone}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">

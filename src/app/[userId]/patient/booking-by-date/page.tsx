@@ -24,7 +24,6 @@ export default function Page() {
   const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
   const pathname = usePathname();
   const [patient, setPatient] = useState<Patient | null>(null);
-  const [loading, setLoading] = useState(true);
   const formatDate = (date: Date | undefined) => {
     if (!date) return "N/A";
     return format(date, "dd/MM/yyyy");
@@ -33,7 +32,6 @@ export default function Page() {
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
-        setLoading(true);
         if (!pathname.split("_").includes("/user")) {
           const currentEmail = localStorage.getItem("currentEmail");
           if (!currentEmail) {
@@ -47,10 +45,8 @@ export default function Page() {
           setPatient(null);
         }
       } catch (error) {
-        console.error("Error fetching patient data:", error);
-      } finally {
-        setLoading(false);
-      }
+        console.error(error);
+      } 
     };
 
     fetchPatientByAccountId();

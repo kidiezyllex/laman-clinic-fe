@@ -43,6 +43,8 @@ const formSchema = z.object({
   }),
   password: z.string().min(7, { message: "Password ít nhất 7 kí tự" }),
   email: z.string().email({ message: "Email không hợp lệ" }),
+  province: z.string().min(1, { message: "Không hợp lệ" }),
+  district: z.string().min(1, { message: "Không hợp lệ" }),
 });
 
 export default function PatientProfileForm({
@@ -70,31 +72,31 @@ export default function PatientProfileForm({
       gender: "Male",
       password: "",
       email: "",
-      // province: "",
-      // district: "",
+      province: "",
+      district: "",
     },
   });
 
-  // useEffect(() => {
-  //   const fetchProvinces = async () => {
-  //     const response = await axios.get(
-  //       "https://provinces.open-api.vn/api/?depth=2"
-  //     );
-  //     setProvincesList(response.data);
-  //   };
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      const response = await axios.get(
+        "https://provinces.open-api.vn/api/?depth=2"
+      );
+      setProvincesList(response.data);
+    };
 
-  //   fetchProvinces();
-  // }, []);
+    fetchProvinces();
+  }, []);
 
-  // const handleFetchDistricts = async (provinceName: string) => {
-  //   const provinceCode = parseInt(provinceName?.match(/\d+/)?.[0] || "0");
-  //   const provinceByCode = provincesList.find(
-  //     (item) => item.code === provinceCode
-  //   );
-  //   if (provinceByCode) {
-  //     setDistrictsList(provinceByCode.districts);
-  //   }
-  // };
+  const handleFetchDistricts = async (provinceName: string) => {
+    const provinceCode = parseInt(provinceName?.match(/\d+/)?.[0] || "0");
+    const provinceByCode = provincesList.find(
+      (item) => item.code === provinceCode
+    );
+    if (provinceByCode) {
+      setDistrictsList(provinceByCode.districts);
+    }
+  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
@@ -109,11 +111,11 @@ export default function PatientProfileForm({
       email: data.email,
       medicalHistory: [],
       clerkId: pathName[1],
-      // dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
-      // address:
-      //   data.district.split("-").slice(1).join("-") +
-      //   "," +
-      //   data.province.split("-").slice(1).join("-"),
+      dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
+      address:
+        data.district.split("-").slice(1).join("-") +
+        "," +
+        data.province.split("-").slice(1).join("-"),
     };
     try {
       const response = await axios.post(
@@ -141,6 +143,9 @@ export default function PatientProfileForm({
         localStorage.setItem("currentEmail", data.email);
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
+        );
+        const response3 = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/register`, {email: data.email, password: data.password}
         );
         router.push(`/${(response2?.data as any)._id}/patient/dashboard`);
       }
@@ -331,7 +336,7 @@ export default function PatientProfileForm({
             )}
           />
 
-          {/* <div className="space-y-2">
+          <div className="space-y-2">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
               <FormField
                 control={form.control}
@@ -397,7 +402,7 @@ export default function PatientProfileForm({
                 )}
               />
             </div>
-          </div> */}
+          </div>
 
           <Button type="submit" className="w-fit">
             {isLoading ? (

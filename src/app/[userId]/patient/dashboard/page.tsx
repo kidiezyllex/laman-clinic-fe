@@ -4,12 +4,8 @@ import Link from "next/link";
 import {
   Bell,
   ContactRound,
-  HistoryIcon,
   MessageCircleMore,
-  NotepadText,
 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
 import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
@@ -30,13 +26,6 @@ export default function Page() {
       case "appointments":
         return (
           <div className="flex flex-col items-center gap-4 text-center">
-            <h3 className="text-2xl font-bold tracking-tight">
-              Your Appointments
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              You have 6 upcoming appointments.
-            </p>
-            <Button className="mt-4">Manage Appointments</Button>
           </div>
         );
       case "messages":
@@ -57,7 +46,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/components" className="text-base">
+            <BreadcrumbLink className="text-base">
               BỆNH NHÂN
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -88,18 +77,6 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("medicalReport")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalReport"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <NotepadText className="h-4 w-4" />
-                  Phiếu khám bệnh
-                </Link>
-                <Link
-                  href="#"
                   onClick={() => setActiveSection("messages")}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
                     activeSection === "messages"
@@ -121,18 +98,6 @@ export default function Page() {
                 >
                   <Bell className="h-4 w-4" />
                   Thông báo
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicalHistory")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalHistory"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <HistoryIcon className="h-4 w-4" />
-                  Lịch sử khám bệnh
                 </Link>
               </nav>
             </div>

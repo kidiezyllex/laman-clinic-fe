@@ -84,9 +84,9 @@ export default function NavBar() {
     // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
     if (token !== "" && token !== "undefined" && token !== null)
       return (
-        <div className="flex flex-row gap-3 justify-end">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
+        <div>
+          {role === "patient" ? (
+            <div className="flex flex-row gap-3 justify-end">
               <Button
                 variant="outline"
                 size="icon"
@@ -94,27 +94,21 @@ export default function NavBar() {
               >
                 <User className="h-[1.2rem] w-[1.2rem] text-blue-500" />
               </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 mt-2" align="end">
-              <DropdownMenuItem
+              <ModeToggle></ModeToggle>
+              <DropdownMenuToggle></DropdownMenuToggle>
+            </div>
+          ) : (
+            <div className="flex flex-row gap-3 justify-end">
+              <Button
+                variant="outline"
+                size="icon"
                 onClick={() => handleLogOut()}
-                className="px-4 py-2 flex flex-row justify-between"
               >
-                <span>Đăng xuất</span>
-                <LogOut className="mr-2 h-4 w-4" />
-              </DropdownMenuItem>
-              <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between ">
-                <Link href={`/${userId}/patient/dashboard`}>
-                  <span>Quản lý tài khoản</span>
-                </Link>
-                <SquareUser className="mr-2 h-4 w-4" />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <ModeToggle></ModeToggle>
-          {role === "patient" ? (
-            <DropdownMenuToggle></DropdownMenuToggle>
-          ) : null}
+                <LogOut className="h-4 w-4" />
+              </Button>
+              <ModeToggle></ModeToggle>
+            </div>
+          )}
         </div>
       );
     return (

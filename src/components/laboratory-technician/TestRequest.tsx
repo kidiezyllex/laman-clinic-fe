@@ -13,6 +13,7 @@ import {
   MapPin,
   Phone,
   SearchIcon,
+  Stethoscope,
   TestTube,
   User,
 } from "lucide-react";
@@ -32,6 +33,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Separator } from "../ui/separator";
 export default function TestRequest() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -72,7 +74,7 @@ export default function TestRequest() {
         <Input
           type="search"
           placeholder="Nhập mã bệnh nhân"
-          className="pl-10"
+          className="pl-10 bg-primary-foreground"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -82,20 +84,29 @@ export default function TestRequest() {
         {filteredRequestTests.map((requestTest) => (
           <Card
             key={(requestTest as any)._id}
-            className="flex flex-col gap-6 justify-center items-center p-4"
+            className="flex flex-col gap-6 items-center p-4 bg-primary-foreground"
           >
             <div className="flex flex-col gap-4 w-full">
-              <div className="flex flex-row gap-4 items-center">
+              <div className="flex flex-row gap-4 items-center w-full">
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-blue-500 ">
                   <User className="text-blue-500" />
                 </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold text-base">Mã bệnh nhân</span>
-                  <span className="text-sm text-muted-foreground">
-                    {requestTest.patientId}
-                  </span>
+                <div className="flex flex-col gap-1">
+                  <p className="font-semibold text-sm">
+                    Mã bệnh nhân:{" "}
+                    <span className="text-muted-foreground">
+                      {requestTest.patientId}
+                    </span>
+                  </p>
+                  <p className="font-semibold text-sm">
+                    Ngày yêu cầu:{" "}
+                    <span className="text-muted-foreground">
+                      {formatDate(requestTest.requestDate)}
+                    </span>
+                  </p>
                 </div>
               </div>
+              <Separator></Separator>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 items-center">
                   <CircleHelp className="h-4 w-4 text-blue-500"></CircleHelp>
@@ -111,14 +122,17 @@ export default function TestRequest() {
               </div>
               <div className="flex flex-row flex-wrap gap-2">
                 {requestTest.test.map((test, index) => (
-                  <Badge variant={"secondary"} key={index}>
+                  <Badge
+                    variant={"secondary"}
+                    key={index}
+                    className="bg-slate-200 dark:bg-slate-800"
+                  >
                     {test}
                   </Badge>
                 ))}
               </div>
             </div>
-
-            <div className="flex flex-row gap-2">
+            <div className="flex-grow flex flex-col justify-end">
               <Button
                 className="w-fit bg-blue-500 hover:bg-blue-600"
                 onClick={() => {
@@ -166,7 +180,7 @@ export default function TestRequest() {
                 </div>
               </div>
               <div className="grid grid-cols-2 border rounded-md p-4 mr-4">
-                <div className="flex flex-col gap-3 mb-6">
+                <div className="flex flex-col gap-3">
                   <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
@@ -202,16 +216,22 @@ export default function TestRequest() {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3 mb-6">
+                <div className="flex flex-col gap-3">
                   <p className="text-md font-semibold">
                     Thông tin yêu cầu xét nghiệm
                   </p>
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row gap-2 items-center">
-                      <TestTube className="h-4 w-4 text-blue-500"></TestTube>
-                      <span className="font-semibold text-sm">
-                        Loại xét nghiệm:
+                      <Stethoscope className="h-4 w-4 text-blue-500"></Stethoscope>
+                      <span className="text-sm">
+                        Bác sĩ yêu cầu: {selectedRequestTest.doctorId}
                       </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex flex-row gap-2 items-center">
+                      <TestTube className="h-4 w-4 text-blue-500"></TestTube>
+                      <span className="text-sm">Loại xét nghiệm:</span>
                     </div>
                     <div className="flex flex-row flex-wrap gap-2">
                       {selectedRequestTest.test.map((test, index) => (
@@ -224,7 +244,7 @@ export default function TestRequest() {
                   <div className="flex flex-col gap-2">
                     <div className="flex flex-row gap-2 items-center">
                       <CircleHelp className="h-4 w-4 text-blue-500"></CircleHelp>
-                      <span className="font-semibold text-sm">Lý do:</span>
+                      <span className="text-sm">Lý do:</span>
                     </div>
                     <span className="text-sm text-muted-foreground">
                       {selectedRequestTest.reason}

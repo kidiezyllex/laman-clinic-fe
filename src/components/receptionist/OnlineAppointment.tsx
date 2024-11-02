@@ -23,6 +23,7 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
+import { Separator } from "../ui/separator";
 
 export default function OnlineAppointment() {
   const { toast } = useToast();
@@ -181,31 +182,35 @@ export default function OnlineAppointment() {
             key={appointment.id + ""}
             className="flex flex-col gap-6 justify-center items-center p-4"
           >
-            <div className="flex flex-row gap-2 items-center w-full">
+            <div className="flex flex-row gap-4 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
               appointment.gender.toLowerCase() === "nam" ? (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-blue-500 bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
               ) : (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-pink-500 bg-pink-200">
                   <Cat className="text-pink-500" />
                 </div>
               )}
-
-              <div>
-                <p className="text-base">
-                  <span className="font-semibold text-base">Tên: </span>{" "}
-                  {appointment.fullName}
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold text-sm">
+                  Tên bệnh nhân:{" "}
+                  <span className="text-muted-foreground">
+                    {appointment.fullName}
+                  </span>
                 </p>
-                <p className="text-sm text-slate-500">
-                  <span className="font-semibold text-sm">Giới tính: </span>{" "}
-                  {appointment.gender?.toLowerCase() === "female"
-                    ? "Nữ"
-                    : "Nam"}
+                <p className="font-semibold text-sm">
+                  Giới tính:{" "}
+                  <span className="text-muted-foreground">
+                    {appointment.gender?.toLowerCase() === "female"
+                      ? "Nữ"
+                      : "Nam"}
+                  </span>
                 </p>
               </div>
             </div>
+            <Separator></Separator>
             <div className="flex flex-row gap-2 w-full">
               <Badge variant={"secondary"}>Đang chờ</Badge>
               <Badge>Khoa: {appointment.specialization}</Badge>

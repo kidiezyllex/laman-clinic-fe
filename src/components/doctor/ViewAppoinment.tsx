@@ -530,7 +530,7 @@ export default function ViewAppointment() {
                 </div>
               </div>
               <div className="grid grid-cols-2 border rounded-md p-4 mr-4">
-                <div className="flex flex-col gap-3 mb-6">
+                <div className="flex flex-col gap-3">
                   <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
@@ -566,7 +566,7 @@ export default function ViewAppointment() {
                     </span>
                   </div>
                 </div>
-                <div className="flex flex-col gap-3 mb-6">
+                <div className="flex flex-col gap-3">
                   <p className="text-md font-semibold">
                     Thông tin lịch hẹn đăng ký
                   </p>
@@ -632,7 +632,7 @@ export default function ViewAppointment() {
                 </div>
               </div>
               {showPrescriptionForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
                   <h3 className="text-md font-semibold self-center">
                     Tạo đơn thuốc
                   </h3>
@@ -743,7 +743,7 @@ export default function ViewAppointment() {
               )}
 
               {showDiagnosticResultsForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
                   <h3 className="text-md font-semibold mr-4 self-center">
                     Nhập thông tin khám bệnh/chẩn đoán bệnh
                   </h3>
@@ -852,7 +852,7 @@ export default function ViewAppointment() {
               )}
 
               {showLabTestsForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
                   <h3 className="text-md font-semibold self-center">
                     Tạo xét nghiệm
                   </h3>
@@ -862,26 +862,23 @@ export default function ViewAppointment() {
                       placeholder="Tìm kiếm nhanh..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-[50%] mb-4"
+                      className="w-full mb-4"
                     />
-                    <div className="rounded-md border p-4 grid grid-cols-2 gap-2 mb-4">
+                    <div className="rounded-md border p-4 grid grid-cols-2 gap-2 mb-4 dark:bg-slate-950 bg-white">
                       {filteredTests.map((test) => (
-                        <div
+                        <Label
                           key={test.id}
-                          className="flex items-center space-x-2 mb-2 "
+                          className="flex items-center space-x-2 mb-2 p-2 border rounded-md"
                         >
                           <Checkbox
                             id={`test-${test.id}`}
                             checked={selectedTests.includes(test.id)}
                             onCheckedChange={() => handleTestToggle(test.id)}
                           />
-                          <Label
-                            htmlFor={`test-${test.id}`}
-                            className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                          >
+                          <Label className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                             {test.name}
                           </Label>
-                        </div>
+                        </Label>
                       ))}
                     </div>
                     <div className="flex flex-col gap-4">

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, CalendarRange, User } from "lucide-react";
+import { Bell, FlaskConical, User } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,22 +10,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ViewAppointment from "@/components/receptionist/OnlineAppointment";
+import TestRequest from "@/components/laboratory-technician/TestRequest";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
 import Notification from "@/components/receptionist/Notification";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("online");
+  const [activeSection, setActiveSection] = useState("request");
 
   const renderMainContent = () => {
     switch (activeSection) {
-      case "online":
-        return <ViewAppointment />;
-      case "offline":
+      case "request":
+        return <TestRequest />;
+      case "type":
         return <DirectAppoinment />;
       case "profile":
         return <ReceptionistProfile />;
-      case "notification":
+      case "completed":
         return <Notification />;
       default:
         return null;
@@ -43,7 +43,9 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-base">LỄ TÂN</BreadcrumbLink>
+            <BreadcrumbLink className="text-base">
+              Y TÁ XÉT NGHIỆM
+            </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -59,30 +61,19 @@ export default function Page() {
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
                 <div className="flex items-center gap-3 rounded-md px-3 py-2">
-                  <CalendarRange className="h-4 w-4" />
-                  Lịch hẹn
+                  <FlaskConical className="h-4 w-4" />
+                  Xét nghiệm
                 </div>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("online")}
+                  onClick={() => setActiveSection("request")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "online"
+                    activeSection === "request"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
-                  <p className="ml-7">Online</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("offline")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "offline"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <p className="ml-7">Trực tiếp</p>
+                  <p className="ml-7">Yêu cầu</p>
                 </Link>
                 <Link
                   href="#"
@@ -97,15 +88,15 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("notification")}
+                  onClick={() => setActiveSection("type")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "notification"
+                    activeSection === "type"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
+                  <FlaskConical className="h-4 w-4" />
+                  Loại xét nghiệm
                 </Link>
                 <Link
                   href="#"

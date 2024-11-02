@@ -58,7 +58,7 @@ export interface Appointment {
   medicalHistory: MedicalHistory[];
   priority: boolean;
   dateOfBirth?: Date;
-  address: string
+  address: string;
 }
 
 export interface MedicationRow {
@@ -114,4 +114,13 @@ export interface Receptionist {
   phone?: string;
   email?: string;
   schedule?: Schedule[];
+}
+
+export interface RequestTest {
+  _id: String;
+  test: String[];
+  patientId: String;
+  doctorId: String;
+  reason: String;
+  requestDate: Date;
 }

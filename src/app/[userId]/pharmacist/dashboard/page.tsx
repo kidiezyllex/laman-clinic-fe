@@ -18,7 +18,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ViewPrescription from "@/components/pharmacist/ViewPrescription";
+import PrescriptionRequest from "@/components/pharmacist/PrescriptionRequest";
 import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
@@ -29,7 +29,7 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "prescriptions":
-        return <ViewPrescription />;
+        return <PrescriptionRequest />;
       case "profile":
         return <PharmacistProfile />;
       case "visitor":
@@ -52,9 +52,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/components" className="text-base">
-              DƯỢC SĨ
-            </BreadcrumbLink>
+            <BreadcrumbLink className="text-base">DƯỢC SĨ</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

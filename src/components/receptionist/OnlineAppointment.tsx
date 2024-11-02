@@ -24,7 +24,7 @@ import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
 
-export default function ViewAppointment() {
+export default function OnlineAppointment() {
   const { toast } = useToast();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -200,7 +200,9 @@ export default function ViewAppointment() {
                 </p>
                 <p className="text-sm text-slate-500">
                   <span className="font-semibold text-sm">Giới tính: </span>{" "}
-                  {appointment.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
+                  {appointment.gender?.toLowerCase() === "female"
+                    ? "Nữ"
+                    : "Nam"}
                 </p>
               </div>
             </div>

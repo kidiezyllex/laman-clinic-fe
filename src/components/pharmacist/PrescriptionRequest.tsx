@@ -18,7 +18,7 @@ import { formatDate } from "../../../lib/utils";
 import { Medication, Patient, Prescription } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
 
-export default function ViewPrescription() {
+export default function PrescriptionRequest() {
   const { toast } = useToast();
   const [showCheckboxes, setShowCheckboxes] = useState({
     isShow: false,

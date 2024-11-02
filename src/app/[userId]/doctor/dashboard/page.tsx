@@ -42,9 +42,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href="/components" className="text-base">
-              BÁC SĨ
-            </BreadcrumbLink>
+            <BreadcrumbLink className="text-base">BÁC SĨ</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
@@ -71,11 +69,7 @@ export default function Page() {
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
                 </Link>
-                <div
-                  className={
-                    "flex items-center gap-3 rounded-md px-3 py-2"
-                  }
-                >
+                <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
                   <CircleCheck className="h-4 w-4" />
                   Hoàn thành
                 </div>

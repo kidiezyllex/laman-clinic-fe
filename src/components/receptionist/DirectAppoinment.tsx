@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { CalendarIcon, Cat, Dog, Loader2, SearchIcon } from "lucide-react";
 import axios from "axios";
-import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import PatientProfileForm from "../patient/profile/PatientProfileForm";
 import {
@@ -27,6 +26,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Patient } from "../../../lib/entity-types";
+import { formatDate } from "../../../lib/utils";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
@@ -71,10 +71,6 @@ export default function DirectAppoinment() {
       setShowCreatePatientProfile(true);
     }
     setFilteredPatients(filteredP);
-  };
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
   };
 
   useEffect(() => {
@@ -261,7 +257,7 @@ export default function DirectAppoinment() {
               <Label htmlFor="name">Email</Label>
               <Input
                 id="email"
-                value={selectedPatient?.email || ""}
+                value={selectedPatient?.email + "" || ""}
                 className="col-span-3 bg-secondary rounded-sm"
                 disabled={!isEditing}
               />
@@ -270,7 +266,7 @@ export default function DirectAppoinment() {
               <Label htmlFor="name">Phone</Label>
               <Input
                 id="phone"
-                value={selectedPatient?.phone || ""}
+                value={selectedPatient?.phone + "" || ""}
                 className="col-span-3 bg-secondary rounded-sm"
                 disabled={!isEditing}
               />
@@ -280,7 +276,7 @@ export default function DirectAppoinment() {
                 <Label htmlFor="address">Địa chỉ</Label>
                 <Textarea
                   id="address"
-                  value={selectedPatient?.address || ""}
+                  value={selectedPatient?.address + "" || ""}
                   className="col-span-3 bg-secondary rounded-sm"
                   disabled={!isEditing}
                 />

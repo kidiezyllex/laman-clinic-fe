@@ -161,7 +161,7 @@ export default function PatientPrescriptionInvoice({
             <TableBody>
               {newMedication.length !== 0 &&
                 newMedication.map((medication, index) => (
-                  <TableRow key={medication._id}>
+                  <TableRow key={medication._id + ""}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{medication?.medicationName}</TableCell>
                     <TableCell>{medication?.dose}</TableCell>
@@ -174,7 +174,7 @@ export default function PatientPrescriptionInvoice({
                 ))}
               {newMedication.length === 0 &&
                 prescription.medications.map((medication, index) => (
-                  <TableRow key={medication._id}>
+                  <TableRow key={medication._id + ""}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{medication?.medicationName}</TableCell>
                     <TableCell>{medication?.dose}</TableCell>

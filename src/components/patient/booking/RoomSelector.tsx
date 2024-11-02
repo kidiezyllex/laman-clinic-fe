@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Clock, FileCog, Stethoscope, User, Warehouse } from "lucide-react";
 import ArrowButton from "@/components/animata/button/arrow-button";
+import { Schedule } from "../../../../lib/entity-types";
 export default function RoomSelector({
   setActiveSection,
   selectedSpe,
@@ -121,48 +122,31 @@ export default function RoomSelector({
                 </div>
               </div>
               <div className="space-y-4 ">
-                {(doctor as any).schedule.map(
-                  (scheduleItem: {
-                    _id: Key | null | undefined;
-                    dayOfWeek:
-                      | string
-                      | number
-                      | bigint
-                      | boolean
-                      | ReactElement<any, string | JSXElementConstructor<any>>
-                      | Iterable<ReactNode>
-                      | ReactPortal
-                      | Promise<AwaitedReactNode>
-                      | null
-                      | undefined;
-                    startTime: string;
-                    endTime: string;
-                  }) => (
-                    <div
-                      key={scheduleItem._id}
-                      className={
-                        scheduleItem.dayOfWeek === getDayOfWeek(selectedDate)
-                          ? "p-3 border-2 border-blue-500 "
-                          : "p-3 border"
-                      }
-                    >
-                      <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                        <Clock className="w-4 h-4 mr-2" />
-                        <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                      </h3>
-                      <div className="grid grid-cols-4 gap-2 ">
-                        {generateTimeSlots(
-                          scheduleItem.startTime,
-                          scheduleItem.endTime
-                        ).map((slot) => (
-                          <Button key={slot} variant={"secondary"}>
-                            {slot}
-                          </Button>
-                        ))}
-                      </div>
+                {(doctor as any).schedule.map((scheduleItem: Schedule) => (
+                  <div
+                    key={scheduleItem._id + ""}
+                    className={
+                      scheduleItem.dayOfWeek === getDayOfWeek(selectedDate)
+                        ? "p-3 border-2 border-blue-500 "
+                        : "p-3 border"
+                    }
+                  >
+                    <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+                      <Clock className="w-4 h-4 mr-2" />
+                      <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+                    </h3>
+                    <div className="grid grid-cols-4 gap-2 ">
+                      {generateTimeSlots(
+                        (scheduleItem as any).startTime,
+                        (scheduleItem as any).endTime
+                      ).map((slot) => (
+                        <Button key={slot} variant={"secondary"}>
+                          {slot}
+                        </Button>
+                      ))}
                     </div>
-                  )
-                )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

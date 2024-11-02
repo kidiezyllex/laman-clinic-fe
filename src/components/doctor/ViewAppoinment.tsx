@@ -119,15 +119,6 @@ export default function ViewAppointment() {
     otherTreatment: "",
   });
 
-  // const handleTestChange = (value: any) => {
-  //   const selectedSpecData = labTestsData.find(
-  //     (spec) => spec.specialization === selectedSpecialization
-  //   );
-  //   const testData = selectedSpecData?.labTests.find(
-  //     (test) => test.testName === value
-  //   );
-  //   setSelectedTest(testData as any);
-  // };
   // Toggle Form tạo đơn thuốc
   const handleCanclePrescription = () => {
     setRows([
@@ -252,7 +243,6 @@ export default function ViewAppointment() {
           return app as Appointment;
         });
       };
-      console.log(mergeAppointments());
       setAppointments(mergeAppointments());
     };
 
@@ -391,9 +381,9 @@ export default function ViewAppointment() {
         patientId: selectedAppointment?.patientId,
         doctorId: doctorData._id,
         testType: testType,
-        reason: reasonRequestTest
+        reason: reasonRequestTest,
       };
-      console.log(payload)
+      console.log(payload);
       // const response3 = await axios.post(
       //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
       //   payload
@@ -479,7 +469,7 @@ export default function ViewAppointment() {
                     )
                     .map((appointment) => (
                       <div
-                        key={appointment.patientId}
+                        key={(appointment as any).patientId}
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
@@ -581,16 +571,16 @@ export default function ViewAppointment() {
                     Thông tin lịch hẹn đăng ký
                   </p>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-5 text-blue-500" />
+                    <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
                       Ngày hẹn khám:{" "}
                       {formatDate(
-                        new Date(selectedAppointment?.appointmentDate)
+                        new Date((selectedAppointment as any)?.appointmentDate)
                       )}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-5 text-blue-500" />
+                    <FileText className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">Trạng thái: Đang chờ khám</span>
                   </div>
                 </div>
@@ -615,9 +605,11 @@ export default function ViewAppointment() {
                       </TableHeader>
                       <TableBody>
                         {selectedAppointment.medicalHistory.map((history) => (
-                          <TableRow key={history.diagnosisDate}>
+                          <TableRow key={(history as any).diagnosisDate}>
                             <TableCell>
-                              {formatDate(new Date(history?.diagnosisDate))}
+                              {formatDate(
+                                new Date((history as any)?.diagnosisDate)
+                              )}
                             </TableCell>
                             <TableCell>
                               {history.disease.split("_")[1]}
@@ -641,7 +633,9 @@ export default function ViewAppointment() {
               </div>
               {showPrescriptionForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
-                  <h3 className="text-md font-semibold self-center">Tạo đơn thuốc</h3>
+                  <h3 className="text-md font-semibold self-center">
+                    Tạo đơn thuốc
+                  </h3>
                   <Form {...form}>
                     <form className="space-y-2">
                       <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md bg-secondary">
@@ -685,7 +679,7 @@ export default function ViewAppointment() {
                             </SelectContent>
                           </Select>
                           <Input
-                            value={row.dose}
+                            value={row.dose + ""}
                             onChange={(e) =>
                               updateRow(row.id, "dose", e.target.value)
                             }
@@ -711,7 +705,7 @@ export default function ViewAppointment() {
                             placeholder="Đơn giá"
                           />
                           <Input
-                            value={row.instructions}
+                            value={row.instructions + ""}
                             onChange={(e) =>
                               updateRow(row.id, "instructions", e.target.value)
                             }
@@ -859,7 +853,9 @@ export default function ViewAppointment() {
 
               {showLabTestsForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4">
-                  <h3 className="text-md font-semibold self-center">Tạo xét nghiệm</h3>
+                  <h3 className="text-md font-semibold self-center">
+                    Tạo xét nghiệm
+                  </h3>
                   <div className="">
                     <Input
                       type="search"
@@ -894,19 +890,21 @@ export default function ViewAppointment() {
                       </h3>
                       <div className="flex flex-row flex-wrap gap-4">
                         {testType.map((test, index) => (
-                         <Badge variant={"secondary"} key={index}>{test}</Badge>
+                          <Badge variant={"secondary"} key={index}>
+                            {test}
+                          </Badge>
                         ))}
                       </div>
                       <h3 className="text-sm font-semibold">
                         Nhập lý do xét nghiệm:
                       </h3>
                       <Textarea
-                          id="reasonRequestTest"
-                          name="reasonRequestTest"
-                          value={reasonRequestTest}
-                          onChange={(e)=> setReasonRequestTest(e.target.value)}
-                          placeholder="Nhập lý do xét nghiệm..."
-                        />
+                        id="reasonRequestTest"
+                        name="reasonRequestTest"
+                        value={reasonRequestTest}
+                        onChange={(e) => setReasonRequestTest(e.target.value)}
+                        placeholder="Nhập lý do xét nghiệm..."
+                      />
                     </div>
                   </div>
                   <div className="flex flex-row flex-grow gap-4 w-full justify-end mt-4 items-end">
@@ -916,7 +914,7 @@ export default function ViewAppointment() {
                         setShowLabTestsForm(false);
                         setMainShow(true);
                         setTestType([]);
-                        setSelectedTests([])
+                        setSelectedTests([]);
                       }}
                     >
                       Huỷ xét nghiệm

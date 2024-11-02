@@ -1,29 +1,15 @@
-import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CalendarIcon,
-  MapPinIcon,
   PhoneIcon,
   MailIcon,
-  UserIcon,
   Trash2Icon,
   PencilIcon,
   Dog,
   Cat,
   Clock,
 } from "lucide-react";
-import {
-  useState,
-  useCallback,
-  useEffect,
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   AlertDialog,
@@ -37,7 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { usePathname } from "next/navigation";
-import { Receptionist } from "../../../lib/entity-types";
+import { Receptionist, Schedule } from "../../../lib/entity-types";
 
 export default function ReceptionistProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -149,41 +135,24 @@ export default function ReceptionistProfile() {
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
       <div className="flex flex-col gap-3">
         {Object.keys(receptionist).length !== 0 &&
-          (receptionist as any).schedule.map(
-            (scheduleItem: {
-              _id: Key | null | undefined;
-              dayOfWeek:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<any, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<AwaitedReactNode>
-                | null
-                | undefined;
-              startTime: string;
-              endTime: string;
-            }) => (
-              <div key={scheduleItem._id} className="p-3 border">
-                <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                </h3>
-                <div className="grid grid-cols-4 gap-2 ">
-                  {generateTimeSlots(
-                    scheduleItem.startTime,
-                    scheduleItem.endTime
-                  ).map((slot) => (
-                    <Button key={slot} variant={"secondary"}>
-                      {slot}
-                    </Button>
-                  ))}
-                </div>
+          (receptionist as any).schedule.map((scheduleItem: Schedule) => (
+            <div key={scheduleItem._id + ""} className="p-3 border">
+              <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+                <Clock className="w-4 h-4 mr-2" />
+                <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+              </h3>
+              <div className="grid grid-cols-4 gap-2 ">
+                {generateTimeSlots(
+                  (scheduleItem as any).startTime,
+                  (scheduleItem as any).endTime
+                ).map((slot) => (
+                  <Button key={slot} variant={"secondary"}>
+                    {slot}
+                  </Button>
+                ))}
               </div>
-            )
-          )}
+            </div>
+          ))}
       </div>
       {Object.keys(receptionist).length !== 0 && (
         <div className="flex justify-end space-x-4">

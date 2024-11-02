@@ -178,7 +178,7 @@ export default function OnlineAppointment() {
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
           <Card
-            key={appointment.id}
+            key={appointment.id + ""}
             className="flex flex-col gap-6 justify-center items-center p-4"
           >
             <div className="flex flex-row gap-2 items-center w-full">

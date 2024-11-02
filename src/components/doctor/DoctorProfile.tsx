@@ -1,27 +1,15 @@
 import { Button } from "@/components/ui/button";
 import {
   CalendarIcon,
-  MapPinIcon,
   PhoneIcon,
   MailIcon,
-  UserIcon,
   Trash2Icon,
   PencilIcon,
   Dog,
   Cat,
   Clock,
 } from "lucide-react";
-import {
-  useState,
-  useCallback,
-  useEffect,
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   AlertDialog,
@@ -33,13 +21,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { format } from "date-fns";
-import { usePathname } from "next/navigation";
 import { Doctor, Schedule } from "../../../lib/entity-types";
+import { formatDate } from "../../../lib/utils";
 
 export default function DoctorProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const userId = usePathname().split("/")[1];
   const [doctor, setDoctor] = useState<Partial<Doctor>>({});
 
   function generateTimeSlots(startTime: string, endTime: string) {
@@ -64,32 +50,7 @@ export default function DoctorProfile() {
 
     return slots;
   }
-
-  function getDayOfWeek(date: Date) {
-    switch (date.getUTCDay()) {
-      case 6:
-        return "Sunday";
-      case 0:
-        return "Monday";
-      case 1:
-        return "Tuesday";
-      case 2:
-        return "Wednesday";
-      case 3:
-        return "Thursday";
-      case 4:
-        return "Friday";
-      case 5:
-        return "Saturday";
-      default:
-        return "Invalid day";
-    }
-  }
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
-  // Fetch Data Lễ tân
+  // Fetch Data Bác sĩ
   useEffect(() => {
     const fetchDoctor = async () => {
       const currentEmail = localStorage.getItem("currentEmail");
@@ -148,15 +109,15 @@ export default function DoctorProfile() {
       <div className="flex flex-col gap-3">
         {Object.keys(doctor).length !== 0 &&
           (doctor as any).schedule.map((scheduleItem: Schedule) => (
-            <div key={scheduleItem._id} className="p-3 border">
+            <div key={scheduleItem._id + ""} className="p-3 border">
               <h3 className="font-medium text-slate-500 mb-2 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
                 <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
               </h3>
               <div className="grid grid-cols-4 gap-2 ">
                 {generateTimeSlots(
-                  scheduleItem.startTime,
-                  scheduleItem.endTime
+                  (scheduleItem as any)?.startTime,
+                  (scheduleItem as any)?.endTime
                 ).map((slot) => (
                   <Button key={slot} variant={"secondary"}>
                     {slot}

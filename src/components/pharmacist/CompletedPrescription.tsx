@@ -64,7 +64,7 @@ export default function CompletedPrescription() {
 
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (
-          <Card key={prescription._id} className="mb-6">
+          <Card key={prescription._id + ""} className="mb-6">
             {/* Prescription header */}
             <div className="grid grid-cols-3 items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
               <p className="flex items-center text-base">
@@ -94,7 +94,7 @@ export default function CompletedPrescription() {
               </TableHeader>
               <TableBody>
                 {prescription.medications.map((medication) => (
-                  <TableRow key={medication._id}>
+                  <TableRow key={medication._id + ""}>
                     <TableCell>{medication.medicationName}</TableCell>
                     <TableCell>{medication.dose}</TableCell>
                     <TableCell>{medication.quantity}</TableCell>
@@ -113,7 +113,7 @@ export default function CompletedPrescription() {
                 <Button
                   variant="destructive"
                   onClick={() =>
-                    setShowInvoice({ isShow: false, id: prescription._id })
+                    setShowInvoice({ isShow: false, id: prescription._id + "" })
                   }
                 >
                   Thu gọn
@@ -122,7 +122,7 @@ export default function CompletedPrescription() {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    setShowInvoice({ isShow: true, id: prescription._id });
+                    setShowInvoice({ isShow: true, id: prescription._id + "" });
                   }}
                 >
                   Xem hoá đơn

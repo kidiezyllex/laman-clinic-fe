@@ -130,3 +130,12 @@ export interface RequestTest {
   reason: String;
   requestDate: Date;
 }
+
+export interface LoginResponse {
+  status: string;
+  message: string;
+  data?: {
+    id: string;
+    role: string;
+  };
+}

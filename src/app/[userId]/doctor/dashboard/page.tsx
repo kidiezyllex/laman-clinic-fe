@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, CircleCheck, ContactRound, Database, User } from "lucide-react";
+import { Bell, CircleCheck, ContactRound, Edit, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import Messages from "@/components/receptionist/messages";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,9 +14,14 @@ import {
 } from "@/components/ui/breadcrumb";
 import ViewAppointment from "@/components/doctor/ViewAppoinment";
 import DoctorProfile from "@/components/doctor/DoctorProfile";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
+
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
-
+  const [roomNumber, setRoomNumber] = useState("");
+  const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {
       case "appoinments":
@@ -28,6 +32,27 @@ export default function Page() {
       // return <Notification />;
       default:
         return null;
+    }
+  };
+
+  const handleChangeRoomNumber = async () => {
+    try {
+      // const response3 = await axios.patch(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+      //   roomNumber
+      // );
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã cập nhật số phòng.",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+      console.error(error);
     }
   };
 
@@ -52,6 +77,26 @@ export default function Page() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
+
+      <Alert className="mt-4">
+        <Edit className="h-4 w-4" />
+        <AlertTitle>
+          VUI LÒNG CẬP NHẬT SỐ PHÒNG KHÁM SAU KHI ĐĂNG NHẬP
+        </AlertTitle>
+        <AlertDescription>
+          <div className="w-full mt-4 flex flex-row gap-3 justify-between">
+            <Input
+              placeholder="Ví dụ: '102'"
+              value={roomNumber}
+              onChange={(e) => setRoomNumber(e.target.value)}
+              className="bg-transparent"
+            ></Input>
+            <Button onClick={handleChangeRoomNumber} variant={"secondary"}>
+              Cập nhật
+            </Button>
+          </div>
+        </AlertDescription>
+      </Alert>
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[200px_1fr] gap-3 mt-8">
         <div className="hidden h-full border bg-background md:block rounded-md">
           <div className="flex h-full max-h-screen flex-col gap-2">

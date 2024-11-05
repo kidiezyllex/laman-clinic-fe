@@ -328,7 +328,7 @@ export default function ViewAppointment() {
       //   payload
       // );
     } catch (error) {
-      console.error("Error during sign in:", error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }

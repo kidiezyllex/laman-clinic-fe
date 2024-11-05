@@ -7,22 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { getCookie, getSession } from "../../../../../actions/getCookie";
 import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
-interface LoginResponse {
-  status: string;
-  message: string;
-  data?: {
-    id: string;
-    role: string;
-  };
-}
+import { LoginResponse } from "../../../../../lib/entity-types";
 
 export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
@@ -30,7 +21,6 @@ export default function Page() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -55,22 +45,21 @@ export default function Page() {
         if (data.data?.role === "doctor") {
           toast({
             variant: "default",
-            title: data.message,
-            description: "Đăng nhập với quyền Bác sĩ",
+            title: "Thành công!",
+            description: "Đăng nhập với quyền Bác sĩ.",
           });
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${
               (data as any)?.data?.email
             }`
           );
-          console.log(res.data[0]._id)
           router.push(`/${res.data[0]._id}/doctor/dashboard`);
           localStorage.setItem("currentId", res.data[0]._id);
         } else if (data.data?.role === "receptionist") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: data.message,
+            description: "Đăng nhập với quyền Lễ tân.",
           });
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${
@@ -83,7 +72,7 @@ export default function Page() {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: data.message,
+            description: "Đăng nhập với quyền Dược sĩ.",
           });
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${
@@ -101,12 +90,7 @@ export default function Page() {
         });
       }
     } catch (error) {
-      console.error("Error during sign in:", error);
-      setError(
-        error instanceof Error
-          ? error.message
-          : "An error occurred during sign in. Please try again."
-      );
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -142,8 +126,8 @@ export default function Page() {
             <Input
               id="email"
               type="email"
-              placeholder="Enter your email"
-              className="dark:bg-primary border border-slate-200"
+              placeholder="Nhập Email của bạn..."
+              className="dark:bg-white border border-slate-200"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -155,8 +139,8 @@ export default function Page() {
             <Input
               id="password"
               type="password"
-              className="dark:bg-primary border border-slate-200"
-              placeholder="Enter your password"
+              className="dark:bg-white border border-slate-200"
+              placeholder="Nhập mật khẩu của bạn..."
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required

@@ -47,7 +47,8 @@ export interface MedicalHistory {
 }
 
 export interface Appointment {
-  patientId: String;
+  patientId: Patient;
+  doctorId: Doctor;
   appointmentDate: String;
   reason: String;
   specialization: String;
@@ -115,10 +116,15 @@ export interface Receptionist {
   email?: String;
   schedule?: Schedule[];
 }
-
+export interface TestType {
+  _id: String;
+  testName: String;
+  description: String;
+  price: number;
+}
 export interface RequestTest {
   _id: String;
-  test: String[];
+  test: TestType[];
   patientId: String;
   doctorId: String;
   reason: String;

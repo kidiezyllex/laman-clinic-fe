@@ -1,12 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  ContactRound,
-  MessageCircleMore,
-} from "lucide-react";
-import Messages from "@/components/receptionist/messages";
+import { Bell, ContactRound, MessageCircleMore } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -25,11 +20,8 @@ export default function Page() {
         return <PatientProfile />;
       case "appointments":
         return (
-          <div className="flex flex-col items-center gap-4 text-center">
-          </div>
+          <div className="flex flex-col items-center gap-4 text-center"></div>
         );
-      case "messages":
-        return <Messages />;
       default:
         return null;
     }
@@ -46,9 +38,7 @@ export default function Page() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink className="text-base">
-              BỆNH NHÂN
-            </BreadcrumbLink>
+            <BreadcrumbLink className="text-base">BỆNH NHÂN</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>

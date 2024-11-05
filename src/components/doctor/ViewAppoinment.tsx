@@ -68,6 +68,8 @@ const formSchema = z.object({
 export default function ViewAppointment() {
   // built-in functions
   const { toast } = useToast();
+  const pathname = usePathname();
+  const doctorId = pathname.split("/")[1];
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -176,74 +178,18 @@ export default function ViewAppointment() {
 
   // Toggle chi tiết lịch hẹn
   const openAppointmentDetails = (appointment: Appointment) => {
+    console.log(appointment);
     setSelectedAppointment(appointment);
     setIsOpen(true);
   };
-  const pathname = usePathname();
 
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
-      const currentEmail = localStorage.getItem("currentEmail");
-
-      const response1 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
       );
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/queue/${response1.data.roomNumber}`
-      // );
-      const response = {
-        success: true,
-        data: [
-          {
-            patientId: "BN-PMQ7TS",
-            appointmentDate: "2024-11-02T10:27:40.521Z",
-            reason: "benh",
-            specialization: "Cardiology",
-            priority: true,
-          },
-          {
-            patientId: "BN-5C662W",
-            appointmentDate: "2024-11-02T05:09:19.661Z",
-            reason: "benh ho",
-            specialization: "Cardiology",
-          },
-          {
-            patientId: "BN-CODQ3H",
-            appointmentDate: "2024-11-02T10:34:32.233Z",
-            reason: "benhss",
-            specialization: "Cardiology",
-            priority: false,
-          },
-        ],
-      };
-      setAppointments(response?.data as any);
-
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
-      );
-      // thay bằng response.data.data khi mở comment
-      const mergeAppointments = (): Appointment[] => {
-        return response.data.map((app: any) => {
-          const patient = response2.data.find(
-            (p: { _id: string }) => p._id === app.patientId
-          );
-          if (patient) {
-            return {
-              ...app,
-              email: patient.email,
-              fullName: patient.fullName,
-              gender: patient.gender,
-              phone: patient.phone,
-              medicalHistory: patient.medicalHistory,
-              dateOfBirth: patient.dateOfBirth,
-              address: patient.address,
-            };
-          }
-          return app as Appointment;
-        });
-      };
-      setAppointments(mergeAppointments());
+      setAppointments(response.data);
     };
 
     fetchAppointments();
@@ -254,24 +200,18 @@ export default function ViewAppointment() {
   const handleCreatePrescription = async () => {
     try {
       setIsLoading(true);
-      // Lấy data bác sĩ
-      const currentEmail = localStorage.getItem("currentEmail");
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
-      );
-      const doctorData = response2.data[0];
       const payload = {
         patientId: selectedAppointment?.patientId,
-        doctorId: doctorData._id,
+        doctorId: doctorId,
         medications: rows,
         dateIssued: new Date(),
       };
-      const response3 = await axios.post(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
         payload
       );
     } catch (error) {
-      console.error("Error during sign in:", error);
+      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -383,7 +323,6 @@ export default function ViewAppointment() {
         testType: testType,
         reason: reasonRequestTest,
       };
-      console.log(payload);
       // const response3 = await axios.post(
       //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
       //   payload
@@ -473,7 +412,7 @@ export default function ViewAppointment() {
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >
-                        {appointment.gender === "Male" ? (
+                        {appointment.patientId.gender === "nam" ? (
                           <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                             <Dog className="text-blue-500" />
                           </div>
@@ -483,7 +422,7 @@ export default function ViewAppointment() {
                           </div>
                         )}
                         <p className="text-xs font-semibold text-center">
-                          {appointment.fullName}
+                          {appointment.patientId.fullName}
                         </p>
                         <p className="text-xs font-semibold text-center text-slate-500">
                           Lý do: {appointment.reason}
@@ -503,7 +442,8 @@ export default function ViewAppointment() {
           {selectedAppointment && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
-                {selectedAppointment?.gender?.toLowerCase() === "male" ? (
+                {selectedAppointment?.patientId?.gender?.toLowerCase() ===
+                "male" ? (
                   <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border-2 border-blue-500">
                     <Dog className="text-blue-500" />
                   </div>
@@ -514,18 +454,19 @@ export default function ViewAppointment() {
                 )}
                 <div>
                   <p className="text-base font-semibold ">
-                    {selectedAppointment?.gender?.toLowerCase() === "male" ? (
+                    {selectedAppointment?.patientId?.gender?.toLowerCase() ===
+                    "nam" ? (
                       <p className="text-blue-500">
-                        {selectedAppointment?.fullName}
+                        {selectedAppointment?.patientId?.fullName}
                       </p>
                     ) : (
                       <p className="text-pink-500">
-                        {selectedAppointment?.fullName}
+                        {selectedAppointment?.patientId?.fullName}
                       </p>
                     )}
                   </p>
                   <p className="text-slate-500">
-                    Mã bệnh nhân: {selectedAppointment?.patientId}
+                    Mã bệnh nhân: {selectedAppointment?.patientId?._id}
                   </p>
                 </div>
               </div>
@@ -535,14 +476,16 @@ export default function ViewAppointment() {
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Ngày sinh: {formatDate(selectedAppointment?.dateOfBirth)}
+                      Ngày sinh:{" "}
+                      {formatDate(selectedAppointment?.patientId?.dateOfBirth)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
                       Giới tính:{" "}
-                      {selectedAppointment?.gender.toLowerCase() === "female"
+                      {selectedAppointment?.patientId?.gender?.toLowerCase() ===
+                      "female"
                         ? "Nữ"
                         : "Nam"}
                     </span>
@@ -588,7 +531,8 @@ export default function ViewAppointment() {
               <div className="border rounded-md p-4 mr-4">
                 <div className="flex flex-col gap-1 w-full">
                   <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
-                  {selectedAppointment.medicalHistory.length === 0 ? (
+                  {selectedAppointment?.patientId?.medicalHistory?.length ===
+                  0 ? (
                     <p className="text-slate-500 text-sm">
                       Chưa có lịch sử khám bệnh
                     </p>
@@ -604,28 +548,30 @@ export default function ViewAppointment() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {selectedAppointment.medicalHistory.map((history) => (
-                          <TableRow key={(history as any).diagnosisDate}>
-                            <TableCell>
-                              {formatDate(
-                                new Date((history as any)?.diagnosisDate)
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              {history.disease.split("_")[1]}
-                            </TableCell>
-                            <TableCell>
-                              {history.disease.split("_")[0]}
-                            </TableCell>
-                            <TableCell>
-                              {history.disease.split("_")[2]}
-                            </TableCell>
-                            <TableCell>
-                              {history.treatment.split("_")[0] +
-                                history.treatment.split("_")[1]}
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                        {selectedAppointment?.patientId?.medicalHistory?.map(
+                          (history) => (
+                            <TableRow key={(history as any).diagnosisDate}>
+                              <TableCell>
+                                {formatDate(
+                                  new Date((history as any)?.diagnosisDate)
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[1]}
+                              </TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[0]}
+                              </TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[2]}
+                              </TableCell>
+                              <TableCell>
+                                {history.treatment.split("_")[0] +
+                                  history.treatment.split("_")[1]}
+                              </TableCell>
+                            </TableRow>
+                          )
+                        )}
                       </TableBody>
                     </Table>
                   )}
@@ -745,7 +691,7 @@ export default function ViewAppointment() {
               {showDiagnosticResultsForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
                   <h3 className="text-md font-semibold mr-4 self-center">
-                    Nhập thông tin khám bệnh/chẩn đoán bệnh
+                    Nhập kết quả khám bệnh/chẩn đoán bệnh
                   </h3>
                   <Form {...form}>
                     <form

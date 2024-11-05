@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -22,8 +22,7 @@ import axios from "axios";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "../../../lib/utils";
-import { Patient } from "../../../lib/entity-types";
-import { RequestTest } from "../../../lib/entity-types";
+import { Patient, TestType, RequestTest } from "../../../lib/entity-types";
 import { reqTestData } from "../../../lib/hardcoded-data";
 import {
   Table,
@@ -34,6 +33,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Separator } from "../ui/separator";
+import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
+import { Checkbox } from "../ui/checkbox";
 export default function TestRequest() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -43,6 +45,9 @@ export default function TestRequest() {
     useState<RequestTest | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedPatientId, setSelectedPatientId] = useState("");
+  const [testResult, setTestResult] = useState("");
+  const [performedTests, setPerformedTests] = useState<TestType[]>([]);
+
   const filteredRequestTests = requestTests.filter((requestTest) => {
     const searchTermLower = searchTerm.toLowerCase();
     return requestTest.patientId.toLowerCase().includes(searchTermLower);
@@ -64,6 +69,35 @@ export default function TestRequest() {
     fetchData();
   }, [selectedPatientId]);
 
+  // const handleTestToggle = (testId: number) => {
+  //   setSelectedTests((prev) =>
+  //     prev.includes(testId)
+  //       ? prev.filter((id) => id !== testId)
+  //       : [...prev, testId]
+  //   );
+  // };
+  const handleToggleCheckbox = (test: TestType) => {
+    setPerformedTests((prevTests) => {
+      const testIndex = prevTests.findIndex((t) => t._id === test._id);
+      if (testIndex > -1) {
+        return prevTests.filter((t) => t._id !== test._id);
+      } else {
+        return [...prevTests, test];
+      }
+    });
+  };
+
+  const totalAmount = useMemo(() => {
+    return performedTests.reduce((sum, test) => sum + test.price, 0);
+  }, [performedTests]);
+
+  const handleCompleteTest = async () => {
+    const payload = {
+      requestTest: selectedRequestTest,
+      performedDate: new Date(),
+    };
+    console.log(payload);
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
@@ -127,7 +161,7 @@ export default function TestRequest() {
                     key={index}
                     className="bg-slate-200 dark:bg-slate-800"
                   >
-                    {test}
+                    {test.testName}
                   </Badge>
                 ))}
               </div>
@@ -236,7 +270,7 @@ export default function TestRequest() {
                     <div className="flex flex-row flex-wrap gap-2">
                       {selectedRequestTest.test.map((test, index) => (
                         <Badge variant={"secondary"} key={index}>
-                          {test}
+                          {test.testName}
                         </Badge>
                       ))}
                     </div>
@@ -296,6 +330,65 @@ export default function TestRequest() {
                       </TableBody>
                     </Table>
                   )}
+                </div>
+              </div>
+              <div className="border rounded-md p-4 mr-4">
+                <div className="flex flex-col gap-1 w-full">
+                  <h3 className="text-md font-semibold mr-4 self-center uppercase mb-4">
+                    Nhập kết quả xét nghiệm
+                  </h3>
+                  <div className="flex flex-col gap-4">
+                    <p className="text-sm font-semibold">
+                      Xét nghiệm đã thực hiện:
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {selectedRequestTest.test.map((test) => (
+                        <Label
+                          key={test + ""}
+                          className="flex items-center justify-between space-x-2 mb-2 p-2 border rounded-md"
+                        >
+                          <Checkbox
+                            id={`test-${test}`}
+                            checked={performedTests.some(
+                              (t) => t._id === test._id
+                            )}
+                            onCheckedChange={() => handleToggleCheckbox(test)}
+                          />
+                          <p className="text-sm font-semibold">
+                            {test.testName}
+                          </p>
+                          <Badge
+                            variant={"secondary"}
+                            className="bg-slate-200 dark:bg-slate-800 self-end"
+                          >
+                            {test.price.toLocaleString("vi-VN") + " VNĐ"}
+                          </Badge>
+                        </Label>
+                      ))}
+                    </div>
+                    <p className="text-sm font-semibold">
+                      Tổng chi phí:{" "}
+                      <Badge
+                        variant={"secondary"}
+                        className="bg-slate-200 dark:bg-slate-800 self-end"
+                      >
+                        {totalAmount.toLocaleString("vi-VN") + " VNĐ"}
+                      </Badge>
+                    </p>
+                    <p className="text-sm font-semibold">Kết quả xét nghiệm:</p>
+                    <Textarea
+                      id="result"
+                      value={testResult}
+                      onChange={(e) => setTestResult(e.target.value)}
+                      placeholder="Nhập kết quả xét nghiệm"
+                    />
+                    <Button
+                      className="w-fit self-end"
+                      onClick={handleCompleteTest}
+                    >
+                      Hoàn thành
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>

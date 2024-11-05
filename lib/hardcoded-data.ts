@@ -318,97 +318,121 @@ export const labTestsData = [
     id: 1,
     name: "Xét nghiệm máu tổng quát",
     description: "Kiểm tra các chỉ số cơ bản trong máu.",
+    price: 150000,
   },
   {
     id: 2,
     name: "Xét nghiệm đường huyết",
     description: "Đo lượng đường trong máu.",
+    price: 160000,
   },
   {
     id: 3,
     name: "Xét nghiệm cholesterol",
     description: "Đánh giá mức độ cholesterol trong máu.",
+    price: 140000,
   },
   {
     id: 4,
     name: "Xét nghiệm chức năng gan",
     description: "Kiểm tra sức khỏe của gan.",
+    price: 210000,
   },
   {
     id: 5,
     name: "Xét nghiệm chức năng thận",
     description: "Đánh giá chức năng thận.",
+    price: 140000,
   },
   {
     id: 6,
     name: "Xét nghiệm viêm gan B",
     description: "Kiểm tra sự hiện diện của virus viêm gan B.",
+    price: 300000,
   },
   {
     id: 7,
     name: "Xét nghiệm viêm gan C",
     description: "Kiểm tra sự hiện diện của virus viêm gan C.",
+    price: 140000,
   },
-  { id: 8, name: "Xét nghiệm HIV", description: "Xét nghiệm virus HIV." },
+  {
+    id: 8,
+    name: "Xét nghiệm HIV",
+    description: "Xét nghiệm virus HIV.",
+    price: 140000,
+  },
   {
     id: 9,
     name: "Xét nghiệm hormon tuyến giáp",
     description: "Kiểm tra các chỉ số hormon tuyến giáp.",
+    price: 140000,
   },
   {
     id: 10,
     name: "Xét nghiệm nước tiểu",
     description: "Phân tích mẫu nước tiểu.",
+    price: 140000,
   },
   {
     id: 11,
     name: "Xét nghiệm điện giải đồ",
     description: "Đo các điện giải trong máu.",
+    price: 100000,
   },
   {
     id: 12,
     name: "Xét nghiệm nhóm máu",
     description: "Xác định nhóm máu của bệnh nhân.",
+    price: 100000,
   },
   {
     id: 13,
     name: "Xét nghiệm kháng thể",
     description: "Kiểm tra các kháng thể trong cơ thể.",
+    price: 100000,
   },
   {
     id: 14,
     name: "Xét nghiệm mỡ máu",
     description: "Đo mức triglycerides trong máu.",
+    price: 100000,
   },
   {
     id: 15,
     name: "Xét nghiệm vi sinh",
     description: "Nuôi cấy vi sinh vật từ mẫu bệnh phẩm.",
+    price: 100000,
   },
   {
     id: 16,
     name: "Xét nghiệm phản ứng viêm",
     description: "Đánh giá mức độ viêm trong cơ thể.",
+    price: 200000,
   },
   {
     id: 17,
     name: "Xét nghiệm tinh dịch",
     description: "Phân tích mẫu tinh dịch.",
+    price: 200000,
   },
   {
     id: 18,
     name: "Xét nghiệm dị ứng",
     description: "Kiểm tra phản ứng dị ứng.",
+    price: 200000,
   },
   {
     id: 19,
     name: "Xét nghiệm ung thư",
     description: "Xét nghiệm các chỉ số liên quan đến ung thư.",
+    price: 200000,
   },
   {
     id: 20,
     name: "Xét nghiệm COVID-19",
     description: "Kiểm tra sự hiện diện của virus COVID-19.",
+    price: 200000,
   },
 ];
 
@@ -465,7 +489,20 @@ export const processSteps = [
 export const reqTestData = [
   {
     _id: "YCXN-033564",
-    test: ["Xét nghiệm máu", "Xét nghiệm nước tiểu"],
+    test: [
+      {
+        _id: "1",
+        testName: "Xét nghiệm viêm gan B",
+        price: 300000,
+        description: "",
+      },
+      {
+        _id: "2",
+        testName: "Xét nghiệm chức năng thận",
+        price: 140000,
+        description: "",
+      },
+    ],
     patientId: "BN-5C662W",
     doctorId: "BS-98ANP7",
     reason: "Xin lỗi anh chịu hông nổi, xin lỗi vì quá đẹp trai",
@@ -473,7 +510,20 @@ export const reqTestData = [
   },
   {
     _id: "YCXN-033546",
-    test: ["Xét nghiệm máu", "Rap Nhà Bè"],
+    test: [
+      {
+        _id: "3",
+        testName: "Xét nghiệm dị ứng",
+        price: 200000,
+        description: "",
+      },
+      {
+        _id: "4",
+        testName: "Xét nghiệm ung thư",
+        price: 200000,
+        description: "",
+      },
+    ],
     patientId: "BN-PMQ7TS",
     doctorId: "BS-98ANP7",
     reason:

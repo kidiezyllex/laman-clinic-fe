@@ -3,7 +3,7 @@ export interface AppointmentByPatient {
   appointmentDateByPatient: Date;
   specialization: string;
   fullName: string;
-  dateOfBirth: string;
+  dateOfBirth: Date;
   gender: string;
   address: string;
   phone: string;

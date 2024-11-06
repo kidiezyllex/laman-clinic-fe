@@ -157,9 +157,8 @@ export default function TestRequest() {
               <div className="flex flex-row flex-wrap gap-2">
                 {requestTest.test.map((test, index) => (
                   <Badge
-                    variant={"secondary"}
+                    className="bg-slate-600 dark:bg-slate-700 dark:text-white"
                     key={index}
-                    className="bg-slate-200 dark:bg-slate-800"
                   >
                     {test.testName}
                   </Badge>

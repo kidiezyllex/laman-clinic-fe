@@ -103,9 +103,9 @@ export default function Notification() {
         {notifications.map((nt) => (
           <div
             key={nt.id}
-            className="mb-4 border p-4 rounded-md flex flex-row justify-between bg-blue-50"
+            className="mb-4 border p-4 rounded-md flex flex-row justify-between bg-primary-foreground"
           >
-            <p className="text-base text-gray-700">{nt.message}</p>
+            <p className="text-base dark:text-slate-300">{nt.message}</p>
             <Badge className="w-fit" variant={"default"}>
               Khoảng {getTimeDifference(nt?.createdAt as Date, new Date())}{" "}
               trước

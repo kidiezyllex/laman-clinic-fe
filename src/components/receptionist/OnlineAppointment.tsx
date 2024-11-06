@@ -163,7 +163,7 @@ export default function OnlineAppointment() {
         <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
         <Input
           type="search"
-          placeholder="Nhập tên, hoặc sđt, hoặc email"
+          placeholder="Nhập mã hoặc tên bệnh nhân..."
           className="pl-10"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -180,7 +180,7 @@ export default function OnlineAppointment() {
         {filteredAppointments.map((appointment) => (
           <Card
             key={appointment.id + ""}
-            className="flex flex-col gap-6 justify-center items-center p-4"
+            className="flex flex-col gap-6 justify-center items-center p-4 bg-primary-foreground"
           >
             <div className="flex flex-row gap-4 items-center w-full">
               {appointment.gender.toLowerCase() === "male" ||
@@ -194,18 +194,16 @@ export default function OnlineAppointment() {
                 </div>
               )}
               <div className="flex flex-col gap-1">
-                <p className="font-semibold text-sm">
-                  Tên bệnh nhân:{" "}
+                <p className="text-sm">
+                  <span className="font-semibold">Tên bệnh nhân: </span>
                   <span className="text-muted-foreground">
                     {appointment.fullName}
                   </span>
                 </p>
-                <p className="font-semibold text-sm">
-                  Giới tính:{" "}
+                <p className="text-sm">
+                  <span className="font-semibold">Mã bệnh nhân: </span>
                   <span className="text-muted-foreground">
-                    {appointment.gender?.toLowerCase() === "female"
-                      ? "Nữ"
-                      : "Nam"}
+                    {appointment.id}
                   </span>
                 </p>
               </div>
@@ -213,21 +211,20 @@ export default function OnlineAppointment() {
             <Separator></Separator>
             <div className="flex flex-row gap-2 w-full">
               <Badge variant={"secondary"}>Đang chờ</Badge>
-              <Badge>Khoa: {appointment.specialization}</Badge>
+              <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white">
+                Khoa: {appointment.specialization}
+              </Badge>
+              <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white">
+                Ngày ĐK: {formatDate(appointment?.appointmentDateByPatient)}
+              </Badge>
             </div>
-            <div className="flex flex-row gap-2">
+            <div className="flex flex-row gap-2 mt-4">
               <Button
-                className="w-fit bg-blue-500 hover:bg-blue-600"
+                className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreateAppointment(appointment)}
               >
                 <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám
               </Button>
-              {/* <Button
-                variant={"destructive"}
-                onClick={() => handleDeleteAppointmentByPatient(appointment.id)}
-              >
-                <Trash className="mr-2 h-4 w-4" /> Xoá
-              </Button> */}
             </div>
           </Card>
         ))}
@@ -260,8 +257,7 @@ export default function OnlineAppointment() {
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
-                  Ngày sinh:
-                  {/* {formatDate(selectedAppointment?.dateOfBirth)} */}
+                  Ngày sinh: {formatDate(selectedAppointment?.dateOfBirth)}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -277,7 +273,7 @@ export default function OnlineAppointment() {
                 <MapPin className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
                   Địa chỉ:
-                  {/* {selectedAppointment.patientId.address} */}
+                  {selectedAppointment?.address}
                 </span>
               </div>
               <div className="flex items-center gap-2">

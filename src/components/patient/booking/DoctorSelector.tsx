@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ArrowButton from "@/components/animata/button/arrow-button";
 import axios from "axios";
 import { doctorsData } from "../../../../lib/hardcoded-data";
 import {
@@ -26,11 +25,32 @@ export default function DoctorSelector({
   setSelectedSpe: (section: string) => void;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const handleSelectDoctor = (item: any) => {
     setSelectedSpe(item?.specialization);
     setSelectedDoctor(item);
     setActiveSection("calendarSelector");
   };
+
+  const filteredDoctors = doctors.filter((doctor) => {
+    const searchTermLower = searchTerm.toLowerCase();
+    return doctor?.fullName?.toLowerCase().includes(searchTermLower);
+  });
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors`
+      // );
+      // const filteredDoctors = response.data.filter((specialty: string) =>
+      //   specialty.toLowerCase().includes(searchTerm.toLowerCase())
+      // );
+      // setDoctors(filteredDoctors);
+      setDoctors(doctorsData as any);
+    };
+
+    fetchDoctors();
+  }, [searchTerm]);
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -40,9 +60,9 @@ export default function DoctorSelector({
 
       <Input
         type="text"
-        placeholder="Tìm kiếm chuyên khoa..."
+        placeholder="Nhập tên bác sĩ..."
         value={searchTerm}
-        // onChange={handleSearch}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full"
       />
       <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
@@ -58,7 +78,7 @@ export default function DoctorSelector({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {doctorsData.map((item, index) => (
+            {filteredDoctors.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>{item.fullName}</TableCell>

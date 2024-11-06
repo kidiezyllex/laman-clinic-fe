@@ -8,34 +8,30 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import CalendarSelector from "@/components/patient/booking/CalendarSelector";
-import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
-import { format } from "date-fns";
 import axios from "axios";
-import RoomSelector from "@/components/patient/booking/RoomSelector";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
-import Payment from "@/components/patient/booking/Payment";
 import { usePathname } from "next/navigation";
-import { Patient } from "../../../../../lib/entity-types";
+import { Doctor, Patient } from "../../../../../lib/entity-types";
 import { formatDate } from "../../../../../lib/utils";
+import DoctorSelector from "@/components/patient/booking/DoctorSelector";
+import CalendarSelector from "@/components/patient/booking/CalendarSelector";
+import Payment from "@/components/patient/booking/Payment";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("calendarSelector");
+  const [activeSection, setActiveSection] = useState("doctorSelector");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
+  const [selectedSpe, setSelectedSpe] = useState<String | null>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const pathname = usePathname();
+  const patientId = pathname.split("/")[1];
   const [patient, setPatient] = useState<Patient | null>(null);
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
         if (!pathname.split("_").includes("/user")) {
-          const currentEmail = localStorage.getItem("currentEmail");
-          if (!currentEmail) {
-            throw new Error("No email found in localStorage");
-          }
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
           );
           setPatient(response.data);
         } else {
@@ -43,42 +39,37 @@ export default function Page() {
         }
       } catch (error) {
         console.log(error);
-      } 
+      }
     };
 
     fetchPatientByAccountId();
   }, []);
   const renderMainContent = () => {
     switch (activeSection) {
+      case "doctorSelector":
+        return (
+          <DoctorSelector
+            setActiveSection={setActiveSection}
+            setSelectedDoctor={setSelectedDoctor}
+            setSelectedSpe={setSelectedSpe}
+          />
+        );
       case "calendarSelector":
         return (
           <CalendarSelector
             setActiveSection={setActiveSection}
             setSelectedDate={setSelectedDate}
+            selectedDoctor={selectedDoctor}
           />
-        );
-      case "specialtySelector":
-        return (
-          <SpecialtySelector
-            setActiveSection={setActiveSection}
-            setSelectedSpe={setSelectedSpe}
-          />
-        );
-      case "roomSelector":
-        return (
-          <RoomSelector
-            setActiveSection={setActiveSection}
-            selectedDate={selectedDate}
-            selectedSpe={selectedSpe}
-          ></RoomSelector>
         );
       case "payment":
         return (
           <Payment
             setActiveSection={setActiveSection}
-            selectedSpe={selectedSpe}
+            selectedSpe={null}
             selectedDate={selectedDate}
             patient={patient as any}
+            selectedDoctor={selectedDoctor}
           ></Payment>
         );
       default:
@@ -174,15 +165,21 @@ export default function Page() {
               </div>
               <p className="text-sm">
                 <span className="font-semibold dark:text-slate-500">
-                  Ngày khám:
+                  Bác sĩ:
                 </span>{" "}
-                {formatDate(selectedDate)}
+                {selectedDoctor?.fullName}
               </p>
               <p className="text-sm">
                 <span className="font-semibold dark:text-slate-500">
                   Chuyên khoa:
                 </span>{" "}
                 {selectedSpe}
+              </p>
+              <p className="text-sm">
+                <span className="font-semibold dark:text-slate-500">
+                  Ngày khám:
+                </span>{" "}
+                {formatDate(selectedDate)}
               </p>
             </div>
           </div>
@@ -194,7 +191,7 @@ export default function Page() {
               <BreadcrumbItem>
                 <BreadcrumbPage
                   className={
-                    activeSection === "calendarSelector"
+                    activeSection === "doctorSelector"
                       ? "text-base text-blue-500 dark:text-blue-500"
                       : "text-base"
                   }
@@ -211,7 +208,7 @@ export default function Page() {
                       : "text-base"
                   }
                 >
-                  Phòng khám, giờ khám
+                  Ngày & giờ khám
                 </BreadcrumbPage>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

@@ -17,18 +17,20 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { usePathname } from "next/navigation";
-import { Patient } from "../../../../lib/entity-types";
+import { Doctor, Patient } from "../../../../lib/entity-types";
 
 const PaymentForm = ({
   setActiveSection,
   selectedDate,
   selectedSpe,
   patient,
+  selectedDoctor,
 }: {
   setActiveSection: (section: string) => void;
   selectedDate: Date | undefined;
   selectedSpe: number | null;
   patient: Patient;
+  selectedDoctor: Doctor | null;
 }) => {
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const { toast } = useToast();
@@ -55,9 +57,9 @@ const PaymentForm = ({
   const handleBooking = async () => {
     setIsLoading(true);
     const payload = {
-      id: patient._id + "",
+      patientId: patient._id + "",
       appointmentDateByPatient: selectedDate,
-      specialization: selectedSpe,
+      specialization: selectedDoctor?.specialization || selectedSpe,
       fullName: patient.fullName,
       dateOfBirth: patient.dateOfBirth || new Date(),
       gender: patient.gender || "",
@@ -65,12 +67,14 @@ const PaymentForm = ({
       phone: patient.phone || "",
       email: patient.email,
       medicalHistory: [],
+      doctorId: selectedDoctor?._id || "",
     };
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
-        payload
-      );
+      // const response = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
+      //   payload
+      // );
+      console.log(payload);
       toast({
         variant: "default",
         title: "Thành công!",
@@ -83,7 +87,7 @@ const PaymentForm = ({
           title: "Thất bại!",
           description: "Trùng hồ sơ. Vui lòng dùng hồ sơ khác!",
         });
-        console.error("Axios error:", error.response?.data || error.message);
+        console.error(error.response?.data || error.message);
       }
     } finally {
       setIsLoading(false);

@@ -39,17 +39,14 @@ export default function CreatePatientProfile() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const pathname = usePathname();
+  const patientId = pathname.split("/")[1];
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
         if (!pathname.split("_").includes("/user")) {
-          const currentEmail = localStorage.getItem("currentEmail");
-          if (!currentEmail) {
-            throw new Error("No email found in localStorage");
-          }
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
           );
           setPatient(response.data);
         } else {
@@ -57,7 +54,7 @@ export default function CreatePatientProfile() {
         }
       } catch (error) {
         console.log(error);
-      } 
+      }
     };
 
     fetchPatientByAccountId();
@@ -73,7 +70,10 @@ export default function CreatePatientProfile() {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbLink href={`/${pathname.split("/")[1]}/patient/dashboard`} className="text-base">
+            <BreadcrumbLink
+              href={`/${pathname.split("/")[1]}/patient/dashboard`}
+              className="text-base"
+            >
               BỆNH NHÂN
             </BreadcrumbLink>
           </BreadcrumbItem>
@@ -126,7 +126,10 @@ export default function CreatePatientProfile() {
                   <div className="flex items-center space-x-3">
                     <UserIcon className="text-blue-500 h-4 w-4" />
                     <span className="text-slate-600 text-sm">
-                      Giới tính: {patient.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
+                      Giới tính:{" "}
+                      {patient.gender?.toLowerCase() === "female"
+                        ? "Nữ"
+                        : "Nam"}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
@@ -151,13 +154,19 @@ export default function CreatePatientProfile() {
               </div>
               <div className="flex flex-row gap-4 items-center justify-center my-4">
                 <Link href={`/${patient._id}/patient/booking-by-date`}>
-                  <Button className="w-fit bg-blue-500 text-white hover:bg-blue-700" variant={"secondary"}>
+                  <Button
+                    className="w-fit bg-blue-500 text-white hover:bg-blue-700"
+                    variant={"secondary"}
+                  >
                     <Calendar className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo ngày
                   </Button>
                 </Link>
                 <Link href={`/${patient._id}/patient/booking-by-doctor`}>
-                  <Button className="w-fit bg-blue-500 text-white hover:bg-blue-700" variant={"secondary"}>
+                  <Button
+                    className="w-fit bg-blue-500 text-white hover:bg-blue-700"
+                    variant={"secondary"}
+                  >
                     <Stethoscope className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo bác sĩ
                   </Button>

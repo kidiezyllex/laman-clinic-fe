@@ -128,7 +128,7 @@ export default function DirectAppoinment() {
         });
       }
     } catch (error) {
-      console.error("Error during sign in:", error);
+      console.error(error);
     } finally {
       setIsLoading(false);
       setIsDialogOpen(false);

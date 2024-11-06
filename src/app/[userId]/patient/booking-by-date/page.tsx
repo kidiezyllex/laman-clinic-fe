@@ -10,35 +10,28 @@ import {
 } from "@/components/ui/breadcrumb";
 import CalendarSelector from "@/components/patient/booking/CalendarSelector";
 import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
-import { format } from "date-fns";
 import axios from "axios";
 import RoomSelector from "@/components/patient/booking/RoomSelector";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import Payment from "@/components/patient/booking/Payment";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../../lib/entity-types";
+import { formatDate } from "../../../../../lib/utils";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
-  const pathname = usePathname();
   const [patient, setPatient] = useState<Patient | null>(null);
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
+  const pathname = usePathname();
+  const patientId = pathname.split("/")[1];
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
         if (!pathname.split("_").includes("/user")) {
-          const currentEmail = localStorage.getItem("currentEmail");
-          if (!currentEmail) {
-            throw new Error("No email found in localStorage");
-          }
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
           );
           setPatient(response.data);
         } else {
@@ -46,7 +39,7 @@ export default function Page() {
         }
       } catch (error) {
         console.error(error);
-      } 
+      }
     };
 
     fetchPatientByAccountId();
@@ -58,6 +51,7 @@ export default function Page() {
           <CalendarSelector
             setActiveSection={setActiveSection}
             setSelectedDate={setSelectedDate}
+            selectedDoctor={null}
           />
         );
       case "specialtySelector":

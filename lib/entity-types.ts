@@ -1,89 +1,90 @@
 export interface AppointmentByPatient {
-  id: String;
+  id: string;
   appointmentDateByPatient: Date;
-  specialization: String;
-  fullName: String;
-  dateOfBirth: String;
-  gender: String;
-  address: String;
-  phone: String;
-  email: String;
-  medicalHistory: Array<String>;
+  specialization: string;
+  fullName: string;
+  dateOfBirth: string;
+  gender: string;
+  address: string;
+  phone: string;
+  email: string;
+  medicalHistory: Array<string>;
 }
 
 export interface Schedule {
-  dayOfWeek: String;
-  startTime: String;
-  endTime: String;
-  _id: String;
+  dayOfWeek: string;
+  startTime: string;
+  endTime: string;
+  _id: string;
 }
 export interface Doctor {
-  _id: String;
-  numberId?: String;
-  fullName?: String;
+  _id: string;
+  fullName?: string;
   dateOfBirth?: Date;
-  gender?: String;
-  address?: String;
-  phone?: String;
-  email?: String;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
   schedule?: Schedule[];
+  roomNumber?: string;
+  specialization?: string;
 }
 export interface Patient {
-  _id?: String;
-  fullName?: String;
+  _id?: string;
+  fullName?: string;
   dateOfBirth?: Date;
-  gender?: String;
-  address?: String;
-  phone?: String;
-  email?: String;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
   medicalHistory?: MedicalHistory[];
 }
 
 export interface MedicalHistory {
-  _id: String;
-  disease: String;
-  diagnosisDate: String;
-  treatment: String;
+  _id: string;
+  disease: string;
+  diagnosisDate: string;
+  treatment: string;
 }
 
 export interface Appointment {
   patientId: Patient;
   doctorId: Doctor;
-  appointmentDate: String;
-  reason: String;
-  specialization: String;
-  email: String;
-  fullName: String;
-  gender: String;
-  phone: String;
+  appointmentDate: string;
+  reason: string;
+  specialization: string;
+  email: string;
+  fullName: string;
+  gender: string;
+  phone: string;
   medicalHistory: MedicalHistory[];
   priority: boolean;
   dateOfBirth?: Date;
-  address: String;
+  address: string;
 }
 
 export interface MedicationRow {
   id: number;
-  medicationName: String;
-  dose: String;
+  medicationName: string;
+  dose: string;
   quantity: number;
-  instructions: String;
+  instructions: string;
   price: number;
 }
 
 export interface Medication {
-  medicationName: String;
-  dose: String;
+  medicationName: string;
+  dose: string;
   quantity: number;
   price: number;
-  instructions: String;
-  _id: String;
+  instructions: string;
+  _id: string;
 }
 
 export interface Prescription {
-  _id: String;
-  patientId: String;
-  doctorId: String;
+  _id: string;
+  patientId: string;
+  doctorId: string;
   medications: Medication[];
   dateIssued: Date;
 }
@@ -94,40 +95,40 @@ export interface PatientPrescriptionInvoiceProps {
 }
 
 export interface Pharmacist {
-  _id: String;
-  numberId?: String;
-  fullName?: String;
+  _id: string;
+  numberId?: string;
+  fullName?: string;
   dateOfBirth?: Date;
-  gender?: String;
-  address?: String;
-  phone?: String;
-  email?: String;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
   schedule?: Schedule[];
 }
 
 export interface Receptionist {
-  _id: String;
-  numberId?: String;
-  fullName?: String;
+  _id: string;
+  numberId?: string;
+  fullName?: string;
   dateOfBirth?: Date;
-  gender?: String;
-  address?: String;
-  phone?: String;
-  email?: String;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
   schedule?: Schedule[];
 }
 export interface TestType {
-  _id: String;
-  testName: String;
-  description: String;
+  _id: string;
+  testName: string;
+  description: string;
   price: number;
 }
 export interface RequestTest {
-  _id: String;
+  _id: string;
   test: TestType[];
-  patientId: String;
-  doctorId: String;
-  reason: String;
+  patientId: string;
+  doctorId: string;
+  reason: string;
   requestDate: Date;
 }
 

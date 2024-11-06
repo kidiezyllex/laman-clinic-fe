@@ -3,23 +3,37 @@
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import ArrowButton from "@/components/animata/button/arrow-button";
+import { Doctor } from "../../../../lib/entity-types";
 
 export default function CalendarSelector({
   setActiveSection,
   setSelectedDate,
+  selectedDoctor,
 }: {
   setActiveSection: (section: string) => void;
-  setSelectedDate: (section: Date) => void;
+  setSelectedDate: (date: Date) => void;
+  selectedDoctor: Doctor | null;
 }) {
   const [date, setDate] = useState<Date | undefined>(undefined);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
+
+  const availableDays = new Set(
+    selectedDoctor?.schedule?.map((day) => day.dayOfWeek.toLowerCase())
+  );
 
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && selectedDate >= today) {
       setDate(selectedDate);
       setSelectedDate(selectedDate);
     }
+  };
+
+  const isDateDisabled = (date: Date) => {
+    const day = date
+      .toLocaleDateString("en-US", { weekday: "long" })
+      .toLowerCase();
+    return date < today || !availableDays.has(day);
   };
 
   return (
@@ -31,7 +45,7 @@ export default function CalendarSelector({
         mode="single"
         selected={date}
         onSelect={handleSelect}
-        disabled={(date) => date < today}
+        disabled={isDateDisabled}
         className="rounded-md border bg-background flex flex-row items-center justify-center"
         styles={{
           head: {
@@ -59,9 +73,11 @@ export default function CalendarSelector({
         className="w-fit self-end"
         text={"Tiếp tục"}
         onClick={() => {
-          setActiveSection("specialtySelector");
+          if (selectedDoctor) {
+            setActiveSection("payment");
+          } else setActiveSection("specialtySelector");
         }}
-      ></ArrowButton>
+      />
     </div>
   );
 }

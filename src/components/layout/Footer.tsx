@@ -17,10 +17,13 @@ import { Avatar, AvatarImage } from "../ui/avatar";
 export default function Footer() {
   const pathname = usePathname();
   const isHomePage =
-    pathname === "/" || pathname === "/process" || pathname === "/question";
+    pathname === "/" ||
+    pathname === "/process" ||
+    pathname === "/question" ||
+    pathname === "/contact";
   const router = useRouter();
   return isHomePage ? (
-    <div className="mx-auto p-8 dark:bg-slate-950 bg-secondary border mt-8">
+    <div className="mx-auto p-8 dark:bg-slate-950 border mt-8 ">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="flex flex-row justify-center">
           <div>
@@ -65,9 +68,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center">
                 <MapPin className="w-4 h-4 mr-2" />
-                <span className="text-sm">
-                  123 Medical Ave, Health City, HC 12345
-                </span>
+                <span className="text-sm">Gò Vấp, T.P Hồ Chí Minh</span>
               </li>
             </ul>
           </div>
@@ -80,15 +81,17 @@ export default function Footer() {
             <ul className="space-y-2">
               <li className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                <span className="text-sm">Mon-Fri: 8:00 AM - 8:00 PM</span>
+                <span className="text-sm">
+                  Thứ 2 - Thứ 6: 8:00 AM - 8:00 PM
+                </span>
               </li>
               <li className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                <span className="text-sm">Sat: 9:00 AM - 5:00 PM</span>
+                <span className="text-sm">Thứ 7: 9:00 AM - 5:00 PM</span>
               </li>
               <li className="flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                <span className="text-sm">Sun: Closed</span>
+                <span className="text-sm">Chủ Nhật: Đóng cửa</span>
               </li>
             </ul>
           </div>
@@ -127,20 +130,17 @@ export default function Footer() {
       <Separator className="my-8 bg-slate-700" />
       <div className="flex flex-col md:flex-row justify-between items-center">
         <p className="text-sm">
-          &copy; 2023 HealthCare Clinic. All rights reserved.
+          &copy; 2023 Laman Clinic. All rights reserved.
         </p>
         <div className="flex space-x-4 mt-4 md:mt-0">
           <Link href="#" className="hover:text-primary-foreground/80">
             <Facebook className="w-5 h-5" />
-            <span className="sr-only">Facebook</span>
           </Link>
           <Link href="#" className="hover:text-primary-foreground/80">
             <Twitter className="w-5 h-5" />
-            <span className="sr-only">Twitter</span>
           </Link>
           <Link href="#" className="hover:text-primary-foreground/80">
-            <Instagram className="w-5 h-5" />
-            <span className="sr-only">Instagram</span>
+            <Mail className="w-5 h-5" />
           </Link>
         </div>
       </div>

@@ -46,7 +46,7 @@ export default function Page() {
         {processSteps.map((step, index) => (
           <div
             key={index}
-            className="rounded-lg p-6 dark:bg-slate-950 bg-secondary border"
+            className="rounded-lg p-6 dark:bg-primary-foreground bg-secondary border"
           >
             <h2 className="text-base font-semibold mb-4 flex items-center text-blue-500">
               <span className="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3">

@@ -16,12 +16,6 @@ import { Card } from "../ui/card";
 import Link from "next/link";
 import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { getUserData } from "../../../actions/getUserData";
@@ -38,14 +32,12 @@ export default function NavBar() {
   useEffect(() => {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");
-    // setToken(localStorage.getItem("token") || "");
   }, []);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/process", label: "QUY TRÌNH" },
-    { href: "/huong-dan", label: "HƯỚNG DẪN" },
-    { href: "/hoi-dap", label: "HỎI ĐÁP" },
-    { href: "/lien-he", label: "LIÊN HỆ" },
+    { href: "/question", label: "HỎI ĐÁP" },
+    { href: "/contact", label: "LIÊN HỆ" },
   ];
 
   const handleLogOut = async () => {

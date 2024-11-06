@@ -1,5 +1,5 @@
 "use client";
-import { Hotel, Pencil, TrendingUp } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import React from "react";
 import Image from "next/image";
@@ -8,9 +8,7 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -26,17 +24,17 @@ import ArrowButton from "../animata/button/arrow-button";
 import AvatarList from "../animata/list/avatar-list";
 
 const chartData = [
-  { month: "January", desktop: 50000 },
-  { month: "February", desktop: 45000 },
-  { month: "March", desktop: 55000 },
-  { month: "April", desktop: 67000 },
-  { month: "May", desktop: 78000 },
-  { month: "June", desktop: 95000 },
+  { month: "Th.1", desktop: 50000 },
+  { month: "Th.2", desktop: 45000 },
+  { month: "Th.3", desktop: 55000 },
+  { month: "Th.4", desktop: 67000 },
+  { month: "Th.5", desktop: 78000 },
+  { month: "Th.6", desktop: 95000 },
 ];
 
 const chartConfig = {
   desktop: {
-    label: "Desktop",
+    label: "Số lượng: ",
     color: "hsl(217.2 91.2% 59.8%)",
   },
 } satisfies ChartConfig;
@@ -66,7 +64,7 @@ export default function Hero() {
               }}
             ></ArrowButton>
             <Button className="flex flex-row gap-3 " variant="outline">
-              <Hotel h-4 w-4 />
+              <Calendar className="h-4 w-4" />
               Đặt lịch khám
             </Button>
           </div>
@@ -87,7 +85,7 @@ export default function Hero() {
             <Card className="w-[100%]">
               <CardHeader>
                 <CardDescription>
-                  Lượt bệnh nhân đặt khám năm 2024
+                  Số lượng bệnh nhân ghé thăm (2024)
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -104,7 +102,7 @@ export default function Hero() {
                       tickLine={false}
                       tickMargin={10}
                       axisLine={false}
-                      tickFormatter={(value) => value.slice(0, 3)}
+                      tickFormatter={(value) => value.slice(0, 4)}
                     />
                     <ChartTooltip
                       cursor={false}

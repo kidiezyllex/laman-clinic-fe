@@ -154,11 +154,11 @@ export default function Specialties() {
           Search Specialties
         </Label>
         <div className="relative">
-          <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400" />
+          <Search className="h-4 w-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <Input
             id="search"
             type="search"
-            placeholder="Search specialties, conditions, or procedures..."
+            placeholder="Tìm kiếm chuyên khoa, tình trạng hoặc quy trình..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -172,8 +172,8 @@ export default function Specialties() {
               <Card className="hover:shadow-lg transition-shadow cursor-pointer">
                 <CardHeader>
                   <CardTitle className="flex items-center justify-center">
-                    <specialty.icon className="w-8 h-8 text-blue-500 mr-2" />
-                    {specialty.name}
+                    <specialty.icon className="w-6 h-6 text-blue-500 mr-2" />
+                    <p className="text-blue-500 text-md">{specialty.name}</p>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -231,14 +231,6 @@ export default function Specialties() {
                   </Accordion>
                 </DialogDescription>
               </ScrollArea>
-              <DialogFooter className="flex flex-col sm:flex-row gap-2">
-                <Button className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white">
-                  Book Appointment
-                </Button>
-                <Button className="w-full sm:w-auto" variant="outline">
-                  Learn More
-                </Button>
-              </DialogFooter>
             </DialogContent>
           </Dialog>
         ))}

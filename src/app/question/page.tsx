@@ -33,29 +33,47 @@ Trong trường hợp CẤP CỨU, người nhà nên đưa người bệnh đ�
     id: 2,
     trigger: "Đăng ký khám qua phần mềm có tốn phí không?",
     content: `Có!
-Hiện tại, khi đăng ký khám bệnh qua phần mềm, ngoài tiền khám bạn phải trả thêm phí tiện ích.`,
+Khi đăng ký khám bệnh qua phần mềm, ngoài tiền khám bạn phải trả thêm phí tiện ích cho dịch vụ trực tuyến.`,
   },
   {
     id: 3,
-    trigger: "Các loại tiền và phí khi sử dụng phần mềm để đăng ký khám bệnh?",
-    content: `Tiền khám: là số tiền bạn trả cho việc sử dụng dịch vụ khám chữa bệnh của bệnh viện, số tiền này được thu theo qui định của bệnh viện.
-Phí tiện ích: là số tiền bạn trả để hỗ trợ cho việc sử dụng dịch vụ đăng ký khám bệnh trực tuyến của phần mềm.`,
+    trigger: "Các loại phí khi sử dụng phần mềm để đăng ký khám bệnh là gì?",
+    content: `Tiền khám: là số tiền bạn trả cho dịch vụ khám bệnh tại bệnh viện, thu theo quy định.
+
+Phí tiện ích: là phí hỗ trợ việc đăng ký trực tuyến qua phần mềm.`,
   },
   {
     id: 4,
-    trigger: "Đăng ký khám qua phần mềm có tốn phí không?",
-    content: `Có!
-
-Hiện tại, khi đăng ký khám bệnh qua phần mềm, ngoài tiền khám bạn phải trả thêm phí tiện ích.`,
+    trigger: "Có cần tài khoản khi đăng ký khám qua phần mềm không?",
+    content: `Có, bạn cần có tài khoản để đăng nhập vào phần mềm trước khi tiến hành đăng ký khám bệnh. Điều này giúp hệ thống lưu trữ và quản lý lịch sử khám của bạn dễ dàng hơn.`,
   },
   {
     id: 5,
-    trigger: "Đăng ký khám qua phần mềm có tốn phí không?",
-    content: `Có!
-
-Hiện tại, khi đăng ký khám bệnh qua phần mềm, ngoài tiền khám bạn phải trả thêm phí tiện ích.`,
+    trigger: "Làm sao để huỷ lịch khám đã đăng ký qua phần mềm?",
+    content: `Bạn có thể huỷ lịch khám đã đăng ký trong mục "Lịch hẹn của tôi" trong phần mềm. Chỉ cần chọn lịch hẹn và bấm nút huỷ để hoàn tất.`,
+  },
+  {
+    id: 6,
+    trigger: "Có thể thay đổi lịch khám đã đăng ký không?",
+    content: `Có, bạn có thể thay đổi lịch khám đã đăng ký bằng cách chọn lịch hẹn và chọn thời gian mới trong phần mềm. Lưu ý, thay đổi chỉ khả dụng nếu lịch hẹn chưa đến giờ.`,
+  },
+  {
+    id: 7,
+    trigger: "Phần mềm có hỗ trợ đặt lịch khám với bác sĩ cụ thể không?",
+    content: `Phần mềm cho phép bạn chọn bác sĩ theo chuyên khoa mong muốn nếu bác sĩ đó có lịch khám khả dụng vào thời gian bạn chọn.`,
+  },
+  {
+    id: 8,
+    trigger: "Làm thế nào để được nhắc nhở trước lịch hẹn khám?",
+    content: `Phần mềm sẽ gửi thông báo nhắc nhở qua tin nhắn hoặc email mà bạn đã đăng ký trước thời gian khám để đảm bảo bạn không bỏ lỡ lịch hẹn.`,
+  },
+  {
+    id: 9,
+    trigger: "Có hỗ trợ tư vấn trực tuyến qua phần mềm không?",
+    content: `Có, phần mềm cung cấp tính năng tư vấn trực tuyến cho những trường hợp không cần gặp trực tiếp. Bạn có thể đặt lịch tư vấn và được kết nối với bác sĩ qua video.`,
   },
 ];
+
 export default function Page() {
   return (
     <div className="flex flex-col gap-4">
@@ -83,9 +101,9 @@ export default function Page() {
         </BreadcrumbList>
       </Breadcrumb>
       <Separator></Separator>
-      <div className="grid grid-cols-4 mt-4 gap-6">
+      <div className="grid grid-cols-4 mt-4 gap-6 ">
         {/* Sidebar */}
-        <div className="col-span-1 flex flex-col gap-3">
+        <div className="col-span-1 flex flex-col gap-3 dark:bg-slate-950 border rounded-md p-4">
           <h2 className="text-base font-semibold text-blue">
             TÌM NHANH CÂU HỎI
           </h2>
@@ -95,7 +113,7 @@ export default function Page() {
               <Search className="h-4 w-4" />
             </Button>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-2 p-2 border rounded-md">
             <h3 className="text-sm text-blue-500">Vấn đề chung</h3>
             <h3 className="text-sm">Vấn đề về tài khoản</h3>
             <h3 className="text-sm">Vấn đề về quy trình đặt khám</h3>

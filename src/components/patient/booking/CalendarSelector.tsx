@@ -45,7 +45,7 @@ export default function CalendarSelector({
         mode="single"
         selected={date}
         onSelect={handleSelect}
-        disabled={isDateDisabled}
+        disabled={selectedDoctor ? isDateDisabled : false}
         className="rounded-md border bg-background flex flex-row items-center justify-center"
         styles={{
           head: {

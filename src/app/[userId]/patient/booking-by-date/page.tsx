@@ -76,6 +76,7 @@ export default function Page() {
             selectedSpe={selectedSpe}
             selectedDate={selectedDate}
             patient={patient as any}
+            selectedDoctor={null}
           ></Payment>
         );
       default:

@@ -35,23 +35,21 @@ import { usePathname } from "next/navigation";
 import { Patient } from "../../../../lib/entity-types";
 import { formatDate } from "../../../../lib/utils";
 import UpdateProfileForm from "./UpdateProfileForm";
+import { useToast } from "@/hooks/use-toast";
 
 export default function PatientProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const pathname = usePathname();
+  const patientId = pathname.split("/")[1];
+  const { toast } = useToast();
   const [patient, setPatient] = useState<Patient | null>(null);
-
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
         if (!pathname.split("_").includes("/user")) {
-          const currentEmail = localStorage.getItem("currentEmail");
-          if (!currentEmail) {
-            throw new Error("No email found in localStorage");
-          }
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
           );
           setPatient(response.data);
         } else {
@@ -59,7 +57,7 @@ export default function PatientProfile() {
         }
       } catch (error) {
         console.log(error);
-      } 
+      }
     };
 
     fetchPatientByAccountId();
@@ -67,9 +65,17 @@ export default function PatientProfile() {
 
   const handleDelete = async () => {
     try {
-      console.log("Delete functionality not implemented");
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
+      );
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Bạn đã xoá hồ sơ của mình!",
+      });
+      setPatient(null);
     } catch (error) {
-      console.error("Error deleting patient:", error);
+      console.error(error);
     }
     setIsAlertOpen(false);
   };
@@ -159,7 +165,9 @@ export default function PatientProfile() {
               </Table>
             )}
           </div>
-          <div className={showUpdateForm?"hidden":"flex justify-end space-x-4"}>
+          <div
+            className={showUpdateForm ? "hidden" : "flex justify-end space-x-4"}
+          >
             <Button
               variant="destructive"
               className="flex items-center space-x-2"
@@ -186,9 +194,7 @@ export default function PatientProfile() {
         />
       )}
       {showUpdateForm && (
-        <UpdateProfileForm
-          setShowUpdateForm={setShowUpdateForm}
-        />
+        <UpdateProfileForm setShowUpdateForm={setShowUpdateForm} />
       )}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>

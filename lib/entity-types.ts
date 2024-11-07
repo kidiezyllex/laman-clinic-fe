@@ -42,7 +42,7 @@ export interface Patient {
 
 export interface MedicalHistory {
   _id: string;
-  disease: string;
+  diagnosisDescription: string;
   diagnosisDate: string;
   treatment: string;
 }

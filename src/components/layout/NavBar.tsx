@@ -18,7 +18,6 @@ import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
-import { getUserData } from "../../../actions/getUserData";
 import { useAuthContext } from "@/app/auth-context";
 export default function NavBar() {
   const { toast } = useToast();
@@ -55,17 +54,7 @@ export default function NavBar() {
       return (
         <div className="flex flex-row gap-3 justify-end">
           <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
-            <UserButton afterSignOutUrl="/">
-              <UserButton.MenuItems>
-                <UserButton.Action
-                  label="Cập nhật tài khoản"
-                  labelIcon={<HistoryIcon className="h-4 w-4" />}
-                  onClick={async () => {
-                    const user = await getUserData(userId);
-                  }}
-                />
-              </UserButton.MenuItems>
-            </UserButton>
+            <UserButton afterSignOutUrl="/"></UserButton>
           </div>
 
           {/* Dark Mode */}

@@ -129,42 +129,6 @@ export default function PatientProfile() {
               <span className=" text-base">Email: {patient.email}</span>
             </div>
           </div>
-          <div className="w-full border rounded-md p-4">
-            <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
-            {(patient as any).medicalHistory.length === 0 ? (
-              <p className="text-slate-500 text-sm">
-                Chưa có lịch sử khám bệnh
-              </p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Ngày khám</TableHead>
-                    <TableHead>Tiền sử bệnh</TableHead>
-                    <TableHead>Chẩn đoán bệnh</TableHead>
-                    <TableHead>Kết quả xét nghiệm (nếu có)</TableHead>
-                    <TableHead>Điều trị</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(patient as any).medicalHistory.map((history: any) => (
-                    <TableRow key={history.diagnosisDate}>
-                      <TableCell>
-                        {formatDate(history?.diagnosisDate)}
-                      </TableCell>
-                      <TableCell>{history.disease.split("_")[1]}</TableCell>
-                      <TableCell>{history.disease.split("_")[0]}</TableCell>
-                      <TableCell>{history.disease.split("_")[2]}</TableCell>
-                      <TableCell>
-                        {history.treatment.split("_")[0] +
-                          history.treatment.split("_")[1]}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            )}
-          </div>
           <div
             className={showUpdateForm ? "hidden" : "flex justify-end space-x-4"}
           >

@@ -1,7 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, ContactRound, MessageCircleMore } from "lucide-react";
+import {
+  Bell,
+  ContactRound,
+  HistoryIcon,
+  MessageCircleMore,
+} from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,17 +16,16 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import PatientProfile from "@/components/patient/profile/PatientProfile";
+import MedicalHistory from "@/components/patient/MedicalHistory";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("patientProfile");
+  const [activeSection, setActiveSection] = useState("medicalHistory");
 
   const renderMainContent = () => {
     switch (activeSection) {
       case "patientProfile":
         return <PatientProfile />;
-      case "appointments":
-        return (
-          <div className="flex flex-col items-center gap-4 text-center"></div>
-        );
+      case "medicalHistory":
+        return <MedicalHistory />;
       default:
         return null;
     }
@@ -67,15 +71,15 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("messages")}
+                  onClick={() => setActiveSection("medicalHistory")}
                   className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "messages"
+                    activeSection === "medicalHistory"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
-                  <MessageCircleMore className="h-4 w-4" />
-                  Tin nhắn
+                  <HistoryIcon className="h-4 w-4" />
+                  Lịch sử khám bệnh
                 </Link>
                 <Link
                   href="#"

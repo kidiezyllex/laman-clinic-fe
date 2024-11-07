@@ -5,7 +5,6 @@ import Pusher from "pusher-js";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
-import { format } from "date-fns";
 interface Notification {
   id?: string;
   message?: string;
@@ -14,21 +13,13 @@ interface Notification {
 
 export default function Notification() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
 
   function getTimeDifference(
     date1: Date | string | number,
     date2: Date | string | number
   ): string {
-    // Convert inputs to Date objects if they're not already
     const d1 = date1 instanceof Date ? date1 : new Date(date1);
     const d2 = date2 instanceof Date ? date2 : new Date(date2);
-
-    // Check if the dates are valid
     if (isNaN(d1.getTime()) || isNaN(d2.getTime())) {
       throw new Error("Invalid date input");
     }

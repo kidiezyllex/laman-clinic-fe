@@ -3,7 +3,6 @@ import {
   CalendarIcon,
   PhoneIcon,
   MailIcon,
-  Trash2Icon,
   PencilIcon,
   Dog,
   Cat,
@@ -11,45 +10,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Doctor, Schedule } from "../../../lib/entity-types";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, generateTimeSlots } from "../../../lib/utils";
 
 export default function DoctorProfile() {
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [doctor, setDoctor] = useState<Partial<Doctor>>({});
-
-  function generateTimeSlots(startTime: string, endTime: string) {
-    const slots = [];
-    let currentTime = new Date(`2000-01-01T${startTime}:00`);
-    const end = new Date(`2000-01-01T${endTime}:00`);
-
-    while (currentTime < end) {
-      const slotStart = currentTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      currentTime.setHours(currentTime.getHours() + 1);
-      const slotEnd = currentTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      slots.push(`${slotStart} - ${slotEnd}`);
-    }
-
-    return slots;
-  }
   // Fetch Data Bác sĩ
   useEffect(() => {
     const fetchDoctor = async () => {
@@ -130,14 +95,6 @@ export default function DoctorProfile() {
       {Object.keys(doctor).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
-            variant="destructive"
-            className="flex items-center space-x-2"
-            onClick={() => setIsAlertOpen(true)}
-          >
-            <Trash2Icon className="w-4 h-4" />
-            <span>Xoá</span>
-          </Button>
-          <Button
             variant="outline"
             className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-50"
           >
@@ -146,22 +103,6 @@ export default function DoctorProfile() {
           </Button>
         </div>
       )}
-
-      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Bạn có chắc chắn muốn xoá?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Hành động này không thể hoàn tác. Điều này sẽ xoá vĩnh viễn dữ
-              liệu của bạn khỏi máy chủ của chúng tôi.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Huỷ</AlertDialogCancel>
-            <AlertDialogAction>Xác nhận xoá</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 }

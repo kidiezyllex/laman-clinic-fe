@@ -140,30 +140,6 @@ export default function Page() {
                 >
                   <p className="ml-7">Dịch vụ</p>
                 </Link>
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicalReport")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalReport"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <NotepadText className="h-4 w-4" />
-                  Phiếu khám bệnh
-                </Link> */}
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("messages")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "messages"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <MessageCircleMore className="h-4 w-4" />
-                  Tin nhắn
-                </Link> */}
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
@@ -188,18 +164,6 @@ export default function Page() {
                   <User className="h-4 w-4" />
                   Tài khoản
                 </Link>
-                {/* <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicalHistory")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "medicalHistory"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <HistoryIcon className="h-4 w-4" />
-                  Lịch sử khám bệnh
-                </Link> */}
               </nav>
             </div>
           </div>

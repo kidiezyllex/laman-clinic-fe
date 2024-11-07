@@ -1,7 +1,7 @@
 "use client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -540,35 +540,24 @@ export default function ViewAppointment() {
                     <Table>
                       <TableHeader>
                         <TableRow>
+                          <TableHead>STT</TableHead>
                           <TableHead>Ngày khám</TableHead>
-                          <TableHead>Tiền sử bệnh</TableHead>
                           <TableHead>Chẩn đoán bệnh</TableHead>
-                          <TableHead>Kết quả xét nghiệm (nếu có)</TableHead>
-                          <TableHead>Điều trị</TableHead>
+                          <TableHead>Phương pháp điều trị</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {selectedAppointment?.patientId?.medicalHistory?.map(
-                          (history) => (
-                            <TableRow key={(history as any).diagnosisDate}>
+                          (history: any, index) => (
+                            <TableRow key={history.diagnosisDate}>
+                              <TableCell>{index + 1}</TableCell>
                               <TableCell>
-                                {formatDate(
-                                  new Date((history as any)?.diagnosisDate)
-                                )}
+                                {formatDate(history?.diagnosisDate)}
                               </TableCell>
                               <TableCell>
-                                {history.disease.split("_")[1]}
+                                {history.diagnosisDescription}
                               </TableCell>
-                              <TableCell>
-                                {history.disease.split("_")[0]}
-                              </TableCell>
-                              <TableCell>
-                                {history.disease.split("_")[2]}
-                              </TableCell>
-                              <TableCell>
-                                {history.treatment.split("_")[0] +
-                                  history.treatment.split("_")[1]}
-                              </TableCell>
+                              <TableCell>{history.treatment}</TableCell>
                             </TableRow>
                           )
                         )}

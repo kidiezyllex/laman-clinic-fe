@@ -97,3 +97,27 @@ export function setTimeToDate(selectDate: Date, slot: string): Date {
 
   return newDate;
 }
+export const getHoursBetweenDates = (
+  date2: Date | string | number | undefined
+): number | null => {
+  const date1 = new Date();
+
+  if (date2 === undefined) return null;
+
+  let parsedDate2: Date;
+
+  if (typeof date2 === "string") {
+    parsedDate2 = new Date(date2);
+  } else if (typeof date2 === "number") {
+    parsedDate2 = new Date(date2);
+  } else {
+    parsedDate2 = date2;
+  }
+
+  if (isNaN(parsedDate2.getTime())) {
+    return null;
+  }
+
+  const timeDifference = Math.abs(parsedDate2.getTime() - date1.getTime());
+  return Math.floor(timeDifference / (1000 * 60 * 60));
+};

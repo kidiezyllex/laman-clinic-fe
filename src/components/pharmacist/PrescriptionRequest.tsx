@@ -297,29 +297,24 @@ export default function PrescriptionRequest() {
                 <TableHeader>
                   {selectedPatientId.id === prescription._id && (
                     <TableRow>
+                      <TableHead>STT</TableHead>
                       <TableHead>Ngày khám</TableHead>
-                      <TableHead>Tiền sử bệnh</TableHead>
                       <TableHead>Chẩn đoán bệnh</TableHead>
-                      <TableHead>Kết quả xét nghiệm (nếu có)</TableHead>
-                      <TableHead>Điều trị</TableHead>
+                      <TableHead>Phương pháp điều trị</TableHead>
                     </TableRow>
                   )}
                 </TableHeader>
                 <TableBody>
                   {selectedPatientId.id === prescription._id &&
                     selectedPatientMedicalHistory?.medicalHistory?.map(
-                      (history) => (
+                      (history: any, index) => (
                         <TableRow key={history.diagnosisDate}>
+                          <TableCell>{index + 1}</TableCell>
                           <TableCell>
-                            {formatDate(new Date(history?.diagnosisDate))}
+                            {formatDate(history?.diagnosisDate)}
                           </TableCell>
-                          <TableCell>{history.disease.split("_")[1]}</TableCell>
-                          <TableCell>{history.disease.split("_")[0]}</TableCell>
-                          <TableCell>{history.disease.split("_")[2]}</TableCell>
-                          <TableCell>
-                            {history.treatment.split("_")[0] +
-                              history.treatment.split("_")[1]}
-                          </TableCell>
+                          <TableCell>{history.diagnosisDescription}</TableCell>
+                          <TableCell>{history.treatment}</TableCell>
                         </TableRow>
                       )
                     )}

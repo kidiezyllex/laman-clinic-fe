@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, getHoursBetweenDates } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
 import { Separator } from "../ui/separator";
 
@@ -64,31 +64,7 @@ export default function OnlineAppointment() {
     setIsDialogOpen(true);
   };
 
-  const getHoursBetweenDates = (
-    date2: Date | string | number | undefined
-  ): number | null => {
-    const date1 = new Date();
-
-    if (date2 === undefined) return null;
-
-    let parsedDate2: Date;
-
-    if (typeof date2 === "string") {
-      parsedDate2 = new Date(date2);
-    } else if (typeof date2 === "number") {
-      parsedDate2 = new Date(date2);
-    } else {
-      parsedDate2 = date2;
-    }
-
-    if (isNaN(parsedDate2.getTime())) {
-      return null;
-    }
-
-    const timeDifference = Math.abs(parsedDate2.getTime() - date1.getTime());
-    return Math.floor(timeDifference / (1000 * 60 * 60));
-  };
-
+  // Tạo ca khám
   const handleSubmit = async () => {
     try {
       setIsLoading(true);
@@ -137,20 +113,6 @@ export default function OnlineAppointment() {
       setIsDialogOpen(false);
       setIsEditing(false);
       setReason("");
-    }
-  };
-
-  const handleDeleteAppointmentByPatient = async (id: string) => {
-    try {
-      const response = await axios.delete(
-        `/api/appointment/appointment-by-patient/?id=${id}`
-      );
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        console.error("Axios error:", error.response?.data || error.message);
-      } else {
-        console.error("An unexpected error occurred:", error);
-      }
     }
   };
 

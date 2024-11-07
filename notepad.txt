@@ -90,27 +90,10 @@ Thêm border-2 và border-secondary cho Button primary để cho 2 cái button �
 <Button className="flex flex-row gap-3 border-2 border-secondary">
 <Button className="flex flex-row gap-3 " variant="outline">
 
-13. Các chức năng của bệnh nhân
-+ Quản lý thông tin tài khoản sau khi đăng nhập
-- Đặt lịch khám
-- Xem lịch khám/ buồng khám
-- Xem lịch tái khám
-- Xem thông báo, thư
-- Thanh toán
-- Xem lịch sử khám bệnh
-https://medical-app-pied.vercel.app/
-      
-Bệnh nhân duyệt/tìm Bác sĩ bằng các cách:
-+ Specialty; Chuyên ngành
-+ Popular Diseases: Bệnh thường gặp
-+ Symptoms: Triệu chứng
-+ Quiz: Hỏi đáp
-
-
-  "scripts": {
+"scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
-  },
+},

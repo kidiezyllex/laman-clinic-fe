@@ -140,3 +140,9 @@ export interface LoginResponse {
     role: string;
   };
 }
+
+export interface Notification {
+  id?: string;
+  message?: string;
+  createdAt?: Date;
+}

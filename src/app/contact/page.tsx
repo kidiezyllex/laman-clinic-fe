@@ -1,13 +1,10 @@
 "use client";
-import Container from "@/components/Container";
 import {
   Building2,
   Facebook,
   HeartPulse,
   MessageCircle,
   PhoneCall,
-  Plus,
-  Send,
   Settings,
   Stethoscope,
 } from "lucide-react";

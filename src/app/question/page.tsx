@@ -123,8 +123,8 @@ export default function Page() {
 
         <div className="col-span-3 flex-1">
           <Accordion type="single" collapsible className="space-y-4">
-            {questionData.map((item) => (
-              <AccordionItem value={`item-${item.id}`}>
+            {questionData.map((item, index) => (
+              <AccordionItem value={`item-${item.id}`} key={index}>
                 <AccordionTrigger className="text-left bg-secondary px-4 dark:bg-slate-950 border dark:border-slate-950">
                   {item.trigger}
                 </AccordionTrigger>

@@ -268,7 +268,9 @@ export default function Visitor() {
                 name="gender"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Giới tính (Nam: "Male", Nữ: "Female")</FormLabel>
+                    <FormLabel>
+                      Giới tính (Nam: &apos;Male&apos;, Nữ: &apos;Female&apos;)
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

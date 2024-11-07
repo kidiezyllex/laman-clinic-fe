@@ -2,9 +2,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import {
-  Bell,
   BriefcaseMedical,
-  ContactRound,
   Database,
   Newspaper,
   Pill,
@@ -22,7 +20,6 @@ import PrescriptionRequest from "@/components/pharmacist/PrescriptionRequest";
 import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
-// import Notification from "@/components/pharmacist/Notification";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("completed");
 

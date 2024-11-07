@@ -21,9 +21,8 @@ export default function ReceptionistProfile() {
   // Fetch Data Lễ tân
   useEffect(() => {
     const fetchReceptionist = async () => {
-      const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${currentEmail}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/${userId}`
       );
       setReceptionist(response.data);
     };

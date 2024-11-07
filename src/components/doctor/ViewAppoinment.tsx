@@ -90,7 +90,6 @@ export default function ViewAppointment() {
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
     useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState("Week");
   const [rows, setRows] = useState<MedicationRow[]>([
     {
       id: 1,
@@ -176,7 +175,7 @@ export default function ViewAppointment() {
     );
   };
 
-  // Toggle chi tiết lịch hẹn
+  // Chi tiết lịch hẹn
   const openAppointmentDetails = (appointment: Appointment) => {
     console.log(appointment);
     setSelectedAppointment(appointment);
@@ -186,6 +185,10 @@ export default function ViewAppointment() {
   // Fecth data Appointments đã được lễ tân duyệt
   useEffect(() => {
     const fetchAppointments = async () => {
+      // Fetch Data bác sĩ trước
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
+      // );
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
       );
@@ -217,7 +220,6 @@ export default function ViewAppointment() {
     }
   };
 
-  // Xử lý Form Chẩn đoán bệnh
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -235,6 +237,7 @@ export default function ViewAppointment() {
     }));
   };
 
+  // Hoàn thành khám
   const handleCreateDiagnosticResults = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -247,7 +250,7 @@ export default function ViewAppointment() {
         medicalHistory: [
           ...response2.data?.medicalHistory,
           {
-            disease:
+            diagnosisDescription:
               formData.diagnosis +
               "_" +
               formData.medicalHistory +
@@ -262,6 +265,12 @@ export default function ViewAppointment() {
       const response3 = await axios.patch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`,
         payload
+      );
+
+      // Xoá khỏi Kafka
+      const response4 = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
+        { roomNumber: "000", patientId: selectedAppointment?.patientId }
       );
       toast({
         variant: "default",
@@ -308,13 +317,13 @@ export default function ViewAppointment() {
     );
   };
 
+  // Yêu cầu xét nghiệm
   const handleRequestTest = async () => {
     try {
       setIsLoading(true);
       // Lấy data bác sĩ
-      const currentEmail = localStorage.getItem("currentEmail");
       const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
       );
       const doctorData = response2.data[0];
       const payload = {
@@ -362,7 +371,7 @@ export default function ViewAppointment() {
           </Select>
           <div className="flex space-x-1">
             <Button
-              variant={view === "today" ? "secondary" : "outline"}
+              variant={"outline"}
               size="sm"
               onClick={() => setCurrentDate(new Date())}
             >

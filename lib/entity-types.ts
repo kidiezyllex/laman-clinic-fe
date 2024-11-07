@@ -1,5 +1,7 @@
 export interface AppointmentByPatient {
   id: string;
+  patientId: string;
+  doctorId: string;
   appointmentDateByPatient: Date;
   specialization: string;
   fullName: string;

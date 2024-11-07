@@ -4,7 +4,18 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { CalendarIcon, Cat, Dog, Loader2, SearchIcon } from "lucide-react";
+import {
+  Calendar,
+  CalendarIcon,
+  Cat,
+  Dog,
+  Loader2,
+  Mail,
+  MapPin,
+  Phone,
+  SearchIcon,
+  User,
+} from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import PatientProfileForm from "../patient/profile/PatientProfileForm";
@@ -69,7 +80,7 @@ export default function DirectAppoinment() {
         description: "Vui lòng Tạo hồ sơ bệnh nhân mới!",
       });
       setShowCreatePatientProfile(true);
-    }
+    } else setShowCreatePatientProfile(false);
     setFilteredPatients(filteredP);
   };
 
@@ -83,7 +94,6 @@ export default function DirectAppoinment() {
       );
       setPatients(response.data);
       setSpecializations(response2.data);
-      console.log(response.data);
     };
 
     fetchData();
@@ -205,121 +215,106 @@ export default function DirectAppoinment() {
         ></PatientProfileForm>
       )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>
-              Bệnh nhân:{" "}
-              <span className="text-blue-500">{selectedPatient?.fullName}</span>
-            </DialogTitle>
-          </DialogHeader>
-          <Separator></Separator>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-4 w-full">
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">Mã bệnh nhân</Label>
-              <Input
-                id="id"
-                value={selectedPatient?._id + ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            {selectedPatient?.dateOfBirth && (
-              <div className="grid grid-cols-4 items-center gap-3">
-                <Label htmlFor="dob">Ngày sinh</Label>
-                <Input
-                  id="dob"
-                  value={
-                    formatDate(
-                      selectedPatient?.dateOfBirth as unknown as Date
-                    ) || ""
-                  }
-                  className="col-span-3 bg-secondary rounded-sm"
-                  disabled={!isEditing}
-                />
+        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+          <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
+            {selectedPatient?.gender?.toLowerCase() === "male" ? (
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                <Dog className="text-blue-500" />
+              </div>
+            ) : (
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                <Cat className="text-pink-500" />
               </div>
             )}
-
-            <div className="grid grid-cols-4 items-center gap-3">
-              <Label htmlFor="gender">Giới tính</Label>
-              <Input
-                id="gender"
-                value={
-                  selectedPatient?.gender?.toLowerCase() === "male" ||
-                  selectedPatient?.gender?.toLowerCase() === "nam"
-                    ? "Nam"
-                    : "Nữ"
-                }
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
+            <div>
+              <p className="text-base font-semibold">
+                {selectedPatient?.fullName}
+              </p>
+              <p className="text-slate-500">
+                Mã bệnh nhân: {selectedPatient?._id}
+              </p>
             </div>
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">Email</Label>
-              <Input
-                id="email"
-                value={selectedPatient?.email + "" || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-2 ">
-              <Label htmlFor="name">Phone</Label>
-              <Input
-                id="phone"
-                value={selectedPatient?.phone + "" || ""}
-                className="col-span-3 bg-secondary rounded-sm"
-                disabled={!isEditing}
-              />
-            </div>
-            {selectedPatient?.address && (
-              <div className="grid grid-cols-4 items-center gap-3">
-                <Label htmlFor="address">Địa chỉ</Label>
-                <Textarea
-                  id="address"
-                  value={selectedPatient?.address + "" || ""}
-                  className="col-span-3 bg-secondary rounded-sm"
-                  disabled={!isEditing}
-                />
-              </div>
-            )}
           </div>
-          <div className="grid grid-cols-8 items-center gap-3">
-            <Label htmlFor="reason">Lý do</Label>
-            <Textarea
+          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4">
+            <div className="flex flex-col gap-3">
+              <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
+              <div className="flex items-center gap-2">
+                <Calendar className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Ngày sinh: {formatDate(selectedPatient?.dateOfBirth)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Giới tính:{" "}
+                  {selectedPatient?.gender?.toLowerCase() === "female"
+                    ? "Nữ"
+                    : "Nam"}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">
+                  Địa chỉ: {selectedPatient?.address}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">Số ĐT: {selectedPatient?.phone}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4 text-blue-500" />
+                <span className="text-sm">Email: {selectedPatient?.email}</span>
+              </div>
+            </div>
+          </div>
+          <h3 className="text-md font-semibold">
+            Vui lòng nhập lý do hẹn khám
+          </h3>
+          <div className="mr-4">
+            <Input
               id="reason"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="col-span-7"
               placeholder="Nhập lý do hẹn khám"
             />
           </div>
-          <div className="grid grid-cols-8 items-center gap-3">
-            <Label htmlFor="reason">Chuyên ngành</Label>
-            <Select onValueChange={(value) => setSpecialization(value)}>
-              <SelectTrigger className="col-span-7">
-                <SelectValue placeholder="Chọn Chuyên ngành" />
-              </SelectTrigger>
-              <SelectContent>
-                {specializations.map((specialization) => (
-                  <SelectItem key={specialization} value={specialization}>
-                    {specialization}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col gap-3">
+              <h3 className="text-md font-semibold">
+                Vui lòng chọn chuyên ngành
+              </h3>
+              <div className="w-full">
+                <Select onValueChange={(value) => setSpecialization(value)}>
+                  <SelectTrigger className="col-span-7">
+                    <SelectValue placeholder="Chọn Chuyên ngành" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {specializations.map((specialization) => (
+                      <SelectItem key={specialization} value={specialization}>
+                        {specialization}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="text-md font-semibold">
+                Vui lòng chọn ưu tiên (tuỳ chọn)
+              </h3>
+              <input
+                className="h-5 w-5"
+                type="checkbox"
+                checked={checked}
+                onChange={() => {
+                  setChecked(!checked);
+                }}
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-8 items-center gap-3">
-            <Label htmlFor="reason">Ưu tiên</Label>
-            <input
-              className="h-5 w-5"
-              type="checkbox"
-              checked={checked}
-              onChange={() => {
-                setChecked(!checked);
-              }}
-            />
-          </div>
-          <DialogFooter className="flex-grow items-end">
+          <DialogFooter className="flex-grow items-end mr-4">
             <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
               {isEditing ? "Hủy" : "Chỉnh sửa"}
             </Button>

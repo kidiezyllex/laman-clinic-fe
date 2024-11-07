@@ -12,15 +12,16 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Doctor, Schedule } from "../../../lib/entity-types";
 import { formatDate, generateTimeSlots } from "../../../lib/utils";
+import { usePathname } from "next/navigation";
 
 export default function DoctorProfile() {
   const [doctor, setDoctor] = useState<Partial<Doctor>>({});
+  const userId = usePathname().split("/")[1];
   // Fetch Data Bác sĩ
   useEffect(() => {
     const fetchDoctor = async () => {
-      const currentEmail = localStorage.getItem("currentEmail");
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${currentEmail}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${userId}`
       );
       setDoctor(response.data[0]);
     };

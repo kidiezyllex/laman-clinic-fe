@@ -15,13 +15,20 @@ import {
   MapPin,
   Phone,
   SearchIcon,
+  SquareActivity,
+  Timer,
   User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate, getHoursBetweenDates } from "../../../lib/utils";
+import {
+  formatDate,
+  formatDate3,
+  generateExamination,
+  getHoursBetweenDates,
+} from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
 import { Separator } from "../ui/separator";
 
@@ -132,11 +139,12 @@ export default function OnlineAppointment() {
         />
       </div>
       <div className="flex flex-row gap-2 justify-end">
-        <p className="font-semibold text-base">Trạng thái: </p>
-        <Badge variant={"destructive"}>Đã huỷ</Badge>
-        <Badge variant={"secondary"}>Đang chờ</Badge>
-        <Badge className="bg-blue-500 dark:text-white">Đã lên lịch</Badge>
-        <Badge className="bg-green-500 dark:text-white">Hoàn thành</Badge>
+        <Badge className="bg-blue-500 dark:text-white hover:bg-blue-700">
+          Đặt lịch theo ngày
+        </Badge>
+        <Badge className="bg-green-500 dark:text-white hover:bg-green-700">
+          Đặt lịch theo Bác sĩ
+        </Badge>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
@@ -165,20 +173,36 @@ export default function OnlineAppointment() {
                 <p className="text-sm">
                   <span className="font-semibold">Mã bệnh nhân: </span>
                   <span className="text-muted-foreground">
-                    {appointment.id}
+                    {appointment.patientId}
                   </span>
                 </p>
               </div>
             </div>
             <Separator></Separator>
-            <div className="flex flex-row gap-2 w-full">
-              <Badge variant={"secondary"}>Đang chờ</Badge>
-              <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white">
+            <div className="flex flex-row gap-2 w-full flex-wrap">
+              {!appointment.doctorId ? (
+                <Badge className="bg-blue-500 dark:text-white hover:bg-blue-700">
+                  Đặt lịch theo ngày
+                </Badge>
+              ) : (
+                <Badge className="bg-green-500 dark:text-white hover:bg-green-700">
+                  Đặt lịch theo Bác sĩ
+                </Badge>
+              )}
+              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
                 Khoa: {appointment.specialization}
               </Badge>
-              <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white">
+              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
                 Ngày ĐK: {formatDate(appointment?.appointmentDateByPatient)}
               </Badge>
+              {!appointment.doctorId ? null : (
+                <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
+                  Ca khám:{" "}
+                  {generateExamination(
+                    formatDate3(appointment?.appointmentDateByPatient)
+                  )}
+                </Badge>
+              )}
             </div>
             <div className="flex flex-row gap-2 mt-4">
               <Button
@@ -209,7 +233,7 @@ export default function OnlineAppointment() {
                 {selectedAppointment?.fullName}
               </p>
               <p className="text-slate-500">
-                Mã bệnh nhân: {selectedAppointment?.id}
+                Mã bệnh nhân: {selectedAppointment?.patientId}
               </p>
             </div>
           </div>
@@ -234,8 +258,7 @@ export default function OnlineAppointment() {
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
-                  Địa chỉ:
-                  {selectedAppointment?.address}
+                  Địa chỉ: {selectedAppointment?.address}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -256,10 +279,31 @@ export default function OnlineAppointment() {
                 Thông tin lịch hẹn đăng ký
               </p>
               <div className="flex items-center gap-2">
+                <User className="w-4 h-5 text-blue-500" />
+                <span className="text-sm">
+                  Bác sĩ: {selectedAppointment?.doctorId}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <SquareActivity className="w-4 h-5 text-blue-500" />
+                <span className="text-sm">
+                  Chuyên khoa: {selectedAppointment?.specialization}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-5 text-blue-500" />
                 <span className="text-sm">
                   Ngày hẹn khám:{" "}
                   {formatDate(selectedAppointment?.appointmentDateByPatient)}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Timer className="w-4 h-5 text-blue-500" />
+                <span className="text-sm">
+                  Ca khám:{" "}
+                  {generateExamination(
+                    formatDate3(selectedAppointment?.appointmentDateByPatient)
+                  )}
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -279,7 +323,6 @@ export default function OnlineAppointment() {
               placeholder="Nhập lý do hẹn khám"
             />
           </div>
-
           <div className="mr-4">
             {selectedAppointment?.appointmentDateByPatient ? (
               <div className="w-full p-4 bg-secondary rounded-md border">

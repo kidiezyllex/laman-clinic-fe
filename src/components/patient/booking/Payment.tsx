@@ -63,7 +63,7 @@ const PaymentForm = ({
       fullName: patient.fullName,
       dateOfBirth: patient.dateOfBirth || new Date(),
       gender: patient.gender || "",
-      address: patient.address || "",
+      address: patient.address,
       phone: patient.phone || "",
       email: patient.email,
       medicalHistory: [],

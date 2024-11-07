@@ -1,20 +1,12 @@
 "use client";
 
-import {
-  useState,
-  useEffect,
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { Clock, FileCog, Stethoscope, User, Warehouse } from "lucide-react";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import { Schedule } from "../../../../lib/entity-types";
+import { generateTimeSlots, getDayOfWeek } from "../../../../lib/utils";
 export default function RoomSelector({
   setActiveSection,
   selectedSpe,
@@ -46,49 +38,7 @@ export default function RoomSelector({
 
     fetchDoctors();
   }, []);
-  function generateTimeSlots(startTime: string, endTime: string) {
-    const slots = [];
-    let currentTime = new Date(`2000-01-01T${startTime}:00`);
-    const end = new Date(`2000-01-01T${endTime}:00`);
 
-    while (currentTime < end) {
-      const slotStart = currentTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      currentTime.setHours(currentTime.getHours() + 1);
-      const slotEnd = currentTime.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false,
-      });
-      slots.push(`${slotStart} - ${slotEnd}`);
-    }
-
-    return slots;
-  }
-
-  function getDayOfWeek(date: Date) {
-    switch (date.getUTCDay()) {
-      case 6:
-        return "Sunday";
-      case 0:
-        return "Monday";
-      case 1:
-        return "Tuesday";
-      case 2:
-        return "Wednesday";
-      case 3:
-        return "Thursday";
-      case 4:
-        return "Friday";
-      case 5:
-        return "Saturday";
-      default:
-        return "Invalid day";
-    }
-  }
   return (
     <div className="w-full flex flex-col gap-4">
       <p className="text-base font-semibold text-blue-500">
@@ -124,7 +74,7 @@ export default function RoomSelector({
               <div className="space-y-4 ">
                 {(doctor as any).schedule.map((scheduleItem: Schedule) => (
                   <div
-                    key={scheduleItem._id + ""}
+                    key={scheduleItem._id}
                     className={
                       scheduleItem.dayOfWeek === getDayOfWeek(selectedDate)
                         ? "p-3 border-2 border-blue-500 "
@@ -154,7 +104,7 @@ export default function RoomSelector({
       </div>
       <div className="flex flex-row justify-between">
         <Button
-          className="w-fit"
+          className="w-fit dark:hover:bg-slate-900"
           onClick={() => {
             setActiveSection("specialtySelector");
           }}

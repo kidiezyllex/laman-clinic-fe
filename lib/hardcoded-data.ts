@@ -550,19 +550,19 @@ export const doctorsData = [
       {
         dayOfWeek: "Tuesday",
         startTime: "09:00",
-        endTime: "17:00",
+        endTime: "16:00",
         _id: { $oid: "6710e31a19d4c9bd1bd8fd95" },
       },
       {
         dayOfWeek: "Wednesday",
         startTime: "09:00",
-        endTime: "17:00",
+        endTime: "15:00",
         _id: { $oid: "6710e31a19d4c9bd1bd8fd96" },
       },
       {
         dayOfWeek: "Friday",
         startTime: "09:00",
-        endTime: "17:00",
+        endTime: "15:00",
         _id: { $oid: "6710e31a19d4c9bd1bd8fd98" },
       },
     ],

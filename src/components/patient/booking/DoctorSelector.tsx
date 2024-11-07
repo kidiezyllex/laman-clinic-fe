@@ -73,8 +73,7 @@ export default function DoctorSelector({
               <TableHead>Họ và tên</TableHead>
               <TableHead>Giới tính</TableHead>
               <TableHead>Chuyên khoa</TableHead>
-              <TableHead>Lịch khám</TableHead>
-              <TableHead></TableHead>
+              <TableHead>Chọn</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -86,12 +85,10 @@ export default function DoctorSelector({
                   {item.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
                 </TableCell>
                 <TableCell>{item.specialization}</TableCell>
-                <TableCell>
-                  <Button variant={"outline"}>Xem chi tiết</Button>
-                </TableCell>
+
                 <TableCell>
                   <Button
-                    className="bg-blue-500 text-white hover:bg-blue-700"
+                    className="bg-blue-500 text-white dark:text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-700"
                     onClick={() => handleSelectDoctor(item)}
                   >
                     Đặt khám

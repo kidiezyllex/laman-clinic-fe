@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import {
   Bell,
+  Calendar,
   ContactRound,
   HistoryIcon,
   MessageCircleMore,
@@ -17,6 +18,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import PatientProfile from "@/components/patient/profile/PatientProfile";
 import MedicalHistory from "@/components/patient/MedicalHistory";
+import BookedAppointments from "@/components/patient/BookedAppointments";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("medicalHistory");
 
@@ -26,6 +28,8 @@ export default function Page() {
         return <PatientProfile />;
       case "medicalHistory":
         return <MedicalHistory />;
+      case "bookedAppointments":
+        return <BookedAppointments />;
       default:
         return null;
     }
@@ -80,6 +84,18 @@ export default function Page() {
                 >
                   <HistoryIcon className="h-4 w-4" />
                   Lịch sử khám bệnh
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("bookedAppointments")}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "bookedAppointments"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <Calendar className="h-4 w-4" />
+                  Lịch hẹn đã đặt
                 </Link>
                 <Link
                   href="#"

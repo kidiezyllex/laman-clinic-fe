@@ -72,27 +72,27 @@ export default function UserMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mt-2" align="end">
-        <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
-          <Link href={`/${currentId}/patient/profile`}>
+        <Link href={`/${currentId}/patient/profile`}>
+          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
             <span>Đặt lịch khám</span>
-          </Link>
-          <Calendar className="mr-2 h-4 w-4" />
-        </DropdownMenuItem>
-        <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
-          <Link href={`/${currentId}/patient/dashboard`}>
+            <Calendar className="mr-2 h-4 w-4" />
+          </DropdownMenuItem>
+        </Link>
+        <Link href={`/${currentId}/patient/dashboard`}>
+          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
             <span>Quản lý tài khoản</span>
-          </Link>
-          <User className="mr-2 h-4 w-4" />
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          className="px-4 py-2 flex flex-row justify-between"
-          onClick={() => handleLogOut()}
-        >
-          <Link href="/">
+            <User className="mr-2 h-4 w-4" />
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/">
+          <DropdownMenuItem
+            className="px-4 py-2 flex flex-row justify-between"
+            onClick={() => handleLogOut()}
+          >
             <span>Đăng xuất</span>
-          </Link>
-          <LogOut className="mr-2 h-4 w-4" />
-        </DropdownMenuItem>
+            <LogOut className="mr-2 h-4 w-4" />
+          </DropdownMenuItem>
+        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   );

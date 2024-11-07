@@ -79,7 +79,7 @@ export default function SpecialtySelector({
       </ScrollArea>
       <div className="flex flex-row justify-between">
         <Button
-          className="w-fit"
+          className="w-fit dark:hover:bg-slate-900"
           onClick={() => {
             setActiveSection("calendarSelector");
           }}

@@ -12,14 +12,19 @@ import axios from "axios";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Doctor, Patient } from "../../../../../lib/entity-types";
-import { formatDate } from "../../../../../lib/utils";
+import {
+  formatDate,
+  formatDate2,
+  formatDate3,
+  generateExamination,
+} from "../../../../../lib/utils";
 import DoctorSelector from "@/components/patient/booking/DoctorSelector";
 import CalendarSelector from "@/components/patient/booking/CalendarSelector";
 import Payment from "@/components/patient/booking/Payment";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("doctorSelector");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedSpe, setSelectedSpe] = useState<String | null>(null);
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const pathname = usePathname();
@@ -179,7 +184,15 @@ export default function Page() {
                 <span className="font-semibold dark:text-slate-500">
                   Ngày khám:
                 </span>{" "}
-                {formatDate(selectedDate)}
+                {selectedDate ? formatDate(selectedDate) : null}
+              </p>
+              <p className="text-sm">
+                <span className="font-semibold dark:text-slate-500">
+                  Ca khám:
+                </span>{" "}
+                {selectedDate
+                  ? generateExamination(formatDate3(selectedDate))
+                  : null}
               </p>
             </div>
           </div>

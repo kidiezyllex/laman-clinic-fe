@@ -3,7 +3,14 @@
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import ArrowButton from "@/components/animata/button/arrow-button";
-import { Doctor } from "../../../../lib/entity-types";
+import { Doctor, Schedule } from "../../../../lib/entity-types";
+import { Button } from "@/components/ui/button";
+import {
+  generateTimeSlots,
+  getDayOfWeek,
+  setTimeToDate,
+} from "../../../../lib/utils";
+import { Clock } from "lucide-react";
 
 export default function CalendarSelector({
   setActiveSection,
@@ -15,6 +22,10 @@ export default function CalendarSelector({
   selectedDoctor: Doctor | null;
 }) {
   const [date, setDate] = useState<Date | undefined>(undefined);
+  const [showExamination, setShowExamination] = useState(false);
+  const [selectedDate2, setSelectedDate2] = useState<Date>(new Date());
+  const [selectedSlot, setSelectedSlot] = useState("");
+
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -25,7 +36,10 @@ export default function CalendarSelector({
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && selectedDate >= today) {
       setDate(selectedDate);
+      console.log(selectedDate);
       setSelectedDate(selectedDate);
+      setSelectedDate2(selectedDate);
+      setShowExamination(true);
     }
   };
 
@@ -34,6 +48,18 @@ export default function CalendarSelector({
       .toLocaleDateString("en-US", { weekday: "long" })
       .toLowerCase();
     return date < today || !availableDays.has(day);
+  };
+
+  const filteredSchedule = (selectedDoctor as any).schedule.filter(
+    (scheduleItem: Schedule) => {
+      return scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2);
+    }
+  );
+
+  const handleSetSelectedDate = (slot: string) => {
+    setSelectedSlot(slot);
+    const newDate = setTimeToDate(selectedDate2, slot.split("-")[0]);
+    setSelectedDate(newDate);
   };
 
   return (
@@ -68,16 +94,59 @@ export default function CalendarSelector({
           nav_button: { width: "32px", height: "70px" },
         }}
       />
-      <ArrowButton
-        disabled={!date}
-        className="w-fit self-end"
-        text={"Tiếp tục"}
-        onClick={() => {
-          if (selectedDoctor) {
-            setActiveSection("payment");
-          } else setActiveSection("specialtySelector");
-        }}
-      />
+      {filteredSchedule[0] && showExamination ? (
+        <div className="w-full flex flex-col gap-4">
+          <p className="text-base font-semibold text-blue-500">
+            VUI LÒNG CHỌN CA KHÁM
+          </p>
+          <div className="space-y-4 bg-background rounded-md p-4">
+            <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+              <Clock className="w-4 h-4 mr-2" />
+              <p className="text-sm"> {filteredSchedule[0].dayOfWeek}</p>
+            </h3>
+            <div className="grid grid-cols-4 gap-2 ">
+              {generateTimeSlots(
+                filteredSchedule[0].startTime,
+                filteredSchedule[0].endTime
+              ).map((slot) => (
+                <Button
+                  key={slot}
+                  variant={selectedSlot === slot ? "default" : "outline"}
+                  onClick={() => handleSetSelectedDate(slot)}
+                >
+                  {slot}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      ) : null}
+      <div className="flex flex-row justify-between">
+        {selectedDoctor ? (
+          <Button
+            className="w-fit dark:hover:bg-slate-900"
+            onClick={() => {
+              setActiveSection("doctorSelector");
+            }}
+            variant={"outline"}
+          >
+            Quay lại
+          </Button>
+        ) : (
+          <div></div>
+        )}
+
+        <ArrowButton
+          disabled={!date}
+          className="w-fit self-end"
+          text={"Tiếp tục"}
+          onClick={() => {
+            if (selectedDoctor) {
+              setActiveSection("payment");
+            } else setActiveSection("specialtySelector");
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -70,11 +70,11 @@ const PaymentForm = ({
       doctorId: selectedDoctor?._id || "",
     };
     try {
-      // const response = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
-      //   payload
-      // );
-      console.log(payload);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
+        payload
+      );
+      // console.log(payload);
       toast({
         variant: "default",
         title: "Thành công!",
@@ -183,7 +183,7 @@ const PaymentForm = ({
       </div>
       <div className="flex flex-row justify-between mt-4">
         <Button
-          className="w-fit"
+          className="w-fit dark:hover:bg-slate-900"
           onClick={() => {
             setActiveSection("roomSelector");
           }}

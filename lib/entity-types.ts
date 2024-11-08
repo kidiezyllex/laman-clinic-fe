@@ -148,3 +148,13 @@ export interface Notification {
   message?: string;
   createdAt?: Date;
 }
+
+export interface User {
+  _id: string;
+  fullName?: string;
+  gender?: string;
+  phone?: string;
+  email?: string;
+  password?: string;
+  role?: string;
+}

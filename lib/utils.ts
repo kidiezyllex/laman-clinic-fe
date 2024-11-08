@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-
+// import bcrypt from "bcrypt";
 // Linear interpolation
 export function lerp(a: number, b: number, n: number) {
   return (1 - n) * a + n * b;
@@ -121,3 +121,18 @@ export const getHoursBetweenDates = (
   const timeDifference = Math.abs(parsedDate2.getTime() - date1.getTime());
   return Math.floor(timeDifference / (1000 * 60 * 60));
 };
+
+// export async function hashPassword(password: string): Promise<string> {
+//   const saltRounds = 12;
+
+//   try {
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
+//     return hashedPassword;
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       throw new Error(`Error hashing password: ${error.message}`);
+//     } else {
+//       throw new Error("An unknown error occurred while hashing the password");
+//     }
+//   }
+// }

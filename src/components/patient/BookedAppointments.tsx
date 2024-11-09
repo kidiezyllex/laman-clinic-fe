@@ -13,21 +13,22 @@ import {
 import { usePathname } from "next/navigation";
 import { AppointmentByPatient, Patient } from "../../../lib/entity-types";
 import { formatDate, formatDate2 } from "../../../lib/utils";
-import { useToast } from "@/hooks/use-toast";
 
 export default function BookedAppointments() {
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
-  const { toast } = useToast();
-  const [patient, setPatient] = useState<Patient | null>(null);
   const [appointmentByPatients, setAppointmentByPatients] = useState<
     AppointmentByPatient[]
   >([]);
   const fetchData = async () => {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?patientId=${patientId}`
-    );
-    setAppointmentByPatients(response.data);
+    if (!pathname.split("_").includes("/user")) {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?patientId=${patientId}`
+      );
+      setAppointmentByPatients(response.data);
+    } else {
+      setAppointmentByPatients([]);
+    }
   };
   useEffect(() => {
     fetchData();
@@ -39,8 +40,8 @@ export default function BookedAppointments() {
         Danh sách lịch hẹn đã đặt
       </p>
       <div className="w-full border rounded-md p-4">
-        {appointmentByPatients && appointmentByPatients?.length === 0 ? (
-          <p className="text-slate-500 text-sm">Chưa có lịch sử khám bệnh</p>
+        {!appointmentByPatients || appointmentByPatients?.length === 0 ? (
+          <p className="text-slate-500 text-sm">Chưa có lịch đã đặt</p>
         ) : (
           <Table>
             <TableHeader>

@@ -1,5 +1,5 @@
 export interface AppointmentByPatient {
-  id: string;
+  _id: string;
   patientId: string;
   doctorId: string;
   appointmentDateByPatient: Date;

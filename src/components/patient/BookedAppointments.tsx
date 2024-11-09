@@ -12,14 +12,25 @@ import {
 } from "@/components/ui/table";
 import { usePathname } from "next/navigation";
 import { AppointmentByPatient, Patient } from "../../../lib/entity-types";
-import { formatDate, formatDate2 } from "../../../lib/utils";
-
+import { formatDate, formatDate2, renderSpecialty } from "../../../lib/utils";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 export default function BookedAppointments() {
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
   const [appointmentByPatients, setAppointmentByPatients] = useState<
     AppointmentByPatient[]
   >([]);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [apmtId, setApmtId] = useState("");
   const fetchData = async () => {
     if (!pathname.split("_").includes("/user")) {
       const response = await axios.get(
@@ -34,6 +45,16 @@ export default function BookedAppointments() {
     fetchData();
   }, []);
 
+  const handleDeleteAppointmentByPatient = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?_id=${apmtId}`
+      );
+      fetchData()
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-full">
       <p className="text-base font-semibold text-blue-500 uppercase">
@@ -51,6 +72,7 @@ export default function BookedAppointments() {
                 <TableHead>Bác sĩ</TableHead>
                 <TableHead>Chuyên khoa</TableHead>
                 <TableHead>Đặt vào lúc</TableHead>
+                <TableHead>Thao tác</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -62,14 +84,44 @@ export default function BookedAppointments() {
                       {formatDate(item?.appointmentDateByPatient)}
                     </TableCell>
                     <TableCell>{item.doctorId}</TableCell>
-                    <TableCell>{item.specialization}</TableCell>
+                    <TableCell>
+                      {renderSpecialty(item.specialization)}
+                    </TableCell>
                     <TableCell>{formatDate2(item?.createdAt)}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => {
+                          setApmtId(item._id);
+                          setIsAlertOpen(true);
+                        }}
+                      >
+                        Xoá
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
         )}
       </div>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Bạn có chắc chắn muốn xoá?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Hành động này không thể hoàn tác. Điều này sẽ xoá vĩnh viễn dữ
+              liệu của bạn khỏi máy chủ của chúng tôi.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Huỷ</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteAppointmentByPatient}>
+              Xác nhận xoá
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

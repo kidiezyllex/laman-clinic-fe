@@ -17,11 +17,16 @@ import DoctorProfile from "@/components/doctor/DoctorProfile";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
+import { usePathname } from "next/navigation";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
   const [roomNumber, setRoomNumber] = useState("");
+  const [updatedRoomNumber, setUpdatedRoomNumber] = useState(false);
   const { toast } = useToast();
+  const pathname = usePathname();
+  const doctorId = pathname.split("/")[1];
   const renderMainContent = () => {
     switch (activeSection) {
       case "appoinments":
@@ -35,12 +40,13 @@ export default function Page() {
     }
   };
 
-  const handleChangeRoomNumber = async () => {
+  const handleUpdateRoomNumber = async () => {
     try {
-      // const response3 = await axios.patch(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
-      //   roomNumber
-      // );
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}/updateRoomNumber`,
+        { isOnline: true, roomNumber: roomNumber }
+      );
+      setUpdatedRoomNumber(true);
       toast({
         variant: "default",
         title: "Thành công!",
@@ -78,25 +84,28 @@ export default function Page() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      <Alert className="mt-4">
-        <Edit className="h-4 w-4" />
-        <AlertTitle>
-          VUI LÒNG CẬP NHẬT SỐ PHÒNG KHÁM SAU KHI ĐĂNG NHẬP
-        </AlertTitle>
-        <AlertDescription>
-          <div className="w-full mt-4 flex flex-row gap-3 justify-between">
-            <Input
-              placeholder="Ví dụ: '102'"
-              value={roomNumber}
-              onChange={(e) => setRoomNumber(e.target.value)}
-              className="bg-transparent"
-            ></Input>
-            <Button onClick={handleChangeRoomNumber} variant={"secondary"}>
-              Cập nhật
-            </Button>
-          </div>
-        </AlertDescription>
-      </Alert>
+      {!updatedRoomNumber ? (
+        <Alert className="mt-4">
+          <Edit className="h-4 w-4" />
+          <AlertTitle>
+            VUI LÒNG CẬP NHẬT SỐ PHÒNG KHÁM SAU KHI ĐĂNG NHẬP
+          </AlertTitle>
+          <AlertDescription>
+            <div className="w-full mt-4 flex flex-row gap-3 justify-between">
+              <Input
+                placeholder="Ví dụ: '102'"
+                value={roomNumber}
+                onChange={(e) => setRoomNumber(e.target.value)}
+                className="bg-transparent"
+              ></Input>
+              <Button onClick={handleUpdateRoomNumber} variant={"secondary"}>
+                Cập nhật
+              </Button>
+            </div>
+          </AlertDescription>
+        </Alert>
+      ) : null}
+
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[200px_1fr] gap-3 mt-8">
         <div className="hidden h-full border bg-background md:block rounded-md">
           <div className="flex h-full max-h-screen flex-col gap-2">

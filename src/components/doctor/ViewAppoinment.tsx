@@ -189,10 +189,13 @@ export default function ViewAppointment() {
       // const response = await axios.get(
       //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
       // );
-      const response = await axios.get(
+      // const response = await axios.get(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
+      // );
+      const response2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
       );
-      setAppointments(response.data);
+      setAppointments(response2.data);
     };
 
     fetchAppointments();

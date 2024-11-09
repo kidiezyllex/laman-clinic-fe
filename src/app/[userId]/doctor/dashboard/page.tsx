@@ -30,7 +30,7 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "appoinments":
-        return <ViewAppointment />;
+        return <ViewAppointment roomNumber={roomNumber} />;
       case "profile":
         return <DoctorProfile />;
       // case "notification":

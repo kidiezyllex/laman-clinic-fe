@@ -1,29 +1,15 @@
-import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   CalendarIcon,
-  MapPinIcon,
   PhoneIcon,
   MailIcon,
-  UserIcon,
   Trash2Icon,
   PencilIcon,
   Dog,
   Cat,
   Clock,
 } from "lucide-react";
-import {
-  useState,
-  useCallback,
-  useEffect,
-  AwaitedReactNode,
-  JSXElementConstructor,
-  Key,
-  ReactElement,
-  ReactNode,
-  ReactPortal,
-} from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import {
   AlertDialog,
@@ -35,9 +21,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { format } from "date-fns";
 import { usePathname } from "next/navigation";
-import { Receptionist } from "../../../lib/entity-types";
+import { Receptionist, Schedule } from "../../../lib/entity-types";
+import { formatDate } from "../../../lib/utils";
 
 export default function LaboratoryTechnicianProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -67,40 +53,15 @@ export default function LaboratoryTechnicianProfile() {
     return slots;
   }
 
-  function getDayOfWeek(date: Date) {
-    switch (date.getUTCDay()) {
-      case 6:
-        return "Sunday";
-      case 0:
-        return "Monday";
-      case 1:
-        return "Tuesday";
-      case 2:
-        return "Wednesday";
-      case 3:
-        return "Thursday";
-      case 4:
-        return "Friday";
-      case 5:
-        return "Saturday";
-      default:
-        return "Invalid day";
-    }
-  }
-  const formatDate = (date: Date | undefined) => {
-    if (!date) return "N/A";
-    return format(date, "dd/MM/yyyy");
-  };
-  // Fetch Data Lễ tân
+  // Fetch Data Y tá xét nghiệm
   useEffect(() => {
-    const fetchReceptionist = async () => {
-      const currentEmail = localStorage.getItem("currentEmail");
+    const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${currentEmail}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/laboratory-technicians/${userId}`
       );
       setReceptionist(response.data);
     };
-    fetchReceptionist();
+    fetchData();
   }, []);
 
   return (
@@ -149,41 +110,24 @@ export default function LaboratoryTechnicianProfile() {
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
       <div className="flex flex-col gap-3">
         {Object.keys(receptionist).length !== 0 &&
-          (receptionist as any).schedule.map(
-            (scheduleItem: {
-              _id: Key | null | undefined;
-              dayOfWeek:
-                | string
-                | number
-                | bigint
-                | boolean
-                | ReactElement<any, string | JSXElementConstructor<any>>
-                | Iterable<ReactNode>
-                | ReactPortal
-                | Promise<AwaitedReactNode>
-                | null
-                | undefined;
-              startTime: string;
-              endTime: string;
-            }) => (
-              <div key={scheduleItem._id} className="p-3 border">
-                <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                  <Clock className="w-4 h-4 mr-2" />
-                  <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                </h3>
-                <div className="grid grid-cols-4 gap-2 ">
-                  {generateTimeSlots(
-                    scheduleItem.startTime,
-                    scheduleItem.endTime
-                  ).map((slot) => (
-                    <Button key={slot} variant={"secondary"}>
-                      {slot}
-                    </Button>
-                  ))}
-                </div>
+          (receptionist as any).schedule.map((scheduleItem: Schedule) => (
+            <div key={scheduleItem._id} className="p-3 border">
+              <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+                <Clock className="w-4 h-4 mr-2" />
+                <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+              </h3>
+              <div className="grid grid-cols-4 gap-2 ">
+                {generateTimeSlots(
+                  scheduleItem.startTime,
+                  scheduleItem.endTime
+                ).map((slot) => (
+                  <Button key={slot} variant={"secondary"}>
+                    {slot}
+                  </Button>
+                ))}
               </div>
-            )
-          )}
+            </div>
+          ))}
       </div>
       {Object.keys(receptionist).length !== 0 && (
         <div className="flex justify-end space-x-4">

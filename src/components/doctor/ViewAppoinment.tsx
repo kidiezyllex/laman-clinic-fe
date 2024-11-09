@@ -65,8 +65,11 @@ const medicationSchema = z.object({
 const formSchema = z.object({
   medications: z.array(medicationSchema),
 });
-export default function ViewAppointment() {
-  // built-in functions
+export default function ViewAppointment({
+  roomNumber,
+}: {
+  roomNumber: string;
+}) {
   const { toast } = useToast();
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
@@ -135,7 +138,6 @@ export default function ViewAppointment() {
     setShowPrescriptionForm(!showPrescriptionForm);
     setMainShow(true);
   };
-
   // Thêm 1 row
   const addRow = () => {
     const newRow: MedicationRow = {
@@ -148,7 +150,6 @@ export default function ViewAppointment() {
     };
     setRows([...rows, newRow]);
   };
-
   // Cập nhật row
   const updateRow = (
     id: number,
@@ -159,7 +160,6 @@ export default function ViewAppointment() {
       rows.map((row) => (row.id === id ? { ...row, [field]: value } : row))
     );
   };
-
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
 
@@ -182,47 +182,6 @@ export default function ViewAppointment() {
     setIsOpen(true);
   };
 
-  // Fecth data Appointments đã được lễ tân duyệt
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      // Fetch Data bác sĩ trước
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
-      // );
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
-      // );
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
-      );
-      setAppointments(response2.data);
-    };
-
-    fetchAppointments();
-    setIsOpen2(false);
-  }, []);
-
-  // Tạo đơn thuốc
-  const handleCreatePrescription = async () => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorId,
-        medications: rows,
-        dateIssued: new Date(),
-      };
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
-        payload
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -238,6 +197,71 @@ export default function ViewAppointment() {
       ...prevState,
       treatment: value,
     }));
+  };
+
+  useEffect(() => {
+    const selectedTestNames = labTestsData
+      .filter((test) => selectedTests.includes(test.id))
+      .map((test) => test.name);
+    setTestType(selectedTestNames);
+  }, [selectedTests]);
+
+  const filteredTests = labTestsData.filter((test) =>
+    test.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleTestToggle = (testId: number) => {
+    setSelectedTests((prev) =>
+      prev.includes(testId)
+        ? prev.filter((id) => id !== testId)
+        : [...prev, testId]
+    );
+  };
+  // Fecth Data
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      if (roomNumber !== "") {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
+        );
+        setAppointments(response.data);
+      } else {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
+        );
+        setAppointments(response.data);
+      }
+      // Dùng khi test
+    };
+
+    fetchAppointments();
+    setIsOpen2(false);
+  }, []);
+
+  // Yêu cầu xét nghiệm
+  const handleRequestTest = async () => {
+    try {
+      setIsLoading(true);
+      // Lấy data bác sĩ
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      const doctorData = response2.data[0];
+      const payload = {
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorData._id,
+        testType: testType,
+        reason: reasonRequestTest,
+      };
+      // const response3 = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+      //   payload
+      // );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Hoàn thành khám
@@ -273,7 +297,11 @@ export default function ViewAppointment() {
       // Xoá khỏi Kafka
       const response4 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
-        { roomNumber: "000", patientId: selectedAppointment?.patientId }
+        {
+          roomNumber: roomNumber,
+          patientId: selectedAppointment?.patientId,
+          doctorId: doctorId,
+        }
       );
       toast({
         variant: "default",
@@ -301,44 +329,20 @@ export default function ViewAppointment() {
     }
   };
 
-  useEffect(() => {
-    const selectedTestNames = labTestsData
-      .filter((test) => selectedTests.includes(test.id))
-      .map((test) => test.name);
-    setTestType(selectedTestNames);
-  }, [selectedTests]);
-
-  const filteredTests = labTestsData.filter((test) =>
-    test.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleTestToggle = (testId: number) => {
-    setSelectedTests((prev) =>
-      prev.includes(testId)
-        ? prev.filter((id) => id !== testId)
-        : [...prev, testId]
-    );
-  };
-
-  // Yêu cầu xét nghiệm
-  const handleRequestTest = async () => {
+  // Tạo đơn thuốc
+  const handleCreatePrescription = async () => {
     try {
       setIsLoading(true);
-      // Lấy data bác sĩ
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
-      );
-      const doctorData = response2.data[0];
       const payload = {
         patientId: selectedAppointment?.patientId,
-        doctorId: doctorData._id,
-        testType: testType,
-        reason: reasonRequestTest,
+        doctorId: doctorId,
+        medications: rows,
+        dateIssued: new Date(),
       };
-      // const response3 = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
-      //   payload
-      // );
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+        payload
+      );
     } catch (error) {
       console.error(error);
     } finally {

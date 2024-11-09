@@ -19,16 +19,7 @@ import {
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import PatientProfileForm from "../patient/profile/PatientProfileForm";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-import { Separator } from "../ui/separator";
+import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,

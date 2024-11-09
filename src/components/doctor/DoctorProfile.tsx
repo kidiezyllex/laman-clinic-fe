@@ -19,19 +19,19 @@ export default function DoctorProfile() {
   const userId = usePathname().split("/")[1];
   // Fetch Data Bác sĩ
   useEffect(() => {
-    const fetchDoctor = async () => {
+    const fetchData = async () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${userId}`
       );
-      setDoctor(response.data[0]);
+      setDoctor(response.data);
     };
-    fetchDoctor();
+    fetchData();
   }, []);
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">HỒ SƠ BÁC SĨ</p>
-      {Object.keys(doctor).length !== 0 && (
+      {doctor && (
         <div className="flex flex-col border rounded-md p-4 gap-3">
           <div className="flex gap-3 items-center">
             {doctor.gender?.toLocaleLowerCase() === "male" ? (

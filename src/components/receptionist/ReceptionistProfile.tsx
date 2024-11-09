@@ -20,19 +20,19 @@ export default function ReceptionistProfile() {
 
   // Fetch Data Lễ tân
   useEffect(() => {
-    const fetchReceptionist = async () => {
+    const fetchData = async () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/${userId}`
       );
       setReceptionist(response.data);
     };
-    fetchReceptionist();
+    fetchData();
   }, []);
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">HỒ SƠ LỄ TÂN</p>
-      {Object.keys(receptionist).length !== 0 && (
+      {receptionist && (
         <div className="flex flex-col border rounded-md p-4 gap-3">
           <div className="flex gap-3 items-center">
             {receptionist.gender?.toLocaleLowerCase() === "male" ? (

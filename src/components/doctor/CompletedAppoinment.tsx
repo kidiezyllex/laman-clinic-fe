@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/select";
 import { SearchIcon } from "lucide-react";
 import axios from "axios";
-import { Appointment, Doctor, User } from "../../../lib/entity-types";
+import { CompletedAppointment } from "../../../lib/entity-types";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   Pagination,
@@ -30,26 +30,18 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useToast } from "@/hooks/use-toast";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
-export default function CompletedAppoinment() {
-  const { toast } = useToast();
+
+export default function CompletedAppointments() {
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
-  const [doctor, setDoctor] = useState<Partial<Doctor>>({});
-  const [completedAppointments, setCompletedAppointments] = useState<
-    Appointment[]
-  >([]);
+  const [completedAppointments, setCompletedAppointments] = useState<CompletedAppointment[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [filterRole, setFilterRole] = useState("all");
+  const [filterType, setFilterType] = useState("all");
   const itemsPerPage = 10;
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
- 
+
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -57,7 +49,7 @@ export default function CompletedAppoinment() {
       );
       setCompletedAppointments(response.data.appointmentList);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error("Error fetching appointments:", error);
     }
   };
 
@@ -65,16 +57,24 @@ export default function CompletedAppoinment() {
     fetchData();
   }, []);
 
-  const filteredCA = completedAppointments.filter(
-    (ca) =>
+  const filteredAndSortedCA = completedAppointments
+    .filter((ca) =>
       ca?.patientId?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    )
+    .sort((a, b) => {
+      if (filterType === "new") {
+        return new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime();
+      } else if (filterType === "old") {
+        return new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime();
+      }
+      return 0;
+    });
 
-  const totalPages = Math.ceil(filteredCA.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredAndSortedCA.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentCA = filteredCA.slice(startIndex, endIndex);
-
+  const currentCA = filteredAndSortedCA.slice(startIndex, endIndex);
+  
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
       <p className="text-base font-semibold text-blue-500">
@@ -91,9 +91,9 @@ export default function CompletedAppoinment() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        <Select value={filterRole} onValueChange={setFilterRole}>
+        <Select value={filterType} onValueChange={setFilterType}>
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Lọc theo" />
+            <SelectValue placeholder="Lọc theo ngày" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
@@ -101,9 +101,6 @@ export default function CompletedAppoinment() {
             <SelectItem value="old">Cũ nhất</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
-          Thêm tài khoản
-        </Button>
       </div>
       <div className="max-w-full border rounded-md p-4">
         <ScrollArea className="w-full whitespace-nowrap">
@@ -120,7 +117,7 @@ export default function CompletedAppoinment() {
             </TableHeader>
             <TableBody>
               {currentCA.map((item, index) => (
-                <TableRow key={item._id}>
+                <TableRow key={`${item._id}-${index}`}>
                   <TableCell>{startIndex + index + 1}</TableCell>
                   <TableCell>{item._id}</TableCell>
                   <TableCell>{item.patientId}</TableCell>
@@ -171,123 +168,6 @@ export default function CompletedAppoinment() {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {/* <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto flex flex-col justify-start gap-4">
-          <DialogTitle className="text-md font-semibold self-center">
-            THÊM TÀI KHOẢN
-          </DialogTitle>
-          <div className="flex flex-col gap-4 mx-4 h-full">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="fullName">Họ tên</Label>
-              <Input
-                id="fullName"
-                value={newUser.fullName}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, fullName: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone">Số ĐT</Label>
-              <Input
-                id="phone"
-                value={newUser.phone}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={newUser.email}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, email: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password">Mật khẩu</Label>
-              <Input
-                id="password"
-                type="password"
-                value={newUser.password}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, password: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label>Giới tính</Label>
-              <RadioGroup
-                defaultValue="Male"
-                onValueChange={(value) =>
-                  setNewUser({ ...newUser, gender: value })
-                }
-                className="col-span-3 flex"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Male" id="Male" />
-                  <Label htmlFor="Male">Nam</Label>
-                </div>
-                <div className="flex items-center space-x-2 ml-4">
-                  <RadioGroupItem value="Female" id="Female" />
-                  <Label htmlFor="Female">Nữ</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role">Vai trò</Label>
-              <Select
-                value={newUser.role}
-                onValueChange={(value) =>
-                  setNewUser({ ...newUser, role: value })
-                }
-              >
-                <SelectTrigger className="col-span-3">
-                  <SelectValue placeholder="Chọn vai trò" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="patient">Bệnh nhân</SelectItem>
-                  <SelectItem value="receptionist">Lễ tân</SelectItem>
-                  <SelectItem value="doctor">Bác sĩ</SelectItem>
-                  <SelectItem value="pharmacist">Dược sĩ</SelectItem>
-                  <SelectItem value="laboratory-technician">
-                    Y tá xét nghiệm
-                  </SelectItem>
-                  <SelectItem value="cashier">Thu ngân</SelectItem>
-                  <SelectItem value="admin">Quản trị viên</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex justify-end items-end self-end gap-2 flex-grow h-full">
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  setNewUser({
-                    fullName: "",
-                    phone: "",
-                    email: "",
-                    password: "",
-                    gender: "male",
-                    role: "patient",
-                  });
-                }}
-              >
-                Huỷ
-              </Button>
-              <Button onClick={handleCreateUser}>Tạo tài khoản</Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog> */}
     </div>
   );
 }

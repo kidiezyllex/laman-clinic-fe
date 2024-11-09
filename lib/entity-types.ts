@@ -48,11 +48,9 @@ export interface MedicalHistory {
   diagnosisDate: string;
   treatment: string;
 }
-
 export interface Appointment {
   _id: string;
   patientId: string;
-  doctorId: string;
   appointmentDate: string;
   reason: string;
   specialization: string;
@@ -64,6 +62,13 @@ export interface Appointment {
   priority: boolean;
   dateOfBirth?: Date;
   address: string;
+}
+export interface CompletedAppointment {
+  _id: string;
+  patientId: string;
+  doctorId: string;
+  appointmentDate: string;
+  reason: string;
 }
 
 export interface MedicationRow {

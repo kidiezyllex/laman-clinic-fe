@@ -199,7 +199,12 @@ export default function ViewAppointment({
         </div>
       </div>
       {/* Dialog chi tiết bệnh nhân */}
-      <PatientDetails roomNumber={roomNumber} isOpen={isOpen} setIsOpen={setIsOpen} selectedAppointment={selectedAppointment}></PatientDetails>
+      <PatientDetails 
+  roomNumber={roomNumber} 
+  isOpen={isOpen} 
+  setIsOpen={setIsOpen} 
+  selectedAppointment={selectedAppointment}
+/>
     </div>
   );
 }

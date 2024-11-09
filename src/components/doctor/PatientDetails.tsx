@@ -43,6 +43,7 @@ import { formatDate } from "../../../lib/utils";
 import { Appointment, MedicationRow } from "../../../lib/entity-types";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
+import CalendarSelector from "./CalendarSelector";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
@@ -83,11 +84,13 @@ export default function PatientDetails({
   });
   // state
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
+  const [showReExaminationForm, setShowReExaminationForm] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [showLabTestsForm, setShowLabTestsForm] = useState(false);
   const [mainShow, setMainShow] = useState(true);
+  const [reason, setReason] = useState("");
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
     useState(false);
-  const [currentDate, setCurrentDate] = useState(new Date());
   const [rows, setRows] = useState<MedicationRow[]>([
     {
       id: 1,
@@ -299,6 +302,38 @@ export default function PatientDetails({
       };
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+        payload
+      );
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  //   Tạo tái khám
+  const handleCreateReExamination = async (
+    selectedAppointment: Appointment
+  ) => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        patientId: selectedAppointment._id + "",
+        appointmentDateByPatient: selectedDate,
+        specialization: selectedAppointment?.specialization,
+        fullName: selectedAppointment.patientId.fullName,
+        dateOfBirth: selectedAppointment.patientId.dateOfBirth || new Date(),
+        gender: selectedAppointment.patientId.gender || "",
+        address: selectedAppointment.patientId.address,
+        phone: selectedAppointment.patientId.phone || "",
+        email: selectedAppointment.patientId.email,
+        medicalHistory: selectedAppointment.patientId.medicalHistory,
+        doctorId: doctorId,
+        reason: reason
+      };
+      console.log(payload);
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
         payload
       );
     } catch (error) {
@@ -738,6 +773,58 @@ export default function PatientDetails({
                   </div>
                 </div>
               )}
+
+              {showReExaminationForm && (
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
+                  <h3 className="text-md font-semibold mr-4 self-center">
+                    Thông tin tái khám
+                  </h3>
+                  <h3 className="text-md font-semibold">
+                    Vui lòng nhập lý do hẹn tái khám
+                  </h3>
+                  <div className="mr-4">
+                    <Input
+                      id="reason"
+                      value={reason}
+                      onChange={(e) => setReason(e.target.value)}
+                      placeholder="Nhập lý do hẹn tái khám"
+                    />
+                  </div>
+                  <h3 className="text-md font-semibold">Chọn ngày tái khám</h3>
+                  <CalendarSelector
+                    setSelectedDate={setSelectedDate}
+                  ></CalendarSelector>
+
+                  <div className="flex flex-row gap-4 w-full justify-end">
+                    <Button
+                      variant="destructive"
+                      onClick={() => {
+                        setShowReExaminationForm(!showReExaminationForm);
+                        setMainShow(true);
+                        setReason("")
+                      }}
+                    >
+                      Huỷ
+                    </Button>
+                    <Button
+                      onClick={() =>
+                        handleCreateReExamination(selectedAppointment)
+                      }
+                      className="w-fit"
+                      variant={"secondary"}
+                    >
+                      {isLoading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Đang xử lý...
+                        </>
+                      ) : (
+                        "Tạo tái khám"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
               {mainShow && (
                 <div className="flex flex-row gap-4 mr-4 justify-end items-end flex-grow">
                   <Button
@@ -748,6 +835,15 @@ export default function PatientDetails({
                     }}
                   >
                     Tạo xét nghiệm
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setShowReExaminationForm(!showReExaminationForm);
+                      setMainShow(false);
+                    }}
+                  >
+                    Tạo tái khám
                   </Button>
                   <Button
                     variant="outline"

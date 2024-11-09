@@ -36,7 +36,6 @@ export default function CalendarSelector({
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && selectedDate >= today) {
       setDate(selectedDate);
-      console.log(selectedDate);
       setSelectedDate(selectedDate);
       setSelectedDate2(selectedDate);
       setShowExamination(true);

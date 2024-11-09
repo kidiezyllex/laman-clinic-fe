@@ -31,28 +31,6 @@ export default function Page() {
         return null;
     }
   };
-
-  const handleChangeRoomNumber = async () => {
-    try {
-      // const response3 = await axios.patch(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
-      //   roomNumber
-      // );
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã cập nhật số phòng.",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-      console.error(error);
-    }
-  };
-
   return (
     <div>
       <Breadcrumb className="mt-4">

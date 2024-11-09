@@ -50,8 +50,9 @@ export interface MedicalHistory {
 }
 
 export interface Appointment {
-  patientId: Patient;
-  doctorId: Doctor;
+  _id: string;
+  patientId: string;
+  doctorId: string;
   appointmentDate: string;
   reason: string;
   specialization: string;

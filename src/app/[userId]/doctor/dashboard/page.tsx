@@ -19,6 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { usePathname } from "next/navigation";
+import CompletedAppoinment from "@/components/doctor/CompletedAppoinment";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
@@ -33,6 +34,8 @@ export default function Page() {
         return <ViewAppointment roomNumber={roomNumber} />;
       case "profile":
         return <DoctorProfile />;
+      case "completedApt":
+        return <CompletedAppoinment />;
       // case "notification":
       // return <Notification />;
       default:
@@ -129,14 +132,14 @@ export default function Page() {
                 </div>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("invoice")}
+                  onClick={() => setActiveSection("completedApt")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "invoice"
+                    activeSection === "completedApt"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
                 >
-                  <p className="ml-7">Lịch hẹn</p>
+                  <p className="ml-7">Ca khám</p>
                 </Link>
                 <Link
                   href="#"

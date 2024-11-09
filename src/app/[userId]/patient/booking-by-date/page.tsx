@@ -16,11 +16,15 @@ import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
 import Payment from "@/components/patient/booking/Payment";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../../lib/entity-types";
-import { formatDate } from "../../../../../lib/utils";
+import {
+  formatDate,
+  formatDate3,
+  generateExamination,
+} from "../../../../../lib/utils";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("calendarSelector");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date>();
   const [selectedSpe, setSelectedSpe] = useState<number | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const pathname = usePathname();
@@ -67,6 +71,7 @@ export default function Page() {
             setActiveSection={setActiveSection}
             selectedDate={selectedDate}
             selectedSpe={selectedSpe}
+            setSelectedDate={setSelectedDate}
           ></RoomSelector>
         );
       case "payment":
@@ -174,7 +179,15 @@ export default function Page() {
                 <span className="font-semibold dark:text-slate-500">
                   Ngày khám:
                 </span>{" "}
-                {formatDate(selectedDate)}
+                {selectedDate ? formatDate(selectedDate) : null}
+              </p>
+              <p className="text-sm">
+                <span className="font-semibold dark:text-slate-500">
+                  Ca khám:
+                </span>{" "}
+                {selectedDate
+                  ? generateExamination(formatDate3(selectedDate))
+                  : null}
               </p>
               <p className="text-sm">
                 <span className="font-semibold dark:text-slate-500">

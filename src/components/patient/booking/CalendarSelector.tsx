@@ -47,14 +47,15 @@ export default function CalendarSelector({
     const day = date
       .toLocaleDateString("en-US", { weekday: "long" })
       .toLowerCase();
-    return date < today || !availableDays.has(day);
+    if (selectedDoctor) return date < today || !availableDays.has(day);
+    return date < today;
   };
 
-  const filteredSchedule = (selectedDoctor as any).schedule.filter(
-    (scheduleItem: Schedule) => {
-      return scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2);
-    }
-  );
+  const filteredSchedule = selectedDoctor
+    ? (selectedDoctor as any).schedule.filter((scheduleItem: Schedule) => {
+        return scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2);
+      })
+    : [];
 
   const handleSetSelectedDate = (slot: string) => {
     setSelectedSlot(slot);
@@ -71,7 +72,7 @@ export default function CalendarSelector({
         mode="single"
         selected={date}
         onSelect={handleSelect}
-        disabled={selectedDoctor ? isDateDisabled : false}
+        disabled={isDateDisabled}
         className="rounded-md border bg-background flex flex-row items-center justify-center"
         styles={{
           head: {

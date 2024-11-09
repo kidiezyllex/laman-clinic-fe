@@ -44,7 +44,7 @@ export interface Patient {
 
 export interface MedicalHistory {
   _id: string;
-  diagnosisDescription: string;
+  disease: string;
   diagnosisDate: string;
   treatment: string;
 }

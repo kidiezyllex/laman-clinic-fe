@@ -61,9 +61,6 @@ export default function SpecialtySelector({
           >
             <div>
               <h3 className="font-medium">{specialty}</h3>
-              <p className="text-sm text-gray-500">
-                {/* {specialty.price.toLocaleString("vi-VN")} VNĐ */}
-              </p>
             </div>
             <Button
               onClick={() => {

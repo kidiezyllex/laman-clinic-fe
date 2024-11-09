@@ -74,7 +74,6 @@ const PaymentForm = ({
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
         payload
       );
-      // console.log(payload);
       toast({
         variant: "default",
         title: "Thành công!",
@@ -185,7 +184,9 @@ const PaymentForm = ({
         <Button
           className="w-fit dark:hover:bg-slate-900"
           onClick={() => {
-            setActiveSection("roomSelector");
+            selectedDoctor
+              ? setActiveSection("calendarSelector")
+              : setActiveSection("roomSelector");
           }}
           variant={"outline"}
         >

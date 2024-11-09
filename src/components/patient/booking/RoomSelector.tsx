@@ -6,39 +6,56 @@ import axios from "axios";
 import { Clock, FileCog, Stethoscope, User, Warehouse } from "lucide-react";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import { Schedule } from "../../../../lib/entity-types";
-import { generateTimeSlots, getDayOfWeek } from "../../../../lib/utils";
+import {
+  generateTimeSlots,
+  getDayOfWeek,
+  setTimeToDate,
+} from "../../../../lib/utils";
 export default function RoomSelector({
   setActiveSection,
   selectedSpe,
   selectedDate,
+  setSelectedDate,
 }: {
   setActiveSection: (section: string) => void;
   selectedSpe: number | null;
-  selectedDate: Date;
+  selectedDate: Date | undefined;
+  setSelectedDate: (date: Date) => void;
 }) {
   const [doctorsBySpecialization, setDoctorsBySpecialization] = useState<[]>(
     []
   );
+  const [selectedSlot, setSelectedSlot] = useState("");
+  const [selectedSlotId, setSelectedSlotId] = useState("");
 
   useEffect(() => {
     const fetchDoctors = async () => {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors?specialization=${selectedSpe}`
       );
-      const getDoctorsByDay = response.data.filter(
-        (doctor: { schedule: any[] }) =>
-          doctor.schedule.some(
-            (schedule: { dayOfWeek: string }) =>
-              schedule.dayOfWeek === getDayOfWeek(selectedDate)
+      const getDoctorsByDay = selectedDate
+        ? response.data.filter((doctor: { schedule: any[] }) =>
+            doctor.schedule.some(
+              (schedule: { dayOfWeek: string }) =>
+                schedule.dayOfWeek === getDayOfWeek(selectedDate)
+            )
           )
-      );
-      console.log(getDoctorsByDay);
+        : [];
       setDoctorsBySpecialization(getDoctorsByDay);
     };
 
     fetchDoctors();
   }, []);
 
+  const handleSetSelectedDate = (slot: string, scheduleItemId: string) => {
+    setSelectedSlot(slot);
+    setSelectedSlotId(scheduleItemId);
+    const newDate = setTimeToDate(
+      selectedDate || new Date(),
+      slot.split("-")[0]
+    );
+    setSelectedDate(newDate);
+  };
   return (
     <div className="w-full flex flex-col gap-4">
       <p className="text-base font-semibold text-blue-500">
@@ -76,9 +93,10 @@ export default function RoomSelector({
                   <div
                     key={scheduleItem._id}
                     className={
-                      scheduleItem.dayOfWeek === getDayOfWeek(selectedDate)
-                        ? "p-3 border-2 border-blue-500 "
-                        : "p-3 border"
+                      scheduleItem.dayOfWeek ===
+                      getDayOfWeek(selectedDate || new Date())
+                        ? "p-4 border"
+                        : "hidden"
                     }
                   >
                     <h3 className="font-medium text-slate-500 mb-2 flex items-center">
@@ -90,7 +108,18 @@ export default function RoomSelector({
                         (scheduleItem as any).startTime,
                         (scheduleItem as any).endTime
                       ).map((slot) => (
-                        <Button key={slot} variant={"secondary"}>
+                        <Button
+                          key={slot}
+                          variant={
+                            selectedSlot === slot &&
+                            selectedSlotId === scheduleItem._id
+                              ? "default"
+                              : "outline"
+                          }
+                          onClick={() =>
+                            handleSetSelectedDate(slot, scheduleItem._id)
+                          }
+                        >
                           {slot}
                         </Button>
                       ))}

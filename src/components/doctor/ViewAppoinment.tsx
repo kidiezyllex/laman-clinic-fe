@@ -563,9 +563,7 @@ export default function ViewAppointment() {
                               <TableCell>
                                 {formatDate(history?.diagnosisDate)}
                               </TableCell>
-                              <TableCell>
-                                {history.diagnosisDescription}
-                              </TableCell>
+                              <TableCell>{history.disease}</TableCell>
                               <TableCell>{history.treatment}</TableCell>
                             </TableRow>
                           )

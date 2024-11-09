@@ -20,7 +20,7 @@ import PatientProfile from "@/components/patient/profile/PatientProfile";
 import MedicalHistory from "@/components/patient/MedicalHistory";
 import BookedAppointments from "@/components/patient/BookedAppointments";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("medicalHistory");
+  const [activeSection, setActiveSection] = useState("patientProfile");
 
   const renderMainContent = () => {
     switch (activeSection) {

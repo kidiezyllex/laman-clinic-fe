@@ -5,7 +5,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { doctorsData } from "../../../../lib/hardcoded-data";
 import {
   Table,
   TableBody,
@@ -39,14 +38,10 @@ export default function DoctorSelector({
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      // const response = await axios.get(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors`
-      // );
-      // const filteredDoctors = response.data.filter((specialty: string) =>
-      //   specialty.toLowerCase().includes(searchTerm.toLowerCase())
-      // );
-      // setDoctors(filteredDoctors);
-      setDoctors(doctorsData as any);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors`
+      );
+      setDoctors(response.data);
     };
 
     fetchDoctors();

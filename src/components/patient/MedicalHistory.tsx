@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -14,31 +13,6 @@ import { usePathname } from "next/navigation";
 import { Patient } from "../../../lib/entity-types";
 import { formatDate } from "../../../lib/utils";
 import { useToast } from "@/hooks/use-toast";
-const samplePatientData = {
-  _id: "BN-PMQ7TS",
-  fullName: "Hồ Đức Lâm",
-  gender: "Male",
-  password: "$2a$12$e3o.Enlcck9mtToe7iHnYugIFtL8/kD3jAFM63HqZSVVThDMZvsnO",
-  phone: "+84352923442",
-  email: "hoduclam24082002hight@gmail.com",
-  medicalHistory: [
-    {
-      diagnosisDescription: "Cảm nhẹ, ho khan",
-      diagnosisDate: "2024-10-22T12:44:56.869Z",
-      treatment: "Sử dụng thuốc",
-      _id: "67179e48c862a45935495460",
-    },
-    {
-      diagnosisDescription: "Sỏi thận nhỏ 1-2 mm",
-      diagnosisDate: "2024-10-25T11:35:18.592Z",
-      treatment: "Giải phẫu",
-      _id: "671b827608fc3853ac883d02",
-    },
-  ],
-  createdAt: "2024-10-20T10:25:36.230Z",
-  updatedAt: "2024-10-25T11:35:18.598Z",
-  __v: 0,
-};
 export default function MedicalHistory() {
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
@@ -47,15 +21,14 @@ export default function MedicalHistory() {
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
       try {
-        // if (!pathname.split("_").includes("/user")) {
-        //   const response = await axios.get(
-        //     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
-        //   );
-        //   setPatient(response.data);
-        // } else {
-        //   setPatient(null);
-        // }
-        setPatient(samplePatientData as any);
+        if (!pathname.split("_").includes("/user")) {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
+          );
+          setPatient(response.data);
+        } else {
+          setPatient(null);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -88,7 +61,7 @@ export default function MedicalHistory() {
                   <TableRow key={history.diagnosisDate}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{formatDate(history?.diagnosisDate)}</TableCell>
-                    <TableCell>{history.diagnosisDescription}</TableCell>
+                    <TableCell>{history.disease}</TableCell>
                     <TableCell>{history.treatment}</TableCell>
                   </TableRow>
                 ))}

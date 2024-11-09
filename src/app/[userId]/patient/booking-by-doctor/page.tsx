@@ -17,6 +17,7 @@ import {
   formatDate2,
   formatDate3,
   generateExamination,
+  renderSpecialty,
 } from "../../../../../lib/utils";
 import DoctorSelector from "@/components/patient/booking/DoctorSelector";
 import CalendarSelector from "@/components/patient/booking/CalendarSelector";
@@ -178,7 +179,7 @@ export default function Page() {
                 <span className="font-semibold dark:text-slate-500">
                   Chuyên khoa:
                 </span>{" "}
-                {selectedSpe}
+                {renderSpecialty(selectedSpe + "")}
               </p>
               <p className="text-sm">
                 <span className="font-semibold dark:text-slate-500">

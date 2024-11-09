@@ -41,6 +41,7 @@ export default function RoomSelector({
             )
           )
         : [];
+      console.log(getDoctorsByDay);
       setDoctorsBySpecialization(getDoctorsByDay);
     };
 

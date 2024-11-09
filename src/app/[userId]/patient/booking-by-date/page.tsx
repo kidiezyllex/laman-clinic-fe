@@ -20,6 +20,7 @@ import {
   formatDate,
   formatDate3,
   generateExamination,
+  renderSpecialty,
 } from "../../../../../lib/utils";
 
 export default function Page() {
@@ -193,7 +194,7 @@ export default function Page() {
                 <span className="font-semibold dark:text-slate-500">
                   Chuyên khoa:
                 </span>{" "}
-                {selectedSpe}
+                {renderSpecialty(selectedSpe + "")}
               </p>
             </div>
           </div>

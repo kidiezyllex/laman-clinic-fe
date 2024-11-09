@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import axios from "axios";
+import { renderSpecialty } from "../../../../lib/utils";
 
 export default function SpecialtySelector({
   setActiveSection,
@@ -60,7 +61,7 @@ export default function SpecialtySelector({
             className="flex justify-between items-center py-2 border-b"
           >
             <div>
-              <h3 className="font-medium">{specialty}</h3>
+              <h3 className="font-medium">{renderSpecialty(specialty)}</h3>
             </div>
             <Button
               onClick={() => {

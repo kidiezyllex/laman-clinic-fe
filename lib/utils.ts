@@ -122,17 +122,13 @@ export const getHoursBetweenDates = (
   return Math.floor(timeDifference / (1000 * 60 * 60));
 };
 
-// export async function hashPassword(password: string): Promise<string> {
-//   const saltRounds = 12;
-
-//   try {
-//     const hashedPassword = await bcrypt.hash(password, saltRounds);
-//     return hashedPassword;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       throw new Error(`Error hashing password: ${error.message}`);
-//     } else {
-//       throw new Error("An unknown error occurred while hashing the password");
-//     }
-//   }
-// }
+export const renderSpecialty = (specialty: string) => {
+  const specialtys: { [key: string]: string } = {
+    Cardiology: "Khoa Tim mạch",
+    Dermatology: "Khoa Da liễu",
+    Hematology: "Khoa Huyết học",
+    InternalMedicine: "Khoa Nội tổng quát",
+    Otolaryngology: "Khoa Tai Mũi Họng",
+  };
+  return specialtys[specialty] || "Không xác định";
+};

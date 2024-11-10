@@ -1,14 +1,7 @@
 "use client";
 import { useAuth, UserButton } from "@clerk/nextjs";
 import { Button } from "../ui/button";
-import {
-  Calendar,
-  HistoryIcon,
-  LogOut,
-  User,
-  SquareUser,
-  CircleUser,
-} from "lucide-react";
+import { LogOut, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
@@ -27,11 +20,11 @@ export default function NavBar() {
   const [role, setRole] = useState("");
   const pathName = usePathname();
   const { token, setToken } = useAuthContext();
-
   useEffect(() => {
     setCurrentId(localStorage.getItem("currentId") || "");
     setRole(localStorage.getItem("role") || "");
-  }, []);
+    renderNavBar();
+  }, [token]);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/process", label: "QUY TRÌNH" },

@@ -81,6 +81,45 @@ export default function Page() {
           );
           router.push(`/${res.data._id}/pharmacist/dashboard`);
           localStorage.setItem("currentId", res.data._id);
+        } else if (data.data?.role === "laboratory-technician") {
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: "Đăng nhập với quyền Y tá xét nghiệm.",
+          });
+          const res = await axios.get(
+            `${
+              process.env.NEXT_PUBLIC_BACKEND_API_URL
+            }/laboratory-technician/?email=${(data as any)?.data?.email}`
+          );
+          router.push(`/${res.data._id}/laboratory-technician/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
+        } else if (data.data?.role === "cashier") {
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: "Đăng nhập với quyền Thu ngân.",
+          });
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cashier/?email=${
+              (data as any)?.data?.email
+            }`
+          );
+          router.push(`/${res.data._id}/cashier/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
+        } else if (data.data?.role === "admin") {
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: "Đăng nhập với quyền Quản trị viên.",
+          });
+          const res = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admin/?email=${
+              (data as any)?.data?.email
+            }`
+          );
+          router.push(`/${res.data._id}/admin/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
         } else router.push("/");
       } else {
         toast({

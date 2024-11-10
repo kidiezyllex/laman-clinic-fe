@@ -172,6 +172,7 @@ export default function Component() {
             <TableBody>
               {currentUsers.map((item, index) => (
                 <TableRow key={item._id}>
+                  <TableCell>{item._id}</TableCell>
                   <TableCell>{startIndex + index + 1}</TableCell>
                   <TableCell>{item.fullName}</TableCell>
                   <TableCell>

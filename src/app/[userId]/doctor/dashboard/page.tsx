@@ -19,7 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { usePathname } from "next/navigation";
-import CompletedAppoinment from "@/components/doctor/CompletedAppoinment";
+import CompletedAppointments from "@/components/doctor/CompletedAppoinment";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
@@ -35,7 +35,7 @@ export default function Page() {
       case "profile":
         return <DoctorProfile />;
       case "completedApt":
-        return <CompletedAppoinment />;
+        return <CompletedAppointments />;
       // case "notification":
       // return <Notification />;
       default:

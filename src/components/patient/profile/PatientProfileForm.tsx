@@ -144,8 +144,24 @@ export default function PatientProfileForm({
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
         );
+        // const response3 = await axios.post(
+        //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/register`, {email: data.email, password: data.password, role: "patient", fullName: data.fullName, phone: data.phone.startsWith("0")
+        //     ? "+84" + data.phone.slice(1)
+        //     : data.phone, gender: data.gender}
+        // );
+        const newUser = {
+          email: data.email,
+          password: data.password,
+          role: "patient",
+          fullName: data.fullName,
+          phone: data.phone.startsWith("0")
+            ? "+84" + data.phone.slice(1)
+            : data.phone,
+          gender: data.gender,
+        };
         const response3 = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/register`, {email: data.email, password: data.password}
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user`,
+          newUser
         );
         router.push(`/${(response2?.data as any)._id}/patient/dashboard`);
       }

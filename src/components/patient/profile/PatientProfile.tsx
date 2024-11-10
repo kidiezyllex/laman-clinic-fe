@@ -22,14 +22,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import PatientProfileForm from "./PatientProfileForm";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../lib/entity-types";

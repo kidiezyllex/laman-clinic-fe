@@ -27,7 +27,7 @@ export default function RoomSelector({
   );
   const [selectedSlot, setSelectedSlot] = useState("");
   const [selectedSlotId, setSelectedSlotId] = useState("");
-
+  const [selectedDate2, setSelectedDate2] = useState<Date>(selectedDate || new Date());
   useEffect(() => {
     const fetchDoctors = async () => {
       const response = await axios.get(
@@ -41,7 +41,6 @@ export default function RoomSelector({
             )
           )
         : [];
-      console.log(getDoctorsByDay);
       setDoctorsBySpecialization(getDoctorsByDay);
     };
 
@@ -90,12 +89,12 @@ export default function RoomSelector({
                 </div>
               </div>
               <div className="space-y-4 ">
-                {(doctor as any).schedule.map((scheduleItem: Schedule) => (
+                {selectedDate && (doctor as any).schedule.map((scheduleItem: Schedule) => (
                   <div
                     key={scheduleItem._id}
                     className={
                       scheduleItem.dayOfWeek ===
-                      getDayOfWeek(selectedDate || new Date())
+                      getDayOfWeek(selectedDate2)
                         ? "p-4 border"
                         : "hidden"
                     }

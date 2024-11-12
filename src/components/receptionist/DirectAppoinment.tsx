@@ -34,7 +34,6 @@ import { formatDate } from "../../../lib/utils";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
@@ -135,7 +134,6 @@ export default function DirectAppoinment() {
     } finally {
       setIsLoading(false);
       setIsDialogOpen(false);
-      setIsEditing(false);
       setReason("");
     }
   };
@@ -311,7 +309,10 @@ export default function DirectAppoinment() {
           <DialogFooter className="flex-grow items-end mr-4">
             <Button
               variant="destructive"
-              onClick={() => setIsDialogOpen(false)}
+              onClick={() => {
+                setIsDialogOpen(false);
+                setReason("");
+              }}
             >
               Huỷ
               <X className="w-4 h-4" />

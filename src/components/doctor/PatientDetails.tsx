@@ -234,8 +234,17 @@ export default function PatientDetails({
         );
       }
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
+      });
       setIsLoading(false);
     }
   };
@@ -302,7 +311,6 @@ export default function PatientDetails({
         description: "Đã lưu thông tin khám bệnh/chẩn đoán bệnh",
       });
     } catch (error) {
-      console.error(error);
       toast({
         variant: "destructive",
         title: "Thất bại!",
@@ -337,8 +345,17 @@ export default function PatientDetails({
         payload
       );
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo đơn thuốc cho bệnh nhân!",
+      });
       setIsLoading(false);
     }
   };
@@ -359,7 +376,6 @@ export default function PatientDetails({
         address: selectedAppointment.patientId.address,
         phone: selectedAppointment.patientId.phone || "",
         email: selectedAppointment.patientId.email,
-        medicalHistory: selectedAppointment.patientId.medicalHistory,
         doctorId: doctorId,
         reason: reason,
       };
@@ -376,9 +392,18 @@ export default function PatientDetails({
         );
       }
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
       setIsLoading(false);
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo tái khám cho bệnh nhân!",
+      });
     }
   };
   return (

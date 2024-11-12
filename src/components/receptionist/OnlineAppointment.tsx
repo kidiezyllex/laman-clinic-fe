@@ -41,7 +41,6 @@ import {
 } from "@/components/ui/select";
 export default function OnlineAppointment() {
   const { toast } = useToast();
-
   const [searchTerm, setSearchTerm] = useState("");
   const [appointmentByPatient, setAppointmentByPatient] = useState<
     AppointmentByPatient[]
@@ -49,7 +48,6 @@ export default function OnlineAppointment() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedAppointment, setSelectedAppointment] =
     useState<AppointmentByPatient | null>(null);
-  const [isEditing, setIsEditing] = useState(false);
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [filterType, setFilterType] = useState("all");
@@ -146,11 +144,30 @@ export default function OnlineAppointment() {
     } finally {
       setIsLoading(false);
       setIsDialogOpen(false);
-      setIsEditing(false);
       setReason("");
     }
   };
 
+  const renderBadge = (doctorId: string, reExamination: boolean) => {
+    if (doctorId && !reExamination) {
+      return (
+        <Badge className="bg-green-600 dark:text-white hover:bg-green-700">
+          Đặt lịch theo Bác sĩ
+        </Badge>
+      );
+    } else if (reExamination) {
+      return (
+        <Badge className="bg-yellow-600 dark:text-white hover:bg-yellow-700">
+          Tái khám
+        </Badge>
+      );
+    } else
+      return (
+        <Badge className="bg-blue-600 dark:text-white hover:bg-blue-700">
+          Đặt lịch theo ngày
+        </Badge>
+      );
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
@@ -182,9 +199,9 @@ export default function OnlineAppointment() {
         {filteredAppointments.map((appointment) => (
           <Card
             key={appointment._id + ""}
-            className="flex flex-col gap-6 justify-center items-center p-4 bg-primary-foreground"
+            className="flex flex-col gap-6 items-center p-4 bg-primary-foreground"
           >
-            <div className="flex flex-row gap-4 items-center w-full">
+            <div className="flex flex-row gap-4 items-center w-full self-start">
               {appointment.gender.toLowerCase() === "male" ||
               appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-blue-500 bg-blue-200">
@@ -212,22 +229,17 @@ export default function OnlineAppointment() {
             </div>
             <Separator></Separator>
             <div className="flex flex-row gap-2 w-full flex-wrap">
-              {!appointment.doctorId ? (
-                <Badge className="bg-blue-500 dark:text-white hover:bg-blue-700">
-                  Đặt lịch theo ngày
-                </Badge>
-              ) : (
-                <Badge className="bg-green-500 dark:text-white hover:bg-green-700">
-                  Đặt lịch theo Bác sĩ
-                </Badge>
-              )}
+              {renderBadge(appointment.doctorId, appointment.reExamination)}
               <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
                 Khoa: {appointment.specialization}
               </Badge>
               <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
-                Ngày ĐK: {formatDate(appointment?.appointmentDateByPatient)}
+                {appointment.reExamination
+                  ? "Ngày tái khám: "
+                  : "Ngày đăng ký: "}
+                {formatDate(appointment?.appointmentDateByPatient)}
               </Badge>
-              {!appointment.doctorId ? null : (
+              {!appointment.doctorId || appointment.reExamination ? null : (
                 <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
                   Ca khám:{" "}
                   {generateExamination(
@@ -236,9 +248,9 @@ export default function OnlineAppointment() {
                 </Badge>
               )}
             </div>
-            <div className="flex flex-row gap-2 mt-4">
+            <div className="flex flex-row gap-2 mt-4 flex-grow">
               <Button
-                className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
+                className="self-end w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreateAppointment(appointment)}
               >
                 Tạo ca khám
@@ -326,19 +338,25 @@ export default function OnlineAppointment() {
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
-                  Ngày hẹn khám:{" "}
+                  {selectedAppointment?.reExamination
+                    ? "Ngày tái khám: "
+                    : "Ngày đăng ký: "}
                   {formatDate(selectedAppointment?.appointmentDateByPatient)}
                 </span>
               </div>
-              <div className="flex items-center gap-2">
-                <Timer className="w-4 h-4 text-blue-500" />
-                <span className="text-sm">
-                  Ca khám:{" "}
-                  {generateExamination(
-                    formatDate3(selectedAppointment?.appointmentDateByPatient)
-                  )}
-                </span>
-              </div>
+              {!selectedAppointment?.doctorId ||
+              selectedAppointment?.reExamination ? null : (
+                <div className="flex items-center gap-2">
+                  <Timer className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm">
+                    Ca khám:{" "}
+                    {generateExamination(
+                      formatDate3(selectedAppointment?.appointmentDateByPatient)
+                    )}
+                  </span>
+                </div>
+              )}
+
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">Trạng thái: Đang chờ duyệt</span>
@@ -350,8 +368,9 @@ export default function OnlineAppointment() {
           </h3>
           <div className="mr-4">
             <Input
+              disabled={selectedAppointment?.reExamination}
               id="reason"
-              value={reason}
+              value={selectedAppointment?.reason || reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="Nhập lý do hẹn khám"
             />
@@ -374,7 +393,10 @@ export default function OnlineAppointment() {
           <DialogFooter className="mr-4 mt-4">
             <Button
               variant="destructive"
-              onClick={() => setIsDialogOpen(false)}
+              onClick={() => {
+                setIsDialogOpen(false);
+                setReason("");
+              }}
             >
               Huỷ
               <X className="w-4 h-4" />

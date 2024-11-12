@@ -66,7 +66,6 @@ const PaymentForm = ({
       address: patient.address,
       phone: patient.phone || "",
       email: patient.email,
-      medicalHistory: [],
       doctorId: selectedDoctor?._id || "",
       doctorName: selectedDoctor?.fullName || "",
     };

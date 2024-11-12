@@ -10,7 +10,8 @@ export interface AppointmentByPatient {
   address: string;
   phone: string;
   email: string;
-  medicalHistory: Array<string>;
+  reExamination: boolean;
+  reason: string;
 }
 
 export interface Schedule {

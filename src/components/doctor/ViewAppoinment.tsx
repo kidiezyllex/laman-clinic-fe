@@ -22,7 +22,7 @@ import {
 import axios from "axios";
 import { labTestsData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
-import { Appointment } from "../../../lib/entity-types";
+import { Appointment, Doctor } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
 
 export default function ViewAppointment({
@@ -31,7 +31,6 @@ export default function ViewAppointment({
   roomNumber: string;
 }) {
   const { toast } = useToast();
-  const pathname = usePathname();
   // state
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] =
@@ -61,18 +60,21 @@ export default function ViewAppointment({
   // Fecth Data
   useEffect(() => {
     const fetchAppointments = async () => {
-      if (roomNumber !== "") {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
-        );
-        setAppointments(response.data);
-      } else {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
-        );
-        setAppointments(response.data);
+      try {
+        if (roomNumber !== "") {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
+          );
+          setAppointments(response.data);
+        } else {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
+          );
+          setAppointments(response.data);
+        }
+      } catch (err) {
+        console.log(err + "");
       }
-      // Dùng khi test
     };
 
     fetchAppointments();
@@ -150,9 +152,9 @@ export default function ViewAppointment({
                         day
                       )
                     )
-                    .map((appointment) => (
+                    .map((appointment, index) => (
                       <div
-                        key={(appointment as any).patientId}
+                        key={(appointment as any).patientId + index}
                         className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                         onClick={() => openAppointmentDetails(appointment)}
                       >

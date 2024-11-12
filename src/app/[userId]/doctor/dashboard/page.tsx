@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell, CircleCheck, ContactRound, Edit, User } from "lucide-react";
 
@@ -24,7 +24,7 @@ import CompletedAppointments from "@/components/doctor/CompletedAppoinment";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("appoinments");
   const [roomNumber, setRoomNumber] = useState("");
-  const [updatedRoomNumber, setUpdatedRoomNumber] = useState(false);
+  const [showUpdateRNForm, setShowUpdateRNForm] = useState(false);
   const { toast } = useToast();
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
@@ -36,12 +36,23 @@ export default function Page() {
         return <DoctorProfile />;
       case "completedApt":
         return <CompletedAppointments />;
-      // case "notification":
-      // return <Notification />;
       default:
         return null;
     }
   };
+
+  // Fetch Data Bác sĩ, lấy roomNumber
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      const roomN = response.data.roomNumber;
+      if (roomN.toString() === "000") setShowUpdateRNForm(true);
+      else setShowUpdateRNForm(false);
+    };
+    fetchData();
+  }, [showUpdateRNForm]);
 
   const handleUpdateRoomNumber = async () => {
     try {
@@ -49,7 +60,7 @@ export default function Page() {
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}/updateRoomNumber`,
         { isOnline: true, roomNumber: roomNumber }
       );
-      setUpdatedRoomNumber(true);
+      setShowUpdateRNForm(false);
       toast({
         variant: "default",
         title: "Thành công!",
@@ -64,7 +75,6 @@ export default function Page() {
       console.error(error);
     }
   };
-
   return (
     <div>
       <Breadcrumb className="mt-4">
@@ -87,7 +97,7 @@ export default function Page() {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {!updatedRoomNumber ? (
+      {showUpdateRNForm ? (
         <Alert className="mt-4">
           <Edit className="h-4 w-4" />
           <AlertTitle>

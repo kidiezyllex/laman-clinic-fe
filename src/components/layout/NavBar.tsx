@@ -12,6 +12,7 @@ import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/app/auth-context";
+import axios from "axios";
 export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
@@ -33,6 +34,15 @@ export default function NavBar() {
   ];
 
   const handleLogOut = async () => {
+    // Nếu Bác sĩ đăng xuất thì cập nhật lại room và status Online
+    if (pathName.split("/")[1].includes("BS")) {
+      const res = await axios.patch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${
+          pathName.split("/")[1]
+        }/updateRoomNumber`,
+        { isOnline: false, roomNumber: "000" }
+      );
+    }
     setToken(null);
     toast({
       variant: "default",

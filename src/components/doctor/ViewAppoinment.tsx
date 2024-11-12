@@ -52,8 +52,8 @@ export default function ViewAppointment({
 
   useEffect(() => {
     const selectedTestNames = labTestsData
-      .filter((test) => selectedTests.includes(test.id))
-      .map((test) => test.name);
+      .filter((test) => selectedTests.includes(test._id))
+      .map((test) => test.testName);
     setTestType(selectedTestNames);
   }, [selectedTests]);
 

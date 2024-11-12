@@ -61,8 +61,13 @@ export default function MedicalHistory() {
                   <TableRow key={history.diagnosisDate}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{formatDate(history?.diagnosisDate)}</TableCell>
-                    <TableCell>{history.disease}</TableCell>
-                    <TableCell>{history.treatment}</TableCell>
+                    <TableCell>{history.disease.split("_")[0]}</TableCell>
+                    <TableCell>{history.disease.split("_")[1]}</TableCell>
+                    <TableCell>{history.disease.split("_")[2]}</TableCell>
+                    <TableCell>
+                      {history.treatment.split("_")[0] +
+                        history.treatment.split("_")[1]}
+                    </TableCell>
                   </TableRow>
                 ))}
             </TableBody>

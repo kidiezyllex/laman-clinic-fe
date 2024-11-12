@@ -37,7 +37,9 @@ export default function CompletedAppointments() {
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
-  const [completedAppointments, setCompletedAppointments] = useState<CompletedAppointment[]>([]);
+  const [completedAppointments, setCompletedAppointments] = useState<
+    CompletedAppointment[]
+  >([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
   const itemsPerPage = 10;
@@ -49,7 +51,7 @@ export default function CompletedAppointments() {
       );
       setCompletedAppointments(response.data.appointmentList);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
+      console.error(error);
     }
   };
 
@@ -63,9 +65,15 @@ export default function CompletedAppointments() {
     )
     .sort((a, b) => {
       if (filterType === "new") {
-        return new Date(b.appointmentDate).getTime() - new Date(a.appointmentDate).getTime();
+        return (
+          new Date(b.appointmentDate).getTime() -
+          new Date(a.appointmentDate).getTime()
+        );
       } else if (filterType === "old") {
-        return new Date(a.appointmentDate).getTime() - new Date(b.appointmentDate).getTime();
+        return (
+          new Date(a.appointmentDate).getTime() -
+          new Date(b.appointmentDate).getTime()
+        );
       }
       return 0;
     });
@@ -74,7 +82,7 @@ export default function CompletedAppointments() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentCA = filteredAndSortedCA.slice(startIndex, endIndex);
-  
+
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
       <p className="text-base font-semibold text-blue-500">
@@ -125,7 +133,9 @@ export default function CompletedAppointments() {
                     {formatDate(new Date(item.appointmentDate))}
                   </TableCell>
                   <TableCell>{item.reason}</TableCell>
-                  <TableCell><Button variant={"outline"}>Xem chi tiết</Button></TableCell>
+                  <TableCell>
+                    <Button variant={"outline"}>Xem chi tiết</Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

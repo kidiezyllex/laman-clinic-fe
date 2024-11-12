@@ -75,7 +75,7 @@ export interface CompletedAppointment {
 export interface MedicationRow {
   id: number;
   medicationName: string;
-  dose: string;
+  dosage: string;
   quantity: number;
   instructions: string;
   price: number;
@@ -83,7 +83,7 @@ export interface MedicationRow {
 
 export interface Medication {
   medicationName: string;
-  dose: string;
+  dosage: string;
   quantity: number;
   price: number;
   instructions: string;

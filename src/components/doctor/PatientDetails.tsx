@@ -17,14 +17,20 @@ import { Form, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
   Calendar,
+  CalendarIcon,
   Cat,
+  CircleCheckBig,
   Dog,
   FileText,
+  FlaskConical,
   Loader2,
   Mail,
   MapPin,
   Phone,
+  Pill,
+  Plus,
   User,
+  X,
 } from "lucide-react";
 import {
   Select,
@@ -40,14 +46,18 @@ import { Label } from "../ui/label";
 import { labTestsData, medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
-import { Appointment, MedicationRow } from "../../../lib/entity-types";
+import {
+  Appointment,
+  MedicationRow,
+  TestType,
+} from "../../../lib/entity-types";
 import { Checkbox } from "../ui/checkbox";
 import { Badge } from "../ui/badge";
 import CalendarSelector from "./CalendarSelector";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
-  dose: z.string().min(1, "Liều lượng không được để trống"),
+  dosage: z.string().min(1, "Liều lượng không được để trống"),
   quantity: z.coerce.number().min(1, "Số lượng phải lớn hơn 0"),
   instructions: z.string().optional(),
 });
@@ -75,7 +85,7 @@ export default function PatientDetails({
       medications: [
         {
           medicationName: "",
-          dose: "",
+          dosage: "",
           quantity: 0,
           instructions: "",
         },
@@ -95,7 +105,7 @@ export default function PatientDetails({
     {
       id: 1,
       medicationName: "",
-      dose: "",
+      dosage: "",
       quantity: 0,
       instructions: "",
       price: 0,
@@ -105,7 +115,7 @@ export default function PatientDetails({
   const [selectedTests, setSelectedTests] = useState<number[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [reasonRequestTest, setReasonRequestTest] = useState("");
-  const [testType, setTestType] = useState<string[]>([]);
+  const [testTypes, setTestTypes] = useState<TestType[]>([]);
   const [formData, setFormData] = useState({
     medicalHistory: "",
     diagnosis: "",
@@ -120,7 +130,7 @@ export default function PatientDetails({
       {
         id: 1,
         medicationName: "",
-        dose: "",
+        dosage: "",
         quantity: 0,
         instructions: "",
         price: 0,
@@ -134,7 +144,7 @@ export default function PatientDetails({
     const newRow: MedicationRow = {
       id: rows.length + 1,
       medicationName: "",
-      dose: "",
+      dosage: "",
       quantity: 0,
       price: 0,
       instructions: "",
@@ -182,14 +192,14 @@ export default function PatientDetails({
   };
 
   useEffect(() => {
-    const selectedTestNames = labTestsData
-      .filter((test) => selectedTests.includes(test.id))
-      .map((test) => test.name);
-    setTestType(selectedTestNames);
+    const selected = labTestsData.filter((test) =>
+      selectedTests.includes(test._id)
+    );
+    setTestTypes(selected as any);
   }, [selectedTests]);
 
   const filteredTests = labTestsData.filter((test) =>
-    test.name.toLowerCase().includes(searchTerm.toLowerCase())
+    test.testName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleTestToggle = (testId: number) => {
@@ -200,25 +210,28 @@ export default function PatientDetails({
     );
   };
 
-  // Yêu cầu xét nghiệm
+  // Tạo xét nghiệm
   const handleRequestTest = async () => {
     try {
       setIsLoading(true);
-      // Lấy data bác sĩ
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
-      );
-      const doctorData = response2.data[0];
       const payload = {
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorData._id,
-        testType: testType,
+        testTypes: testTypes,
+        patientId: selectedAppointment?.patientId._id,
+        doctorId: doctorId,
+        requestDate: new Date(),
         reason: reasonRequestTest,
       };
-      // const response3 = await axios.post(
-      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
-      //   payload
-      // );
+      if (reasonRequestTest.trim() === "" || testTypes.length === 0) {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: "Vui lòng nhập đầy đủ Yêu cầu xét nghiệm!",
+        });
+      }
+      const res3 = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
+        payload
+      );
     } catch (error) {
       console.error(error);
     } finally {
@@ -233,13 +246,13 @@ export default function PatientDetails({
       setIsLoading(true);
       // Lấy thông tin medicalHistory trước đó
       const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId._id}`
       );
       const payload = {
         medicalHistory: [
           ...response2.data?.medicalHistory,
           {
-            diagnosisDescription:
+            disease:
               formData.diagnosis +
               "_" +
               formData.medicalHistory +
@@ -250,18 +263,35 @@ export default function PatientDetails({
           },
         ],
       };
-      // Cập nhật thông tin khám bệnh
-      const response3 = await axios.patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`,
+      // Cập nhật vào MedicalHistory của bệnh nhân
+      const response3 = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId._id}`,
         payload
       );
 
-      // Xoá khỏi Kafka
+      // Tạo 1 Diagnosis mới
+      const diagnosisPayload = {
+        patientId: selectedAppointment?.patientId?._id,
+        doctorId: doctorId,
+        disease:
+          formData.diagnosis +
+          "_" +
+          formData.medicalHistory +
+          "_" +
+          formData.testResults,
+        diagnosisDate: new Date(),
+        treatment: formData.treatment + "_" + formData.otherTreatment,
+      };
       const response4 = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/diagnoses`,
+        diagnosisPayload
+      );
+      // Xoá khỏi Kafka
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
         {
           roomNumber: roomNumber,
-          patientId: selectedAppointment?.patientId,
+          patientId: selectedAppointment?.patientId._id,
           doctorId: doctorId,
         }
       );
@@ -271,7 +301,7 @@ export default function PatientDetails({
         description: "Đã lưu thông tin khám bệnh/chẩn đoán bệnh",
       });
     } catch (error) {
-      console.error("Error during sign in:", error);
+      console.error(error);
       toast({
         variant: "destructive",
         title: "Thất bại!",
@@ -280,6 +310,7 @@ export default function PatientDetails({
     } finally {
       setIsLoading(false);
       setShowDiagnosticResultsForm(false);
+      setMainShow(true);
       setFormData({
         medicalHistory: "",
         diagnosis: "",
@@ -295,7 +326,7 @@ export default function PatientDetails({
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?.patientId,
+        patientId: selectedAppointment?.patientId._id,
         doctorId: doctorId,
         medications: rows,
         dateIssued: new Date(),
@@ -311,7 +342,7 @@ export default function PatientDetails({
     }
   };
 
-  //   Tạo tái khám
+  // Tạo tái khám
   const handleCreateReExamination = async (
     selectedAppointment: Appointment
   ) => {
@@ -450,7 +481,9 @@ export default function PatientDetails({
                         <TableRow>
                           <TableHead>STT</TableHead>
                           <TableHead>Ngày khám</TableHead>
+                          <TableHead>Tiền sử bệnh</TableHead>
                           <TableHead>Chẩn đoán bệnh</TableHead>
+                          <TableHead>KQ Xét nghiệm</TableHead>
                           <TableHead>Phương pháp điều trị</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -462,8 +495,19 @@ export default function PatientDetails({
                               <TableCell>
                                 {formatDate(history?.diagnosisDate)}
                               </TableCell>
-                              <TableCell>{history.disease}</TableCell>
-                              <TableCell>{history.treatment}</TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[0]}
+                              </TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[1]}
+                              </TableCell>
+                              <TableCell>
+                                {history.disease.split("_")[2]}
+                              </TableCell>
+                              <TableCell>
+                                {history.treatment.split("_")[0] +
+                                  history.treatment.split("_")[1]}
+                              </TableCell>
                             </TableRow>
                           )
                         )}
@@ -520,9 +564,9 @@ export default function PatientDetails({
                             </SelectContent>
                           </Select>
                           <Input
-                            value={row.dose + ""}
+                            value={row.dosage + ""}
                             onChange={(e) =>
-                              updateRow(row.id, "dose", e.target.value)
+                              updateRow(row.id, "dosage", e.target.value)
                             }
                             placeholder="Liều lượng"
                           />
@@ -559,24 +603,30 @@ export default function PatientDetails({
                   <div className="flex flex-row gap-4 w-full justify-end items-end flex-grow">
                     <Button type="button" onClick={addRow} variant="outline">
                       Thêm dòng
+                      <Plus className="w-4 h-4" />
                     </Button>
                     <Button
                       variant="destructive"
                       onClick={() => handleCanclePrescription()}
                     >
-                      Huỷ đơn thuốc
+                      Huỷ đơn
+                      <X className="w-4 h-4" />
                     </Button>
                     <Button
                       onClick={() => handleCreatePrescription()}
                       disabled={isLoading}
+                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       {isLoading ? (
                         <>
+                          Đang xử lý
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Đang xử lý...
                         </>
                       ) : (
-                        "Tạo đơn thuốc"
+                        <>
+                          Tạo đơn thuốc
+                          <Pill className="mr-2 h-4 w-4" />
+                        </>
                       )}
                     </Button>
                   </div>
@@ -671,19 +721,23 @@ export default function PatientDetails({
                           }}
                         >
                           Huỷ
+                          <X className="w-4 h-4" />
                         </Button>
                         <Button
                           type="submit"
-                          className="w-fit"
+                          className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                           variant={"secondary"}
                         >
                           {isLoading ? (
                             <>
+                              Đang xử lý
                               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                              Đang xử lý...
                             </>
                           ) : (
-                            "Hoàn thành khám"
+                            <>
+                              Hoàn thành
+                              <CircleCheckBig className="mr-2 h-4 w-4" />
+                            </>
                           )}
                         </Button>
                       </div>
@@ -708,16 +762,16 @@ export default function PatientDetails({
                     <div className="rounded-md border p-4 grid grid-cols-2 gap-2 mb-4 dark:bg-slate-950 bg-white">
                       {filteredTests.map((test) => (
                         <Label
-                          key={test.id}
+                          key={test._id}
                           className="flex items-center space-x-2 mb-2 p-2 border rounded-md"
                         >
                           <Checkbox
-                            id={`test-${test.id}`}
-                            checked={selectedTests.includes(test.id)}
-                            onCheckedChange={() => handleTestToggle(test.id)}
+                            id={`test-${test._id}`}
+                            checked={selectedTests.includes(test._id)}
+                            onCheckedChange={() => handleTestToggle(test._id)}
                           />
                           <Label className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                            {test.name}
+                            {test.testName}
                           </Label>
                         </Label>
                       ))}
@@ -727,9 +781,9 @@ export default function PatientDetails({
                         Các xét nghiệm đã chọn:
                       </h3>
                       <div className="flex flex-row flex-wrap gap-4">
-                        {testType.map((test, index) => (
+                        {testTypes.map((test, index) => (
                           <Badge variant={"secondary"} key={index}>
-                            {test}
+                            {test.testName}
                           </Badge>
                         ))}
                       </div>
@@ -737,6 +791,7 @@ export default function PatientDetails({
                         Nhập lý do xét nghiệm:
                       </h3>
                       <Textarea
+                        required
                         id="reasonRequestTest"
                         name="reasonRequestTest"
                         value={reasonRequestTest}
@@ -751,23 +806,28 @@ export default function PatientDetails({
                       onClick={() => {
                         setShowLabTestsForm(false);
                         setMainShow(true);
-                        setTestType([]);
+                        setTestTypes([]);
                         setSelectedTests([]);
                       }}
                     >
-                      Huỷ xét nghiệm
+                      Huỷ
+                      <X className="w-4 h-4" />
                     </Button>
                     <Button
                       onClick={() => handleRequestTest()}
                       disabled={isLoading}
+                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       {isLoading ? (
                         <>
+                          Đang xử lý
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Đang xử lý...
                         </>
                       ) : (
-                        "Tạo xét nghiệm"
+                        <>
+                          Tạo xét nghiệm
+                          <FlaskConical className="mr-2 h-4 w-4" />
+                        </>
                       )}
                     </Button>
                   </div>
@@ -805,21 +865,25 @@ export default function PatientDetails({
                       }}
                     >
                       Huỷ
+                      <X className="w-4 h-4" />
                     </Button>
                     <Button
                       onClick={() =>
                         handleCreateReExamination(selectedAppointment)
                       }
-                      className="w-fit"
                       variant={"secondary"}
+                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       {isLoading ? (
                         <>
+                          Đang xử lý
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Đang xử lý...
                         </>
                       ) : (
-                        "Tạo tái khám"
+                        <>
+                          Tạo tái khám
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                        </>
                       )}
                     </Button>
                   </div>

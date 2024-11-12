@@ -18,6 +18,7 @@ import {
   SquareActivity,
   Timer,
   User,
+  X,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
@@ -31,7 +32,13 @@ import {
 } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
 import { Separator } from "../ui/separator";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 export default function OnlineAppointment() {
   const { toast } = useToast();
 
@@ -45,16 +52,37 @@ export default function OnlineAppointment() {
   const [isEditing, setIsEditing] = useState(false);
   const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [filterType, setFilterType] = useState("all");
 
-  const filteredAppointments = appointmentByPatient.filter((appointment) => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return (
-      appointment.fullName.toLowerCase().includes(searchTermLower) ||
-      (appointment.phone && appointment.phone.includes(searchTerm)) ||
-      (appointment.email &&
-        appointment.email.toLowerCase().includes(searchTermLower))
-    );
-  });
+  const filteredAppointments = appointmentByPatient
+    .filter((appointment) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      if (filterType === "today")
+        return (
+          formatDate(appointment.appointmentDateByPatient) ===
+          formatDate(new Date())
+        );
+      return (
+        appointment.fullName.toLowerCase().includes(searchTermLower) ||
+        (appointment.phone && appointment.phone.includes(searchTerm)) ||
+        (appointment.email &&
+          appointment.email.toLowerCase().includes(searchTermLower))
+      );
+    })
+    .sort((a, b) => {
+      if (filterType === "old") {
+        return (
+          new Date(b.appointmentDateByPatient).getTime() -
+          new Date(a.appointmentDateByPatient).getTime()
+        );
+      } else if (filterType === "new") {
+        return (
+          new Date(a.appointmentDateByPatient).getTime() -
+          new Date(b.appointmentDateByPatient).getTime()
+        );
+      }
+      return 0;
+    });
 
   const fetchData = async () => {
     const response = await axios.get(
@@ -128,15 +156,27 @@ export default function OnlineAppointment() {
       <p className="text-base font-semibold text-blue-500">
         DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEB
       </p>
-      <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="search"
-          placeholder="Nhập mã hoặc tên bệnh nhân..."
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex flex-row gap-3">
+        <div className="relative flex-grow">
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="search"
+            placeholder="Nhập mã hoặc tên bệnh nhân..."
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo ngày" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="new">Gần nhất</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
@@ -332,17 +372,28 @@ export default function OnlineAppointment() {
             )}
           </div>
           <DialogFooter className="mr-4 mt-4">
-            <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? "Hủy" : "Chỉnh sửa"}
+            <Button
+              variant="destructive"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              Huỷ
+              <X className="w-4 h-4" />
             </Button>
-            <Button onClick={handleSubmit} disabled={isLoading}>
+            <Button
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
               {isLoading ? (
                 <>
+                  Đang xử lý
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Đang xử lý...
                 </>
               ) : (
-                "Xác nhận"
+                <>
+                  Tạo ca khám
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                </>
               )}
             </Button>
           </DialogFooter>

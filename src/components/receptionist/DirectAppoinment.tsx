@@ -329,7 +329,7 @@ export default function DirectAppoinment() {
               ) : (
                 <>
                   Tạo ca khám
-                  <ArrowUpFromLine className="mr-2 h-4 w-4" />
+                  <CalendarIcon className="mr-2 h-4 w-4" />
                 </>
               )}
             </Button>

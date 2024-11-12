@@ -7,6 +7,8 @@ import {
   Dog,
   Cat,
   Clock,
+  User,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -56,20 +58,29 @@ export default function ReceptionistProfile() {
           </div>
           <div className="flex flex-col gap-3 ml-3">
             <div className="flex items-center space-x-3">
+              <User className="text-blue-500 h-4 w-4" />
+              <span className="text-slate-500 text-base">
+                Giới tính:{" "}
+                {receptionist.gender?.toLocaleLowerCase() === "male"
+                  ? "Nam"
+                  : "Nữ"}
+              </span>
+            </div>
+            <div className="flex items-center space-x-3">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
+              <span className="text-slate-500 text-base">
                 Ngày sinh: {formatDate(receptionist.dateOfBirth)}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
+              <span className="text-slate-500 text-base">
                 Số ĐT: {receptionist.phone}
               </span>
             </div>
             <div className="flex items-center space-x-3">
               <MailIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-600 text-base">
+              <span className="text-slate-500 text-base">
                 Email: {receptionist.email}
               </span>
             </div>
@@ -103,11 +114,11 @@ export default function ReceptionistProfile() {
       {Object.keys(receptionist).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
-            variant="outline"
-            className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+            type="submit"
+            className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           >
-            <PencilIcon className="w-4 h-4" />
-            <span>Chỉnh sửa</span>
+            Cập nhật
+            <ArrowUpFromLine className="w-4 h-4" />
           </Button>
         </div>
       )}

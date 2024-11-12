@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { ArrowUpFromLine, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -419,15 +419,20 @@ export default function PatientProfileForm({
               />
             </div>
           </div>
-
-          <Button type="submit" className="w-fit">
+          <Button
+            type="submit"
+            className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          >
             {isLoading ? (
               <>
+                Đang xử lý
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Đang xử lý...
               </>
             ) : (
-              "Tạo hồ sơ"
+              <>
+                Tạo hồ sơ
+                <ArrowUpFromLine className="w-4 h-4" />
+              </>
             )}
           </Button>
         </form>

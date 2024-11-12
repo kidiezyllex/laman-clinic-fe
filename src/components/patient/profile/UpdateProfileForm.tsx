@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/form";
 import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from "lucide-react";
+import { ArrowUpFromLine, Loader2, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 const formSchema = z.object({
@@ -109,7 +109,9 @@ export default function UpdateProfileForm({
     };
     try {
       const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${pathname.split("/")[1]}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${
+          pathname.split("/")[1]
+        }`,
         payload
       );
       toast({
@@ -129,15 +131,18 @@ export default function UpdateProfileForm({
         pathname.split("/").includes("patient") &&
         pathname.split("/").includes("dashboard")
       ) {
-        const response2 = await axios
-          .get(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${pathname.split("/")[1]}`);
+        const response2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${
+            pathname.split("/")[1]
+          }`
+        );
         router.push(`/${(response2?.data as any)._id}/patient/dashboard`);
       }
     }
   };
 
   return (
-    <div className="mt-4 p-4 border border-blue-500 rounded-md">
+    <div className="mt-4 p-4 border rounded-md">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
         CẬP NHẬT HỒ SƠ BỆNH NHÂN
       </h3>
@@ -356,20 +361,31 @@ export default function UpdateProfileForm({
             </div>
           </div>
           <div className="flex flex-row gap-4 justify-end">
-          <Button type="submit" className="w-fit" variant={"destructive"} onClick={()=> setShowUpdateForm(false)}>
+            <Button
+              type="submit"
+              className="w-fit"
+              variant={"destructive"}
+              onClick={() => setShowUpdateForm(false)}
+            >
               Huỷ
+              <X className="w-4 h-4" />
             </Button>
-            <Button type="submit" className="w-fit">
+            <Button
+              type="submit"
+              className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
               {isLoading ? (
                 <>
+                  Đang xử lý
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Đang xử lý...
                 </>
               ) : (
-                "Cập nhật hồ sơ"
+                <>
+                  Cập nhật hồ sơ
+                  <ArrowUpFromLine className="w-4 h-4" />
+                </>
               )}
             </Button>
-           
           </div>
         </form>
       </Form>

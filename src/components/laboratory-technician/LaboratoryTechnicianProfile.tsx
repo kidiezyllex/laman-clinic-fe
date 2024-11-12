@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { usePathname } from "next/navigation";
 import { Receptionist, Schedule } from "../../../lib/entity-types";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, renderDayOfWeek } from "../../../lib/utils";
 
 export default function LaboratoryTechnicianProfile() {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
@@ -81,7 +81,7 @@ export default function LaboratoryTechnicianProfile() {
             )}
             <div>
               <p className="text-base font-semibold">
-                Lễ tân: {receptionist.fullName}
+                Y tá: {receptionist.fullName}
               </p>
             </div>
           </div>
@@ -112,9 +112,11 @@ export default function LaboratoryTechnicianProfile() {
         {Object.keys(receptionist).length !== 0 &&
           (receptionist as any).schedule.map((scheduleItem: Schedule) => (
             <div key={scheduleItem._id} className="p-3 border">
-              <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+              <h3 className="font-medium text-blue-500 mb-2 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+                <p className="text-sm">
+                  {renderDayOfWeek(scheduleItem.dayOfWeek)}
+                </p>
               </h3>
               <div className="grid grid-cols-4 gap-2 ">
                 {generateTimeSlots(

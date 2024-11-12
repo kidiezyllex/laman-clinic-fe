@@ -30,6 +30,7 @@ export interface Doctor {
   schedule?: Schedule[];
   roomNumber?: string;
   specialization?: string;
+  isDepartmentHead?: boolean;
 }
 export interface Patient {
   _id?: string;

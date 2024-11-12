@@ -119,13 +119,13 @@ export default function CreatePatientProfile() {
                 <div className="col-span-2 grid grid-cols-2 gap-3 border rounded-md p-4">
                   <div className="flex items-center space-x-3">
                     <CalendarIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-600 text-sm">
+                    <span className="text-slate-500 text-sm">
                       Ngày sinh: {formatDate(patient.dateOfBirth)}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <UserIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-600 text-sm">
+                    <span className="text-slate-500 text-sm">
                       Giới tính:{" "}
                       {patient.gender?.toLowerCase() === "female"
                         ? "Nữ"
@@ -134,19 +134,19 @@ export default function CreatePatientProfile() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <MapPinIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-600 text-sm">
+                    <span className="text-slate-500 text-sm">
                       Địa chỉ: {patient.address}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <PhoneIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-600 text-sm">
+                    <span className="text-slate-500 text-sm">
                       Số ĐT: {patient.phone}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <MailIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-600 text-sm">
+                    <span className="text-slate-500 text-sm">
                       Email: {patient.email}
                     </span>
                   </div>

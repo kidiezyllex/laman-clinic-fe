@@ -34,7 +34,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
-export default function Component() {
+export default function AccountsManagement() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<User[]>([]);
@@ -53,11 +53,11 @@ export default function Component() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`
       );
       setUsers(response.data);
     } catch (error) {
-      console.error("Error fetching users:", error);
+      console.error(error);
     }
   };
 
@@ -172,7 +172,6 @@ export default function Component() {
             <TableBody>
               {currentUsers.map((item, index) => (
                 <TableRow key={item._id}>
-                  <TableCell>{item._id}</TableCell>
                   <TableCell>{startIndex + index + 1}</TableCell>
                   <TableCell>{item.fullName}</TableCell>
                   <TableCell>

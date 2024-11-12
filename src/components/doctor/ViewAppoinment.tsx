@@ -2,9 +2,6 @@
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   format,
   addDays,
@@ -14,12 +11,7 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import {
-  Cat,
-  ChevronLeft,
-  ChevronRight,
-  Dog,
-} from "lucide-react";
+import { Cat, ChevronLeft, ChevronRight, Dog } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -28,21 +20,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import axios from "axios";
-import { labTestsData} from "../../../lib/hardcoded-data";
+import { labTestsData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
-import { Appointment, MedicationRow } from "../../../lib/entity-types";
+import { Appointment } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
 
-const medicationSchema = z.object({
-  medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
-  dose: z.string().min(1, "Liều lượng không được để trống"),
-  quantity: z.coerce.number().min(1, "Số lượng phải lớn hơn 0"),
-  instructions: z.string().optional(),
-});
-
-const formSchema = z.object({
-  medications: z.array(medicationSchema),
-});
 export default function ViewAppointment({
   roomNumber,
 }: {
@@ -65,7 +47,6 @@ export default function ViewAppointment({
 
   // Chi tiết lịch hẹn
   const openAppointmentDetails = (appointment: Appointment) => {
-    console.log(appointment);
     setSelectedAppointment(appointment);
     setIsOpen(true);
   };
@@ -199,12 +180,12 @@ export default function ViewAppointment({
         </div>
       </div>
       {/* Dialog chi tiết bệnh nhân */}
-      <PatientDetails 
-  roomNumber={roomNumber} 
-  isOpen={isOpen} 
-  setIsOpen={setIsOpen} 
-  selectedAppointment={selectedAppointment}
-/>
+      <PatientDetails
+        roomNumber={roomNumber}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selectedAppointment={selectedAppointment}
+      />
     </div>
   );
 }

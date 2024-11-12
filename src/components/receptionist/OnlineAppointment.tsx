@@ -76,7 +76,7 @@ export default function OnlineAppointment() {
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?.id,
+        patientId: selectedAppointment?._id,
         appointmentDate: new Date(),
         reason,
         specialization: selectedAppointment?.specialization,
@@ -102,7 +102,7 @@ export default function OnlineAppointment() {
 
         // Xoá khỏi lịch hẹn khám tạm
         const response2 = await axios.delete(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?id=${selectedAppointment?.id}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?id=${selectedAppointment?._id}`
         );
         // Fetch lại data
         fetchData();
@@ -138,18 +138,10 @@ export default function OnlineAppointment() {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="flex flex-row gap-2 justify-end">
-        <Badge className="bg-blue-500 dark:text-white hover:bg-blue-700">
-          Đặt lịch theo ngày
-        </Badge>
-        <Badge className="bg-green-500 dark:text-white hover:bg-green-700">
-          Đặt lịch theo Bác sĩ
-        </Badge>
-      </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (
           <Card
-            key={appointment.id + ""}
+            key={appointment._id + ""}
             className="flex flex-col gap-6 justify-center items-center p-4 bg-primary-foreground"
           >
             <div className="flex flex-row gap-4 items-center w-full">
@@ -209,7 +201,8 @@ export default function OnlineAppointment() {
                 className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreateAppointment(appointment)}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám
+                Tạo ca khám
+                <CalendarIcon className="mr-2 h-4 w-4" />
               </Button>
             </div>
           </Card>
@@ -279,26 +272,26 @@ export default function OnlineAppointment() {
                 Thông tin lịch hẹn đăng ký
               </p>
               <div className="flex items-center gap-2">
-                <User className="w-4 h-5 text-blue-500" />
+                <User className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
                   Bác sĩ: {selectedAppointment?.doctorId}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <SquareActivity className="w-4 h-5 text-blue-500" />
+                <SquareActivity className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
                   Chuyên khoa: {selectedAppointment?.specialization}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-5 text-blue-500" />
+                <Calendar className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
                   Ngày hẹn khám:{" "}
                   {formatDate(selectedAppointment?.appointmentDateByPatient)}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Timer className="w-4 h-5 text-blue-500" />
+                <Timer className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
                   Ca khám:{" "}
                   {generateExamination(
@@ -307,7 +300,7 @@ export default function OnlineAppointment() {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-5 text-blue-500" />
+                <FileText className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">Trạng thái: Đang chờ duyệt</span>
               </div>
             </div>

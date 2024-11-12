@@ -11,7 +11,11 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Doctor, Schedule } from "../../../lib/entity-types";
-import { formatDate, generateTimeSlots } from "../../../lib/utils";
+import {
+  formatDate,
+  generateTimeSlots,
+  renderDayOfWeek,
+} from "../../../lib/utils";
 import { usePathname } from "next/navigation";
 
 export default function DoctorProfile() {
@@ -76,9 +80,11 @@ export default function DoctorProfile() {
         {Object.keys(doctor).length !== 0 &&
           (doctor as any).schedule.map((scheduleItem: Schedule) => (
             <div key={scheduleItem._id + ""} className="p-3 border">
-              <h3 className="font-medium text-slate-500 mb-2 flex items-center">
+              <h3 className="font-medium text-blue-500 mb-2 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
-                <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
+                <p className="text-sm">
+                  {renderDayOfWeek(scheduleItem.dayOfWeek)}
+                </p>
               </h3>
               <div className="grid grid-cols-4 gap-2 ">
                 {generateTimeSlots(

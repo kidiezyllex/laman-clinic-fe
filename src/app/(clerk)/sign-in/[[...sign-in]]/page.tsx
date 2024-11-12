@@ -90,7 +90,7 @@ export default function Page() {
           const res = await axios.get(
             `${
               process.env.NEXT_PUBLIC_BACKEND_API_URL
-            }/laboratory-technician/?email=${(data as any)?.data?.email}`
+            }/laboratory-technicians/?email=${(data as any)?.data?.email}`
           );
           router.push(`/${res.data._id}/laboratory-technician/dashboard`);
           localStorage.setItem("currentId", res.data._id);
@@ -101,7 +101,7 @@ export default function Page() {
             description: "Đăng nhập với quyền Thu ngân.",
           });
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cashier/?email=${
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cashiers/?email=${
               (data as any)?.data?.email
             }`
           );
@@ -114,10 +114,12 @@ export default function Page() {
             description: "Đăng nhập với quyền Quản trị viên.",
           });
           const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admin/?email=${
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admins/?email=${
               (data as any)?.data?.email
             }`
           );
+          console.log(res);
+          console.log(res.data._id);
           router.push(`/${res.data._id}/admin/dashboard`);
           localStorage.setItem("currentId", res.data._id);
         } else router.push("/");

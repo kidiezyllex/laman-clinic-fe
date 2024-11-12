@@ -23,6 +23,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Trash2 } from "lucide-react";
 export default function BookedAppointments() {
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
@@ -50,7 +51,7 @@ export default function BookedAppointments() {
       const response = await axios.delete(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?_id=${apmtId}`
       );
-      fetchData()
+      fetchData();
     } catch (error) {
       console.log(error);
     }
@@ -97,6 +98,7 @@ export default function BookedAppointments() {
                         }}
                       >
                         Xoá
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>

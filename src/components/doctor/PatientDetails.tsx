@@ -329,7 +329,7 @@ export default function PatientDetails({
         email: selectedAppointment.patientId.email,
         medicalHistory: selectedAppointment.patientId.medicalHistory,
         doctorId: doctorId,
-        reason: reason
+        reason: reason,
       };
       console.log(payload);
       const res = await axios.post(
@@ -363,7 +363,7 @@ export default function PatientDetails({
                 <div>
                   <p className="text-base font-semibold ">
                     {selectedAppointment?.patientId?.gender?.toLowerCase() ===
-                    "nam" ? (
+                    "male" ? (
                       <p className="text-blue-500">
                         {selectedAppointment?.patientId?.fullName}
                       </p>
@@ -801,7 +801,7 @@ export default function PatientDetails({
                       onClick={() => {
                         setShowReExaminationForm(!showReExaminationForm);
                         setMainShow(true);
-                        setReason("")
+                        setReason("");
                       }}
                     >
                       Huỷ

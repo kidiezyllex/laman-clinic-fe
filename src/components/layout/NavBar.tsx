@@ -49,7 +49,6 @@ export default function NavBar() {
           <div className="flex items-center justify-center bg-slate-200 w-[40px] rounded-full">
             <UserButton afterSignOutUrl="/"></UserButton>
           </div>
-
           {/* Dark Mode */}
           <ModeToggle></ModeToggle>
           <DropdownMenuToggle></DropdownMenuToggle>
@@ -100,12 +99,11 @@ export default function NavBar() {
   };
   return (
     <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
-      <div className="max-w-[1920px] w-full mx-auto xl:px-20 px-4 py-4 dark:bg-slate-800 bg-white">
+      <div className="max-w-[1920px] w-full mx-auto xl:px-14 px-4 py-4 dark:bg-slate-800 bg-white">
         <div className="items-center justify-between flex flex-row gap-10">
           <Link
             className="flex flex-row items-center gap-3 justify-start"
-            href={"/"}
-            onClick={() => router.push("/")}
+            href={pathName.split("/")[2] === "patient" ? "/" : "#"}
           >
             <Avatar className=" border-blue-500 border-4">
               <AvatarImage

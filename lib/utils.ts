@@ -124,11 +124,37 @@ export const getHoursBetweenDates = (
 
 export const renderSpecialty = (specialty: string) => {
   const specialtys: { [key: string]: string } = {
-    Cardiology: "Khoa Tim mạch",
-    Dermatology: "Khoa Da liễu",
-    Hematology: "Khoa Huyết học",
     InternalMedicine: "Khoa Nội tổng quát",
+    GeneralSurgery: "Khoa Ngoại tổng quát",
+    Pediatrics: "Khoa Nhi",
+    ObstetricsGynecology: "Khoa Sản",
+    Cardiology: "Khoa Tim mạch",
+    Neurology: "Khoa Thần kinh",
+    Pulmonology: "Khoa Phổi",
+    Dermatology: "Khoa Da liễu",
+    Gastroenterology: "Khoa Tiêu hóa",
+    NephrologyUrology: "Khoa Thận - Tiết niệu",
+    Hematology: "Khoa Huyết học",
     Otolaryngology: "Khoa Tai Mũi Họng",
+    Ophthalmology: "Khoa Mắt",
+    OralMaxillofacialSurgery: "Khoa Răng Hàm Mặt",
+    PhysicalMedicineRehabilitation: "Khoa Phục hồi chức năng",
+    ClinicalPsychology: "Khoa Tâm lý học",
   };
-  return specialtys[specialty] || "Không xác định";
+
+  return specialtys[specialty] || "";
+};
+
+export const renderDayOfWeek = (day: string) => {
+  const days: { [key: string]: string } = {
+    Monday: "Thứ Hai",
+    Tuesday: "Thứ Ba",
+    Wednesday: "Thứ Tư",
+    Thursday: "Thứ Năm",
+    Friday: "Thứ Sáu",
+    Saturday: "Thứ Bảy",
+    Sunday: "Chủ Nhật",
+  };
+
+  return days[day] || "";
 };

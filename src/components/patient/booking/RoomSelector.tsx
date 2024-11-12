@@ -9,6 +9,7 @@ import { Schedule } from "../../../../lib/entity-types";
 import {
   generateTimeSlots,
   getDayOfWeek,
+  renderDayOfWeek,
   setTimeToDate,
 } from "../../../../lib/utils";
 export default function RoomSelector({
@@ -27,7 +28,9 @@ export default function RoomSelector({
   );
   const [selectedSlot, setSelectedSlot] = useState("");
   const [selectedSlotId, setSelectedSlotId] = useState("");
-  const [selectedDate2, setSelectedDate2] = useState<Date>(selectedDate || new Date());
+  const [selectedDate2, setSelectedDate2] = useState<Date>(
+    selectedDate || new Date()
+  );
   useEffect(() => {
     const fetchDoctors = async () => {
       const response = await axios.get(
@@ -89,43 +92,34 @@ export default function RoomSelector({
                 </div>
               </div>
               <div className="space-y-4 ">
-                {selectedDate && (doctor as any).schedule.map((scheduleItem: Schedule) => (
-                  <div
-                    key={scheduleItem._id}
-                    className={
-                      scheduleItem.dayOfWeek ===
-                      getDayOfWeek(selectedDate2)
-                        ? "p-4 border"
-                        : "hidden"
-                    }
-                  >
-                    <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <p className="text-sm"> {scheduleItem.dayOfWeek}</p>
-                    </h3>
-                    <div className="grid grid-cols-4 gap-2 ">
-                      {generateTimeSlots(
-                        (scheduleItem as any).startTime,
-                        (scheduleItem as any).endTime
-                      ).map((slot) => (
-                        <Button
-                          key={slot}
-                          variant={
-                            selectedSlot === slot &&
-                            selectedSlotId === scheduleItem._id
-                              ? "default"
-                              : "outline"
-                          }
-                          onClick={() =>
-                            handleSetSelectedDate(slot, scheduleItem._id)
-                          }
-                        >
-                          {slot}
-                        </Button>
-                      ))}
+                {selectedDate &&
+                  (doctor as any).schedule.map((scheduleItem: Schedule) => (
+                    <div
+                      key={scheduleItem._id}
+                      className={
+                        scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2)
+                          ? "p-4 border"
+                          : "hidden"
+                      }
+                    >
+                      <h3 className="font-medium text-blue-500 mb-2 flex items-center">
+                        <Clock className="w-4 h-4 mr-2" />
+                        <p className="text-sm">
+                          {renderDayOfWeek(scheduleItem.dayOfWeek)}
+                        </p>
+                      </h3>
+                      <div className="grid grid-cols-4 gap-2 ">
+                        {generateTimeSlots(
+                          (scheduleItem as any).startTime,
+                          (scheduleItem as any).endTime
+                        ).map((slot) => (
+                          <Button key={slot} variant={"outline"} disabled>
+                            {slot}
+                          </Button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             </div>
           </div>

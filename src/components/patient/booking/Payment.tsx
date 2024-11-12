@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { CircleArrowUp, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
@@ -68,6 +68,7 @@ const PaymentForm = ({
       email: patient.email,
       medicalHistory: [],
       doctorId: selectedDoctor?._id || "",
+      doctorName: selectedDoctor?.fullName || "",
     };
     try {
       const response = await axios.post(
@@ -195,16 +196,19 @@ const PaymentForm = ({
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-fit"
+          className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           onClick={() => handleBooking()}
         >
           {isLoading ? (
             <>
+              Đang xử lý
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Đang xử lý...
             </>
           ) : (
-            "Đăng ký khám"
+            <>
+              Đăng ký khám
+              <CircleArrowUp className="w-4 h-4" />
+            </>
           )}
         </Button>
       </div>

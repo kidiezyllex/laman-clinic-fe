@@ -5,10 +5,10 @@ import {
   PhoneIcon,
   MailIcon,
   UserIcon,
-  Trash2Icon,
-  PencilIcon,
   Dog,
   Cat,
+  Trash2,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -122,23 +122,23 @@ export default function PatientProfile() {
             </div>
           </div>
           <div
-            className={showUpdateForm ? "hidden" : "flex justify-end space-x-4"}
+            className={
+              showUpdateForm
+                ? "hidden"
+                : "flex flex-row justify-end gap-4 items-end"
+            }
           >
-            <Button
-              variant="destructive"
-              className="flex items-center space-x-2"
-              onClick={() => setIsAlertOpen(true)}
-            >
-              <Trash2Icon className="w-4 h-4" />
-              <span>Xoá</span>
+            <Button variant="destructive" onClick={() => setIsAlertOpen(true)}>
+              Xoá
+              <Trash2 className="w-4 h-4" />
             </Button>
             <Button
               variant="outline"
-              className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
               onClick={() => setShowUpdateForm(true)}
             >
-              <PencilIcon className="w-4 h-4" />
-              <span>Cập nhật</span>
+              Cập nhật
+              <ArrowUpFromLine className="w-4 h-4" />
             </Button>
           </div>
         </>

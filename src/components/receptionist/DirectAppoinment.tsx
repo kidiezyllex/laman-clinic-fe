@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import {
+  ArrowUpFromLine,
   Calendar,
   CalendarIcon,
   Cat,
@@ -15,6 +16,7 @@ import {
   Phone,
   SearchIcon,
   User,
+  X,
 } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
@@ -190,10 +192,11 @@ export default function DirectAppoinment() {
             </div>
             <div className="flex flex-row gap-2">
               <Button
-                className="w-fit bg-blue-500 hover:bg-blue-600"
+                className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreatePatient(patient)}
               >
-                <CalendarIcon className="mr-2 h-4 w-4" /> Tạo ca khám
+                Tạo ca khám
+                <CalendarIcon className="mr-2 h-4 w-4" />
               </Button>
             </div>
           </Card>
@@ -306,17 +309,28 @@ export default function DirectAppoinment() {
             </div>
           </div>
           <DialogFooter className="flex-grow items-end mr-4">
-            <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? "Hủy" : "Chỉnh sửa"}
+            <Button
+              variant="destructive"
+              onClick={() => setIsDialogOpen(false)}
+            >
+              Huỷ
+              <X className="w-4 h-4" />
             </Button>
-            <Button onClick={handleSubmit} disabled={isLoading}>
+            <Button
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+            >
               {isLoading ? (
                 <>
+                  Đang xử lý
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Đang xử lý...
                 </>
               ) : (
-                "Xác nhận"
+                <>
+                  Tạo ca khám
+                  <ArrowUpFromLine className="mr-2 h-4 w-4" />
+                </>
               )}
             </Button>
           </DialogFooter>

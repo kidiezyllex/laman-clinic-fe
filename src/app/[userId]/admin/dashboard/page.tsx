@@ -11,20 +11,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ViewAppointment from "@/components/doctor/ViewAppoinment";
 import DoctorProfile from "@/components/doctor/DoctorProfile";
 import { useToast } from "@/hooks/use-toast";
-import AccountManagement from "@/components/admin/AccountManagement";
+import AccountsManagement from "@/components/admin/AccountsManagement";
+import DoctorsManagement from "@/components/admin/DoctorsManagement";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("accounts");
+  const [activeSection, setActiveSection] = useState("doctors");
   const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {
       case "accounts":
-        return <AccountManagement />;
+        return <AccountsManagement />;
       case "profile":
         return <DoctorProfile />;
+      case "doctors":
+        return <DoctorsManagement />;
       // case "notification":
       // return <Notification />;
       default:
@@ -57,6 +59,10 @@ export default function Page() {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
+                <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
+                  <Users className="h-4 w-4" />
+                  Quản lý
+                </div>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("accounts")}
@@ -66,8 +72,18 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <Users className="h-4 w-4" />
-                  QL Tài khoản
+                  <p className="ml-7">Tài khoản</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("doctors")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "doctors"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <p className="ml-7">Bác sĩ</p>
                 </Link>
                 <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
                   <CircleCheck className="h-4 w-4" />

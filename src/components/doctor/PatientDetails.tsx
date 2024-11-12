@@ -227,11 +227,12 @@ export default function PatientDetails({
           title: "Lỗi!",
           description: "Vui lòng nhập đầy đủ Yêu cầu xét nghiệm!",
         });
+      } else {
+        const res3 = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
+          payload
+        );
       }
-      const res3 = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
-        payload
-      );
     } catch (error) {
       console.error(error);
     } finally {
@@ -349,7 +350,7 @@ export default function PatientDetails({
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment._id + "",
+        patientId: selectedAppointment?.patientId._id + "",
         appointmentDateByPatient: selectedDate,
         specialization: selectedAppointment?.specialization,
         fullName: selectedAppointment.patientId.fullName,
@@ -362,11 +363,18 @@ export default function PatientDetails({
         doctorId: doctorId,
         reason: reason,
       };
-      console.log(payload);
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
-        payload
-      );
+      if (reason.trim() === "") {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: "Vui lòng nhập đầy đủ Thông tin tái khám!",
+        });
+      } else {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
+          payload
+        );
+      }
     } catch (error) {
       console.error(error);
     } finally {

@@ -38,8 +38,8 @@ export default function PrescriptionRequest() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
-        // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
+        // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/get-list-prescriptions` //api này có connect với redis
       );
       // setPrescriptions(
       //   response.data.sort(
@@ -48,7 +48,7 @@ export default function PrescriptionRequest() {
       //   )
       // );
       setPrescriptions(
-        response.data.filter(
+        response.data.data.filter(
           (item: { status: string }) => item.status === "Scheduled"
         )
       );
@@ -182,7 +182,7 @@ export default function PrescriptionRequest() {
                         </TableCell>
                       )}
                     <TableCell>{medication.medicationName}</TableCell>
-                    <TableCell>{medication.dose}</TableCell>
+                    <TableCell>{medication.dosage}</TableCell>
                     <TableCell>{medication.quantity}</TableCell>
                     <TableCell>{medication.price}</TableCell>
                     <TableCell className="w-[35%]">
@@ -205,7 +205,7 @@ export default function PrescriptionRequest() {
                 variant={"outline"}
                 className={
                   showCheckboxes.id === prescription._id &&
-                  showCheckboxes.isShow
+                    showCheckboxes.isShow
                     ? "hidden"
                     : ""
                 }
@@ -214,7 +214,7 @@ export default function PrescriptionRequest() {
               </Button>
 
               {showCheckboxes.id === prescription._id &&
-              showCheckboxes.isShow ? (
+                showCheckboxes.isShow ? (
                 <Button
                   variant={"destructive"}
                   onClick={() => {
@@ -275,7 +275,7 @@ export default function PrescriptionRequest() {
 
             {/* Lịch sử bệnh lý */}
             {selectedPatientId.id === prescription._id &&
-            selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
+              selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
               <p className="text-slate-500 text-sm">
                 Chưa có lịch sử khám bệnh
               </p>

@@ -49,7 +49,10 @@ export default function Page() {
       );
       const roomN = response.data.roomNumber;
       if (roomN.toString() === "000") setShowUpdateRNForm(true);
-      else setShowUpdateRNForm(false);
+      else {
+        setRoomNumber(response.data.roomNumber);
+        setShowUpdateRNForm(false);
+      }
     };
     fetchData();
   }, [showUpdateRNForm]);
@@ -127,11 +130,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("appoinments")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
-                    activeSection === "appoinments"
-                      ? "bg-muted text-blue-500 hover:text-blue-700"
-                      : "text-slate-500"
-                  }`}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${activeSection === "appoinments"
+                    ? "bg-muted text-blue-500 hover:text-blue-700"
+                    : "text-slate-500"
+                    }`}
                 >
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
@@ -139,7 +141,7 @@ export default function Page() {
                 <div
                   className={
                     activeSection === "completedApt" ||
-                    activeSection === "completedSv"
+                      activeSection === "completedSv"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
                       : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
                   }
@@ -150,33 +152,30 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("completedApt")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completedApt"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${activeSection === "completedApt"
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground"
+                    }`}
                 >
                   <p className="ml-7">Ca khám</p>
                 </Link>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("completedSv")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completedSv"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${activeSection === "completedSv"
+                    ? "bg-muted text-primary"
+                    : "text-muted-foreground"
+                    }`}
                 >
                   <p className="ml-7">Dịch vụ</p>
                 </Link>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
-                    activeSection === "profile"
-                      ? "bg-muted text-blue-500 hover:text-blue-700"
-                      : "text-slate-500"
-                  }`}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${activeSection === "profile"
+                    ? "bg-muted text-blue-500 hover:text-blue-700"
+                    : "text-slate-500"
+                    }`}
                 >
                   <User className="h-4 w-4" />
                   Tài khoản

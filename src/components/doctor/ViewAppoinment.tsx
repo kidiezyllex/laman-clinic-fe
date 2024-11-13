@@ -32,6 +32,7 @@ export default function ViewAppointment({
 }) {
   const { toast } = useToast();
   // state
+  console.log(roomNumber);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
@@ -43,7 +44,8 @@ export default function ViewAppointment({
   const [testType, setTestType] = useState<string[]>([]);
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
-
+  const pathname = usePathname();
+  const doctorId = pathname.split("/")[1];
   // Chi tiết lịch hẹn
   const openAppointmentDetails = (appointment: Appointment) => {
     setSelectedAppointment(appointment);
@@ -56,14 +58,21 @@ export default function ViewAppointment({
       .map((test) => test.testName);
     setTestType(selectedTestNames);
   }, [selectedTests]);
-
   // Fecth Data
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        if (roomNumber !== "") {
+        // Lấy roomN của bác sĩ trong data
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+        );
+        const roomN = response.data.roomNumber;
+        console.log(roomN);
+        console.log(response.data);
+        if (roomN.toString().trim() !== "000") {
+
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${roomNumber}`
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
           );
           setAppointments(response.data);
         } else {
@@ -78,7 +87,7 @@ export default function ViewAppointment({
     };
 
     fetchAppointments();
-  }, []);
+  }, [roomNumber]);
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <div className="flex justify-between items-center mb-2">
@@ -140,20 +149,19 @@ export default function ViewAppointment({
                     )}
                   </div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
-                      isSameDay(day, new Date())
-                        ? "bg-blue-500 text-white"
-                        : "bg-secondary text-foreground"
-                    }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
+                      ? "bg-blue-500 text-white"
+                      : "bg-secondary text-foreground"
+                      }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 p-2 ">
                   {appointments
-                    .filter((appointment) =>
+                    ?.filter((appointment) =>
                       isSameDay(
-                        parseISO((appointment as any).appointmentDate),
+                        parseISO((appointment as any)?.appointmentDate),
                         day
                       )
                     )

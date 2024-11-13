@@ -67,19 +67,13 @@ export default function ViewAppointment({
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
         );
         const roomN = response.data.roomNumber;
-        console.log(roomN);
-        console.log(response.data);
         if (roomN.toString().trim() !== "000") {
-
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
           );
           setAppointments(response.data);
         } else {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`
-          );
-          setAppointments(response.data);
+          setAppointments([]);
         }
       } catch (err) {
         console.log(err + "");
@@ -149,45 +143,47 @@ export default function ViewAppointment({
                     )}
                   </div>
                   <div
-                    className={`w-8 h-6 flex justify-center items-center rounded-md ${isSameDay(day, new Date())
-                      ? "bg-blue-500 text-white"
-                      : "bg-secondary text-foreground"
-                      }`}
+                    className={`w-8 h-6 flex justify-center items-center rounded-md ${
+                      isSameDay(day, new Date())
+                        ? "bg-blue-500 text-white"
+                        : "bg-secondary text-foreground"
+                    }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
                   </div>
                 </div>
                 <div className="flex flex-col gap-3 p-2 ">
-                  {appointments
-                    ?.filter((appointment) =>
-                      isSameDay(
-                        parseISO((appointment as any)?.appointmentDate),
-                        day
+                  {appointments.length !== 0 &&
+                    appointments
+                      ?.filter((appointment) =>
+                        isSameDay(
+                          parseISO((appointment as any)?.appointmentDate),
+                          day
+                        )
                       )
-                    )
-                    .map((appointment, index) => (
-                      <div
-                        key={(appointment as any).patientId + index}
-                        className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
-                        onClick={() => openAppointmentDetails(appointment)}
-                      >
-                        {appointment.patientId.gender === "nam" ? (
-                          <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
-                            <Dog className="text-blue-500" />
-                          </div>
-                        ) : (
-                          <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
-                            <Cat className="text-pink-500" />
-                          </div>
-                        )}
-                        <p className="text-xs font-semibold text-center">
-                          {appointment.patientId.fullName}
-                        </p>
-                        <p className="text-xs font-semibold text-center text-slate-500">
-                          Lý do: {appointment.reason}
-                        </p>
-                      </div>
-                    ))}
+                      .map((appointment, index) => (
+                        <div
+                          key={(appointment as any).patientId + index}
+                          className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
+                          onClick={() => openAppointmentDetails(appointment)}
+                        >
+                          {appointment.patientId.gender === "nam" ? (
+                            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                              <Dog className="text-blue-500" />
+                            </div>
+                          ) : (
+                            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                              <Cat className="text-pink-500" />
+                            </div>
+                          )}
+                          <p className="text-xs font-semibold text-center">
+                            {appointment.patientId.fullName}
+                          </p>
+                          <p className="text-xs font-semibold text-center text-slate-500">
+                            Lý do: {appointment.reason}
+                          </p>
+                        </div>
+                      ))}
                 </div>
               </div>
             ))}

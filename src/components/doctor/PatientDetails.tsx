@@ -216,7 +216,7 @@ export default function PatientDetails({
       setIsLoading(true);
       const payload = {
         testTypes: testTypes,
-        patientId: selectedAppointment?.patientId._id,
+        patientId: selectedAppointment?.patientId,
         doctorId: doctorId,
         requestDate: new Date(),
         reason: reasonRequestTest,
@@ -256,7 +256,7 @@ export default function PatientDetails({
       setIsLoading(true);
       // Lấy thông tin medicalHistory trước đó
       const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId._id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`
       );
       const payload = {
         medicalHistory: [
@@ -275,13 +275,13 @@ export default function PatientDetails({
       };
       // Cập nhật vào MedicalHistory của bệnh nhân
       const response3 = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId._id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`,
         payload
       );
 
       // Tạo 1 Diagnosis mới
       const diagnosisPayload = {
-        patientId: selectedAppointment?.patientId?._id,
+        patientId: selectedAppointment?.patientId,
         doctorId: doctorId,
         disease:
           formData.diagnosis +
@@ -301,7 +301,7 @@ export default function PatientDetails({
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
         {
           roomNumber: roomNumber,
-          patientId: selectedAppointment?.patientId._id,
+          patientId: selectedAppointment?.patientId,
           doctorId: doctorId,
         }
       );
@@ -335,7 +335,7 @@ export default function PatientDetails({
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?.patientId._id,
+        patientId: selectedAppointment?.patientId,
         doctorId: doctorId,
         medications: rows,
         dateIssued: new Date(),
@@ -367,15 +367,15 @@ export default function PatientDetails({
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?.patientId._id + "",
+        patientId: selectedAppointment?.patientId + "",
         appointmentDateByPatient: selectedDate,
         specialization: selectedAppointment?.specialization,
-        fullName: selectedAppointment.patientId.fullName,
-        dateOfBirth: selectedAppointment.patientId.dateOfBirth || new Date(),
-        gender: selectedAppointment.patientId.gender || "",
-        address: selectedAppointment.patientId.address,
-        phone: selectedAppointment.patientId.phone || "",
-        email: selectedAppointment.patientId.email,
+        fullName: selectedAppointment.fullName,
+        dateOfBirth: selectedAppointment.dateOfBirth || new Date(),
+        gender: selectedAppointment.gender || "",
+        address: selectedAppointment.address,
+        phone: selectedAppointment.phone || "",
+        email: selectedAppointment.email,
         doctorId: doctorId,
         reason: reason,
       };
@@ -414,8 +414,7 @@ export default function PatientDetails({
           {selectedAppointment && (
             <div className="flex flex-col gap-4">
               <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
-                {selectedAppointment?.patientId?.gender?.toLowerCase() ===
-                "male" ? (
+                {selectedAppointment?.gender?.toLowerCase() === "male" ? (
                   <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border-2 border-blue-500">
                     <Dog className="text-blue-500" />
                   </div>
@@ -426,19 +425,18 @@ export default function PatientDetails({
                 )}
                 <div>
                   <p className="text-base font-semibold ">
-                    {selectedAppointment?.patientId?.gender?.toLowerCase() ===
-                    "male" ? (
+                    {selectedAppointment?.gender?.toLowerCase() === "male" ? (
                       <p className="text-blue-500">
-                        {selectedAppointment?.patientId?.fullName}
+                        {selectedAppointment?.fullName}
                       </p>
                     ) : (
                       <p className="text-pink-500">
-                        {selectedAppointment?.patientId?.fullName}
+                        {selectedAppointment?.fullName}
                       </p>
                     )}
                   </p>
                   <p className="text-slate-500">
-                    Mã bệnh nhân: {selectedAppointment?.patientId?._id}
+                    Mã bệnh nhân: {selectedAppointment?.patientId}
                   </p>
                 </div>
               </div>
@@ -448,16 +446,14 @@ export default function PatientDetails({
                   <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Ngày sinh:{" "}
-                      {formatDate(selectedAppointment?.patientId?.dateOfBirth)}
+                      Ngày sinh: {formatDate(selectedAppointment?.dateOfBirth)}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
                       Giới tính:{" "}
-                      {selectedAppointment?.patientId?.gender?.toLowerCase() ===
-                      "female"
+                      {selectedAppointment?.gender?.toLowerCase() === "female"
                         ? "Nữ"
                         : "Nam"}
                     </span>
@@ -465,19 +461,19 @@ export default function PatientDetails({
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Địa chỉ: {selectedAppointment?.patientId?.address}
+                      Địa chỉ: {selectedAppointment?.address}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Phone className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Số ĐT: {selectedAppointment?.patientId?.phone}
+                      Số ĐT: {selectedAppointment?.phone}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
-                      Email: {selectedAppointment?.patientId?.email}
+                      Email: {selectedAppointment?.email}
                     </span>
                   </div>
                 </div>
@@ -503,8 +499,7 @@ export default function PatientDetails({
               <div className="border rounded-md p-4 mr-4">
                 <div className="flex flex-col gap-1 w-full">
                   <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
-                  {selectedAppointment?.patientId?.medicalHistory?.length ===
-                  0 ? (
+                  {selectedAppointment?.medicalHistory?.length === 0 ? (
                     <p className="text-slate-500 text-sm">
                       Chưa có lịch sử khám bệnh
                     </p>
@@ -521,7 +516,7 @@ export default function PatientDetails({
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {selectedAppointment?.patientId?.medicalHistory?.map(
+                        {selectedAppointment?.medicalHistory?.map(
                           (history: any, index) => (
                             <TableRow key={history.diagnosisDate}>
                               <TableCell>{index + 1}</TableCell>

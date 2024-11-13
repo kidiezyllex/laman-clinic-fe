@@ -11,7 +11,7 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { Cat, ChevronLeft, ChevronRight, Dog } from "lucide-react";
+import { Cat, ChevronLeft, ChevronRight, Dog, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -32,7 +32,6 @@ export default function ViewAppointment({
 }) {
   const { toast } = useToast();
   // state
-  console.log(roomNumber);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
@@ -47,8 +46,11 @@ export default function ViewAppointment({
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
   // Chi tiết lịch hẹn
-  const openAppointmentDetails = (appointment: Appointment) => {
-    setSelectedAppointment(appointment);
+  const openAppointmentDetails = async (appointment: Appointment) => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${appointment.patientId}`
+    );
+    setSelectedAppointment({ ...response.data, ...appointment });
     setIsOpen(true);
   };
 
@@ -68,10 +70,21 @@ export default function ViewAppointment({
         );
         const roomN = response.data.roomNumber;
         if (roomN.toString().trim() !== "000") {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-          );
-          setAppointments(response.data);
+          // const response = await axios.get(
+          //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
+          // );
+          setAppointments([
+            {
+              patientId: "BN-5C662W",
+              appointmentDate: "2024-11-13T02:00:00.000Z",
+              reason: "Kiểm tra định kỳ",
+              status: "Scheduled",
+              specialization: "Cardiology",
+              priority: false,
+              _id: "CH-K4E64V",
+            },
+          ]);
+          // setAppointments(response.data);
         } else {
           setAppointments([]);
         }
@@ -164,22 +177,16 @@ export default function ViewAppointment({
                       .map((appointment, index) => (
                         <div
                           key={(appointment as any).patientId + index}
-                          className="rounded-sm border p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
+                          className="rounded-sm border border-slate-400 p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
                           onClick={() => openAppointmentDetails(appointment)}
                         >
-                          {appointment.patientId.gender === "nam" ? (
-                            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
-                              <Dog className="text-blue-500" />
-                            </div>
-                          ) : (
-                            <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
-                              <Cat className="text-pink-500" />
-                            </div>
-                          )}
+                          <div className="h-12 w-12 border border-slate-400 rounded-full flex flex-row justify-center items-center bg-slate-200">
+                            <User className="text-slate-500" />
+                          </div>
                           <p className="text-xs font-semibold text-center">
-                            {appointment.patientId.fullName}
+                            {appointment.patientId}
                           </p>
-                          <p className="text-xs font-semibold text-center text-slate-500">
+                          <p className="text-xs font-semibold text-center text-slate-700 dark:text-slate-400">
                             Lý do: {appointment.reason}
                           </p>
                         </div>

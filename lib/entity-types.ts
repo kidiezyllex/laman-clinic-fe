@@ -52,19 +52,21 @@ export interface MedicalHistory {
 }
 export interface Appointment {
   _id: string;
-  patientId: Patient;
+  patientId: string;
   appointmentDate: string;
   reason: string;
+  status: string;
   specialization: string;
-  email: string;
-  fullName: string;
-  gender: string;
-  phone: string;
-  medicalHistory: MedicalHistory[];
   priority: boolean;
+  fullName?: string;
   dateOfBirth?: Date;
-  address: string;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  medicalHistory?: MedicalHistory[];
 }
+
 export interface CompletedAppointment {
   _id: string;
   patientId: string;

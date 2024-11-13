@@ -125,20 +125,25 @@ export default function ViewAppointment({
           </Button>
         </div>
       </div>
-
-      {/* Hiển thị bệnh nhân chờ khám trên lịch */}
-      <div className="border rounded-md h-full ">
+      <div className="border rounded-md h-full">
         <div className="inline-block min-w-full h-full">
           <div className="w-full grid grid-cols-7 h-full">
             {days.map((day, index) => (
-              <div key={index} className="flex flex-col gap-2 border-r-2">
+              <div
+                key={index}
+                className="flex flex-col gap-2 border-r-2 last:border-r-0"
+              >
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
-                  <div className="font-semibold">{format(day, "EEE")}</div>
+                  <div className="font-semibold text-sm">
+                    {Intl.DateTimeFormat("vi-VN", { weekday: "short" }).format(
+                      day
+                    )}
+                  </div>
                   <div
                     className={`w-8 h-6 flex justify-center items-center rounded-md ${
                       isSameDay(day, new Date())
                         ? "bg-blue-500 text-white"
-                        : "text-foreground"
+                        : "bg-secondary text-foreground"
                     }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>

@@ -127,16 +127,23 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("appoinments")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
                     activeSection === "appoinments"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
                 </Link>
-                <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
+                <div
+                  className={
+                    activeSection === "completedApt" ||
+                    activeSection === "completedSv"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
+                  }
+                >
                   <CircleCheck className="h-4 w-4" />
                   Hoàn thành
                 </div>
@@ -153,9 +160,9 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("completed")}
+                  onClick={() => setActiveSection("completedSv")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completed"
+                    activeSection === "completedSv"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
@@ -164,23 +171,11 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "notification"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
-                </Link>
-                <Link
-                  href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
                     activeSection === "profile"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <User className="h-4 w-4" />

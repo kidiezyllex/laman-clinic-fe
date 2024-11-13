@@ -21,7 +21,7 @@ import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("completed");
+  const [activeSection, setActiveSection] = useState("prescriptions");
 
   const renderMainContent = () => {
     switch (activeSection) {
@@ -66,7 +66,10 @@ export default function Page() {
               <nav className="grid items-start px-2 text-sm lg:px-4">
                 <div
                   className={
-                    "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                    activeSection === "prescriptions" ||
+                    activeSection === "visitor"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
                   }
                 >
                   <Pill className="h-4 w-4" />
@@ -96,7 +99,10 @@ export default function Page() {
                 </Link>
                 <div
                   className={
-                    "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                    activeSection === "invoices" ||
+                    activeSection === "completed"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
                   }
                 >
                   <Database className="h-4 w-4" />
@@ -104,9 +110,9 @@ export default function Page() {
                 </div>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("invoice")}
+                  onClick={() => setActiveSection("invoices")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "invoice"
+                    activeSection === "invoices"
                       ? "bg-muted text-primary"
                       : "text-muted-foreground"
                   }`}
@@ -126,11 +132,11 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("manage")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "manage"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                  onClick={() => setActiveSection("warehouse")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
+                    activeSection === "warehouse"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <BriefcaseMedical className="h-4 w-4" />
@@ -139,8 +145,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("report")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 text-blue-500 font-semibold transition-all hover:text-primary ${
-                    activeSection === "report" ? "bg-muted" : ""
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
+                    activeSection === "report"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <Newspaper className="h-4 w-4" />
@@ -149,8 +157,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 text-blue-500 font-semibold transition-all hover:text-primary ${
-                    activeSection === "profile" ? "bg-muted" : ""
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
+                    activeSection === "profile"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <User className="h-4 w-4" />

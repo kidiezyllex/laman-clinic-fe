@@ -58,7 +58,13 @@ export default function Page() {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
-                <div className="flex items-center gap-3 rounded-md px-3 py-2">
+                <div
+                  className={
+                    activeSection === "online" || activeSection === "offline"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
+                  }
+                >
                   <CalendarRange className="h-4 w-4" />
                   Lịch hẹn
                 </div>
@@ -87,10 +93,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
                     activeSection === "notification"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <Bell className="h-4 w-4" />
@@ -99,10 +105,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
                     activeSection === "profile"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
                   <User className="h-4 w-4" />

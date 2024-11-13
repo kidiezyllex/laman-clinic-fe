@@ -79,6 +79,7 @@ export default function Page() {
               (data as any)?.data?.email
             }`
           );
+          console.log(res);
           router.push(`/${res.data._id}/pharmacist/dashboard`);
           localStorage.setItem("currentId", res.data._id);
         } else if (data.data?.role === "laboratory-technician") {

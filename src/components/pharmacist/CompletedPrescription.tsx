@@ -96,7 +96,7 @@ export default function CompletedPrescription() {
                 {prescription.medications.map((medication) => (
                   <TableRow key={medication._id + ""}>
                     <TableCell>{medication.medicationName}</TableCell>
-                    <TableCell>{medication.dose}</TableCell>
+                    <TableCell>{medication.dosage}</TableCell>
                     <TableCell>{medication.quantity}</TableCell>
                     <TableCell>{medication.price}</TableCell>
                     <TableCell className="w-[35%]">

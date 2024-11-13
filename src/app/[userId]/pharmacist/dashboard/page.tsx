@@ -21,7 +21,7 @@ import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("prescriptions");
+  const [activeSection, setActiveSection] = useState("visitor");
 
   const renderMainContent = () => {
     switch (activeSection) {
@@ -67,7 +67,8 @@ export default function Page() {
                 <div
                   className={
                     activeSection === "prescriptions" ||
-                    activeSection === "visitor"
+                    activeSection === "visitor" ||
+                    activeSection === "completed"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
                       : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
                   }
@@ -97,6 +98,17 @@ export default function Page() {
                 >
                   <p className="ml-7">Khách vãng lai</p>
                 </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("completed")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "completed"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <p className="ml-7">Hoàn thành</p>
+                </Link>
                 <div
                   className={
                     activeSection === "invoices" ||
@@ -118,17 +130,6 @@ export default function Page() {
                   }`}
                 >
                   <p className="ml-7">Hoá đơn</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("completed")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completed"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <p className="ml-7">Đơn hoàn thành</p>
                 </Link>
                 <Link
                   href="#"

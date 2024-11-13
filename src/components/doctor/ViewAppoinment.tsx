@@ -70,21 +70,10 @@ export default function ViewAppointment({
         );
         const roomN = response.data.roomNumber;
         if (roomN.toString().trim() !== "000") {
-          // const response = await axios.get(
-          //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-          // );
-          setAppointments([
-            {
-              patientId: "BN-5C662W",
-              appointmentDate: "2024-11-13T02:00:00.000Z",
-              reason: "Kiểm tra định kỳ",
-              status: "Scheduled",
-              specialization: "Cardiology",
-              priority: false,
-              _id: "CH-K4E64V",
-            },
-          ]);
-          // setAppointments(response.data);
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
+          );
+          setAppointments(response.data);
         } else {
           setAppointments([]);
         }

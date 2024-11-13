@@ -1,6 +1,4 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -15,35 +13,30 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { formatDate } from "../../../../lib/utils";
 import { PatientPrescriptionInvoiceProps } from "../../../../lib/entity-types";
+import { FileImage, FileText } from "lucide-react";
 
 export default function PatientPrescriptionInvoice({
   prescription,
   newMedication,
 }: PatientPrescriptionInvoiceProps) {
-  const [isLoading, setIsLoading] = useState(false);
-
   const exportToPDF = async () => {
-    setIsLoading(true);
     try {
       const input = document.getElementById("preview");
       if (!input) throw new Error("Preview element not found");
 
       const canvas = await html2canvas(input);
       const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("landscape");
+      const pdf = new jsPDF("portrait");
       const imgWidth = pdf.internal.pageSize.getWidth();
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save("export.pdf");
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   const exportToImage = async () => {
-    setIsLoading(true);
     try {
       const input = document.getElementById("preview");
       if (!input) throw new Error("Preview element not found");
@@ -55,18 +48,16 @@ export default function PatientPrescriptionInvoice({
       link.click();
     } catch (err) {
       console.error(err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   return (
     <div>
-      <Card
-        className="p-6 m-4 dark:bg-secondary dark:text-slate-400"
+      <div
+        className="p-6 m-4 my-6 dark:bg-white dark:text-slate-950 rounded-md"
         id="preview"
       >
-        <div className="border border-slate-500">
+        <div className="border border-slate-950">
           <div className="flex flex-row gap-16 items-center justify-center h-full my-4">
             <div className="w-32 h-32 relative z-0 rounded-full border-4 border-blue-500">
               <Image
@@ -102,7 +93,7 @@ export default function PatientPrescriptionInvoice({
               </p>
             </div>
           </div>
-          <Separator className="bg-slate-500"></Separator>
+          <Separator className="bg-slate-950"></Separator>
           <div className="p-4 flex flex-col gap-2">
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
               Đơn vị bán hàng (Seller): CÔNG TY TRÁCH NHIỆM HỮU HẠN LAMAN CLINIC
@@ -124,7 +115,7 @@ export default function PatientPrescriptionInvoice({
               Ngân hàng (Bank): Ngân hàng BIDV Đầu tư và Phát triển Việt Nam
             </p>
           </div>
-          <Separator className="bg-slate-500"></Separator>
+          <Separator className="bg-slate-950"></Separator>
           <div className="p-4 flex flex-col gap-2">
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
               Họ tên người mua (CustomerName):
@@ -136,26 +127,37 @@ export default function PatientPrescriptionInvoice({
               Mã số thuế (Tax code):
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Địa chỉ (Address): 2012 Phạm Huy Thông, Phường 17, Gò Vấp, T.P Hồ
-              Chí Minh
+              Địa chỉ (Address):
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Hình thức thanh toán (Payment Method): TM
+              Hình thức thanh toán (Payment Method): Tiền mặt
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
               Ghi chú (Note):
             </p>
           </div>
-          <Separator className="bg-slate-500"></Separator>
-          <Table>
+          <Separator className="bg-slate-950"></Separator>
+          <Table className="pointer-events-none">
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Tên thuốc</TableHead>
-                <TableHead>Liều lượng</TableHead>
-                <TableHead>Số lượng</TableHead>
-                <TableHead>Đơn giá (VNĐ)</TableHead>
-                <TableHead>Thành tiền (VNĐ)</TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  STT
+                </TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  Tên thuốc
+                </TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  Liều lượng
+                </TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  Số lượng
+                </TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  Đơn giá (VNĐ)
+                </TableHead>
+                <TableHead className="text-slate-950 dark:text-slate-950">
+                  Thành tiền (VNĐ)
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -164,11 +166,14 @@ export default function PatientPrescriptionInvoice({
                   <TableRow key={medication._id + ""}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{medication?.medicationName}</TableCell>
-                    <TableCell>{medication?.dose}</TableCell>
+                    <TableCell>{medication?.dosage}</TableCell>
                     <TableCell>{medication?.quantity}</TableCell>
                     <TableCell>{medication?.price}</TableCell>
                     <TableCell>
-                      {medication.price * medication.quantity}
+                      {(medication.price * medication.quantity).toLocaleString(
+                        "vi-VN"
+                      )}{" "}
+                      VNĐ
                     </TableCell>
                   </TableRow>
                 ))}
@@ -177,7 +182,7 @@ export default function PatientPrescriptionInvoice({
                   <TableRow key={medication._id + ""}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{medication?.medicationName}</TableCell>
-                    <TableCell>{medication?.dose}</TableCell>
+                    <TableCell>{medication?.dosage}</TableCell>
                     <TableCell>{medication?.quantity}</TableCell>
                     <TableCell>{medication?.price}</TableCell>
                     <TableCell>
@@ -187,7 +192,8 @@ export default function PatientPrescriptionInvoice({
                 ))}
             </TableBody>
           </Table>
-          <p className="font-bold m-4">
+          <Separator className="bg-slate-950"></Separator>
+          <p className="font-bold m-4 self-end text-end">
             Tổng cộng:{" "}
             {newMedication.length !== 0 &&
               newMedication
@@ -200,13 +206,21 @@ export default function PatientPrescriptionInvoice({
             VNĐ
           </p>
         </div>
-      </Card>
+      </div>
       <div className="flex justify-end m-4 gap-3">
-        <Button onClick={exportToPDF} disabled={isLoading}>
+        <Button
+          onClick={exportToPDF}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
           Xuất File PDF
+          <FileText className="mr-2 h-4 w-4" />
         </Button>
-        <Button onClick={exportToImage} disabled={isLoading}>
+        <Button
+          onClick={exportToImage}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
           Xuất File Ảnh
+          <FileImage className="mr-2 h-4 w-4" />
         </Button>
       </div>
     </div>

@@ -14,7 +14,15 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Cat, Dog, SearchIcon } from "lucide-react";
+import {
+  Cat,
+  Dog,
+  Pill,
+  Plus,
+  Receipt,
+  RotateCcw,
+  SearchIcon,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -32,7 +40,7 @@ import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoic
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
-  dose: z.string().min(1, "Liều lượng không được để trống"),
+  dosage: z.string().min(1, "Liều lượng không được để trống"),
   quantity: z.coerce.number().min(1, "Số lượng phải lớn hơn 0"),
   instructions: z.string().optional(),
 });
@@ -51,17 +59,16 @@ export default function Visitor() {
   const { toast } = useToast();
   const [showInvoice, setShowInvoice] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedPatientId, setSelectedPatientId] = useState("");
   const [isShow, setIsShow] = useState(false);
   const [patients, setPatients] = useState<Patient[]>([]);
-  const [showCreatePatientProfile, setShowCreatePatientProfile] =
-    useState(false);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
 
   const [rows, setRows] = useState<MedicationRow[]>([
     {
       id: 1,
       medicationName: "",
-      dose: "",
+      dosage: "",
       quantity: 0,
       instructions: "",
       price: 0,
@@ -73,7 +80,7 @@ export default function Visitor() {
       medications: [
         {
           medicationName: "",
-          dose: "",
+          dosage: "",
           quantity: 0,
           instructions: "",
         },
@@ -108,7 +115,7 @@ export default function Visitor() {
     const newRow: MedicationRow = {
       id: rows.length + 1,
       medicationName: "",
-      dose: "",
+      dosage: "",
       quantity: 0,
       price: 0,
       instructions: "",
@@ -133,19 +140,22 @@ export default function Visitor() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
-
       setPatients(response.data);
     };
-
     fetchData();
   }, [searchTerm]);
 
   const handleSearchPatientProfile = () => {
+    const searchTermLower = searchTerm.toLowerCase();
+    if (searchTermLower.toString().trim() === "") {
+      toast({
+        variant: "destructive",
+        title: "Lỗi!",
+        description: "Vui lòng nhập thông tin tìm kiếm!",
+      });
+      return;
+    }
     const filteredP = patients.filter((patient) => {
-      const searchTermLower = searchTerm.toLowerCase();
-      if (searchTermLower === "") {
-        return;
-      }
       return (
         patient.fullName?.toLowerCase().includes(searchTermLower) ||
         (patient.phone && patient.phone.includes(searchTerm)) ||
@@ -156,34 +166,68 @@ export default function Visitor() {
     });
     if (filteredP.length === 0) {
       toast({
-        variant: "default",
+        variant: "destructive",
         title: "Không tìm thấy!",
         description: "Vui lòng Tạo hồ sơ bệnh nhân mới!",
       });
-      setShowCreatePatientProfile(true);
     }
     setFilteredPatients(filteredP);
   };
 
   const handlePatientCardClick = (patient: Patient) => {
+    setSelectedPatientId(patient?._id + "");
     customerInfoForm.setValue("fullName", patient.fullName || "");
     customerInfoForm.setValue("gender", patient.gender || "Male");
     customerInfoForm.setValue("phone", patient.phone || "");
     customerInfoForm.setValue("email", patient.email || "");
   };
 
-  const handleCreatePrescription = () => {
-    if (customerInfoForm.getValues().fullName.trim() !== "") {
-      // Post data khách hàng lên route patient
-      console.log("Customer Information:", customerInfoForm.getValues());
-      // Post
-      console.log("Prescription Information:", form.getValues());
-    } else
+  // Tạo đơn thuốc
+  const handleCreatePrescription = async () => {
+    try {
+      if (customerInfoForm.getValues().fullName.trim() !== "") {
+        const payload = {
+          patientId: selectedPatientId || `BN-VL0000`,
+          doctorId: "BS-VL0000",
+          medications: rows,
+          status: "Completed",
+          dateIssued: new Date(),
+        };
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
+          payload
+        );
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Đã tạo 1 đơn thuốc cho khách vãng lai!",
+        });
+      } else
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: "Vui lòng nhập thông tin khách hàng!",
+        });
+    } catch (err) {
       toast({
         variant: "destructive",
         title: "Thất bại!",
-        description: "Vui lòng nhập thông tin khách hàng!",
+        description: err + "",
       });
+    } finally {
+      setFilteredPatients([]);
+      setRows([
+        {
+          id: 0,
+          medicationName: "",
+          dosage: "",
+          quantity: 0,
+          instructions: "",
+          price: 0,
+        },
+      ]);
+      customerInfoForm.reset();
+    }
   };
 
   return (
@@ -191,7 +235,7 @@ export default function Visitor() {
       <p className="text-base font-semibold text-blue-500">
         DÀNH CHO KHÁCH VÃNG LAI
       </p>
-      <div className="flex flex-col gap-4 border rounded-md p-4">
+      <div className="flex flex-col gap-4 border rounded-md p-4 bg-primary-foreground">
         <h3 className="text-md font-semibold text-blue-500">
           Thông tin khách hàng
         </h3>
@@ -214,11 +258,11 @@ export default function Visitor() {
               Tìm hồ sơ bệnh nhân
             </Button>
           </div>
-          <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+          <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-2 mb-4">
             {filteredPatients.map((patient) => (
               <Card
                 key={patient?._id + ""}
-                className="flex flex-col gap-6 justify-center items-center p-4"
+                className="flex flex-col gap-6 justify-center items-center p-4 hover:border-blue-500"
                 onClick={() => handlePatientCardClick(patient)}
               >
                 <div className="flex flex-row gap-2 items-center w-full">
@@ -269,7 +313,8 @@ export default function Visitor() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Giới tính (Nam: &apos;Male&apos;, Nữ: &apos;Female&apos;)
+                      Giới tính (Nam nhập &apos;Male&apos;/ Nữ nhập
+                      &apos;Female&apos;)
                     </FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -277,29 +322,6 @@ export default function Visitor() {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={customerInfoForm.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Giới tính</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Chọn giới tính" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Male">Nam</SelectItem>
-                        <SelectItem value="Female">Nữ</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              /> */}
               <FormField
                 control={customerInfoForm.control}
                 name="phone"
@@ -317,7 +339,7 @@ export default function Visitor() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email (Không bắt buộc)</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -328,12 +350,12 @@ export default function Visitor() {
           </Form>
         </div>
       </div>
-      <div className="grid gap-6 md:grid-cols-1">
+      <div className="grid gap-6 md:grid-cols-1 bg-primary-foreground rounded-md">
         <div className="flex flex-col gap-4 border rounded-md p-4">
           <h3 className="text-md font-semibold text-blue-500">Tạo đơn thuốc</h3>
           <Form {...form}>
             <form className="space-y-4">
-              <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md">
+              <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md bg-background">
                 <Label className="align-middle text-center">Tên thuốc</Label>
                 <Label className="align-middle text-center">Liều lượng</Label>
                 <Label className="align-middle text-center">Số lượng</Label>
@@ -342,8 +364,9 @@ export default function Visitor() {
                 </Label>
                 <Label className="align-middle text-center">Hướng dẫn</Label>
               </div>
+
               {rows.map((row) => (
-                <div key={row.id} className="grid grid-cols-5 gap-4">
+                <div key={row.id} className="grid grid-cols-5 gap-2">
                   <Select
                     onValueChange={(value) => {
                       handleSelectMedicationName(value, row.id);
@@ -366,8 +389,10 @@ export default function Visitor() {
                     </SelectContent>
                   </Select>
                   <Input
-                    value={row.dose}
-                    onChange={(e) => updateRow(row.id, "dose", e.target.value)}
+                    value={row.dosage + ""}
+                    onChange={(e) =>
+                      updateRow(row.id, "dosage", e.target.value)
+                    }
                     placeholder="Liều lượng"
                   />
                   <Input
@@ -383,12 +408,12 @@ export default function Visitor() {
                     onChange={(e) => updateRow(row.id, "price", e.target.value)}
                     placeholder="Đơn giá"
                   />
-                  <Textarea
-                    value={row.instructions}
+                  <Input
+                    value={row.instructions + ""}
                     onChange={(e) =>
                       updateRow(row.id, "instructions", e.target.value)
                     }
-                    placeholder="Hướng dẫn (có thể bỏ trống)"
+                    placeholder="Có thể bỏ trống..."
                   />
                 </div>
               ))}
@@ -396,7 +421,7 @@ export default function Visitor() {
           </Form>
         </div>
       </div>
-      <div className="flex flex-row gap-3 w-full justify-end mt-6">
+      <div className="flex flex-row gap-3 w-full justify-end mt-4">
         <Button
           type="button"
           onClick={() => {
@@ -404,7 +429,7 @@ export default function Visitor() {
               {
                 id: 0,
                 medicationName: "",
-                dose: "",
+                dosage: "",
                 quantity: 0,
                 instructions: "",
                 price: 0,
@@ -415,9 +440,9 @@ export default function Visitor() {
           }}
           variant="destructive"
           className={isShow ? "" : "hidden"}
-          // className="self-start "
         >
           Đặt lại
+          <RotateCcw className="w-4 h-4" />
         </Button>
         <Button
           type="button"
@@ -426,6 +451,7 @@ export default function Visitor() {
           className="self-start"
         >
           Thêm dòng
+          <Plus className="w-4 h-4" />
         </Button>
         <Button
           type="button"
@@ -440,23 +466,23 @@ export default function Visitor() {
               });
           }}
           variant="default"
-          className="self-start"
+          className="self-start flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           Xem hoá đơn
+          <Receipt className="h-4 w-4" />
         </Button>
         <Button
           type="button"
           onClick={handleCreatePrescription}
           variant="default"
-          className="self-start"
+          className="self-start flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
         >
           Tạo đơn thuốc
+          <Pill className="h-4 w-4" />
         </Button>
       </div>
       {showInvoice && (
         <div className="border rounded-md">
-          <h3 className="text-md font-semibold text-blue-500 m-4">Hoá đơn</h3>
-
           <PatientPrescriptionInvoice
             prescription={{
               _id: "",

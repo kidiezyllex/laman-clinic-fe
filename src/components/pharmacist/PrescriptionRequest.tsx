@@ -41,12 +41,6 @@ export default function PrescriptionRequest() {
         // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/get-list-prescriptions` //api này có connect với redis
       );
-      // setPrescriptions(
-      //   response.data.sort(
-      //     (a: { dateIssued: Date }, b: { dateIssued: Date }) =>
-      //       new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
-      //   )
-      // );
       setPrescriptions(
         response.data.data.filter(
           (item: { status: string }) => item.status === "Scheduled"
@@ -68,14 +62,6 @@ export default function PrescriptionRequest() {
 
     fetchData();
   }, [selectedPatientId]);
-
-  // const MedicalHistoryById = async () => {
-  //   const response = await axios.get(
-  //     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId}`
-  //   );
-  //   const patient = response.data;
-  //   return <p>{patient}</p>;
-  // };
   const filteredPrescriptions = prescriptions.filter((prescription) => {
     const searchTermLower = searchTerm.toLowerCase();
     return prescription.patientId.toLowerCase().includes(searchTermLower);
@@ -205,7 +191,7 @@ export default function PrescriptionRequest() {
                 variant={"outline"}
                 className={
                   showCheckboxes.id === prescription._id &&
-                    showCheckboxes.isShow
+                  showCheckboxes.isShow
                     ? "hidden"
                     : ""
                 }
@@ -214,7 +200,7 @@ export default function PrescriptionRequest() {
               </Button>
 
               {showCheckboxes.id === prescription._id &&
-                showCheckboxes.isShow ? (
+              showCheckboxes.isShow ? (
                 <Button
                   variant={"destructive"}
                   onClick={() => {
@@ -275,7 +261,7 @@ export default function PrescriptionRequest() {
 
             {/* Lịch sử bệnh lý */}
             {selectedPatientId.id === prescription._id &&
-              selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
+            selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
               <p className="text-slate-500 text-sm">
                 Chưa có lịch sử khám bệnh
               </p>

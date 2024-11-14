@@ -133,16 +133,19 @@ export default function PrescriptionRequest() {
 
   const handleCompletePrescription = async (prescriptionId: string) => {
     try {
-      await axios.patch(
+      await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/${prescriptionId}`,
-        { status: "Completed", dateIssued: new Date() }
+        {
+          status: "Completed",
+          dateIssued: new Date(),
+          medications: newMedication[prescriptionId],
+        }
       );
       toast({
         variant: "default",
         title: "Thành công!",
         description: "Hoàn thành đơn thuốc!",
       });
-      // Update local state to reflect the change
       setPrescriptions((prevPrescriptions) =>
         prevPrescriptions.filter((p) => p._id !== prescriptionId)
       );
@@ -467,54 +470,60 @@ export default function PrescriptionRequest() {
                   Chưa có lịch sử khám bệnh
                 </p>
               ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>
-                        Tên bệnh nhân: {selectedPatientMedicalHistory?.fullName}
-                      </TableHead>
-                      <TableHead>
-                        Giới tính:{" "}
-                        {selectedPatientMedicalHistory?.gender?.toLowerCase() ===
-                        "male"
-                          ? "Nam"
-                          : "Nữ"}
-                      </TableHead>
-                      <TableHead>
-                        Số ĐT: {selectedPatientMedicalHistory?.phone}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>STT</TableHead>
-                      <TableHead>Ngày khám</TableHead>
-                      <TableHead>Tiền sử bệnh</TableHead>
-                      <TableHead>Chẩn đoán bệnh</TableHead>
-                      <TableHead>KQ Xét nghiệm</TableHead>
-                      <TableHead>Phương pháp điều trị</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {selectedPatientMedicalHistory?.medicalHistory?.map(
-                      (history: any, index: number) => (
-                        <TableRow key={history.diagnosisDate}>
-                          <TableCell>{index + 1}</TableCell>
-                          <TableCell>
-                            {formatDate(history?.diagnosisDate)}
-                          </TableCell>
-                          <TableCell>{history.disease.split("_")[0]}</TableCell>
-                          <TableCell>{history.disease.split("_")[1]}</TableCell>
-                          <TableCell>{history.disease.split("_")[2]}</TableCell>
-                          <TableCell>
-                            {history.treatment.split("_")[0] +
-                              history.treatment.split("_")[1]}
-                          </TableCell>
-                        </TableRow>
-                      )
-                    )}
-                  </TableBody>
-                </Table>
+                <div>
+                  <div className="flex flex-row justify-between w-full p-4 border-t border-b bg-primary-foreground">
+                    <p className="text-sm font-semibold">
+                      Tên bệnh nhân: {selectedPatientMedicalHistory?.fullName}
+                    </p>
+                    <p className="text-sm font-semibold">
+                      Giới tính:{" "}
+                      {selectedPatientMedicalHistory?.gender?.toLowerCase() ===
+                      "male"
+                        ? "Nam"
+                        : "Nữ"}
+                    </p>
+                    <p className="text-sm font-semibold">
+                      Số ĐT: {selectedPatientMedicalHistory?.phone}
+                    </p>
+                  </div>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>STT</TableHead>
+                        <TableHead>Ngày khám</TableHead>
+                        <TableHead>Tiền sử bệnh</TableHead>
+                        <TableHead>Chẩn đoán bệnh</TableHead>
+                        <TableHead>KQ Xét nghiệm</TableHead>
+                        <TableHead>Phương pháp điều trị</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedPatientMedicalHistory?.medicalHistory?.map(
+                        (history: any, index: number) => (
+                          <TableRow key={history.diagnosisDate}>
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>
+                              {formatDate(history?.diagnosisDate)}
+                            </TableCell>
+                            <TableCell>
+                              {history.disease.split("_")[0]}
+                            </TableCell>
+                            <TableCell>
+                              {history.disease.split("_")[1]}
+                            </TableCell>
+                            <TableCell>
+                              {history.disease.split("_")[2]}
+                            </TableCell>
+                            <TableCell>
+                              {history.treatment.split("_")[0] +
+                                history.treatment.split("_")[1]}
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               ))}
           </Card>
         ))}

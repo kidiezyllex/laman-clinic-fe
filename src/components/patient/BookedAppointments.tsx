@@ -70,7 +70,7 @@ export default function BookedAppointments() {
               <TableRow>
                 <TableHead>STT</TableHead>
                 <TableHead>Ngày đặt khám</TableHead>
-                <TableHead>Hình thức</TableHead>
+                <TableHead>Đặt lịch theo</TableHead>
                 <TableHead>Chuyên khoa</TableHead>
                 <TableHead>Đặt vào lúc</TableHead>
                 <TableHead>Thao tác</TableHead>

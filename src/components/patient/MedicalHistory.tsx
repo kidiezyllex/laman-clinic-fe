@@ -51,7 +51,9 @@ export default function MedicalHistory() {
               <TableRow>
                 <TableHead>STT</TableHead>
                 <TableHead>Ngày khám</TableHead>
+                <TableHead>Tiền sử bệnh</TableHead>
                 <TableHead>Chẩn đoán bệnh</TableHead>
+                <TableHead>KQ Xét nghiệm</TableHead>
                 <TableHead>Phương pháp điều trị</TableHead>
               </TableRow>
             </TableHeader>
@@ -65,8 +67,10 @@ export default function MedicalHistory() {
                     <TableCell>{history.disease.split("_")[1]}</TableCell>
                     <TableCell>{history.disease.split("_")[2]}</TableCell>
                     <TableCell>
-                      {history.treatment.split("_")[0] +
-                        history.treatment.split("_")[1]}
+                      {history.treatment.split("_")[1] === undefined
+                        ? history.treatment.split("_")[0]
+                        : history.treatment.split("_")[0] +
+                          history.treatment.split("_")[1]}
                     </TableCell>
                   </TableRow>
                 ))}

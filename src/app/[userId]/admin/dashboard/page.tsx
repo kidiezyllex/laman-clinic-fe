@@ -17,7 +17,7 @@ import AccountsManagement from "@/components/admin/AccountsManagement";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("doctors");
+  const [activeSection, setActiveSection] = useState("accounts");
   const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {

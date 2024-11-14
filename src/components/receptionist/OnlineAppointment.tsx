@@ -29,6 +29,7 @@ import {
   formatDate3,
   generateExamination,
   getHoursBetweenDates,
+  renderSpecialty,
 } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
 import { Separator } from "../ui/separator";
@@ -108,43 +109,33 @@ export default function OnlineAppointment() {
         specialization: selectedAppointment?.specialization,
       };
 
-      // Post lịch hẹn khám chính thức
+      // Kafka xử lý
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
         payload
       );
-      if (response.status === 400) {
-        toast({
-          variant: "destructive",
-          title: "Lỗi!",
-          description: response.data.message,
-        });
-      } else if (response.status === 202) {
-        toast({
-          variant: "default",
-          title: "Thành công!",
-          description: response.data.message,
-        });
 
-        // Xoá khỏi lịch hẹn khám tạm
-        const response2 = await axios.delete(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?id=${selectedAppointment?._id}`
-        );
-        // Fetch lại data
-        fetchData();
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Thất bại!",
-          description: response.data.message,
-        });
-      }
+      // Xoá Data khỏi appointmentsByPatient
+      const response2 = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?_id=${selectedAppointment?._id}`
+      );
+      // Fetch lại data
+      fetchData();
     } catch (error) {
-      console.error("Error during sign in:", error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
       setIsLoading(false);
       setIsDialogOpen(false);
       setReason("");
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Hệ thống đang xử lý ca khám!",
+      });
     }
   };
 
@@ -231,7 +222,7 @@ export default function OnlineAppointment() {
             <div className="flex flex-row gap-2 w-full flex-wrap">
               {renderBadge(appointment.doctorId, appointment.reExamination)}
               <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
-                Khoa: {appointment.specialization}
+                Khoa: {renderSpecialty(appointment.specialization)}
               </Badge>
               <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
                 {appointment.reExamination
@@ -323,16 +314,22 @@ export default function OnlineAppointment() {
               <p className="text-md font-semibold">
                 Thông tin lịch hẹn đăng ký
               </p>
-              <div className="flex items-center gap-2">
-                <User className="w-4 h-4 text-blue-500" />
-                <span className="text-sm">
-                  Bác sĩ: {selectedAppointment?.doctorId}
-                </span>
-              </div>
+              {selectedAppointment?.doctorId ? (
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm">
+                    Bác sĩ: {selectedAppointment?.doctorId}
+                  </span>
+                </div>
+              ) : (
+                ""
+              )}
+
               <div className="flex items-center gap-2">
                 <SquareActivity className="w-4 h-4 text-blue-500" />
                 <span className="text-sm">
-                  Chuyên khoa: {selectedAppointment?.specialization}
+                  Chuyên khoa:{" "}
+                  {renderSpecialty(selectedAppointment?.specialization + "")}
                 </span>
               </div>
               <div className="flex items-center gap-2">

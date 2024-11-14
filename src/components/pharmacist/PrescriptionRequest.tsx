@@ -10,76 +10,130 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar, SearchIcon, Stethoscope, User } from "lucide-react";
+import {
+  Calendar,
+  ChevronUp,
+  CircleCheckBig,
+  Edit,
+  Eye,
+  History,
+  SearchIcon,
+  Stethoscope,
+  User,
+  X,
+} from "lucide-react";
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
 import { formatDate } from "../../../lib/utils";
 import { Medication, Patient, Prescription } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "../ui/badge";
 
 export default function PrescriptionRequest() {
   const { toast } = useToast();
+  const [customQuantities, setCustomQuantities] = useState<{
+    [key: string]: { [key: string]: number };
+  }>({});
   const [showCheckboxes, setShowCheckboxes] = useState({
     isShow: false,
     id: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewDoctorName, setViewDoctorName] = useState({
+    doctorName: "",
+    id: "",
+  });
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [newMedication, setNewMedication] = useState<Medication[]>([]);
+  const [newMedication, setNewMedication] = useState<{
+    [key: string]: Medication[];
+  }>({});
   const [showInvoice, setShowInvoice] = useState({ isShow: false, id: "" });
   const [selectedPatientId, setSelectedPatientId] = useState({
     patientId: "",
     id: "",
   });
   const [selectedPatientMedicalHistory, setSelectedPatientMedicalHistory] =
-    useState<Patient>();
+    useState<Patient | undefined>();
+  const [filterType, setFilterType] = useState("all");
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(
-        // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/get-list-prescriptions` //api này có connect với redis
-      );
-      setPrescriptions(
-        response.data.data.filter(
-          (item: { status: string }) => item.status === "Scheduled"
-        )
-      );
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
+        );
+        setPrescriptions(
+          response.data.filter(
+            (item: { status: string }) => item.status === "Scheduled"
+          )
+        );
+      } catch (error) {
+        console.error("Error fetching prescriptions:", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch prescriptions. Please try again.",
+        });
+      }
     };
 
     fetchData();
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId.patientId}`
-      );
-      console.log(response.data);
-      setSelectedPatientMedicalHistory(response.data);
+      if (selectedPatientId.patientId) {
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId.patientId}`
+          );
+          setSelectedPatientMedicalHistory(response.data);
+        } catch (error) {
+          console.error("Error fetching patient medical history:", error);
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description:
+              "Failed to fetch patient medical history. Please try again.",
+          });
+        }
+      }
     };
 
     fetchData();
-  }, [selectedPatientId]);
-  const filteredPrescriptions = prescriptions.filter((prescription) => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return prescription.patientId.toLowerCase().includes(searchTermLower);
-  });
+  }, [selectedPatientId, toast]);
 
-  const handleCheckboxChange = (checked: boolean, medication: Medication) => {
-    if (checked) {
-      setNewMedication((prev) => [...prev, medication]);
-    } else {
-      setNewMedication((prev) =>
-        prev.filter((med) => med._id !== medication._id)
-      );
-    }
-  };
+  const filteredPrescriptions = prescriptions
+    .filter((prescription) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      if (filterType === "today")
+        return formatDate(prescription.dateIssued) === formatDate(new Date());
+      return prescription.patientId.toLowerCase().includes(searchTermLower);
+    })
+    .sort((a, b) => {
+      if (filterType === "old") {
+        return (
+          new Date(b.dateIssued).getTime() - new Date(a.dateIssued).getTime()
+        );
+      } else if (filterType === "new") {
+        return (
+          new Date(a.dateIssued).getTime() - new Date(b.dateIssued).getTime()
+        );
+      }
+      return 0;
+    });
 
   const handleCompletePrescription = async (prescriptionId: string) => {
     try {
-      const response = await axios.patch(
+      await axios.patch(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/${prescriptionId}`,
         { status: "Completed", dateIssued: new Date() }
       );
@@ -88,52 +142,177 @@ export default function PrescriptionRequest() {
         title: "Thành công!",
         description: "Hoàn thành đơn thuốc!",
       });
+      // Update local state to reflect the change
+      setPrescriptions((prevPrescriptions) =>
+        prevPrescriptions.filter((p) => p._id !== prescriptionId)
+      );
     } catch (error) {
+      console.error("Error completing prescription:", error);
       toast({
         variant: "destructive",
         title: "Thất bại!",
-        description: "Lỗi: " + error,
+        description: "Lỗi khi hoàn thành đơn thuốc. Vui lòng thử lại.",
       });
     }
+  };
+
+  const handleViewDoctorName = async (doctorId: string, id: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      setViewDoctorName({ doctorName: response.data.fullName, id: id });
+    } catch (error) {
+      console.error("Error fetching doctor name:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to fetch doctor name. Please try again.",
+      });
+    }
+  };
+
+  const handleQuantityChange = (
+    prescriptionId: string,
+    medicationName: string,
+    quantity: number
+  ) => {
+    setCustomQuantities((prev) => ({
+      ...prev,
+      [prescriptionId]: {
+        ...(prev[prescriptionId] || {}),
+        [medicationName]: quantity,
+      },
+    }));
+
+    setNewMedication((prev) => {
+      const updatedMedications = { ...prev };
+      if (!updatedMedications[prescriptionId]) {
+        updatedMedications[prescriptionId] = [];
+      }
+
+      const medicationIndex = updatedMedications[prescriptionId].findIndex(
+        (med) => med.medicationName === medicationName
+      );
+
+      if (medicationIndex !== -1) {
+        if (quantity > 0) {
+          updatedMedications[prescriptionId][medicationIndex] = {
+            ...updatedMedications[prescriptionId][medicationIndex],
+            quantity,
+          };
+        } else {
+          updatedMedications[prescriptionId].splice(medicationIndex, 1);
+        }
+      } else if (quantity > 0) {
+        const medication = prescriptions
+          .find((p) => p._id === prescriptionId)
+          ?.medications.find((m) => m.medicationName === medicationName);
+
+        if (medication) {
+          updatedMedications[prescriptionId].push({ ...medication, quantity });
+        }
+      }
+
+      return updatedMedications;
+    });
+  };
+
+  const handleCustomizeToggle = (prescriptionId: string) => {
+    setShowCheckboxes((prev) => ({
+      isShow: prev.id === prescriptionId ? !prev.isShow : true,
+      id: prescriptionId,
+    }));
+
+    setCustomQuantities((prev) => {
+      const updatedQuantities = { ...prev };
+      if (!updatedQuantities[prescriptionId]) {
+        const prescription = prescriptions.find(
+          (p) => p._id === prescriptionId
+        );
+        if (prescription) {
+          updatedQuantities[prescriptionId] = prescription.medications.reduce<{
+            [key: string]: number;
+          }>((acc, med) => {
+            acc[med.medicationName] = med.quantity;
+            return acc;
+          }, {});
+        }
+      }
+      return updatedQuantities;
+    });
+
+    // Reset newMedication when toggling customize
+    setNewMedication((prev) => ({
+      ...prev,
+      [prescriptionId]: [],
+    }));
   };
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        DÀNH CHO BỆNH NHÂN ĐÃ KHÁM TẠI PHÒNG KHÁM
+        DÀNH CHO BỆNH NHÂN ĐÃ KHÁM TẠI PHÒNG KHÁM VÀ CÓ TOA THUỐC CỦA BÁC SĨ
       </p>
-
-      <div className="relative mb-6">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="search"
-          placeholder="Nhập mã bệnh nhân (BN-XXXXXX). Ví dụ: BN-JCXX2B"
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex flex-row gap-3">
+        <div className="relative flex-grow">
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="search"
+            placeholder="Nhập mã bệnh nhân (BN-XXXXXX). Ví dụ: BN-JCXX2B"
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo ngày" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="new">Gần nhất</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
-
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (
           <Card key={prescription._id} className="mb-6">
-            {/* Prescription header */}
-            <div className="grid grid-cols-3 items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
-              <p className="flex items-center text-base">
+            <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
+              <p className="flex items-center text-sm">
                 <Calendar className="h-4 w-4 mr-2" />
-                {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
+                Ngày yêu cầu: {formatDate(prescription.dateIssued)}
               </p>
-              <p className="flex items-center text-base">
+              <p className="flex items-center text-sm">
+                <Stethoscope className="h-4 w-4 mr-2" />
+                BS yêu cầu:{" "}
+                <Badge
+                  variant={"default"}
+                  className="ml-2 cursor-pointer"
+                  onClick={() =>
+                    handleViewDoctorName(
+                      prescription.doctorId,
+                      prescription._id
+                    )
+                  }
+                >
+                  {viewDoctorName.id === prescription._id &&
+                  viewDoctorName.doctorName !== ""
+                    ? viewDoctorName.doctorName
+                    : "Xem tên BS"}
+                </Badge>
+              </p>
+              <p className="flex items-center text-sm">
                 <User className="h-4 w-4 mr-2" />
                 Mã Bệnh nhân: {prescription.patientId}
               </p>
-              <p className="flex items-center text-base">
+              <p className="flex items-center text-sm">
                 <Stethoscope className="h-4 w-4 mr-2" />
                 Mã Đơn thuốc: {prescription._id}
               </p>
             </div>
 
-            {/* Medications table */}
             <Table>
               <TableHeader>
                 <TableRow>
@@ -149,19 +328,21 @@ export default function PrescriptionRequest() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {prescription.medications.map((medication) => (
-                  <TableRow key={medication._id}>
+                {prescription.medications.map((medication, index) => (
+                  <TableRow key={`${medication.medicationName}-${index}`}>
                     {showCheckboxes.isShow &&
                       showCheckboxes.id === prescription._id && (
                         <TableCell>
                           <Checkbox
-                            checked={newMedication.some(
-                              (med) => med._id === medication._id
+                            checked={newMedication[prescription._id]?.some(
+                              (med) =>
+                                med.medicationName === medication.medicationName
                             )}
                             onCheckedChange={(checked) =>
-                              handleCheckboxChange(
-                                checked as boolean,
-                                medication as any
+                              handleQuantityChange(
+                                prescription._id,
+                                medication.medicationName,
+                                checked ? medication.quantity : 0
                               )
                             }
                           />
@@ -169,7 +350,29 @@ export default function PrescriptionRequest() {
                       )}
                     <TableCell>{medication.medicationName}</TableCell>
                     <TableCell>{medication.dosage}</TableCell>
-                    <TableCell>{medication.quantity}</TableCell>
+                    <TableCell>
+                      {showCheckboxes.isShow &&
+                      showCheckboxes.id === prescription._id ? (
+                        <Input
+                          type="number"
+                          value={
+                            customQuantities[prescription._id]?.[
+                              medication.medicationName
+                            ] || 0
+                          }
+                          onChange={(e) =>
+                            handleQuantityChange(
+                              prescription._id,
+                              medication.medicationName,
+                              parseInt(e.target.value) || 0
+                            )
+                          }
+                          className="w-20"
+                        />
+                      ) : (
+                        medication.quantity
+                      )}
+                    </TableCell>
                     <TableCell>{medication.price}</TableCell>
                     <TableCell className="w-[35%]">
                       {medication.instructions}
@@ -179,8 +382,7 @@ export default function PrescriptionRequest() {
               </TableBody>
             </Table>
 
-            {/* Action buttons */}
-            <div className="flex lfex-row gap-3 p-4 justify-end">
+            <div className="flex flex-row gap-3 p-4 justify-end">
               <Button
                 onClick={() =>
                   setSelectedPatientId({
@@ -197,6 +399,7 @@ export default function PrescriptionRequest() {
                 }
               >
                 Lịch sử bệnh lý
+                <History className="h-4 w-4 ml-2" />
               </Button>
 
               {showCheckboxes.id === prescription._id &&
@@ -209,18 +412,15 @@ export default function PrescriptionRequest() {
                   }}
                 >
                   Huỷ tuỳ chỉnh
+                  <X className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
                 <Button
                   variant={"outline"}
-                  onClick={() =>
-                    setShowCheckboxes({
-                      isShow: !showCheckboxes.isShow,
-                      id: prescription._id,
-                    })
-                  }
+                  onClick={() => handleCustomizeToggle(prescription._id)}
                 >
-                  {"Tuỳ chỉnh đơn thuốc"}
+                  Tuỳ chỉnh đơn
+                  <Edit className="h-4 w-4 ml-2" />
                 </Button>
               )}
 
@@ -232,6 +432,7 @@ export default function PrescriptionRequest() {
                   }
                 >
                   Thu gọn
+                  <ChevronUp className="h-4 w-4 ml-2" />
                 </Button>
               ) : (
                 <Button
@@ -241,72 +442,80 @@ export default function PrescriptionRequest() {
                   }}
                 >
                   Xem hoá đơn
+                  <Eye className="h-4 w-4 ml-2" />
                 </Button>
               )}
               <Button
-                className="bg-blue-500 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
+                className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                 onClick={() => handleCompletePrescription(prescription._id)}
               >
                 Hoàn thành đơn
+                <CircleCheckBig className="h-4 w-4 ml-2" />
               </Button>
             </div>
 
-            {/* Invoice component */}
             {showInvoice.id === prescription._id && showInvoice.isShow && (
               <PatientPrescriptionInvoice
                 prescription={prescription}
-                newMedication={newMedication}
+                newMedication={newMedication[prescription._id] || []}
               />
             )}
 
-            {/* Lịch sử bệnh lý */}
             {selectedPatientId.id === prescription._id &&
-            selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
-              <p className="text-slate-500 text-sm">
-                Chưa có lịch sử khám bệnh
-              </p>
-            ) : (
-              <Table>
-                <TableHeader>
-                  {selectedPatientId.id === prescription._id && (
+              (selectedPatientMedicalHistory?.medicalHistory?.length === 0 ? (
+                <p className="text-slate-500 text-sm p-4">
+                  Chưa có lịch sử khám bệnh
+                </p>
+              ) : (
+                <Table>
+                  <TableHeader>
                     <TableRow>
                       <TableHead>
                         Tên bệnh nhân: {selectedPatientMedicalHistory?.fullName}
                       </TableHead>
                       <TableHead>
-                        {" "}
+                        Giới tính:{" "}
+                        {selectedPatientMedicalHistory?.gender?.toLowerCase() ===
+                        "male"
+                          ? "Nam"
+                          : "Nữ"}
+                      </TableHead>
+                      <TableHead>
                         Số ĐT: {selectedPatientMedicalHistory?.phone}
                       </TableHead>
                     </TableRow>
-                  )}
-                </TableHeader>
-                <TableHeader>
-                  {selectedPatientId.id === prescription._id && (
+                  </TableHeader>
+                  <TableHeader>
                     <TableRow>
                       <TableHead>STT</TableHead>
                       <TableHead>Ngày khám</TableHead>
+                      <TableHead>Tiền sử bệnh</TableHead>
                       <TableHead>Chẩn đoán bệnh</TableHead>
+                      <TableHead>KQ Xét nghiệm</TableHead>
                       <TableHead>Phương pháp điều trị</TableHead>
                     </TableRow>
-                  )}
-                </TableHeader>
-                <TableBody>
-                  {selectedPatientId.id === prescription._id &&
-                    selectedPatientMedicalHistory?.medicalHistory?.map(
-                      (history: any, index) => (
+                  </TableHeader>
+                  <TableBody>
+                    {selectedPatientMedicalHistory?.medicalHistory?.map(
+                      (history: any, index: number) => (
                         <TableRow key={history.diagnosisDate}>
                           <TableCell>{index + 1}</TableCell>
                           <TableCell>
                             {formatDate(history?.diagnosisDate)}
                           </TableCell>
-                          <TableCell>{history.diagnosisDescription}</TableCell>
-                          <TableCell>{history.treatment}</TableCell>
+                          <TableCell>{history.disease.split("_")[0]}</TableCell>
+                          <TableCell>{history.disease.split("_")[1]}</TableCell>
+                          <TableCell>{history.disease.split("_")[2]}</TableCell>
+                          <TableCell>
+                            {history.treatment.split("_")[0] +
+                              history.treatment.split("_")[1]}
+                          </TableCell>
                         </TableRow>
                       )
                     )}
-                </TableBody>
-              </Table>
-            )}
+                  </TableBody>
+                </Table>
+              ))}
           </Card>
         ))}
       </div>

@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import {
-  ArrowUpFromLine,
   Calendar,
   CalendarIcon,
   Cat,
@@ -30,7 +29,7 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Patient } from "../../../lib/entity-types";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, renderSpecialty } from "../../../lib/utils";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
@@ -106,40 +105,34 @@ export default function DirectAppoinment() {
         specialization: specialization,
         priority: checked,
       };
+
+      // Kafka xử lý
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
         payload
       );
-      if (response.status === 400) {
-        toast({
-          variant: "destructive",
-          title: "Lỗi!",
-          description: response.data.message,
-        });
-      } else if (response.status === 202) {
-        toast({
-          variant: "default",
-          title: "Thành công!",
-          description: response.data.message,
-        });
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Thất bại!",
-          description: response.data.message,
-        });
-      }
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
       setIsLoading(false);
       setIsDialogOpen(false);
       setReason("");
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Hệ thống đang xử lý ca khám!",
+      });
     }
   };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <p className="text-base font-semibold text-blue-500">TẠO HẸN KHÁM MỚI</p>
+      <p className="text-base font-semibold text-blue-500">
+        TẠO HẸN KHÁM MỚI (DÀNH CHO BỆNH NHÂN ĐĂNG KÝ TRỰC TIẾP)
+      </p>
       <div className="flex flex-row w-full gap-3">
         <div className="relative flex-grow">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -285,7 +278,7 @@ export default function DirectAppoinment() {
                   <SelectContent>
                     {specializations.map((specialization) => (
                       <SelectItem key={specialization} value={specialization}>
-                        {specialization}
+                        {renderSpecialty(specialization)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -297,7 +290,7 @@ export default function DirectAppoinment() {
                 Vui lòng chọn ưu tiên (tuỳ chọn)
               </h3>
               <input
-                className="h-5 w-5"
+                className="h-10 w-10"
                 type="checkbox"
                 checked={checked}
                 onChange={() => {

@@ -118,9 +118,24 @@ export default function PatientProfileForm({
         data.province.split("-").slice(1).join("-"),
     };
     try {
-      const response = await axios.post(
+      const res1 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`,
         payload
+      );
+
+      const newUser = {
+        fullName: data.fullName,
+        gender: data.gender,
+        email: data.email,
+        password: data.password,
+        role: "patient",
+        phone: data.phone.startsWith("0")
+          ? "+84" + data.phone.slice(1)
+          : data.phone,
+      };
+      const res2 = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
+        newUser
       );
       toast({
         title: "Tạo hồ sơ thành công!",
@@ -144,11 +159,6 @@ export default function PatientProfileForm({
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
         );
-        // const response3 = await axios.post(
-        //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/register`, {email: data.email, password: data.password, role: "patient", fullName: data.fullName, phone: data.phone.startsWith("0")
-        //     ? "+84" + data.phone.slice(1)
-        //     : data.phone, gender: data.gender}
-        // );
         const newUser = {
           email: data.email,
           password: data.password,
@@ -160,7 +170,7 @@ export default function PatientProfileForm({
           gender: data.gender,
         };
         const response3 = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user`,
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
           newUser
         );
         router.push(`/${(response2?.data as any)._id}/patient/dashboard`);

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import {
   generateTimeSlots,
   getDayOfWeek,
+  renderDayOfWeek,
   setTimeToDate,
 } from "../../../../lib/utils";
 import { Clock } from "lucide-react";
@@ -101,8 +102,11 @@ export default function CalendarSelector({
           </p>
           <div className="space-y-4 bg-background rounded-md p-4">
             <h3 className="font-medium text-slate-500 mb-2 flex items-center">
-              <Clock className="w-4 h-4 mr-2" />
-              <p className="text-sm"> {filteredSchedule[0].dayOfWeek}</p>
+              <Clock className="w-4 h-4 mr-2 text-blue-500" />
+              <p className="text-sm text-blue-500">
+                {" "}
+                {renderDayOfWeek(filteredSchedule[0].dayOfWeek)}
+              </p>
             </h3>
             <div className="grid grid-cols-4 gap-2 ">
               {generateTimeSlots(

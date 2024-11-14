@@ -42,14 +42,6 @@ const PaymentForm = ({
       id: "card",
       label: "Thanh toán bằng thẻ khám bệnh",
     },
-    {
-      id: "visa",
-      label: "Thanh toán bằng Thẻ Visa, Master, JCB",
-    },
-    {
-      id: "atm",
-      label: "Thanh toán bằng Thẻ ATM nội địa/Internet Banking",
-    },
     { id: "momo", label: "Thanh toán bằng ví Momo" },
     { id: "cash", label: "Thanh toán bằng tiền mặt" },
   ];
@@ -70,7 +62,7 @@ const PaymentForm = ({
       doctorName: selectedDoctor?.fullName || "",
     };
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`,
         payload
       );

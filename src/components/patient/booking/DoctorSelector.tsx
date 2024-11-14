@@ -14,6 +14,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Doctor } from "../../../../lib/entity-types";
+import { renderSpecialty } from "../../../../lib/utils";
+import { Calendar } from "lucide-react";
 export default function DoctorSelector({
   setActiveSection,
   setSelectedSpe,
@@ -48,21 +50,20 @@ export default function DoctorSelector({
   }, [searchTerm]);
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      <p className="text-base font-semibold text-blue-500 uppercase">
+    <div className="w-full">
+      <p className="text-base font-semibold text-blue-500 uppercase mb-4">
         Vui lòng chọn bác sĩ
       </p>
-
       <Input
         type="text"
         placeholder="Nhập tên bác sĩ..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="w-full"
+        className="w-full mb-4"
       />
-      <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
-        <Table>
-          <TableHeader>
+      <Table>
+        <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
+          <TableHeader className="sticky">
             <TableRow>
               <TableHead>STT</TableHead>
               <TableHead>Họ và tên</TableHead>
@@ -79,7 +80,9 @@ export default function DoctorSelector({
                 <TableCell>
                   {item.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
                 </TableCell>
-                <TableCell>{item.specialization}</TableCell>
+                <TableCell>
+                  {renderSpecialty(item?.specialization + "")}
+                </TableCell>
 
                 <TableCell>
                   <Button
@@ -87,13 +90,14 @@ export default function DoctorSelector({
                     onClick={() => handleSelectDoctor(item)}
                   >
                     Đặt khám
+                    <Calendar className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
-        </Table>
-      </ScrollArea>
+        </ScrollArea>
+      </Table>
     </div>
   );
 }

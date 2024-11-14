@@ -191,7 +191,9 @@ export default function Page() {
                 <span className="font-semibold dark:text-slate-500">
                   Ca khám:
                 </span>{" "}
-                {selectedDate
+                {selectedDate &&
+                generateExamination(formatDate3(selectedDate))[0] !==
+                  "00:00 - 01:00"
                   ? generateExamination(formatDate3(selectedDate))
                   : null}
               </p>

@@ -70,10 +70,12 @@ export default function PatientDetails({
   isOpen,
   setIsOpen,
   selectedAppointment,
+  fetchAppointments,
 }: {
   roomNumber: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  fetchAppointments: () => void;
   selectedAppointment: Appointment | null;
 }) {
   const { toast } = useToast();
@@ -296,6 +298,7 @@ export default function PatientDetails({
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/diagnoses`,
         diagnosisPayload
       );
+
       // Xoá khỏi Kafka
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
@@ -327,6 +330,8 @@ export default function PatientDetails({
         treatment: "",
         otherTreatment: "",
       });
+      setIsOpen(false);
+      fetchAppointments();
     }
   };
 

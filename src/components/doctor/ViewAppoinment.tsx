@@ -61,27 +61,27 @@ export default function ViewAppointment({
     setTestType(selectedTestNames);
   }, [selectedTests]);
   // Fecth Data
-  useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        // Lấy roomN của bác sĩ trong data
+  const fetchAppointments = async () => {
+    try {
+      // Lấy roomN của bác sĩ trong data
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      const roomN = response.data.roomNumber;
+      if (roomN.toString().trim() !== "000") {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
         );
-        const roomN = response.data.roomNumber;
-        if (roomN.toString().trim() !== "000") {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-          );
-          setAppointments(response.data);
-        } else {
-          setAppointments([]);
-        }
-      } catch (err) {
-        console.log(err + "");
+        setAppointments(response.data);
+      } else {
+        setAppointments([]);
       }
-    };
+    } catch (err) {
+      console.log(err + "");
+    }
+  };
 
+  useEffect(() => {
     fetchAppointments();
   }, [roomNumber]);
   return (
@@ -192,6 +192,7 @@ export default function ViewAppointment({
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         selectedAppointment={selectedAppointment}
+        fetchAppointments={fetchAppointments}
       />
     </div>
   );

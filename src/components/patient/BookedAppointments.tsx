@@ -70,7 +70,7 @@ export default function BookedAppointments() {
               <TableRow>
                 <TableHead>STT</TableHead>
                 <TableHead>Ngày đặt khám</TableHead>
-                <TableHead>Bác sĩ</TableHead>
+                <TableHead>Hình thức</TableHead>
                 <TableHead>Chuyên khoa</TableHead>
                 <TableHead>Đặt vào lúc</TableHead>
                 <TableHead>Thao tác</TableHead>
@@ -84,7 +84,9 @@ export default function BookedAppointments() {
                     <TableCell>
                       {formatDate(item?.appointmentDateByPatient)}
                     </TableCell>
-                    <TableCell>{item.doctorId}</TableCell>
+                    <TableCell>
+                      {item.doctorId ? "Đặt theo Bác sĩ" : "Đặt theo ngày"}
+                    </TableCell>
                     <TableCell>
                       {renderSpecialty(item.specialization)}
                     </TableCell>

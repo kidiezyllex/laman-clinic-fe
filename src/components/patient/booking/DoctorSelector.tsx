@@ -61,8 +61,8 @@ export default function DoctorSelector({
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full mb-4"
       />
-      <Table>
-        <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
+      <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
+        <Table>
           <TableHeader className="sticky">
             <TableRow>
               <TableHead>STT</TableHead>
@@ -96,8 +96,8 @@ export default function DoctorSelector({
               </TableRow>
             ))}
           </TableBody>
-        </ScrollArea>
-      </Table>
+        </Table>
+      </ScrollArea>
     </div>
   );
 }

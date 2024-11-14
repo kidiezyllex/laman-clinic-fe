@@ -10,6 +10,7 @@ import {
   generateTimeSlots,
   getDayOfWeek,
   renderDayOfWeek,
+  renderSpecialty,
   setTimeToDate,
 } from "../../../../lib/utils";
 export default function RoomSelector({
@@ -73,21 +74,25 @@ export default function RoomSelector({
             <div className="p-6">
               <div className="items-center mb-4 grid grid-cols-3">
                 <div className="flex flex-row gap-3 items-center">
-                  <Stethoscope className="w-6 h-6 text-blue-500" />
+                  <Stethoscope className="w-4 h-4 text-blue-500" />
                   <p className="text-sm font-semibold">
                     Bác sĩ: {(doctor as any)?.fullName}
                   </p>
                 </div>
                 <div className="flex flex-row gap-3 items-center">
-                  <Warehouse className="w-6 h-6 text-blue-500" />
+                  <User className="w-4 h-4 text-blue-500" />
                   <p className="text-sm font-semibold">
-                    Phòng khám: {(doctor as any)?.roomNumber}
+                    Giới tính:{" "}
+                    {(doctor as any)?.gender.toLocaleLowerCase() === "male"
+                      ? "Nam"
+                      : "Nữ"}
                   </p>
                 </div>
                 <div className="flex flex-row gap-3 items-center">
-                  <FileCog className="w-6 h-6 text-blue-500" />
+                  <FileCog className="w-4 h-4 text-blue-500" />
                   <p className="text-sm font-semibold">
-                    Chuyên khoa: {(doctor as any)?.specialization}
+                    Chuyên khoa:{" "}
+                    {renderSpecialty((doctor as any)?.specialization)}
                   </p>
                 </div>
               </div>
@@ -113,7 +118,11 @@ export default function RoomSelector({
                           (scheduleItem as any).startTime,
                           (scheduleItem as any).endTime
                         ).map((slot) => (
-                          <Button key={slot} variant={"outline"} disabled>
+                          <Button
+                            key={slot}
+                            variant={"outline"}
+                            className="pointer-events-none"
+                          >
                             {slot}
                           </Button>
                         ))}

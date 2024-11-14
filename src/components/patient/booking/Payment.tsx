@@ -16,7 +16,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Doctor, Patient } from "../../../../lib/entity-types";
 
 const PaymentForm = ({
@@ -34,9 +34,9 @@ const PaymentForm = ({
 }) => {
   const [selectedPayment, setSelectedPayment] = useState<string>("");
   const { toast } = useToast();
-  const pathname = usePathname();
+  const router = useRouter();
+  const patientId = usePathname().split("/")[1];
   const [isLoading, setIsLoading] = useState(false);
-  // Các phương thức thanh toán
   const paymentMethods = [
     {
       id: "card",
@@ -82,11 +82,12 @@ const PaymentForm = ({
       }
     } finally {
       setIsLoading(false);
+      router.push(`/${patientId}/patient/dashboard`);
     }
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 bg-background rounded-md p-4 border">
+    <div className="w-full flex flex-col gap-4 bg-background rounded-md p-4 border h-full">
       <p className="text-base font-semibold text-blue-500">
         VUI LÒNG CHỌN HÌNH THỨC BHYT
       </p>
@@ -110,14 +111,14 @@ const PaymentForm = ({
         </SelectContent>
       </Select>
 
-      <p className="text-base font-semibold text-blue-500">
+      <p className="text-base font-semibold text-blue-500 mb-4">
         VUI LÒNG CHỌN HÌNH THỨC THANH TOÁN
       </p>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 h-[50%]">
         <RadioGroup
           value={selectedPayment}
           onValueChange={setSelectedPayment}
-          className="space-y-4"
+          className="flex flex-col gap-4 items-start"
         >
           {paymentMethods.map((method) => (
             <div key={method.id} className="flex items-center">
@@ -145,36 +146,22 @@ const PaymentForm = ({
               />
             </div>
           )}
-          {selectedPayment === "visa" && (
-            <Card>
-              <CardContent>
-                Bạn đã chọn thanh toán bằng Thẻ Visa, Master, JCB.
-              </CardContent>
-            </Card>
-          )}
-          {selectedPayment === "atm" && (
-            <Card>
-              <CardContent>
-                Bạn đã chọn thanh toán bằng Thẻ ATM nội địa/Internet Banking.
-              </CardContent>
-            </Card>
-          )}
           {selectedPayment === "momo" && (
             <div className="relative h-full z-0 border border-dashed rounded-md border-blue-500">
               <Image
                 src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1727562772/learning-webdev-blog/clinic/MoMo_Logo_b17qgk.png"
                 alt={"image"}
                 className="object-contain rounded"
-                layout="fill" // Use fill for container sizing
+                layout="fill"
               />
             </div>
           )}
           {selectedPayment === "cash" && ""}
         </div>
       </div>
-      <div className="flex flex-row justify-between mt-4">
+      <div className="flex flex-row justify-between mt-4 flex-grow">
         <Button
-          className="w-fit dark:hover:bg-slate-900"
+          className="w-fit dark:hover:bg-slate-900 self-end"
           onClick={() => {
             selectedDoctor
               ? setActiveSection("calendarSelector")
@@ -187,13 +174,13 @@ const PaymentForm = ({
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          className="w-fit self-end flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           onClick={() => handleBooking()}
         >
           {isLoading ? (
             <>
               Đang xử lý
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             </>
           ) : (
             <>

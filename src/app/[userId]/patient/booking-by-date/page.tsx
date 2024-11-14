@@ -184,14 +184,6 @@ export default function Page() {
               </p>
               <p className="text-sm">
                 <span className="font-semibold dark:text-slate-500">
-                  Ca khám:
-                </span>{" "}
-                {selectedDate
-                  ? generateExamination(formatDate3(selectedDate))
-                  : null}
-              </p>
-              <p className="text-sm">
-                <span className="font-semibold dark:text-slate-500">
                   Chuyên khoa:
                 </span>{" "}
                 {renderSpecialty(selectedSpe + "")}
@@ -252,7 +244,9 @@ export default function Page() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          {renderMainContent()}
+          <div className="flex flex-col rounded-md min-h-screen">
+            {renderMainContent()}
+          </div>
         </div>
       </div>
     </div>

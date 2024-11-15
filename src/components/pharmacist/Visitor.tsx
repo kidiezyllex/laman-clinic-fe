@@ -50,9 +50,7 @@ const formSchema = z.object({
 
 const customerInfoSchema = z.object({
   fullName: z.string().min(1, "Họ tên không được để trống"),
-  gender: z.enum(["Male", "Female"]),
   phone: z.string().min(1, "Số điện thoại không được để trống"),
-  email: z.string().email("Email không hợp lệ"),
 });
 
 export default function Visitor() {
@@ -92,9 +90,7 @@ export default function Visitor() {
     resolver: zodResolver(customerInfoSchema),
     defaultValues: {
       fullName: "",
-      gender: "",
       phone: "",
-      email: "",
     },
   });
 
@@ -177,9 +173,7 @@ export default function Visitor() {
   const handlePatientCardClick = (patient: Patient) => {
     setSelectedPatientId(patient?._id + "");
     customerInfoForm.setValue("fullName", patient.fullName || "");
-    customerInfoForm.setValue("gender", patient.gender || "Male");
     customerInfoForm.setValue("phone", patient.phone || "");
-    customerInfoForm.setValue("email", patient.email || "");
   };
 
   // Tạo đơn thuốc
@@ -307,39 +301,13 @@ export default function Visitor() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={customerInfoForm.control}
-                name="gender"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Giới tính (Nam nhập &apos;Male&apos;/ Nữ nhập
-                      &apos;Female&apos;)
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+
               <FormField
                 control={customerInfoForm.control}
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Số điện thoại</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={customerInfoForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email (Không bắt buộc)</FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>

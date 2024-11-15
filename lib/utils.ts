@@ -155,6 +155,18 @@ export const renderDayOfWeek = (day: string) => {
     Saturday: "Thứ Bảy",
     Sunday: "Chủ Nhật",
   };
-
   return days[day] || "";
+};
+
+export const renderRole = (role: string) => {
+  const roles: { [key: string]: string } = {
+    receptionist: "Lễ tân",
+    doctor: "Bác sĩ",
+    admin: "Quản trị viên",
+    pharmacist: "Dược sĩ",
+    cashier: "Thu ngân",
+    patient: "Bệnh nhân",
+    "laboratory-technician": "Y tá xét nghiệm",
+  };
+  return roles[role] || "";
 };

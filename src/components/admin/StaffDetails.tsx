@@ -8,12 +8,19 @@ import {
   Mail,
   MapPin,
   Phone,
+  SquareActivity,
   Trash2,
   User,
+  UserCog,
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { generateTimeSlots, renderDayOfWeek } from "../../../lib/utils";
-import { Receptionist, Schedule } from "../../../lib/entity-types";
+import {
+  generateTimeSlots,
+  renderDayOfWeek,
+  renderRole,
+  renderSpecialty,
+} from "../../../lib/utils";
+import { Schedule, Staff } from "../../../lib/entity-types";
 import { Separator } from "../ui/separator";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -27,7 +34,7 @@ export default function StaffDetails({
   setIsOpen: (isOpen: boolean) => void;
   routes: string;
 }) {
-  const [staff, setStaff] = useState<Receptionist | null>(null);
+  const [staff, setStaff] = useState<Staff | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,6 +78,24 @@ export default function StaffDetails({
               </div>
               <div className="border rounded-md p-4 mr-4">
                 <div className="gap-3 grid grid-cols-2">
+                  <div className="flex items-center gap-2">
+                    <UserCog className="w-4 h-4 text-blue-500" />
+                    <span className="text-sm">
+                      Vai trò:{" "}
+                      {staff?.isDepartmentHead
+                        ? "Trưởng khoa"
+                        : renderRole(staff?.role + "")}
+                    </span>
+                  </div>
+                  {staff?.specialization ? (
+                    <div className="flex items-center gap-2">
+                      <SquareActivity className="w-4 h-4 text-blue-500" />
+                      <span className="text-sm">
+                        Chuyên khoa:{" "}
+                        {renderSpecialty(staff?.specialization + "")}
+                      </span>
+                    </div>
+                  ) : null}
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">

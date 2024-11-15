@@ -95,6 +95,8 @@ export default function AccountsManagement() {
         return "doctors";
       case "admin":
         return "admins";
+      case "pharmacist":
+        return "pharmacists";
       default:
         return "";
     }

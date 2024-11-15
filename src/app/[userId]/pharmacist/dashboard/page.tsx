@@ -21,7 +21,7 @@ import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("visitor");
+  const [activeSection, setActiveSection] = useState("prescriptions");
 
   const renderMainContent = () => {
     switch (activeSection) {

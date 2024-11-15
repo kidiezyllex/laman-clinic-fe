@@ -99,6 +99,8 @@ export interface Prescription {
   doctorId: string;
   medications: Medication[];
   dateIssued: Date;
+  visitorName: string;
+  visitorPhone: string;
 }
 
 export interface PatientPrescriptionInvoiceProps {

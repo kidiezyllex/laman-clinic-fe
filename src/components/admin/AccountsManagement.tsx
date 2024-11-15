@@ -35,6 +35,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import PatientDetails from "./PatientDetails";
+import StaffDetails from "./StaffDetails";
 export default function AccountsManagement() {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +82,23 @@ export default function AccountsManagement() {
     };
     return roles[role] || "Không xác định";
   };
+
+  const staff = (() => {
+    switch (selectedUserRole) {
+      case "receptionist":
+        return "receptionists";
+      case "laboratory-technician":
+        return "laboratory-technicians";
+      case "cashier":
+        return "cashiers";
+      case "doctor":
+        return "doctors";
+      case "admin":
+        return "admins";
+      default:
+        return "";
+    }
+  })();
 
   const filteredUsers = users.filter(
     (user) =>
@@ -179,6 +197,7 @@ export default function AccountsManagement() {
                   key={item._id}
                   onClick={() => {
                     console.log(item.role);
+                    console.log(item.email);
                     setSelectedUserEmail(item.email + "");
                     setSelectedUserRole(item.role + "");
                     setIsOpen(true);
@@ -365,7 +384,13 @@ export default function AccountsManagement() {
           setIsOpen={setIsOpen}
           selectedUserEmail={selectedUserEmail}
         ></PatientDetails>
-      ) : null}
+      ) : (
+        <StaffDetails
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          routes={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${staff}/?email=${selectedUserEmail}`}
+        ></StaffDetails>
+      )}
     </div>
   );
 }

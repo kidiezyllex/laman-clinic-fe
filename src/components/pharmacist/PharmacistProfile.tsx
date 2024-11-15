@@ -7,6 +7,7 @@ import {
   Dog,
   Cat,
   Clock,
+  ArrowUpFromLine,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -102,11 +103,11 @@ export default function PharmacistProfile() {
       {Object.keys(pharmacist).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
-            variant="outline"
-            className="flex items-center space-x-2 border-blue-500 text-blue-500 hover:bg-blue-50"
+            type="submit"
+            className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           >
-            <PencilIcon className="w-4 h-4" />
-            <span>Chỉnh sửa</span>
+            Cập nhật
+            <ArrowUpFromLine className="w-4 h-4" />
           </Button>
         </div>
       )}

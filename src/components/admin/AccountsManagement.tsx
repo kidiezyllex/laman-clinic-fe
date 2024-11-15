@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon } from "lucide-react";
+import { ArrowUpFromLine, SearchIcon, X } from "lucide-react";
 import axios from "axios";
 import { User } from "../../../lib/entity-types";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -34,12 +34,16 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
+import PatientDetails from "./PatientDetails";
 export default function AccountsManagement() {
   const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterRole, setFilterRole] = useState("all");
+  const [selectedUserEmail, setSelectedUserEmail] = useState("");
+  const [selectedUserRole, setSelectedUserRole] = useState("");
   const itemsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newUser, setNewUser] = useState({
@@ -171,7 +175,16 @@ export default function AccountsManagement() {
             </TableHeader>
             <TableBody>
               {currentUsers.map((item, index) => (
-                <TableRow key={item._id}>
+                <TableRow
+                  key={item._id}
+                  onClick={() => {
+                    console.log(item.role);
+                    setSelectedUserEmail(item.email + "");
+                    setSelectedUserRole(item.role + "");
+                    setIsOpen(true);
+                  }}
+                  className="cursor-pointer"
+                >
                   <TableCell>{startIndex + index + 1}</TableCell>
                   <TableCell>{item.fullName}</TableCell>
                   <TableCell>
@@ -188,7 +201,6 @@ export default function AccountsManagement() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-
       <Pagination>
         <PaginationContent>
           <PaginationItem>
@@ -224,8 +236,8 @@ export default function AccountsManagement() {
         </PaginationContent>
       </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto flex flex-col justify-start gap-4">
-          <DialogTitle className="text-md font-semibold self-center">
+        <DialogContent className="max-w-[900px] w-[90%] h-fit overflow-y-auto flex flex-col justify-start gap-4">
+          <DialogTitle className="text-md font-semibold self-center text-blue-500">
             THÊM TÀI KHOẢN
           </DialogTitle>
           <div className="flex flex-col gap-4 mx-4 h-full">
@@ -318,7 +330,7 @@ export default function AccountsManagement() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex justify-end items-end self-end gap-2 flex-grow h-full">
+            <div className="flex justify-end items-end self-end gap-2 flex-grow h-full mt-4">
               <Button
                 variant="destructive"
                 onClick={() => {
@@ -334,12 +346,26 @@ export default function AccountsManagement() {
                 }}
               >
                 Huỷ
+                <X className="w-4 h-4" />
               </Button>
-              <Button onClick={handleCreateUser}>Tạo tài khoản</Button>
+              <Button
+                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                onClick={handleCreateUser}
+              >
+                Tạo
+                <ArrowUpFromLine className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </DialogContent>
       </Dialog>
+      {selectedUserRole.includes("patient") ? (
+        <PatientDetails
+          isOpen={isOpen}
+          setIsOpen={setIsOpen}
+          selectedUserEmail={selectedUserEmail}
+        ></PatientDetails>
+      ) : null}
     </div>
   );
 }

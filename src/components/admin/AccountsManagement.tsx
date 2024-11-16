@@ -33,10 +33,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import PatientDetails from "./PatientDetails";
-import StaffDetails from "./StaffDetails";
+import PatientDetails from "./accounts/PatientDetails";
+import StaffDetails from "./accounts/StaffDetails";
 import PatientProfileForm from "../patient/profile/PatientProfileForm";
-import AddStaffForm from "./AddStaffForm";
+import AddStaffForm from "./accounts/AddStaffForm";
 export default function AccountsManagement() {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);

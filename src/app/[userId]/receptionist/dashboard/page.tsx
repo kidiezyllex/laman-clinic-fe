@@ -93,9 +93,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
                     activeSection === "notification"
-                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >
@@ -105,9 +105,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
                     activeSection === "profile"
-                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >

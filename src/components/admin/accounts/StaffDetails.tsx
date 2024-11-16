@@ -19,9 +19,9 @@ import {
   renderDayOfWeek,
   renderRole,
   renderSpecialty,
-} from "../../../lib/utils";
-import { Schedule, Staff } from "../../../lib/entity-types";
-import { Separator } from "../ui/separator";
+} from "../../../../lib/utils";
+import { Schedule, Staff } from "../../../../lib/entity-types";
+import { Separator } from "../../ui/separator";
 import { useEffect, useState } from "react";
 import axios from "axios";
 

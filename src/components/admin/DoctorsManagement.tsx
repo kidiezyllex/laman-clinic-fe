@@ -32,7 +32,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { renderSpecialty } from "../../../lib/utils";
 import { Badge } from "../ui/badge";
-import DoctorDetails from "./DoctorDetails";
+import DoctorDetails from "./accounts/DoctorDetails";
 export default function DoctorsManagement() {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [isOpen, setIsOpen] = useState(false);

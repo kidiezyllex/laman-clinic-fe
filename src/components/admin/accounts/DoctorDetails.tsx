@@ -18,9 +18,9 @@ import {
   generateTimeSlots,
   renderDayOfWeek,
   renderSpecialty,
-} from "../../../lib/utils";
-import { Doctor, Schedule } from "../../../lib/entity-types";
-import { Separator } from "../ui/separator";
+} from "../../../../lib/utils";
+import { Doctor, Schedule } from "../../../../lib/entity-types";
+import { Separator } from "../../ui/separator";
 
 export default function DoctorDetails({
   isOpen,

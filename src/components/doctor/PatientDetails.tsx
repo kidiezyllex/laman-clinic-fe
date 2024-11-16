@@ -43,7 +43,7 @@ import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { labTestsData, medicationData } from "../../../lib/hardcoded-data";
+import { medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
 import {
@@ -95,6 +95,7 @@ export default function PatientDetails({
     },
   });
   // state
+  const [tests, setTests] = useState<TestType[]>([]);
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
   const [showReExaminationForm, setShowReExaminationForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();
@@ -114,7 +115,7 @@ export default function PatientDetails({
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTests, setSelectedTests] = useState<number[]>([]);
+  const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [reasonRequestTest, setReasonRequestTest] = useState("");
   const [testTypes, setTestTypes] = useState<TestType[]>([]);
@@ -194,17 +195,28 @@ export default function PatientDetails({
   };
 
   useEffect(() => {
-    const selected = labTestsData.filter((test) =>
-      selectedTests.includes(test._id)
-    );
+    const selected = tests.filter((test) => selectedTests.includes(test._id));
     setTestTypes(selected as any);
   }, [selectedTests]);
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`
+      );
+      setTests(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-  const filteredTests = labTestsData.filter((test) =>
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const filteredTests = tests.filter((test) =>
     test.testName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleTestToggle = (testId: number) => {
+  const handleTestToggle = (testId: String) => {
     setSelectedTests((prev) =>
       prev.includes(testId)
         ? prev.filter((id) => id !== testId)

@@ -20,9 +20,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import axios from "axios";
-import { labTestsData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
-import { Appointment, Doctor } from "../../../lib/entity-types";
+import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
 
 export default function ViewAppointment({
@@ -39,12 +38,14 @@ export default function ViewAppointment({
   const [isOpen, setIsOpen] = useState(false);
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const [selectedTests, setSelectedTests] = useState<number[]>([]);
+  const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [testType, setTestType] = useState<string[]>([]);
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
+  const [tests, setTests] = useState<TestType[]>([]);
+
   // Chi tiết lịch hẹn
   const openAppointmentDetails = async (appointment: Appointment) => {
     const response = await axios.get(
@@ -55,7 +56,7 @@ export default function ViewAppointment({
   };
 
   useEffect(() => {
-    const selectedTestNames = labTestsData
+    const selectedTestNames = tests
       .filter((test) => selectedTests.includes(test._id))
       .map((test) => test.testName);
     setTestType(selectedTestNames);
@@ -67,6 +68,10 @@ export default function ViewAppointment({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
       );
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`
+      );
+      setTests(response2.data);
       const roomN = response.data.roomNumber;
       if (roomN.toString().trim() !== "000") {
         const response = await axios.get(

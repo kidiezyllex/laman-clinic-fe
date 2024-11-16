@@ -89,10 +89,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("type")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
                     activeSection === "type"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
                   }`}
                 >
                   <FlaskConical className="h-4 w-4" />
@@ -101,10 +101,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all ${
                     activeSection === "profile"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
                   }`}
                 >
                   <User className="h-4 w-4" />

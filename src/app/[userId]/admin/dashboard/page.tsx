@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, CircleCheck, User, Users } from "lucide-react";
+import { Bell, CircleCheck, FlaskConical, User, Users } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -15,9 +15,10 @@ import DoctorProfile from "@/components/doctor/DoctorProfile";
 import { useToast } from "@/hooks/use-toast";
 import AccountsManagement from "@/components/admin/AccountsManagement";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
+import TestsManagement from "@/components/admin/TestsManagement";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("accounts");
+  const [activeSection, setActiveSection] = useState("tests");
   const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {
@@ -27,8 +28,8 @@ export default function Page() {
         return <DoctorProfile />;
       case "doctors":
         return <DoctorsManagement />;
-      // case "notification":
-      // return <Notification />;
+      case "tests":
+        return <TestsManagement />;
       default:
         return null;
     }
@@ -59,9 +60,15 @@ export default function Page() {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
-                <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
+                <div
+                  className={
+                    activeSection === "accounts" || activeSection === "doctors"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
+                  }
+                >
                   <Users className="h-4 w-4" />
-                  Quản lý
+                  Tài khoản
                 </div>
                 <Link
                   href="#"
@@ -72,7 +79,7 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <p className="ml-7">Tài khoản</p>
+                  <p className="ml-7">Tất cả</p>
                 </Link>
                 <Link
                   href="#"
@@ -85,43 +92,17 @@ export default function Page() {
                 >
                   <p className="ml-7">Bác sĩ</p>
                 </Link>
-                <div className={"flex items-center gap-3 rounded-md px-3 py-2"}>
-                  <CircleCheck className="h-4 w-4" />
-                  Hoàn thành
-                </div>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("invoice")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "invoice"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                  onClick={() => setActiveSection("tests")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "tests"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
                   }`}
                 >
-                  <p className="ml-7">Lịch hẹn</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("completed")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completed"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <p className="ml-7">Dịch vụ</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "notification"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
+                  <FlaskConical className="h-4 w-4" />
+                  Xét nghiệm
                 </Link>
                 <Link
                   href="#"

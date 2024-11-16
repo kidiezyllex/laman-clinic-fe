@@ -13,8 +13,8 @@ import { Calendar, Cat, Dog, Mail, MapPin, Phone, User } from "lucide-react";
 import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
-import { formatDate } from "../../../lib/utils";
-import { Patient } from "../../../lib/entity-types";
+import { formatDate } from "../../../../lib/utils";
+import { Patient } from "../../../../lib/entity-types";
 
 export default function PatientDetails({
   isOpen,

@@ -31,8 +31,8 @@ import {
   renderDayOfWeek,
   renderRole,
   renderSpecialty,
-} from "../../../lib/utils";
-import { Schedule } from "../../../lib/entity-types";
+} from "../../../../lib/utils";
+import { Schedule } from "../../../../lib/entity-types";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),

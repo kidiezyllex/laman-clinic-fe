@@ -82,12 +82,8 @@ export default function AccountsManagement() {
       case "patient":
         return (
           <PatientProfileForm
-            setSearchTerm={function (section: string): void {
-              throw new Error("Function not implemented.");
-            }}
-            setShowCreatePatientProfile={function (section: boolean): void {
-              throw new Error("Function not implemented.");
-            }}
+            setSearchTerm={function (section: string): void {}}
+            setShowCreatePatientProfile={function (section: boolean): void {}}
           ></PatientProfileForm>
         );
       case "receptionist":

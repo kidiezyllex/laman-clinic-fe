@@ -25,12 +25,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowUpFromLine, Loader2 } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { renderDayOfWeek, renderRole } from "../../../lib/utils";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  renderDayOfWeek,
+  renderRole,
+  renderSpecialty,
+} from "../../../lib/utils";
 import { Schedule } from "../../../lib/entity-types";
 
 const formSchema = z.object({
@@ -53,11 +54,11 @@ const formSchema = z.object({
 export default function AddStaffForm({ role }: { role: string }) {
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
-  const { userId } = useAuth();
+  const [specializations, setSpecializations] = useState<[]>([]);
+  const [specialization, setSpecialization] = useState("");
+  const [checked, setChecked] = useState(false);
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -82,14 +83,17 @@ export default function AddStaffForm({ role }: { role: string }) {
   });
 
   useEffect(() => {
-    const fetchProvinces = async () => {
+    const fetchData = async () => {
       const response = await axios.get(
         "https://provinces.open-api.vn/api/?depth=2"
       );
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/specializations`
+      );
       setProvincesList(response.data);
+      setSpecializations(response2.data);
     };
-
-    fetchProvinces();
+    fetchData();
   }, []);
 
   const handleFetchDistricts = async (provinceName: string) => {
@@ -147,7 +151,9 @@ export default function AddStaffForm({ role }: { role: string }) {
 
     toast({
       title: "Lịch trình đã được cập nhật",
-      description: `Lịch trình cho ${currentItem.dayOfWeek} đã được cập nhật`,
+      description: `Lịch trình cho ${renderDayOfWeek(
+        currentItem.dayOfWeek
+      )} đã được cập nhật`,
     });
   };
 
@@ -195,23 +201,25 @@ export default function AddStaffForm({ role }: { role: string }) {
         data.province.split("-").slice(1).join("-"),
       schedule: schedule,
       role: role + "",
+      specialization: specialization,
+      isDepartmentHead: checked,
+    };
+
+    const newUser = {
+      fullName: data.fullName,
+      gender: data.gender,
+      email: data.email,
+      password: data.password,
+      role: role + "",
+      phone: data.phone.startsWith("0")
+        ? "+84" + data.phone.slice(1)
+        : data.phone,
     };
     try {
       const res1 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${role}s`,
         payload
       );
-
-      const newUser = {
-        fullName: data.fullName,
-        gender: data.gender,
-        email: data.email,
-        password: data.password,
-        role: role + "",
-        phone: data.phone.startsWith("0")
-          ? "+84" + data.phone.slice(1)
-          : data.phone,
-      };
       const res2 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
         newUser
@@ -569,6 +577,37 @@ export default function AddStaffForm({ role }: { role: string }) {
               )}
             </div>
           </div>
+          {role === "doctor" && (
+            <div>
+              <p className="text-sm font-semibold mb-4">Chuyên ngành</p>
+              <div className="w-full">
+                <Select onValueChange={(value) => setSpecialization(value)}>
+                  <SelectTrigger className="col-span-7">
+                    <SelectValue placeholder="Chọn Chuyên ngành" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {specializations.map((specialization) => (
+                      <SelectItem key={specialization} value={specialization}>
+                        {renderSpecialty(specialization)}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <p className="text-sm font-semibold my-4">
+                Trưởng khoa/Bác sĩ (Nếu là Trường khoa, vui lòng check vào ô
+                vuông)
+              </p>
+              <input
+                className="h-10 w-10"
+                type="checkbox"
+                checked={checked}
+                onChange={() => {
+                  setChecked(!checked);
+                }}
+              />
+            </div>
+          )}
 
           <Button
             type="submit"

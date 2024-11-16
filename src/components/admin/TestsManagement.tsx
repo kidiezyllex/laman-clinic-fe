@@ -16,6 +16,7 @@ import {
   Edit2,
   Save,
   SearchIcon,
+  Trash,
   X,
 } from "lucide-react";
 import axios from "axios";
@@ -237,20 +238,30 @@ export default function TestsManagement() {
                 )}
               </TableCell>
               <TableCell>
-                {editingId === test._id ? (
-                  <Button
-                    onClick={handleSave}
-                    className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                  >
-                    Lưu
-                    <Save className="w-4 h-4" />
+                <TableCell className="flex flex-row gap-2 p-0">
+                  {editingId === test._id ? (
+                    <Button
+                      onClick={handleSave}
+                      className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                      Lưu
+                      <Save className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleEdit(test)}
+                      variant="secondary"
+                      className="border border-slate-00 dark:border-none"
+                    >
+                      Sửa
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                  )}
+                  <Button variant="destructive">
+                    Xoá
+                    <Trash className="w-4 h-4" />
                   </Button>
-                ) : (
-                  <Button onClick={() => handleEdit(test)} variant="outline">
-                    Sửa
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
-                )}
+                </TableCell>
               </TableCell>
             </TableRow>
           ))}

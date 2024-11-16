@@ -1,7 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, CircleCheck, FlaskConical, User, Users } from "lucide-react";
+import {
+  Bell,
+  CircleCheck,
+  FlaskConical,
+  Pill,
+  User,
+  Users,
+} from "lucide-react";
 
 import {
   Breadcrumb,
@@ -16,9 +23,10 @@ import { useToast } from "@/hooks/use-toast";
 import AccountsManagement from "@/components/admin/AccountsManagement";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
 import TestsManagement from "@/components/admin/TestsManagement";
+import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("tests");
+  const [activeSection, setActiveSection] = useState("medicine-warehouse");
   const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {
@@ -30,6 +38,8 @@ export default function Page() {
         return <DoctorsManagement />;
       case "tests":
         return <TestsManagement />;
+      case "medicine-warehouse":
+        return <MedicineWarehouse />;
       default:
         return null;
     }
@@ -103,6 +113,18 @@ export default function Page() {
                 >
                   <FlaskConical className="h-4 w-4" />
                   Xét nghiệm
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("medicine-warehouse")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "medicine-warehouse"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
+                  }`}
+                >
+                  <Pill className="h-4 w-4" />
+                  Kho thuốc
                 </Link>
                 <Link
                   href="#"

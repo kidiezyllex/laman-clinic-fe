@@ -90,6 +90,7 @@ export interface Medication {
   price: number;
   instructions: string;
   _id: string;
+  expirationDate: Date;
 }
 
 export interface Prescription {

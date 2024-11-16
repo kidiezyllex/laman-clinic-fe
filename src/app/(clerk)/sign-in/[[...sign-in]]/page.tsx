@@ -53,8 +53,8 @@ export default function Page() {
               (data as any)?.data?.email
             }`
           );
-          router.push(`/${res.data[0]._id}/doctor/dashboard`);
-          localStorage.setItem("currentId", res.data[0]._id);
+          router.push(`/${res.data._id}/doctor/dashboard`);
+          localStorage.setItem("currentId", res.data._id);
         } else if (data.data?.role === "receptionist") {
           toast({
             variant: "default",

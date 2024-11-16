@@ -9,21 +9,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Calendar,
-  Cat,
-  Dog,
-  FileText,
-  Mail,
-  MapPin,
-  Phone,
-  User,
-} from "lucide-react";
+import { Calendar, Cat, Dog, Mail, MapPin, Phone, User } from "lucide-react";
 import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
-import { Appointment, Patient } from "../../../lib/entity-types";
+import { Patient } from "../../../lib/entity-types";
 
 export default function PatientDetails({
   isOpen,
@@ -84,7 +75,7 @@ export default function PatientDetails({
                   <p className="text-slate-500">Mã bệnh nhân: {patient?._id}</p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 border rounded-md p-4 mr-4">
+              <div className="border rounded-md p-4 mr-4">
                 <div className="flex flex-col gap-3">
                   <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
                   <div className="flex items-center gap-2">

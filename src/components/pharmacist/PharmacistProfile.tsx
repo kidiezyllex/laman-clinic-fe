@@ -80,7 +80,10 @@ export default function PharmacistProfile() {
       <div className="flex flex-col gap-3">
         {Object.keys(pharmacist).length !== 0 &&
           (pharmacist as any).schedule.map((scheduleItem: Schedule) => (
-            <div key={scheduleItem._id} className="p-3 border">
+            <div
+              key={scheduleItem.dayOfWeek + scheduleItem.startTime}
+              className="p-3 border"
+            >
               <h3 className="font-medium text-blue-500 mb-2 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
                 <p className="text-sm">

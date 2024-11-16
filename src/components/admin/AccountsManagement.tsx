@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ArrowUpFromLine, SearchIcon, X } from "lucide-react";
+import { CirclePlus, SearchIcon } from "lucide-react";
 import axios from "axios";
 import { User } from "../../../lib/entity-types";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -32,10 +32,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/hooks/use-toast";
 import PatientDetails from "./PatientDetails";
 import StaffDetails from "./StaffDetails";
+import PatientProfileForm from "../patient/profile/PatientProfileForm";
+import AddStaffForm from "./AddStaffForm";
 export default function AccountsManagement() {
   const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
@@ -45,16 +46,9 @@ export default function AccountsManagement() {
   const [filterRole, setFilterRole] = useState("all");
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [selectedUserRole, setSelectedUserRole] = useState("");
+  const [role, setRole] = useState("patient");
   const itemsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [newUser, setNewUser] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-    password: "",
-    gender: "Male",
-    role: "patient",
-  });
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -81,6 +75,36 @@ export default function AccountsManagement() {
       admin: "QTV",
     };
     return roles[role] || "Không xác định";
+  };
+
+  const renderAddFormByRole = () => {
+    switch (role) {
+      case "patient":
+        return (
+          <PatientProfileForm
+            setSearchTerm={function (section: string): void {
+              throw new Error("Function not implemented.");
+            }}
+            setShowCreatePatientProfile={function (section: boolean): void {
+              throw new Error("Function not implemented.");
+            }}
+          ></PatientProfileForm>
+        );
+      case "receptionist":
+        return <AddStaffForm role={"receptionist"}></AddStaffForm>;
+      case "laboratory-technician":
+        return <AddStaffForm role={"laboratory-technician"}></AddStaffForm>;
+      case "cashier":
+        return <AddStaffForm role={"cashier"}></AddStaffForm>;
+      case "doctor":
+        return <AddStaffForm role={"doctor"}></AddStaffForm>;
+      case "admin":
+        return <AddStaffForm role={"admin"}></AddStaffForm>;
+      case "pharmacist":
+        return <AddStaffForm role={"pharmacist"}></AddStaffForm>;
+      default:
+        return "";
+    }
   };
 
   const staff = (() => {
@@ -112,37 +136,6 @@ export default function AccountsManagement() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentUsers = filteredUsers.slice(startIndex, endIndex);
-
-  const handleCreateUser = async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/user`,
-        newUser
-      );
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo 1 tài khoản!",
-      });
-      setUsers([...users, response.data]);
-      setIsDialogOpen(false);
-      setNewUser({
-        fullName: "",
-        phone: "",
-        email: "",
-        password: "",
-        gender: "Male",
-        role: "patient",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: "Đã xảy ra lỗi: " + error + "",
-      });
-      console.error(error);
-    }
-  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
       <p className="text-base font-semibold text-blue-500">
@@ -176,8 +169,12 @@ export default function AccountsManagement() {
             <SelectItem value="admin">Quản trị viên</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="secondary" onClick={() => setIsDialogOpen(true)}>
+        <Button
+          onClick={() => setIsDialogOpen(true)}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
           Thêm tài khoản
+          <CirclePlus className="h-4 w-4" />
         </Button>
       </div>
       <div className="max-w-full border rounded-md p-4">
@@ -257,84 +254,16 @@ export default function AccountsManagement() {
         </PaginationContent>
       </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-fit overflow-y-auto flex flex-col justify-start gap-4">
-          <DialogTitle className="text-md font-semibold self-center text-blue-500">
+        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto flex flex-col justify-start gap-4">
+          <DialogTitle className="text-md font-semibold self-center text-blue-500 mb-4">
             THÊM TÀI KHOẢN
           </DialogTitle>
-          <div className="flex flex-col gap-4 mx-4 h-full">
+          <div className="flex flex-col gap-4 mx-4 h-fit">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="fullName">Họ tên</Label>
-              <Input
-                id="fullName"
-                value={newUser.fullName}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, fullName: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="phone">Số ĐT</Label>
-              <Input
-                id="phone"
-                value={newUser.phone}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, phone: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={newUser.email}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, email: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="password">Mật khẩu</Label>
-              <Input
-                id="password"
-                type="password"
-                value={newUser.password}
-                onChange={(e) =>
-                  setNewUser({ ...newUser, password: e.target.value })
-                }
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label>Giới tính</Label>
-              <RadioGroup
-                defaultValue="Male"
-                onValueChange={(value) =>
-                  setNewUser({ ...newUser, gender: value })
-                }
-                className="col-span-3 flex"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="Male" id="Male" />
-                  <Label htmlFor="Male">Nam</Label>
-                </div>
-                <div className="flex items-center space-x-2 ml-4">
-                  <RadioGroupItem value="Female" id="Female" />
-                  <Label htmlFor="Female">Nữ</Label>
-                </div>
-              </RadioGroup>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="role">Vai trò</Label>
-              <Select
-                value={newUser.role}
-                onValueChange={(value) =>
-                  setNewUser({ ...newUser, role: value })
-                }
-              >
+              <Label htmlFor="role" className="text-base">
+                Vui lòng chọn Vai trò:
+              </Label>
+              <Select value={role} onValueChange={(value) => setRole(value)}>
                 <SelectTrigger className="col-span-3">
                   <SelectValue placeholder="Chọn vai trò" />
                 </SelectTrigger>
@@ -351,32 +280,8 @@ export default function AccountsManagement() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex justify-end items-end self-end gap-2 flex-grow h-full mt-4">
-              <Button
-                variant="destructive"
-                onClick={() => {
-                  setIsDialogOpen(false);
-                  setNewUser({
-                    fullName: "",
-                    phone: "",
-                    email: "",
-                    password: "",
-                    gender: "male",
-                    role: "patient",
-                  });
-                }}
-              >
-                Huỷ
-                <X className="w-4 h-4" />
-              </Button>
-              <Button
-                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                onClick={handleCreateUser}
-              >
-                Tạo
-                <ArrowUpFromLine className="w-4 h-4" />
-              </Button>
-            </div>
+            {renderAddFormByRole()}
+            <div className="mb-4"></div>
           </div>
         </DialogContent>
       </Dialog>

@@ -18,7 +18,6 @@ export interface Schedule {
   dayOfWeek: string;
   startTime: string;
   endTime: string;
-  _id: string;
 }
 export interface Doctor {
   _id: string;

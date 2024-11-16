@@ -120,7 +120,10 @@ export default function DoctorDetails({
                 <div className="flex flex-col gap-3">
                   {(selectedDoctor as any)?.schedule?.map(
                     (scheduleItem: Schedule) => (
-                      <div key={scheduleItem._id + ""} className="mt-4">
+                      <div
+                        key={scheduleItem.dayOfWeek + scheduleItem.startTime}
+                        className="mt-4"
+                      >
                         <h3 className="font-medium text-blue-500 mb-2 flex items-center">
                           <Clock className="w-4 h-4 mr-2" />
                           <p className="text-sm">

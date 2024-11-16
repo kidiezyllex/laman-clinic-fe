@@ -100,7 +100,7 @@ export default function RoomSelector({
                 {selectedDate &&
                   (doctor as any).schedule.map((scheduleItem: Schedule) => (
                     <div
-                      key={scheduleItem._id}
+                      key={scheduleItem.dayOfWeek + scheduleItem.startTime}
                       className={
                         scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2)
                           ? "p-4 border"

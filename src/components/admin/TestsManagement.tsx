@@ -186,7 +186,7 @@ export default function TestsManagement() {
           <CirclePlus className="h-4 w-4" />
         </Button>
       </div>
-      <Table>
+      <Table className="border">
         <TableHeader>
           <TableRow>
             <TableHead>STT</TableHead>

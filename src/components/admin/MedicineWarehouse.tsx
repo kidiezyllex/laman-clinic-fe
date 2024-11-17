@@ -11,6 +11,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   ArrowUpFromLine,
   CirclePlus,
   Edit2,
@@ -18,7 +25,7 @@ import {
   Mail,
   MapPin,
   PhoneIcon,
-  Save,
+  TrendingDown,
   SearchIcon,
   Trash,
   X,
@@ -38,6 +45,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDate } from "../../../lib/utils";
+import MedicationFluctuations from "./medicine-warehouse/MedicationFluctuations";
 
 export default function MedicineWarehouse() {
   const { toast } = useToast();
@@ -45,6 +53,7 @@ export default function MedicineWarehouse() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isOpenMF, setIsOpenMF] = useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
   const [editingId, setEditingId] = useState<String | null>("");
   const [editedTest, setEditedTest] = useState<TestType | null>(null);
@@ -54,6 +63,7 @@ export default function MedicineWarehouse() {
     description: "",
     price: 0,
   });
+  const [filterValue, setFilterValue] = useState("all");
 
   const fetchData = async () => {
     try {
@@ -74,9 +84,24 @@ export default function MedicineWarehouse() {
     fetchData();
   }, []);
 
-  const filteredMedications = medications.filter((item) =>
-    item?.medicationName?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredMedications = medications
+    .filter((item) =>
+      item?.medicationName?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      if (filterValue === "farthest") {
+        return (
+          new Date(b.expirationDate).getTime() -
+          new Date(a.expirationDate).getTime()
+        );
+      } else if (filterValue === "nearest") {
+        return (
+          new Date(a.expirationDate).getTime() -
+          new Date(b.expirationDate).getTime()
+        );
+      }
+      return 0;
+    });
 
   const totalPages = Math.ceil(filteredMedications.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -123,6 +148,23 @@ export default function MedicineWarehouse() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+        <Select value={filterValue} onValueChange={setFilterValue}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="nearest">HSD gần nhất</SelectItem>
+            <SelectItem value="farthest">HSD xa nhất</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button
+          onClick={() => setIsOpenMF(true)}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+        >
+          Biến động
+          <TrendingDown className="h-4 w-4" />
+        </Button>
         <Button
           onClick={() => setIsDialogOpen(true)}
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
@@ -131,7 +173,7 @@ export default function MedicineWarehouse() {
           <CirclePlus className="h-4 w-4" />
         </Button>
       </div>
-      <Table>
+      <Table className="border">
         <TableHeader>
           <TableRow>
             <TableHead>STT</TableHead>
@@ -253,6 +295,10 @@ export default function MedicineWarehouse() {
           </div>
         </DialogContent>
       </Dialog>
+      <MedicationFluctuations
+        isOpenMF={isOpenMF}
+        setIsOpenMF={setIsOpenMF}
+      ></MedicationFluctuations>
     </div>
   );
 }

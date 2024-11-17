@@ -178,7 +178,8 @@ export default function MedicineWarehouse() {
           <TableRow>
             <TableHead>STT</TableHead>
             <TableHead>Tên thuốc</TableHead>
-            <TableHead>Số lượng</TableHead>
+            <TableHead>SL nhập</TableHead>
+            <TableHead>SL tồn</TableHead>
             <TableHead>Liều lượng</TableHead>
             <TableHead>Giá</TableHead>
             <TableHead>Hướng dẫn sử dụng</TableHead>
@@ -191,7 +192,8 @@ export default function MedicineWarehouse() {
             <TableRow key={medication._id}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{medication.medicationName}</TableCell>
-              <TableCell>{medication.quantity}</TableCell>
+              <TableCell>{medication.quantityImported}</TableCell>
+              <TableCell>{medication.quantityRemaining}</TableCell>
               <TableCell>{medication.dosage}</TableCell>
               <TableCell>{medication.price}</TableCell>
               <TableCell>{medication.instructions}</TableCell>

@@ -43,11 +43,11 @@ import axios from "axios";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
-import { medicationData } from "../../../lib/hardcoded-data";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
 import {
   Appointment,
+  Medication,
   MedicationRow,
   TestType,
 } from "../../../lib/entity-types";
@@ -90,6 +90,7 @@ export default function PatientDetails({
           dosage: "",
           quantity: 0,
           instructions: "",
+          quantityRemaining: 0,
         },
       ],
     },
@@ -110,6 +111,7 @@ export default function PatientDetails({
       medicationName: "",
       dosage: "",
       quantity: 0,
+      quantityRemaining: 0,
       instructions: "",
       price: 0,
     },
@@ -119,6 +121,7 @@ export default function PatientDetails({
   const [searchTerm, setSearchTerm] = useState("");
   const [reasonRequestTest, setReasonRequestTest] = useState("");
   const [testTypes, setTestTypes] = useState<TestType[]>([]);
+  const [medications, setMedications] = useState<Medication[]>([]);
   const [formData, setFormData] = useState({
     medicalHistory: "",
     diagnosis: "",
@@ -137,6 +140,7 @@ export default function PatientDetails({
         quantity: 0,
         instructions: "",
         price: 0,
+        quantityRemaining: 0,
       },
     ]);
     setShowPrescriptionForm(!showPrescriptionForm);
@@ -151,6 +155,7 @@ export default function PatientDetails({
       quantity: 0,
       price: 0,
       instructions: "",
+      quantityRemaining: 0,
     };
     setRows([...rows, newRow]);
   };
@@ -167,7 +172,7 @@ export default function PatientDetails({
 
   // Fill value trên các row
   const handleSelectMedicationName = (value: string, rowId: number) => {
-    const findMedication = medicationData.find(
+    const findMedication = medications.find(
       (item) => item.medicationName === value
     );
     setRows(
@@ -203,6 +208,10 @@ export default function PatientDetails({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`
       );
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
+      );
+      setMedications(response2.data);
       setTests(response.data);
     } catch (error) {
       console.error(error);
@@ -357,8 +366,12 @@ export default function PatientDetails({
         medications: rows,
         dateIssued: new Date(),
       };
+      // const res = await axios.post(
+      //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+      //   payload
+      // );
       const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-prescription`,
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
         payload
       );
     } catch (error) {
@@ -443,13 +456,13 @@ export default function PatientDetails({
                 <div>
                   <p className="text-base font-semibold ">
                     {selectedAppointment?.gender?.toLowerCase() === "male" ? (
-                      <p className="text-blue-500">
+                      <span className="text-blue-500">
                         {selectedAppointment?.fullName}
-                      </p>
+                      </span>
                     ) : (
-                      <p className="text-pink-500">
+                      <span className="text-pink-500">
                         {selectedAppointment?.fullName}
-                      </p>
+                      </span>
                     )}
                   </p>
                   <p className="text-slate-500">
@@ -598,14 +611,16 @@ export default function PatientDetails({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {medicationData.map((medication, index) => (
-                                <SelectItem
-                                  key={medication.medicationName}
-                                  value={medication.medicationName}
-                                >
-                                  {medication.medicationName}
-                                </SelectItem>
-                              ))}
+                              {(medications as any).map(
+                                (medication: any, index: any) => (
+                                  <SelectItem
+                                    key={medication.medicationName + index}
+                                    value={medication.medicationName}
+                                  >
+                                    {medication.medicationName}
+                                  </SelectItem>
+                                )
+                              )}
                             </SelectContent>
                           </Select>
                           <Input

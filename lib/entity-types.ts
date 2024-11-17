@@ -81,11 +81,14 @@ export interface MedicationRow {
   quantity: number;
   instructions: string;
   price: number;
+  quantityRemaining: number;
 }
 
 export interface Medication {
   medicationName: string;
   dosage: string;
+  quantityImported: number;
+  quantityRemaining: number;
   quantity: number;
   price: number;
   instructions: string;

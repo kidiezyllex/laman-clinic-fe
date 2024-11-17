@@ -23,6 +23,7 @@ import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
+import { apmtData } from "../../../lib/hardcoded-data";
 
 export default function ViewAppointment({
   roomNumber,
@@ -80,6 +81,7 @@ export default function ViewAppointment({
         setAppointments(response.data);
       } else {
         setAppointments([]);
+        // setAppointments(apmtData);
       }
     } catch (err) {
       console.log(err + "");

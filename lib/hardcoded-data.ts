@@ -376,3 +376,18 @@ export const reqTestData = [
     requestDate: new Date(),
   },
 ];
+
+export const apmtData = [
+  {
+    patientId: "BN-5C662W",
+    appointmentDate: "2024-11-17T02:00:00.000Z",
+    reason: "Kiểm tra định kỳ",
+    status: "Scheduled",
+    specialization: "Cardiology",
+    priority: false,
+    createdAt: "2024-11-13T11:33:01.086Z",
+    updatedAt: "2024-11-13T11:33:01.086Z",
+    _id: "CH-K4E64V",
+    __v: 0,
+  },
+];

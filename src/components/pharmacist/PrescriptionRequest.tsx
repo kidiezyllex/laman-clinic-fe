@@ -131,16 +131,33 @@ export default function PrescriptionRequest() {
       return 0;
     });
 
-  const handleCompletePrescription = async (prescriptionId: string) => {
+  const handleCompletePrescription = async (
+    prescriptionId: string,
+    prescriptionMedications: any
+  ) => {
     try {
+      const finalMedications = newMedication[prescriptionId]
+        ? newMedication[prescriptionId]
+        : prescriptionMedications;
       await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/${prescriptionId}`,
         {
           status: "Completed",
           dateIssued: new Date(),
-          medications: newMedication[prescriptionId],
+          medications: finalMedications,
         }
       );
+      finalMedications.forEach(async (item: any) => {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications/${item._id}`,
+          {
+            quantityRemaining:
+              item.quantityRemaining - item.quantity > 0
+                ? item.quantityRemaining - item.quantity
+                : 0,
+          }
+        );
+      });
       toast({
         variant: "default",
         title: "Thành công!",
@@ -150,7 +167,6 @@ export default function PrescriptionRequest() {
         prevPrescriptions.filter((p) => p._id !== prescriptionId)
       );
     } catch (error) {
-      console.error("Error completing prescription:", error);
       toast({
         variant: "destructive",
         title: "Thất bại!",
@@ -450,7 +466,12 @@ export default function PrescriptionRequest() {
               )}
               <Button
                 className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                onClick={() => handleCompletePrescription(prescription._id)}
+                onClick={() =>
+                  handleCompletePrescription(
+                    prescription._id,
+                    prescription.medications
+                  )
+                }
               >
                 Hoàn thành đơn
                 <CircleCheckBig className="h-4 w-4 ml-2" />

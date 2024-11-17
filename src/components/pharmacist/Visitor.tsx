@@ -70,6 +70,7 @@ export default function Visitor() {
       quantity: 0,
       instructions: "",
       price: 0,
+      quantityRemaining: 0,
     },
   ]);
   const form = useForm({
@@ -115,6 +116,7 @@ export default function Visitor() {
       quantity: 0,
       price: 0,
       instructions: "",
+      quantityRemaining: 0,
     };
     setIsShow(true);
     setRows([...rows, newRow]);
@@ -218,6 +220,7 @@ export default function Visitor() {
           quantity: 0,
           instructions: "",
           price: 0,
+          quantityRemaining: 0,
         },
       ]);
       customerInfoForm.reset();
@@ -401,6 +404,7 @@ export default function Visitor() {
                 quantity: 0,
                 instructions: "",
                 price: 0,
+                quantityRemaining: 0,
               },
             ]);
             setIsShow(false);
@@ -458,6 +462,8 @@ export default function Visitor() {
               doctorId: "",
               medications: [],
               dateIssued: new Date(),
+              visitorName: "",
+              visitorPhone: "",
             }}
             newMedication={[...rows] as any}
           />

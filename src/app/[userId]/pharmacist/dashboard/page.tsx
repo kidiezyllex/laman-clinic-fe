@@ -20,6 +20,7 @@ import PrescriptionRequest from "@/components/pharmacist/PrescriptionRequest";
 import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import Visitor from "@/components/pharmacist/Visitor";
 import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
+import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("prescriptions");
 
@@ -33,6 +34,8 @@ export default function Page() {
         return <Visitor />;
       case "completed":
         return <CompletedPrescription />;
+      case "medicine-warehouse":
+        return <MedicineWarehouse />;
       default:
         return null;
     }
@@ -133,14 +136,14 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("warehouse")}
+                  onClick={() => setActiveSection("medicine-warehouse")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
-                    activeSection === "warehouse"
+                    activeSection === "medicine-warehouse"
                       ? "bg-muted text-blue-500 hover:text-blue-700"
                       : "text-slate-500"
                   }`}
                 >
-                  <BriefcaseMedical className="h-4 w-4" />
+                  <Pill className="h-4 w-4" />
                   Kho thuốc
                 </Link>
                 <Link

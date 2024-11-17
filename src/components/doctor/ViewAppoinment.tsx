@@ -11,7 +11,14 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { Cat, ChevronLeft, ChevronRight, Dog, User } from "lucide-react";
+import {
+  Cat,
+  ChevronLeft,
+  ChevronRight,
+  Dog,
+  RotateCcw,
+  User,
+} from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -94,7 +101,7 @@ export default function ViewAppointment({
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-row gap-3">
           <Select
             value={format(currentDate, "MMMM yyyy")}
             onValueChange={(value) => setCurrentDate(new Date(value))}
@@ -118,15 +125,15 @@ export default function ViewAppointment({
               </SelectItem>
             </SelectContent>
           </Select>
-          <div className="flex space-x-1">
-            <Button
-              variant={"outline"}
-              size="sm"
-              onClick={() => setCurrentDate(new Date())}
-            >
-              Hôm nay
-            </Button>
-          </div>
+          <Button
+            variant={"outline"}
+            onClick={() => setCurrentDate(new Date())}
+          >
+            Hôm nay
+          </Button>
+          <Button variant="outline" size="icon" onClick={fetchAppointments}>
+            <RotateCcw className="h-4 w-4" />
+          </Button>
         </div>
         <div className="flex space-x-2">
           <Button variant="outline" size="icon" onClick={handlePreviousWeek}>

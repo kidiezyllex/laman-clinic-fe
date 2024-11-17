@@ -14,6 +14,7 @@ import {
   Mail,
   MapPin,
   Phone,
+  RotateCcw,
   SearchIcon,
   SquareActivity,
   Timer,
@@ -185,6 +186,9 @@ export default function OnlineAppointment() {
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
+        <Button variant="outline" size="icon" onClick={fetchData}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredAppointments.map((appointment) => (

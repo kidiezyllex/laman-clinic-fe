@@ -17,6 +17,7 @@ import {
   Edit,
   Eye,
   History,
+  RotateCcw,
   SearchIcon,
   Stethoscope,
   User,
@@ -63,29 +64,26 @@ export default function PrescriptionRequest() {
   const [selectedPatientMedicalHistory, setSelectedPatientMedicalHistory] =
     useState<Patient | undefined>();
   const [filterType, setFilterType] = useState("all");
-
+  const fetchPrescriptions = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
+      );
+      setPrescriptions(
+        response.data.filter(
+          (item: { status: string }) => item.status === "Scheduled"
+        )
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại",
+        description: error + "",
+      });
+    }
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
-        );
-        setPrescriptions(
-          response.data.filter(
-            (item: { status: string }) => item.status === "Scheduled"
-          )
-        );
-      } catch (error) {
-        console.error("Error fetching prescriptions:", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch prescriptions. Please try again.",
-        });
-      }
-    };
-
-    fetchData();
+    fetchPrescriptions();
   }, [toast]);
 
   useEffect(() => {
@@ -294,6 +292,9 @@ export default function PrescriptionRequest() {
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
+        <Button variant="outline" size="icon" onClick={fetchPrescriptions}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (

@@ -29,6 +29,7 @@ import {
   SearchIcon,
   Trash,
   X,
+  RotateCcw,
 } from "lucide-react";
 import axios from "axios";
 import { Medication, TestType } from "../../../lib/entity-types";
@@ -171,6 +172,9 @@ export default function MedicineWarehouse() {
         >
           Thêm thuốc
           <CirclePlus className="h-4 w-4" />
+        </Button>
+        <Button variant="outline" size="icon" onClick={fetchData}>
+          <RotateCcw className="h-4 w-4" />
         </Button>
       </div>
       <Table className="border">

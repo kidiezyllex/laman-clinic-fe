@@ -233,8 +233,8 @@ export default function PatientDetails({
     );
   };
 
-  // Tạo xét nghiệm
-  const handleRequestTest = async () => {
+  // Tạo xét nghiệm / Yêu cầu xét nghiệm
+  const handleCreateRequestTest = async () => {
     try {
       setIsLoading(true);
       const payload = {
@@ -244,17 +244,24 @@ export default function PatientDetails({
         requestDate: new Date(),
         reason: reasonRequestTest,
       };
+      console.log(payload);
       if (reasonRequestTest.trim() === "" || testTypes.length === 0) {
         toast({
           variant: "destructive",
           title: "Lỗi!",
           description: "Vui lòng nhập đầy đủ Yêu cầu xét nghiệm!",
         });
+        return;
       } else {
         const res3 = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
           payload
         );
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
+        });
       }
     } catch (error) {
       toast({
@@ -263,12 +270,10 @@ export default function PatientDetails({
         description: error + "",
       });
     } finally {
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
-      });
+      setReasonRequestTest("");
+      setSelectedTests([]);
       setIsLoading(false);
+      // setIsOpen(false);
     }
   };
 
@@ -823,14 +828,17 @@ export default function PatientDetails({
                       {filteredTests.map((test) => (
                         <Label
                           key={test._id}
-                          className="flex items-center space-x-2 mb-2 p-2 border rounded-md"
+                          className="flex items-center space-x-2 mb-2 p-2 border rounded-md cursor-pointer"
                         >
                           <Checkbox
                             id={`test-${test._id}`}
                             checked={selectedTests.includes(test._id)}
                             onCheckedChange={() => handleTestToggle(test._id)}
                           />
-                          <Label className="text-sm font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                          <Label
+                            key={test._id}
+                            className="text-sm font-semibold cursor-pointer"
+                          >
                             {test.testName}
                           </Label>
                         </Label>
@@ -874,7 +882,7 @@ export default function PatientDetails({
                       <X className="w-4 h-4" />
                     </Button>
                     <Button
-                      onClick={() => handleRequestTest()}
+                      onClick={() => handleCreateRequestTest()}
                       disabled={isLoading}
                       className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >

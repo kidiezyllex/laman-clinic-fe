@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import {
+  ArrowUpFromLine,
   Calendar,
   Cat,
   CircleHelp,
@@ -12,6 +13,7 @@ import {
   Mail,
   MapPin,
   Phone,
+  RotateCcw,
   SearchIcon,
   Stethoscope,
   TestTube,
@@ -23,7 +25,6 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "../../../lib/utils";
 import { Patient, TestType, RequestTest } from "../../../lib/entity-types";
-import { reqTestData } from "../../../lib/hardcoded-data";
 import {
   Table,
   TableBody,
@@ -32,10 +33,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "../ui/separator";
 import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
+import { usePathname } from "next/navigation";
 export default function TestRequest() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,35 +56,44 @@ export default function TestRequest() {
   const [selectedPatientId, setSelectedPatientId] = useState("");
   const [testResult, setTestResult] = useState("");
   const [performedTests, setPerformedTests] = useState<TestType[]>([]);
+  const [filterType, setFilterType] = useState("all");
+  const technicianId = usePathname().split("/")[1];
+  // Filter Data
+  const filteredRequestTests = requestTests
+    .filter((item) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      if (filterType === "today")
+        return formatDate(item.requestDate) === formatDate(new Date());
+      return item.patientId.toLowerCase().includes(searchTermLower);
+    })
+    .sort((a, b) => {
+      if (filterType === "old") {
+        return (
+          new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
+        );
+      } else if (filterType === "new") {
+        return (
+          new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
+        );
+      }
+      return 0;
+    });
 
-  const filteredRequestTests = requestTests.filter((requestTest) => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return requestTest.patientId.toLowerCase().includes(searchTermLower);
-  });
-
+  // Fetch Data
   const fetchData = async () => {
-    // const response = await axios.get(
-    //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/requestTest`
-    // );
-    // setRequestTests(response.data);
-
-    const response = await axios.get(
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests`
+    );
+    const res2 = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedPatientId}`
     );
-    setSelectedPatient(response.data);
-    setRequestTests(reqTestData);
+    setRequestTests(res.data);
+    setSelectedPatient(res2.data);
   };
   useEffect(() => {
     fetchData();
   }, [selectedPatientId]);
 
-  // const handleTestToggle = (testId: number) => {
-  //   setSelectedTests((prev) =>
-  //     prev.includes(testId)
-  //       ? prev.filter((id) => id !== testId)
-  //       : [...prev, testId]
-  //   );
-  // };
   const handleToggleCheckbox = (test: TestType) => {
     setPerformedTests((prevTests) => {
       const testIndex = prevTests.findIndex((t) => t._id === test._id);
@@ -92,28 +110,77 @@ export default function TestRequest() {
   }, [performedTests]);
 
   const handleCompleteTest = async () => {
-    const payload = {
-      requestTest: selectedRequestTest,
-      performedDate: new Date(),
-    };
-    console.log(payload);
+    try {
+      const payload = {
+        patientId: selectedPatientId,
+        labTestId: "PTN-01",
+        technicianId: technicianId,
+        result: testResult,
+        reasonByDoctor: selectedRequestTest?.reason,
+        datePerformed: new Date(),
+        requestPerformed: selectedRequestTest?.requestDate,
+        testsPerformed: performedTests,
+        status: "Completed",
+      };
+      // Post lên Test
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests`,
+        payload
+      );
+      // Xoá khỏi TestRequest
+      const res2 = await axios.delete(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/${selectedRequestTest?._id}`
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      setIsOpen(false);
+      setPerformedTests([]);
+      setSelectedRequestTest(null);
+      setTestResult("");
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã hoàn thành một xét nghiệm!",
+      });
+      fetchData();
+    }
   };
+
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
         DANH SÁCH CÁC XÉT NGHIỆM ĐƯỢC YÊU CẦU
       </p>
-      <div className="relative">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="search"
-          placeholder="Nhập mã bệnh nhân"
-          className="pl-10 bg-primary-foreground"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex flex-row gap-3">
+        <div className="relative flex-grow">
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="search"
+            placeholder="Nhập mã bệnh nhân..."
+            className="pl-10 bg-primary-foreground"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo ngày" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="new">Gần nhất</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button variant="outline" size="icon" onClick={fetchData}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </div>
-
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredRequestTests.map((requestTest) => (
           <Card
@@ -122,7 +189,7 @@ export default function TestRequest() {
           >
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-row gap-4 items-center w-full">
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-blue-500 ">
+                <div className="bg-background h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 ">
                   <User className="text-blue-500" />
                 </div>
                 <div className="flex flex-col gap-1">
@@ -155,7 +222,7 @@ export default function TestRequest() {
                 <span className="font-semibold text-sm">Loại xét nghiệm:</span>
               </div>
               <div className="flex flex-row flex-wrap gap-2">
-                {requestTest.test.map((test, index) => (
+                {requestTest?.testTypes?.map((test, index) => (
                   <Badge
                     className="bg-slate-600 dark:bg-slate-700 dark:text-white"
                     key={index}
@@ -167,14 +234,15 @@ export default function TestRequest() {
             </div>
             <div className="flex-grow flex flex-col justify-end">
               <Button
-                className="w-fit bg-blue-500 hover:bg-blue-600"
+                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                 onClick={() => {
                   setSelectedRequestTest(requestTest);
                   setSelectedPatientId(requestTest?.patientId + "");
                   setIsOpen(true);
                 }}
               >
-                <FlaskConical className="mr-2 h-4 w-4" /> Tạo xét nghiệm
+                Hoàn thành
+                <FlaskConical className="h-4 w-4" />
               </Button>
             </div>
           </Card>
@@ -198,13 +266,13 @@ export default function TestRequest() {
                 <div>
                   <p className="text-base font-semibold ">
                     {selectedPatient?.gender?.toLowerCase() === "male" ? (
-                      <p className="text-blue-500">
+                      <span className="text-blue-500">
                         {selectedPatient?.fullName}
-                      </p>
+                      </span>
                     ) : (
-                      <p className="text-pink-500">
+                      <span className="text-pink-500">
                         {selectedPatient?.fullName}
-                      </p>
+                      </span>
                     )}
                   </p>
                   <p className="text-slate-500">
@@ -267,7 +335,7 @@ export default function TestRequest() {
                       <span className="text-sm">Loại xét nghiệm:</span>
                     </div>
                     <div className="flex flex-row flex-wrap gap-2">
-                      {selectedRequestTest.test.map((test, index) => (
+                      {selectedRequestTest.testTypes.map((test, index) => (
                         <Badge variant={"secondary"} key={index}>
                           {test.testName}
                         </Badge>
@@ -341,9 +409,9 @@ export default function TestRequest() {
                       Xét nghiệm đã thực hiện:
                     </p>
                     <div className="grid grid-cols-2 gap-2">
-                      {selectedRequestTest.test.map((test) => (
+                      {selectedRequestTest.testTypes.map((test) => (
                         <Label
-                          key={test + ""}
+                          key={test._id}
                           className="flex items-center justify-between space-x-2 mb-2 p-2 border rounded-md"
                         >
                           <Checkbox
@@ -365,7 +433,7 @@ export default function TestRequest() {
                         </Label>
                       ))}
                     </div>
-                    <p className="text-sm font-semibold">
+                    <div className="text-sm font-semibold">
                       Tổng chi phí:{" "}
                       <Badge
                         variant={"secondary"}
@@ -373,7 +441,7 @@ export default function TestRequest() {
                       >
                         {totalAmount.toLocaleString("vi-VN") + " VNĐ"}
                       </Badge>
-                    </p>
+                    </div>
                     <p className="text-sm font-semibold">Kết quả xét nghiệm:</p>
                     <Textarea
                       id="result"
@@ -382,10 +450,11 @@ export default function TestRequest() {
                       placeholder="Nhập kết quả xét nghiệm"
                     />
                     <Button
-                      className="w-fit self-end"
+                      className="w-fit self-end flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                       onClick={handleCompleteTest}
                     >
                       Hoàn thành
+                      <ArrowUpFromLine className="w-4 h-4" />
                     </Button>
                   </div>
                 </div>

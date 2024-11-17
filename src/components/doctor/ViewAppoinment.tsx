@@ -69,6 +69,7 @@ export default function ViewAppointment({
       .map((test) => test.testName);
     setTestType(selectedTestNames);
   }, [selectedTests]);
+
   // Fecth Data
   const fetchAppointments = async () => {
     try {
@@ -87,8 +88,8 @@ export default function ViewAppointment({
         );
         setAppointments(response.data);
       } else {
-        setAppointments([]);
-        // setAppointments(apmtData);
+        // setAppointments([]);
+        setAppointments(apmtData);
       }
     } catch (err) {
       console.log(err + "");

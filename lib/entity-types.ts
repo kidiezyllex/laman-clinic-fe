@@ -158,7 +158,7 @@ export interface TestType {
 }
 export interface RequestTest {
   _id: string;
-  test: TestType[];
+  testTypes: TestType[];
   patientId: string;
   doctorId: string;
   reason: string;

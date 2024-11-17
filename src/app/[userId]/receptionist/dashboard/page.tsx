@@ -12,11 +12,9 @@ import {
 } from "@/components/ui/breadcrumb";
 import ViewAppointment from "@/components/receptionist/OnlineAppointment";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
-import Notification from "@/components/receptionist/Notification";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("online");
-
   const renderMainContent = () => {
     switch (activeSection) {
       case "online":
@@ -25,8 +23,6 @@ export default function Page() {
         return <DirectAppoinment />;
       case "profile":
         return <ReceptionistProfile />;
-      case "notification":
-        return <Notification />;
       default:
         return null;
     }
@@ -89,18 +85,6 @@ export default function Page() {
                   }`}
                 >
                   <p className="ml-7">Trực tiếp</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
-                    activeSection === "notification"
-                      ? "bg-muted text-blue-500"
-                      : "text-slate-500"
-                  }`}
-                >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
                 </Link>
                 <Link
                   href="#"

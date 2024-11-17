@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -41,10 +42,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "../ui/separator";
-import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { usePathname } from "next/navigation";
+
 export default function TestRequest() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -54,17 +55,36 @@ export default function TestRequest() {
     useState<RequestTest | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedPatientId, setSelectedPatientId] = useState("");
-  const [testResult, setTestResult] = useState("");
   const [performedTests, setPerformedTests] = useState<TestType[]>([]);
   const [filterType, setFilterType] = useState("all");
   const technicianId = usePathname().split("/")[1];
+  const [viewDoctorName, setViewDoctorName] = useState({
+    doctorName: "",
+    id: "",
+  });
+
+  const [testResults, setTestResults] = useState<
+    Array<{
+      testName: string;
+      testResult: string;
+      referenceRange: string;
+      measurementUnit: string;
+      equipment: string;
+    }>
+  >([]);
+
   // Filter Data
   const filteredRequestTests = requestTests
     .filter((item) => {
       const searchTermLower = searchTerm.toLowerCase();
       if (filterType === "today")
         return formatDate(item.requestDate) === formatDate(new Date());
-      return item.patientId.toLowerCase().includes(searchTermLower);
+      return (
+        item.patientId.toLowerCase().includes(searchTermLower) ||
+        item.testTypes.some((it) => {
+          return it.testName.toLowerCase().includes(searchTermLower);
+        })
+      );
     })
     .sort((a, b) => {
       if (filterType === "old") {
@@ -90,6 +110,7 @@ export default function TestRequest() {
     setRequestTests(res.data);
     setSelectedPatient(res2.data);
   };
+
   useEffect(() => {
     fetchData();
   }, [selectedPatientId]);
@@ -98,28 +119,73 @@ export default function TestRequest() {
     setPerformedTests((prevTests) => {
       const testIndex = prevTests.findIndex((t) => t._id === test._id);
       if (testIndex > -1) {
+        setTestResults((prev) =>
+          prev.filter((r) => r.testName !== test.testName)
+        );
         return prevTests.filter((t) => t._id !== test._id);
       } else {
+        setTestResults((prev) => {
+          if (!prev.some((r) => r.testName === test.testName)) {
+            return [
+              ...prev,
+              {
+                testName: test.testName,
+                testResult: "",
+                referenceRange: "",
+                measurementUnit: "",
+                equipment: "",
+              },
+            ];
+          }
+          return prev;
+        });
         return [...prevTests, test];
       }
     });
   };
 
-  const totalAmount = useMemo(() => {
-    return performedTests.reduce((sum, test) => sum + test.price, 0);
-  }, [performedTests]);
+  const handleTestResultChange = (
+    testName: string,
+    field: string,
+    value: string
+  ) => {
+    setTestResults((prev) => {
+      const existingIndex = prev.findIndex((r) => r.testName === testName);
+      if (existingIndex > -1) {
+        // Update existing result
+        const updatedResults = [...prev];
+        updatedResults[existingIndex] = {
+          ...updatedResults[existingIndex],
+          [field]: value,
+        };
+        return updatedResults;
+      } else {
+        return [
+          ...prev,
+          {
+            testName,
+            [field]: value,
+            testResult: "",
+            referenceRange: "",
+            measurementUnit: "",
+            equipment: "",
+          },
+        ];
+      }
+    });
+  };
 
   const handleCompleteTest = async () => {
     try {
       const payload = {
-        patientId: selectedPatientId,
+        patientId: selectedRequestTest?.patientId,
+        doctorId: selectedRequestTest?.doctorId,
         labTestId: "PTN-01",
         technicianId: technicianId,
-        result: testResult,
+        results: testResults,
         reasonByDoctor: selectedRequestTest?.reason,
         datePerformed: new Date(),
-        requestPerformed: selectedRequestTest?.requestDate,
-        testsPerformed: performedTests,
+        dateRequested: selectedRequestTest?.requestDate,
         status: "Completed",
       };
       // Post lên Test
@@ -141,13 +207,28 @@ export default function TestRequest() {
       setIsOpen(false);
       setPerformedTests([]);
       setSelectedRequestTest(null);
-      setTestResult("");
+      setTestResults([]);
       toast({
         variant: "default",
         title: "Thành công!",
         description: "Đã hoàn thành một xét nghiệm!",
       });
       fetchData();
+    }
+  };
+
+  const handleViewDoctorName = async (doctorId: string, id: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      setViewDoctorName({ doctorName: response.data.fullName, id: id });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     }
   };
 
@@ -161,8 +242,8 @@ export default function TestRequest() {
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="search"
-            placeholder="Nhập mã bệnh nhân..."
-            className="pl-10 bg-primary-foreground"
+            placeholder="Nhập mã bệnh nhân hoặc tên loại xét nghiệm..."
+            className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -185,7 +266,7 @@ export default function TestRequest() {
         {filteredRequestTests.map((requestTest) => (
           <Card
             key={(requestTest as any)._id}
-            className="flex flex-col gap-6 items-center p-4 bg-primary-foreground"
+            className="flex flex-col gap-6 items-center p-4 bg-primary-foreground "
           >
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-row gap-4 items-center w-full">
@@ -193,15 +274,15 @@ export default function TestRequest() {
                   <User className="text-blue-500" />
                 </div>
                 <div className="flex flex-col gap-1">
-                  <p className="font-semibold text-sm">
+                  <p className="font-semibold text-sm text-slate-700 dark:text-white">
                     Mã bệnh nhân:{" "}
-                    <span className="text-muted-foreground">
+                    <span className="text-muted-foreground font-normal">
                       {requestTest.patientId}
                     </span>
                   </p>
-                  <p className="font-semibold text-sm">
+                  <p className="font-semibold text-sm text-slate-700 dark:text-white">
                     Ngày yêu cầu:{" "}
-                    <span className="text-muted-foreground">
+                    <span className="text-muted-foreground font-normal">
                       {formatDate(requestTest.requestDate)}
                     </span>
                   </p>
@@ -210,8 +291,30 @@ export default function TestRequest() {
               <Separator></Separator>
               <div className="flex flex-col gap-2">
                 <div className="flex flex-row gap-2 items-center">
+                  <Stethoscope className="h-4 w-4 text-blue-500"></Stethoscope>
+                  <div className="font-semibold text-sm text-slate-700 dark:text-white">
+                    Bác sĩ yêu cầu:{" "}
+                    <Badge
+                      className="bg-slate-600 dark:bg-slate-700 dark:text-white ml-2 cursor-pointer"
+                      onClick={() =>
+                        handleViewDoctorName(
+                          requestTest.doctorId,
+                          requestTest._id
+                        )
+                      }
+                    >
+                      {viewDoctorName.id === requestTest._id &&
+                      viewDoctorName.doctorName !== ""
+                        ? viewDoctorName.doctorName
+                        : "Xem tên BS"}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="flex flex-row gap-2 items-center">
                   <CircleHelp className="h-4 w-4 text-blue-500"></CircleHelp>
-                  <span className="font-semibold text-sm">Lý do:</span>
+                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                    Lý do:
+                  </span>
                 </div>
                 <span className="text-sm text-muted-foreground">
                   {requestTest.reason}
@@ -219,7 +322,9 @@ export default function TestRequest() {
               </div>
               <div className="flex flex-row gap-2 items-center">
                 <TestTube className="h-4 w-4 text-blue-500"></TestTube>
-                <span className="font-semibold text-sm">Loại xét nghiệm:</span>
+                <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                  Loại xét nghiệm:
+                </span>
               </div>
               <div className="flex flex-row flex-wrap gap-2">
                 {requestTest?.testTypes?.map((test, index) => (
@@ -408,47 +513,149 @@ export default function TestRequest() {
                     <p className="text-sm font-semibold">
                       Xét nghiệm đã thực hiện:
                     </p>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 gap-4">
                       {selectedRequestTest.testTypes.map((test) => (
-                        <Label
+                        <div
                           key={test._id}
-                          className="flex items-center justify-between space-x-2 mb-2 p-2 border rounded-md"
+                          className="border rounded-md p-4 cursor-pointer bg-primary-foreground"
                         >
-                          <Checkbox
-                            id={`test-${test}`}
-                            checked={performedTests.some(
-                              (t) => t._id === test._id
-                            )}
-                            onCheckedChange={() => handleToggleCheckbox(test)}
-                          />
-                          <p className="text-sm font-semibold">
-                            {test.testName}
-                          </p>
-                          <Badge
-                            variant={"secondary"}
-                            className="bg-slate-200 dark:bg-slate-800 self-end"
-                          >
-                            {test.price.toLocaleString("vi-VN") + " VNĐ"}
-                          </Badge>
-                        </Label>
+                          <Label className="flex items-center justify-between space-x-2 mb-2">
+                            <Checkbox
+                              className="h-7 w-7"
+                              id={`test-${test._id}`}
+                              checked={performedTests.some(
+                                (t) => t._id === test._id
+                              )}
+                              onCheckedChange={() => handleToggleCheckbox(test)}
+                            />
+                            <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white ml-2 cursor-pointer">
+                              {test.testName}
+                            </Badge>
+                          </Label>
+                          {performedTests.some((t) => t._id === test._id) && (
+                            <div className="grid grid-cols-2 gap-4 mt-4">
+                              <div className="space-y-2">
+                                <Label htmlFor={`testResult-${test._id}`}>
+                                  Kết quả
+                                </Label>
+                                <Input
+                                  id={`testResult-${test._id}`}
+                                  value={
+                                    testResults.find(
+                                      (r) => r.testName === test.testName
+                                    )?.testResult || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleTestResultChange(
+                                      test.testName,
+                                      "testResult",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor={`referenceRange-${test._id}`}>
+                                  Phạm vi tham chiếu
+                                </Label>
+                                <Input
+                                  id={`referenceRange-${test._id}`}
+                                  value={
+                                    testResults.find(
+                                      (r) => r.testName === test.testName
+                                    )?.referenceRange || ""
+                                  }
+                                  onChange={(e) =>
+                                    handleTestResultChange(
+                                      test.testName,
+                                      "referenceRange",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor={`measurementUnit-${test._id}`}>
+                                  Đơn vị đo
+                                </Label>
+                                <Select
+                                  value={
+                                    testResults.find(
+                                      (r) => r.testName === test.testName
+                                    )?.measurementUnit || ""
+                                  }
+                                  onValueChange={(value) =>
+                                    handleTestResultChange(
+                                      test.testName,
+                                      "measurementUnit",
+                                      value
+                                    )
+                                  }
+                                >
+                                  <SelectTrigger
+                                    id={`measurementUnit-${test._id}`}
+                                  >
+                                    <SelectValue placeholder="Chọn đơn vị đo" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="mg/dL">mg/dL</SelectItem>
+                                    <SelectItem value="mmol/L">
+                                      mmol/L
+                                    </SelectItem>
+                                    <SelectItem value="g/L">g/L</SelectItem>
+                                    <SelectItem value="ng/mL">ng/mL</SelectItem>
+                                    <SelectItem value="mEq/L">mEq/L</SelectItem>
+                                    <SelectItem value="IU/L">IU/L</SelectItem>
+                                    <SelectItem value="pg/mL">pg/mL</SelectItem>
+                                    <SelectItem value="fL">fL</SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                              <div className="space-y-2">
+                                <Label htmlFor={`equipment-${test._id}`}>
+                                  Thiết bị
+                                </Label>
+                                <Select
+                                  value={
+                                    testResults.find(
+                                      (r) => r.testName === test.testName
+                                    )?.equipment || ""
+                                  }
+                                  onValueChange={(value) =>
+                                    handleTestResultChange(
+                                      test.testName,
+                                      "equipment",
+                                      value
+                                    )
+                                  }
+                                >
+                                  <SelectTrigger id={`equipment-${test._id}`}>
+                                    <SelectValue placeholder="Chọn thiết bị" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="Hematology Analyzer HA-3000">
+                                      Hematology Analyzer HA-3000
+                                    </SelectItem>
+                                    <SelectItem value="BioChem Spectrum 700">
+                                      BioChem Spectrum 700
+                                    </SelectItem>
+                                    <SelectItem value="ImmunoAssay Pro X100">
+                                      ImmunoAssay Pro X100
+                                    </SelectItem>
+                                    <SelectItem value="MicroScan ID/AST">
+                                      MicroScan ID/AST
+                                    </SelectItem>
+                                    <SelectItem value="PathoLab MX-200">
+                                      PathoLab MX-200
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              </div>
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
-                    <div className="text-sm font-semibold">
-                      Tổng chi phí:{" "}
-                      <Badge
-                        variant={"secondary"}
-                        className="bg-slate-200 dark:bg-slate-800 self-end"
-                      >
-                        {totalAmount.toLocaleString("vi-VN") + " VNĐ"}
-                      </Badge>
-                    </div>
-                    <p className="text-sm font-semibold">Kết quả xét nghiệm:</p>
-                    <Textarea
-                      id="result"
-                      value={testResult}
-                      onChange={(e) => setTestResult(e.target.value)}
-                      placeholder="Nhập kết quả xét nghiệm"
-                    />
                     <Button
                       className="w-fit self-end flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                       onClick={handleCompleteTest}

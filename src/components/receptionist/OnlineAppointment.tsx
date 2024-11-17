@@ -199,23 +199,27 @@ export default function OnlineAppointment() {
             <div className="flex flex-row gap-4 items-center w-full self-start">
               {appointment.gender.toLowerCase() === "male" ||
               appointment.gender.toLowerCase() === "nam" ? (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-blue-500 bg-blue-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
               ) : (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border-2 border-pink-500 bg-pink-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
                   <Cat className="text-pink-500" />
                 </div>
               )}
               <div className="flex flex-col gap-1">
                 <p className="text-sm">
-                  <span className="font-semibold">Tên bệnh nhân: </span>
+                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                    Tên bệnh nhân:{" "}
+                  </span>
                   <span className="text-muted-foreground">
                     {appointment.fullName}
                   </span>
                 </p>
                 <p className="text-sm">
-                  <span className="font-semibold">Mã bệnh nhân: </span>
+                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                    Mã bệnh nhân:{" "}
+                  </span>
                   <span className="text-muted-foreground">
                     {appointment.patientId}
                   </span>

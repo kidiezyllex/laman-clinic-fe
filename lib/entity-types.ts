@@ -165,6 +165,25 @@ export interface RequestTest {
   requestDate: Date;
 }
 
+export interface TestResult {
+  testName: string;
+  testResult: string;
+  referenceRange: string;
+  measurementUnit: string;
+  equipment: string;
+}
+export interface Test {
+  _id: string;
+  testTypes: TestType[];
+  patientId: string;
+  doctorId: string;
+  technicianId: string;
+  reasonByDoctor: string;
+  results: [TestResult];
+  datePerformed: Date;
+  dateRequested: Date;
+  testsPerformed: [TestType];
+}
 export interface LoginResponse {
   status: string;
   message: string;

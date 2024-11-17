@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import TestRequest from "@/components/laboratory-technician/TestRequest";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
-import Notification from "@/components/receptionist/Notification";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
+import CompletedTest from "@/components/laboratory-technician/CompletedTest";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("request");
 
@@ -26,7 +26,7 @@ export default function Page() {
       case "profile":
         return <ReceptionistProfile />;
       case "completed":
-        return <Notification />;
+        return <CompletedTest />;
       default:
         return null;
     }
@@ -60,7 +60,13 @@ export default function Page() {
           <div className="flex h-full max-h-screen flex-col gap-2">
             <div className="flex-1 pt-4">
               <nav className="grid items-start px-2 text-sm lg:px-4">
-                <div className="flex items-center gap-3 rounded-md px-3 py-2">
+                <div
+                  className={
+                    activeSection === "request" || activeSection === "completed"
+                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
+                  }
+                >
                   <FlaskConical className="h-4 w-4" />
                   Xét nghiệm
                 </div>

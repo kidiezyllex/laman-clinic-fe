@@ -10,127 +10,175 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar, SearchIcon, Stethoscope, User } from "lucide-react";
+import {
+  Calendar,
+  Download,
+  FlaskConical,
+  Receipt,
+  RotateCcw,
+  SearchIcon,
+  Stethoscope,
+  User,
+} from "lucide-react";
 import axios from "axios";
-import { Medication, Patient, Prescription } from "../../../lib/entity-types";
+import { Doctor, Patient, Test, TestResult } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
-
+import { formatDate } from "../../../lib/utils";
+import { usePathname } from "next/navigation";
+import { Badge } from "../ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import TestResults from "./TestResults";
 export default function CompletedTest() {
   const { toast } = useToast();
+  const technicianId = usePathname().split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
-  const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
-  const [newMedication, setNewMedication] = useState<Medication[]>([]);
-  const [showInvoice, setShowInvoice] = useState({ isShow: false, id: "" });
-
-  // FecthData đơn thuốc đã hoàn thành
+  const [isOpen, setIsOpen] = useState(false);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [selectedTest, setSelectedTest] = useState<Test | null>(null);
+  const [viewDoctorName, setViewDoctorName] = useState({
+    doctorName: "",
+    id: "",
+  });
+  const [filterType, setFilterType] = useState("all");
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests`
+    );
+    setTests(
+      response.data.filter(
+        (item: { technicianId: string }) => item.technicianId === technicianId
+      )
+    );
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions` // cho bên ông test api này
-        // `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/prescriptions` api này có connect với redis
-      );
-      setPrescriptions(
-        response.data.filter(
-          (item: { status: string }) => item.status === "Completed"
-        )
-      );
-    };
-
     fetchData();
   }, []);
 
-  const filteredPrescriptions = prescriptions.filter((prescription) => {
-    const searchTermLower = searchTerm.toLowerCase();
-    return prescription.patientId.toLowerCase().includes(searchTermLower);
-  });
+  const filteredTests = tests
+    .filter((item) => {
+      const searchTermLower = searchTerm.toLowerCase();
+      if (filterType === "today")
+        return formatDate(item.datePerformed) === formatDate(new Date());
+      return item.patientId.toLowerCase().includes(searchTermLower);
+    })
+    .sort((a, b) => {
+      if (filterType === "old") {
+        return (
+          new Date(b.datePerformed).getTime() -
+          new Date(a.datePerformed).getTime()
+        );
+      } else if (filterType === "new") {
+        return (
+          new Date(a.datePerformed).getTime() -
+          new Date(b.datePerformed).getTime()
+        );
+      }
+      return 0;
+    });
+  const handleViewDoctorName = async (doctorId: string, id: string) => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
+      );
+      setViewDoctorName({ doctorName: response.data.fullName, id: id });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    }
+  };
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        ĐƠN THUỐC ĐÃ HOÀN THÀNH
+        DANH SÁCH CÁC XÉT NGHIỆM ĐÃ THỰC HIỆN
       </p>
-
-      <div className="relative mb-6">
-        <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-        <Input
-          type="search"
-          placeholder="Nhập mã đơn thuốc (TT-XXXXXX). Ví dụ: TT-5EN8C8"
-          className="pl-10"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+      <div className="flex flex-row gap-3">
+        <div className="relative flex-grow">
+          <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Input
+            type="search"
+            placeholder="Nhập mã bệnh nhân (BN-XXXXXX). Ví dụ: BN-5EN8C8"
+            className="pl-10"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Lọc theo ngày" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="new">Gần nhất</SelectItem>
+          </SelectContent>
+        </Select>
+        <Button variant="outline" size="icon" onClick={fetchData}>
+          <RotateCcw className="h-4 w-4" />
+        </Button>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-1">
-        {filteredPrescriptions.map((prescription) => (
-          <Card key={prescription._id + ""} className="mb-6">
-            {/* Prescription header */}
-            <div className="grid grid-cols-3 items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
-              <p className="flex items-center text-base">
-                <Calendar className="h-4 w-4 mr-2" />
-                {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
-              </p>
-              <p className="flex items-center text-base">
-                <User className="h-4 w-4 mr-2" />
-                Mã Bệnh nhân: {prescription.patientId}
-              </p>
-              <p className="flex items-center text-base">
-                <Stethoscope className="h-4 w-4 mr-2" />
-                Mã Đơn thuốc: {prescription._id}
-              </p>
-            </div>
-
-            {/* Medications table */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Tên thuốc</TableHead>
-                  <TableHead>Liều lượng</TableHead>
-                  <TableHead>Số lượng</TableHead>
-                  <TableHead>Đơn giá (VNĐ)</TableHead>
-                  <TableHead>Cách dùng</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {prescription.medications.map((medication) => (
-                  <TableRow key={medication._id + ""}>
-                    <TableCell>{medication.medicationName}</TableCell>
-                    <TableCell>{medication.dose}</TableCell>
-                    <TableCell>{medication.quantity}</TableCell>
-                    <TableCell>{medication.price}</TableCell>
-                    <TableCell className="w-[35%]">
-                      {medication.instructions}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-
-            {/* Action buttons */}
-            <div className="flex lfex-row gap-3 p-4 justify-end">
-              {showInvoice.id === prescription._id && showInvoice.isShow ? (
-                <Button
-                  variant="destructive"
-                  onClick={() =>
-                    setShowInvoice({ isShow: false, id: prescription._id + "" })
-                  }
+      <Table className="border">
+        <TableHeader>
+          <TableRow>
+            <TableHead>STT</TableHead>
+            <TableHead>Ngày yêu cầu</TableHead>
+            <TableHead>Ngày thực hiện</TableHead>
+            <TableHead>Mã bệnh nhân</TableHead>
+            <TableHead>Bác sĩ yêu cầu</TableHead>
+            <TableHead>Lý do</TableHead>
+            <TableHead>Thao tác</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredTests.map((test, index) => (
+            <TableRow key={test._id}>
+              <TableCell>{index + 1}</TableCell>
+              <TableCell>{formatDate(test.dateRequested)}</TableCell>
+              <TableCell>{formatDate(test.datePerformed)}</TableCell>
+              <TableCell>{test.patientId}</TableCell>
+              <TableCell>
+                <Badge
+                  className="ml-2 cursor-pointer"
+                  onClick={() => handleViewDoctorName(test.doctorId, test._id)}
                 >
-                  Thu gọn
-                </Button>
-              ) : (
+                  {viewDoctorName.id === test._id &&
+                  viewDoctorName.doctorName !== ""
+                    ? viewDoctorName.doctorName
+                    : "Xem tên BS"}
+                </Badge>
+              </TableCell>
+              <TableCell>{test.reasonByDoctor}</TableCell>
+              <TableCell className="flex flex-row gap-2">
                 <Button
-                  variant="outline"
                   onClick={() => {
-                    setShowInvoice({ isShow: true, id: prescription._id + "" });
+                    setIsOpen(true);
+                    setSelectedTest(test);
                   }}
+                  variant="secondary"
+                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
-                  Xem hoá đơn
+                  Kết quả
+                  <FlaskConical className="w-4 h-4" />
                 </Button>
-              )}
-            </div>
-          </Card>
-        ))}
-      </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <TestResults
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        selectedTest={selectedTest}
+      ></TestResults>
     </div>
   );
 }

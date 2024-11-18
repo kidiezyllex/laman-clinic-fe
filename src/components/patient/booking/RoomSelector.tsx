@@ -73,27 +73,34 @@ export default function RoomSelector({
           >
             <div className="p-6">
               <div className="items-center mb-4 grid grid-cols-3">
-                <div className="flex flex-row gap-3 items-center">
+                <div className="flex flex-row gap-2 items-center">
                   <Stethoscope className="w-4 h-4 text-blue-500" />
-                  <p className="text-sm font-semibold">
-                    Bác sĩ: {(doctor as any)?.fullName}
-                  </p>
+                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                    Bác sĩ:
+                  </span>
+                  <span className="text-slate-500 dark:text-primary">
+                    {(doctor as any)?.fullName}
+                  </span>
                 </div>
-                <div className="flex flex-row gap-3 items-center">
+                <div className="flex flex-row gap-2 items-center">
                   <User className="w-4 h-4 text-blue-500" />
-                  <p className="text-sm font-semibold">
-                    Giới tính:{" "}
+                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                    Giới tính:
+                  </span>
+                  <span className="text-slate-500 dark:text-primary">
                     {(doctor as any)?.gender.toLocaleLowerCase() === "male"
                       ? "Nam"
                       : "Nữ"}
-                  </p>
+                  </span>
                 </div>
-                <div className="flex flex-row gap-3 items-center">
+                <div className="flex flex-row gap-2 items-center">
                   <FileCog className="w-4 h-4 text-blue-500" />
-                  <p className="text-sm font-semibold">
-                    Chuyên khoa:{" "}
+                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                    Chuyên khoa:
+                  </span>
+                  <span className="text-slate-500 dark:text-primary">
                     {renderSpecialty((doctor as any)?.specialization)}
-                  </p>
+                  </span>
                 </div>
               </div>
               <div className="space-y-4 ">
@@ -103,7 +110,7 @@ export default function RoomSelector({
                       key={scheduleItem.dayOfWeek + scheduleItem.startTime}
                       className={
                         scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2)
-                          ? "p-4 border"
+                          ? "p-4 border bg-primary-foreground border-blue-300 dark:border-secondary rounded-md"
                           : "hidden"
                       }
                     >
@@ -123,7 +130,9 @@ export default function RoomSelector({
                             variant={"outline"}
                             className="pointer-events-none"
                           >
-                            {slot}
+                            <span className="text-slate-600 dark:text-primary">
+                              {slot}
+                            </span>
                           </Button>
                         ))}
                       </div>

@@ -143,19 +143,19 @@ export default function OnlineAppointment() {
   const renderBadge = (doctorId: string, reExamination: boolean) => {
     if (doctorId && !reExamination) {
       return (
-        <Badge className="bg-green-600 dark:text-white hover:bg-green-700">
+        <Badge className="bg-green-600 dark:text-slate-300 hover:bg-green-700">
           Đặt lịch theo Bác sĩ
         </Badge>
       );
     } else if (reExamination) {
       return (
-        <Badge className="bg-yellow-600 dark:text-white hover:bg-yellow-700">
+        <Badge className="bg-yellow-600 dark:text-slate-300 hover:bg-yellow-700">
           Tái khám
         </Badge>
       );
     } else
       return (
-        <Badge className="bg-blue-600 dark:text-white hover:bg-blue-700">
+        <Badge className="bg-blue-600 dark:text-slate-300 hover:bg-blue-700">
           Đặt lịch theo ngày
         </Badge>
       );
@@ -209,18 +209,18 @@ export default function OnlineAppointment() {
               )}
               <div className="flex flex-col gap-1">
                 <p className="text-sm">
-                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                  <span className="font-semibold text-sm text-slate-600 dark:text-slate-300">
                     Tên bệnh nhân:{" "}
                   </span>
-                  <span className="text-muted-foreground">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {appointment.fullName}
                   </span>
                 </p>
                 <p className="text-sm">
-                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                  <span className="font-semibold text-sm text-slate-600 dark:text-slate-300">
                     Mã bệnh nhân:{" "}
                   </span>
-                  <span className="text-muted-foreground">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {appointment.patientId}
                   </span>
                 </p>
@@ -229,17 +229,17 @@ export default function OnlineAppointment() {
             <Separator></Separator>
             <div className="flex flex-row gap-2 w-full flex-wrap">
               {renderBadge(appointment.doctorId, appointment.reExamination)}
-              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
+              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-slate-300">
                 Khoa: {renderSpecialty(appointment.specialization)}
               </Badge>
-              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
+              <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-slate-300">
                 {appointment.reExamination
                   ? "Ngày tái khám: "
                   : "Ngày đăng ký: "}
                 {formatDate(appointment?.appointmentDateByPatient)}
               </Badge>
               {!appointment.doctorId || appointment.reExamination ? null : (
-                <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-white">
+                <Badge className="bg-slate-500 dark:bg-slate-700 dark:text-slate-300">
                   Ca khám:{" "}
                   {generateExamination(
                     formatDate3(appointment?.appointmentDateByPatient)
@@ -264,24 +264,24 @@ export default function OnlineAppointment() {
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
             {selectedAppointment?.gender?.toLowerCase() === "male" ? (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                 <Dog className="text-blue-500" />
               </div>
             ) : (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
                 <Cat className="text-pink-500" />
               </div>
             )}
             <div>
-              <p className="text-base font-semibold">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 {selectedAppointment?.fullName}
               </p>
-              <p className="text-slate-500">
+              <p className="text-slate-600 dark:text-slate-300">
                 Mã bệnh nhân: {selectedAppointment?.patientId}
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4">
+          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300">
             <div className="flex flex-col gap-3">
               <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
               <div className="flex items-center gap-2">
@@ -368,7 +368,7 @@ export default function OnlineAppointment() {
               </div>
             </div>
           </div>
-          <h3 className="text-md font-semibold">
+          <h3 className="text-md font-semibold text-slate-600 dark:text-slate-300">
             Vui lòng nhập lý do hẹn khám
           </h3>
           <div className="mr-4">
@@ -382,8 +382,8 @@ export default function OnlineAppointment() {
           </div>
           <div className="mr-4">
             {selectedAppointment?.appointmentDateByPatient ? (
-              <div className="w-full p-4 bg-secondary rounded-md border">
-                <p>
+              <div className="w-full p-4 bg-primary-foreground rounded-md border">
+                <p className="text-slate-600 dark:text-slate-300 text-base">
                   Bệnh nhân đến sớm so với lịch đăng ký{" "}
                   {getHoursBetweenDates(
                     selectedAppointment.appointmentDateByPatient

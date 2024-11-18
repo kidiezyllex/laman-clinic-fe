@@ -1,7 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Bell, FlaskConical, User } from "lucide-react";
+import {
+  Bell,
+  FlaskConical,
+  FlaskRound,
+  Pill,
+  TestTubes,
+  User,
+} from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,6 +21,9 @@ import TestRequest from "@/components/laboratory-technician/TestRequest";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 import CompletedTest from "@/components/laboratory-technician/CompletedTest";
+import TestsManagement from "@/components/test/TestTypesManagement";
+import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
+import TechnicianProfile from "@/components/laboratory-technician/TechnicianProfile";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("request");
 
@@ -24,9 +34,13 @@ export default function Page() {
       case "type":
         return <DirectAppoinment />;
       case "profile":
-        return <ReceptionistProfile />;
+        return <TechnicianProfile />;
       case "completed":
         return <CompletedTest />;
+      case "test-types":
+        return <TestsManagement />;
+      case "medicine-warehouse":
+        return <MedicineWarehouse />;
       default:
         return null;
     }
@@ -94,15 +108,27 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("type")}
+                  onClick={() => setActiveSection("test-types")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
-                    activeSection === "type"
+                    activeSection === "test-types"
                       ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >
-                  <FlaskConical className="h-4 w-4" />
+                  <TestTubes className="h-4 w-4" />
                   Loại xét nghiệm
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("medicine-warehouse")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "medicine-warehouse"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
+                  }`}
+                >
+                  <Pill className="h-4 w-4" />
+                  Kho thuốc
                 </Link>
                 <Link
                   href="#"

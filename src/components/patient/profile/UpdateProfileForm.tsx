@@ -142,7 +142,7 @@ export default function UpdateProfileForm({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-md">
+    <div className="mt-4 p-4 border rounded-md bg-primary-foreground border-blue-300 dark:border-secondary">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
         CẬP NHẬT HỒ SƠ BỆNH NHÂN
       </h3>
@@ -153,7 +153,9 @@ export default function UpdateProfileForm({
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Họ và tên</FormLabel>
+                <FormLabel className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                  Họ và tên
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Nhập họ và tên" {...field} />
                 </FormControl>
@@ -167,7 +169,9 @@ export default function UpdateProfileForm({
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Số điện thoại</FormLabel>
+                <FormLabel className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                  Số điện thoại
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Nhập số điện thoại" {...field} />
                 </FormControl>
@@ -177,7 +181,9 @@ export default function UpdateProfileForm({
           />
 
           <div className="space-y-2">
-            <Label>Ngày sinh</Label>
+            <Label className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+              Ngày sinh
+            </Label>
             <FormDescription>
               (Đối với bệnh nhân từ 3 tuổi trở xuống, vui lòng nhập đầy đủ ngày
               tháng năm sinh)
@@ -272,7 +278,9 @@ export default function UpdateProfileForm({
             name="gender"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel>Giới tính</FormLabel>
+                <FormLabel className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                  Giới tính
+                </FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -300,7 +308,9 @@ export default function UpdateProfileForm({
                 name="province"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn Tỉnh/Thành phố</FormLabel>
+                    <FormLabel className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                      Chọn Tỉnh/Thành phố
+                    </FormLabel>
                     <Select
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -333,7 +343,9 @@ export default function UpdateProfileForm({
                 name="district"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn Quận/Huyện/Thị xã</FormLabel>
+                    <FormLabel className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                      Chọn Quận/Huyện/Thị xã
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

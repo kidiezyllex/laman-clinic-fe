@@ -23,13 +23,14 @@ import {
   Edit2,
   Hospital,
   Mail,
-  MapPin,
   PhoneIcon,
   TrendingDown,
   SearchIcon,
   Trash,
   X,
   RotateCcw,
+  MapPinCheck,
+  MapPin,
 } from "lucide-react";
 import axios from "axios";
 import { Medication, TestType } from "../../../lib/entity-types";
@@ -46,7 +47,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDate } from "../../../lib/utils";
-import MedicationFluctuations from "./medicine-warehouse/MedicationFluctuations";
+import MedicationFluctuations from "../medicine-warehouse/MedicationFluctuations";
 
 export default function MedicineWarehouse() {
   const { toast } = useToast();
@@ -56,8 +57,6 @@ export default function MedicineWarehouse() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isOpenMF, setIsOpenMF] = useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
-  const [editingId, setEditingId] = useState<String | null>("");
-  const [editedTest, setEditedTest] = useState<TestType | null>(null);
   const [newTest, setNewTest] = useState<TestType>({
     _id: "",
     testName: "",
@@ -112,7 +111,7 @@ export default function MedicineWarehouse() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
       <p className="text-base font-semibold text-blue-500">KHO THUỐC</p>
-      <div className="flex flex-col  gap-3 border rounded-md p-4">
+      <div className="flex flex-col  gap-3 border rounded-md p-4 text-slate-600 dark:text-slate-300">
         <div className="flex items-center space-x-3">
           <Hospital className="text-blue-500 h-4 w-4" />
           <span className="text-sm font-semibold">Kho thuốc số 1</span>

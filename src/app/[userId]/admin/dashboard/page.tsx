@@ -1,15 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  CircleCheck,
-  FlaskConical,
-  Pill,
-  User,
-  Users,
-} from "lucide-react";
-
+import { Pill, TestTubes, User, Users } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,12 +10,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import DoctorProfile from "@/components/doctor/DoctorProfile";
 import { useToast } from "@/hooks/use-toast";
 import AccountsManagement from "@/components/admin/AccountsManagement";
 import DoctorsManagement from "@/components/admin/DoctorsManagement";
-import TestsManagement from "@/components/admin/TestsManagement";
+import TestTypesManagement from "@/components/test/TestTypesManagement";
 import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
+import AdminProfile from "@/components/admin/AdminProfile";
 
 export default function Page() {
   const [activeSection, setActiveSection] = useState("medicine-warehouse");
@@ -33,11 +25,11 @@ export default function Page() {
       case "accounts":
         return <AccountsManagement />;
       case "profile":
-        return <DoctorProfile />;
+        return <AdminProfile />;
       case "doctors":
         return <DoctorsManagement />;
       case "tests":
-        return <TestsManagement />;
+        return <TestTypesManagement />;
       case "medicine-warehouse":
         return <MedicineWarehouse />;
       default:
@@ -111,8 +103,8 @@ export default function Page() {
                       : "text-slate-500"
                   }`}
                 >
-                  <FlaskConical className="h-4 w-4" />
-                  Xét nghiệm
+                  <TestTubes className="h-4 w-4" />
+                  Loại xét nghiệm
                 </Link>
                 <Link
                   href="#"

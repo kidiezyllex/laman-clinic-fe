@@ -61,7 +61,7 @@ export default function CreatePatientProfile() {
   }, []);
   return (
     <div>
-      <Breadcrumb>
+      <Breadcrumb className="mt-4">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="text-base">
@@ -85,19 +85,15 @@ export default function CreatePatientProfile() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
-      <Card className="w-full mx-auto mt-8">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-blue-500 mb-4">
-            HỒ SƠ BỆNH NHÂN
-          </CardTitle>
+      <div className="w-full mx-auto mt-8 ">
+        <div className="text-center ">
           {patient && (
-            <div className="p-4 border rounded-md flex flex-col gap-3">
-              <h3 className="text-lg font-semibold text-blue-500 self-start">
+            <div className="p-4 border rounded-md flex flex-col gap-3 bg-background">
+              <h3 className="text-lg font-semibold text-blue-500 text-center">
                 HỒ SƠ HIỆN TẠI
               </h3>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-1 flex items-center space-x-3 border rounded-md p-4">
+              <div className="grid grid-cols-3 gap-4 ">
+                <div className="col-span-1 flex items-center space-x-3 border border-blue-300 dark:border-secondary rounded-md p-4 bg-primary-foreground">
                   {patient.gender?.toLocaleLowerCase() === "male" ? (
                     <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                       <Dog className="text-blue-500" />
@@ -108,7 +104,7 @@ export default function CreatePatientProfile() {
                     </div>
                   )}
                   <div>
-                    <p className="text-base font-semibold text-start">
+                    <p className="text-base font-semibold text-start text-slate-600 dark:text-primary">
                       {patient.fullName}
                     </p>
                     <p className="text-slate-500 text-start">
@@ -116,7 +112,7 @@ export default function CreatePatientProfile() {
                     </p>
                   </div>
                 </div>
-                <div className="col-span-2 grid grid-cols-2 gap-3 border rounded-md p-4">
+                <div className="col-span-2 grid grid-cols-2 gap-3 border border-blue-300 dark:border-secondary rounded-md p-4 bg-primary-foreground">
                   <div className="flex items-center space-x-3">
                     <CalendarIcon className="text-blue-500 h-4 w-4" />
                     <span className="text-slate-500 text-sm">
@@ -155,20 +151,20 @@ export default function CreatePatientProfile() {
               <div className="flex flex-row gap-4 items-center justify-center my-4">
                 <Link href={`/${patient._id}/patient/booking-by-date`}>
                   <Button
-                    className="w-fit bg-blue-500 text-white hover:bg-blue-700"
+                    className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     variant={"secondary"}
                   >
-                    <Calendar className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo ngày
+                    <Calendar className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Link href={`/${patient._id}/patient/booking-by-doctor`}>
                   <Button
-                    className="w-fit bg-blue-500 text-white hover:bg-blue-700"
+                    className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     variant={"secondary"}
                   >
-                    <Stethoscope className="mr-2 h-4 w-4" />
                     Đặt lịch khám theo bác sĩ
+                    <Stethoscope className="h-4 w-4" />
                   </Button>
                 </Link>
               </div>
@@ -176,11 +172,9 @@ export default function CreatePatientProfile() {
           )}
 
           {!patient && (
-            <CardDescription>
-              Bạn đã từng đặt khám tại Đa khoa Laman Clinic?
-            </CardDescription>
+            <div>Bạn đã từng đặt khám tại Đa khoa Laman Clinic?</div>
           )}
-        </CardHeader>
+        </div>
         {!patient && (
           <CardContent className="space-y-4">
             <div className="flex justify-center space-x-4">
@@ -229,7 +223,7 @@ export default function CreatePatientProfile() {
             )}
           </CardContent>
         )}
-      </Card>
+      </div>
     </div>
   );
 }

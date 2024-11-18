@@ -118,7 +118,15 @@ export default function CalendarSelector({
                   variant={selectedSlot === slot ? "default" : "outline"}
                   onClick={() => handleSetSelectedDate(slot)}
                 >
-                  {slot}
+                  <span
+                    className={
+                      selectedSlot === slot
+                        ? "text-white"
+                        : "text-slate-600 dark:text-primary"
+                    }
+                  >
+                    {slot}
+                  </span>
                 </Button>
               ))}
             </div>

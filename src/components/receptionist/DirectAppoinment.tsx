@@ -13,8 +13,10 @@ import {
   Mail,
   MapPin,
   Phone,
+  Search,
   SearchIcon,
   User,
+  UserRoundSearch,
   X,
 } from "lucide-react";
 import axios from "axios";
@@ -145,10 +147,11 @@ export default function DirectAppoinment() {
           />
         </div>
         <Button
-          variant={"secondary"}
+          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           onClick={() => handleSearchPatientProfile()}
         >
-          Tìm hồ sơ bệnh nhân
+          Tìm hồ sơ
+          <UserRoundSearch className="h-4 w-4" />
         </Button>
       </div>
 
@@ -161,29 +164,37 @@ export default function DirectAppoinment() {
             <div className="flex flex-row gap-2 items-center w-full">
               {patient?.gender?.toLowerCase() === "male" ||
               patient?.gender?.toLowerCase() === "nam" ? (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
               ) : (
-                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
                   <Cat className="text-pink-500" />
                 </div>
               )}
 
               <div>
-                <p className="text-sm text-slate-500">
-                  <span className="font-semibold text-sm">Mã bệnh nhân: </span>{" "}
-                  {patient._id}
+                <p className="text-base">
+                  <span className="font-semibold text-base text-slate-600 dark:text-slate-300">
+                    Mã bệnh nhân:{" "}
+                  </span>
+                  <span className="text-base text-slate-600 dark:text-slate-300">
+                    {patient._id}
+                  </span>
                 </p>
                 <p className="text-base">
-                  <span className="font-semibold text-base">Tên: </span>{" "}
-                  {patient.fullName}
+                  <span className="font-semibold text-base text-slate-600 dark:text-slate-300">
+                    Tên:{" "}
+                  </span>
+                  <span className="text-base text-slate-600 dark:text-slate-300">
+                    {patient.fullName}
+                  </span>
                 </p>
               </div>
             </div>
             <div className="flex flex-row gap-2">
               <Button
-                className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
+                className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreatePatient(patient)}
               >
                 Tạo ca khám
@@ -203,24 +214,34 @@ export default function DirectAppoinment() {
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
             {selectedPatient?.gender?.toLowerCase() === "male" ? (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                 <Dog className="text-blue-500" />
               </div>
             ) : (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
                 <Cat className="text-pink-500" />
               </div>
             )}
             <div>
-              <p className="text-base font-semibold">
-                {selectedPatient?.fullName}
+              <p className="text-base">
+                <span className="font-semibold text-base text-slate-600 dark:text-slate-300">
+                  Tên:{" "}
+                </span>
+                <span className="text-base text-slate-600 dark:text-slate-300">
+                  {selectedPatient?.fullName}
+                </span>
               </p>
-              <p className="text-slate-500">
-                Mã bệnh nhân: {selectedPatient?._id}
+              <p className="text-base">
+                <span className="font-semibold text-base text-slate-600 dark:text-slate-300">
+                  Mã bệnh nhân:{" "}
+                </span>
+                <span className="text-base text-slate-600 dark:text-slate-300">
+                  {selectedPatient?._id}
+                </span>
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4">
+          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300">
             <div className="flex flex-col gap-3">
               <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
               <div className="flex items-center gap-2">
@@ -254,9 +275,9 @@ export default function DirectAppoinment() {
               </div>
             </div>
           </div>
-          <h3 className="text-md font-semibold">
+          <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
             Vui lòng nhập lý do hẹn khám
-          </h3>
+          </p>
           <div className="mr-4">
             <Input
               id="reason"
@@ -267,9 +288,9 @@ export default function DirectAppoinment() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col gap-3">
-              <h3 className="text-md font-semibold">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Vui lòng chọn chuyên ngành
-              </h3>
+              </p>
               <div className="w-full">
                 <Select onValueChange={(value) => setSpecialization(value)}>
                   <SelectTrigger className="col-span-7">
@@ -286,9 +307,9 @@ export default function DirectAppoinment() {
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <h3 className="text-md font-semibold">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Vui lòng chọn ưu tiên (tuỳ chọn)
-              </h3>
+              </p>
               <input
                 className="h-10 w-10"
                 type="checkbox"

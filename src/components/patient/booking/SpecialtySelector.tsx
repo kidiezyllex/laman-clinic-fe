@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import axios from "axios";
 import { renderSpecialty } from "../../../../lib/utils";
+import { CircleCheckBig, CirclePlus } from "lucide-react";
 
 export default function SpecialtySelector({
   setActiveSection,
@@ -60,17 +61,27 @@ export default function SpecialtySelector({
             key={specialty}
             className="flex justify-between items-center py-2 border-b"
           >
-            <div>
+            <span className="font-semibold text-slate-600 dark:text-primary">
               <h3 className="font-medium">{renderSpecialty(specialty)}</h3>
-            </div>
+            </span>
             <Button
               onClick={() => {
                 setSelectedSpecialty(specialty);
                 setSelectedSpe(specialty);
               }}
+              className={
+                selectedSpecialty === specialty
+                  ? "flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                  : "text-slate-600 dark:text-primary"
+              }
               variant={selectedSpecialty === specialty ? "default" : "outline"}
             >
               Chọn
+              {selectedSpecialty === specialty ? (
+                <CircleCheckBig className="h-4 w-4" />
+              ) : (
+                <CirclePlus className="h-4 w-4" />
+              )}
             </Button>
           </div>
         ))}

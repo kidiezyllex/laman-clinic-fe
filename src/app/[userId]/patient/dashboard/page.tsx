@@ -64,10 +64,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("patientProfile")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
                     activeSection === "patientProfile"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 font-semibold"
+                      : "text-slate-500"
                   }`}
                 >
                   <ContactRound className="h-4 w-4" />
@@ -76,10 +76,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("medicalHistory")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
                     activeSection === "medicalHistory"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 font-semibold"
+                      : "text-slate-500"
                   }`}
                 >
                   <HistoryIcon className="h-4 w-4" />
@@ -88,10 +88,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("bookedAppointments")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
                     activeSection === "bookedAppointments"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 font-semibold"
+                      : "text-slate-500"
                   }`}
                 >
                   <Calendar className="h-4 w-4" />
@@ -100,10 +100,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
                     activeSection === "notification"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 font-semibold"
+                      : "text-slate-500"
                   }`}
                 >
                   <Bell className="h-4 w-4" />

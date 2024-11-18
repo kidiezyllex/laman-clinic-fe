@@ -14,7 +14,6 @@ import { usePathname } from "next/navigation";
 import { Doctor, Patient } from "../../../../../lib/entity-types";
 import {
   formatDate,
-  formatDate2,
   formatDate3,
   generateExamination,
   renderSpecialty,
@@ -122,34 +121,46 @@ export default function Page() {
             </div>
             <div className="flex flex-col dark:text-slate-300">
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Mã BN:
                 </span>{" "}
-                {patient?._id}
+                <span className="text-slate-500 dark:text-primary">
+                  {patient?._id}
+                </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3 break-words">
-                <span className="font-semibold dark:text-slate-500">Tên:</span>{" "}
-                {patient?.fullName}
+                <span className="font-semibold text-slate-600 dark:text-primary">
+                  Tên:
+                </span>{" "}
+                <span className="text-slate-500 dark:text-primary">
+                  {patient?.fullName}
+                </span>
               </div>
-
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold dark:text-slate-500">
-                  {" "}
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Giới tính:
                 </span>{" "}
-                {patient?.gender?.toLocaleLowerCase() === "female"
-                  ? "Nữ"
-                  : "Nam"}
+                <span className="text-slate-500 dark:text-primary">
+                  {patient?.gender?.toLocaleLowerCase() === "female"
+                    ? "Nữ"
+                    : "Nam"}
+                </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold dark:text-slate-500">SĐT:</span>{" "}
-                {patient?.phone}
+                <span className="font-semibold text-slate-600 dark:text-primary">
+                  SĐT:
+                </span>{" "}
+                <span className="text-slate-500 dark:text-primary">
+                  {patient?.phone}
+                </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3 break-words">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Email:
                 </span>{" "}
-                {patient?.email}
+                <span className="text-slate-500 dark:text-primary">
+                  {patient?.email}
+                </span>
               </div>
             </div>
           </div>
@@ -170,32 +181,40 @@ export default function Page() {
                 </span>
               </div>
               <p className="text-sm">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Bác sĩ:
                 </span>{" "}
-                {selectedDoctor?.fullName}
+                <span className="text-slate-500 dark:text-primary">
+                  {selectedDoctor?.fullName}
+                </span>
               </p>
               <p className="text-sm">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Chuyên khoa:
                 </span>{" "}
-                {renderSpecialty(selectedSpe + "")}
+                <span className="text-slate-500 dark:text-primary">
+                  {renderSpecialty(selectedSpe + "")}
+                </span>
               </p>
               <p className="text-sm">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Ngày khám:
                 </span>{" "}
-                {selectedDate ? formatDate(selectedDate) : null}
+                <span className="text-slate-500 dark:text-primary">
+                  {selectedDate ? formatDate(selectedDate) : null}
+                </span>
               </p>
               <p className="text-sm">
-                <span className="font-semibold dark:text-slate-500">
+                <span className="font-semibold text-slate-600 dark:text-primary">
                   Ca khám:
                 </span>{" "}
-                {selectedDate &&
-                generateExamination(formatDate3(selectedDate))[0] !==
-                  "00:00 - 01:00"
-                  ? generateExamination(formatDate3(selectedDate))
-                  : null}
+                <span className="text-slate-500 dark:text-primary">
+                  {selectedDate &&
+                  generateExamination(formatDate3(selectedDate))[0] !==
+                    "00:00 - 01:00"
+                    ? generateExamination(formatDate3(selectedDate))
+                    : null}
+                </span>
               </p>
             </div>
           </div>
@@ -208,8 +227,8 @@ export default function Page() {
                 <BreadcrumbPage
                   className={
                     activeSection === "doctorSelector"
-                      ? "text-base text-blue-500 dark:text-blue-500"
-                      : "text-base"
+                      ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
+                      : "text-base text-slate-500 dark:text-primary"
                   }
                 >
                   Bác sĩ & chuyên khoa
@@ -219,9 +238,9 @@ export default function Page() {
               <BreadcrumbItem>
                 <BreadcrumbPage
                   className={
-                    activeSection === "roomSelector"
-                      ? "text-base text-blue-500 dark:text-blue-500"
-                      : "text-base"
+                    activeSection === "calendarSelector"
+                      ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
+                      : "text-base text-slate-500 dark:text-primary"
                   }
                 >
                   Ngày & giờ khám
@@ -232,8 +251,8 @@ export default function Page() {
                 <BreadcrumbPage
                   className={
                     activeSection === "payment"
-                      ? "text-base text-blue-500 dark:text-blue-500"
-                      : "text-base"
+                      ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
+                      : "text-base text-slate-500 dark:text-primary"
                   }
                 >
                   Thanh toán

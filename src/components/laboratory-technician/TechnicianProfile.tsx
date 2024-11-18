@@ -20,16 +20,16 @@ import {
   renderDayOfWeek,
 } from "../../../lib/utils";
 import { Separator } from "../ui/separator";
-export default function PharmacistProfile() {
+export default function TechnicianProfile() {
   const userId = usePathname().split("/")[1];
-  const [pharmacist, setPharmacist] = useState<Partial<Staff>>({});
-  // Fetch Data Dược sĩ
+  const [technician, setTechnician] = useState<Partial<Staff>>({});
+  // Fetch Data Y tá xét nghiệm
   useEffect(() => {
     const fetchData = async () => {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/${userId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/laboratory-technicians/${userId}`
       );
-      setPharmacist(response.data);
+      setTechnician(response.data);
     };
     fetchData();
   }, []);
@@ -37,12 +37,12 @@ export default function PharmacistProfile() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500 uppercase">
-        HỒ SƠ Dược sĩ
+        HỒ SƠ Y tá xét nghiệm
       </p>
-      {pharmacist && (
+      {technician && (
         <div className="flex flex-col border rounded-md p-4 gap-3 bg-primary-foreground">
           <div className="flex gap-3 items-center">
-            {pharmacist.gender?.toLocaleLowerCase() === "male" ? (
+            {technician.gender?.toLocaleLowerCase() === "male" ? (
               <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                 <Dog className="text-blue-500" />
               </div>
@@ -53,10 +53,10 @@ export default function PharmacistProfile() {
             )}
             <div>
               <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
-                Dược sĩ: {pharmacist.fullName}
+                Y tá xét nghiệm: {technician.fullName}
               </p>
               <p className="text-slate-600 dark:text-slate-300">
-                Mã Dược sĩ: {pharmacist?._id}
+                Mã Y tá: {technician?._id}
               </p>
             </div>
           </div>
@@ -68,7 +68,7 @@ export default function PharmacistProfile() {
                 Ngày sinh:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {formatDate(pharmacist.dateOfBirth)}
+                {formatDate(technician.dateOfBirth)}
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -77,7 +77,7 @@ export default function PharmacistProfile() {
                 Giới tính:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {pharmacist.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
+                {technician.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
               </p>
             </div>
             <div className="flex items-center space-x-2 ">
@@ -86,7 +86,7 @@ export default function PharmacistProfile() {
                 Địa chỉ:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {pharmacist.address}
+                {technician.address}
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -95,7 +95,7 @@ export default function PharmacistProfile() {
                 Số ĐT:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {pharmacist.phone}
+                {technician.phone}
               </p>
             </div>
             <div className="flex items-center space-x-2">
@@ -104,7 +104,7 @@ export default function PharmacistProfile() {
                 Email:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {pharmacist.email}
+                {technician.email}
               </p>
             </div>
           </div>
@@ -112,8 +112,8 @@ export default function PharmacistProfile() {
       )}
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
       <div className="flex flex-col gap-3 ">
-        {Object.keys(pharmacist).length !== 0 &&
-          (pharmacist as any).schedule.map((scheduleItem: Schedule) => (
+        {Object.keys(technician).length !== 0 &&
+          (technician as any).schedule.map((scheduleItem: Schedule) => (
             <div
               key={scheduleItem.dayOfWeek + scheduleItem.startTime}
               className="p-3 py-5 border bg-primary-foreground rounded-md"
@@ -141,7 +141,7 @@ export default function PharmacistProfile() {
             </div>
           ))}
       </div>
-      {Object.keys(pharmacist).length !== 0 && (
+      {Object.keys(technician).length !== 0 && (
         <div className="flex justify-end space-x-4">
           <Button
             type="submit"

@@ -190,7 +190,9 @@ export default function PatientProfileForm({
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Họ và tên</FormLabel>
+                <FormLabel className="text-slate-600 dark:text-slate-300">
+                  Họ và tên
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Nhập họ và tên" {...field} />
                 </FormControl>
@@ -204,7 +206,9 @@ export default function PatientProfileForm({
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Số điện thoại</FormLabel>
+                <FormLabel className="text-slate-600 dark:text-slate-300">
+                  Số điện thoại
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Nhập số điện thoại" {...field} />
                 </FormControl>
@@ -214,7 +218,9 @@ export default function PatientProfileForm({
           />
 
           <div className="space-y-2">
-            <Label>Ngày sinh</Label>
+            <Label className="text-slate-600 dark:text-slate-300">
+              Ngày sinh
+            </Label>
             <FormDescription>
               (Đối với bệnh nhân từ 3 tuổi trở xuống, vui lòng nhập đầy đủ ngày
               tháng năm sinh)
@@ -309,7 +315,9 @@ export default function PatientProfileForm({
             name="gender"
             render={({ field }) => (
               <FormItem className="space-y-2">
-                <FormLabel>Giới tính</FormLabel>
+                <FormLabel className="text-slate-600 dark:text-slate-300">
+                  Giới tính
+                </FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
@@ -336,7 +344,9 @@ export default function PatientProfileForm({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-slate-600 dark:text-slate-300">
+                  Email
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="email"
@@ -353,7 +363,9 @@ export default function PatientProfileForm({
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-slate-600 dark:text-slate-300">
+                  Mật khẩu
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="Nhập password" {...field} />
                 </FormControl>
@@ -369,7 +381,9 @@ export default function PatientProfileForm({
                 name="province"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn Tỉnh/Thành phố</FormLabel>
+                    <FormLabel className="text-slate-600 dark:text-slate-300">
+                      Chọn Tỉnh/Thành phố
+                    </FormLabel>
                     <Select
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -402,7 +416,9 @@ export default function PatientProfileForm({
                 name="district"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Chọn Quận/Huyện/Thị xã</FormLabel>
+                    <FormLabel className="text-slate-600 dark:text-slate-300">
+                      Chọn Quận/Huyện/Thị xã
+                    </FormLabel>
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}

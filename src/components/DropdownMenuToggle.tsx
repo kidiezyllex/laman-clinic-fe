@@ -73,24 +73,24 @@ export default function UserMenu() {
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 mt-2" align="end">
         <Link href={`/${currentId}/patient/profile`}>
-          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
+          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between text-slate-600 dark:text-primary font-medium">
             <span>Đặt lịch khám</span>
-            <Calendar className="mr-2 h-4 w-4" />
+            <Calendar className="h-4 w-4" />
           </DropdownMenuItem>
         </Link>
         <Link href={`/${currentId}/patient/dashboard`}>
-          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between">
+          <DropdownMenuItem className="px-4 py-2 flex flex-row justify-between text-slate-600 dark:text-primary font-medium">
             <span>Quản lý tài khoản</span>
-            <User className="mr-2 h-4 w-4" />
+            <User className="h-4 w-4" />
           </DropdownMenuItem>
         </Link>
         <Link href="/">
           <DropdownMenuItem
-            className="px-4 py-2 flex flex-row justify-between"
+            className="px-4 py-2 flex flex-row justify-between text-slate-600 dark:text-primary font-medium"
             onClick={() => handleLogOut()}
           >
             <span>Đăng xuất</span>
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="h-4 w-4" />
           </DropdownMenuItem>
         </Link>
       </DropdownMenuContent>

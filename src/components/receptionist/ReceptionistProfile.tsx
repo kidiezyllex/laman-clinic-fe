@@ -3,12 +3,13 @@ import {
   CalendarIcon,
   PhoneIcon,
   MailIcon,
-  PencilIcon,
   Dog,
   Cat,
   Clock,
   User,
   ArrowUpFromLine,
+  MapPinIcon,
+  UserIcon,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -19,11 +20,10 @@ import {
   generateTimeSlots,
   renderDayOfWeek,
 } from "../../../lib/utils";
-
+import { Separator } from "../ui/separator";
 export default function ReceptionistProfile() {
   const userId = usePathname().split("/")[1];
   const [receptionist, setReceptionist] = useState<Partial<Receptionist>>({});
-
   // Fetch Data Lễ tân
   useEffect(() => {
     const fetchData = async () => {
@@ -39,61 +39,83 @@ export default function ReceptionistProfile() {
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">HỒ SƠ LỄ TÂN</p>
       {receptionist && (
-        <div className="flex flex-col border rounded-md p-4 gap-3">
+        <div className="flex flex-col border rounded-md p-4 gap-3 bg-primary-foreground">
           <div className="flex gap-3 items-center">
             {receptionist.gender?.toLocaleLowerCase() === "male" ? (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                 <Dog className="text-blue-500" />
               </div>
             ) : (
-              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+              <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
                 <Cat className="text-pink-500" />
               </div>
             )}
             <div>
-              <p className="text-base font-semibold">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Lễ tân: {receptionist.fullName}
+              </p>
+              <p className="text-slate-600 dark:text-slate-300">
+                Mã Lễ tân: {receptionist?._id}
               </p>
             </div>
           </div>
-          <div className="flex flex-col gap-3 ml-3">
-            <div className="flex items-center space-x-3">
-              <User className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-500 text-base">
-                Giới tính:{" "}
-                {receptionist.gender?.toLocaleLowerCase() === "male"
-                  ? "Nam"
-                  : "Nữ"}
-              </span>
-            </div>
-            <div className="flex items-center space-x-3">
+          <Separator></Separator>
+          <div className="flex flex-col gap-3 ml-3 text-slate-600 dark:text-slate-300">
+            <div className="flex items-center space-x-2 ">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-500 text-base">
-                Ngày sinh: {formatDate(receptionist.dateOfBirth)}
-              </span>
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Ngày sinh:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {formatDate(receptionist.dateOfBirth)}
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
+              <UserIcon className="text-blue-500 h-4 w-4" />
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Giới tính:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {receptionist.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2 ">
+              <MapPinIcon className="text-blue-500 h-4 w-4 " />
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Địa chỉ:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {receptionist.address}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-500 text-base">
-                Số ĐT: {receptionist.phone}
-              </span>
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Số ĐT:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {receptionist.phone}
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <MailIcon className="text-blue-500 h-4 w-4" />
-              <span className="text-slate-500 text-base">
-                Email: {receptionist.email}
-              </span>
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Email:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {receptionist.email}
+              </p>
             </div>
           </div>
         </div>
       )}
       <p className="text-base font-semibold text-blue-500">LỊCH LÀM VIỆC</p>
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 ">
         {Object.keys(receptionist).length !== 0 &&
           (receptionist as any).schedule.map((scheduleItem: Schedule) => (
             <div
               key={scheduleItem.dayOfWeek + scheduleItem.startTime}
-              className="p-3 border"
+              className="p-3 py-5 border bg-primary-foreground rounded-md"
             >
               <h3 className="font-medium text-blue-500 mb-2 flex items-center">
                 <Clock className="w-4 h-4 mr-2" />
@@ -106,8 +128,12 @@ export default function ReceptionistProfile() {
                   (scheduleItem as any).startTime,
                   (scheduleItem as any).endTime
                 ).map((slot) => (
-                  <Button key={slot} variant={"secondary"}>
-                    {slot}
+                  <Button
+                    key={slot}
+                    variant={"outline"}
+                    className="pointer-events-none"
+                  >
+                    <p className="text-slate-600 dark:text-slate-300">{slot}</p>
                   </Button>
                 ))}
               </div>

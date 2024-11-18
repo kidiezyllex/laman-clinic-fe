@@ -11,17 +11,17 @@ export function getDistance(x1: number, y1: number, x2: number, y2: number) {
 }
 
 export function formatDate(date: Date | undefined) {
-  if (!date) return "N/A";
+  if (!date) return "";
   return format(date, "dd/MM/yyyy");
 }
 
 export function formatDate2(date: Date | undefined) {
-  if (!date) return "N/A";
+  if (!date) return "";
   return format(date, "h:mm a dd/MM/yyyy");
 }
 
 export function formatDate3(date: Date | undefined) {
-  if (!date) return "N/A";
+  if (!date) return "";
   return format(date, "HH:mm");
 }
 

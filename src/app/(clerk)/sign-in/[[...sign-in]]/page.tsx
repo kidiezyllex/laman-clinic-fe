@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
 import { LoginResponse } from "../../../../../lib/entity-types";
+import { Loader2, LogIn } from "lucide-react";
 
 export default function Page() {
   const [email, setEmail] = useState("");
@@ -142,7 +143,7 @@ export default function Page() {
     <Card className="w-fit max-w-full bg-white">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-blue-400">
-          Đăng nhập vào Laman Clinic
+          Đăng nhập
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -162,13 +163,13 @@ export default function Page() {
             },
           }}
         />
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div className="space-y-2 text-black">
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               type="email"
-              placeholder="Nhập Email của bạn..."
+              placeholder="Nhập email của bạn..."
               className="dark:bg-white border border-slate-200"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -177,7 +178,7 @@ export default function Page() {
             />
           </div>
           <div className="space-y-2 text-black">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Mật khẩu</Label>
             <Input
               id="password"
               type="password"
@@ -191,11 +192,21 @@ export default function Page() {
           </div>
           <Button
             type="submit"
-            className="w-full border bg-slate-800 hover:bg-slate-700 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-white"
+            className="w-full flex items-center self-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white dark:bg-blue-500 dark:hover:bg-blue-600"
             disabled={isLoading}
             variant={"default"}
           >
-            {isLoading ? "Loading..." : "Continue"}
+            {isLoading ? (
+              <>
+                Đang đăng nhập
+                <Loader2 className="h-4 w-4 animate-spin" />
+              </>
+            ) : (
+              <>
+                Đăng nhập
+                <LogIn className="h-4 w-4" />
+              </>
+            )}
           </Button>
         </form>
       </CardContent>

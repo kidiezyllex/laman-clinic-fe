@@ -17,7 +17,6 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Doctor, Patient, Test } from "../../../lib/entity-types";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 export default function TestResults({
   isOpen,
   setIsOpen,
@@ -31,14 +30,16 @@ export default function TestResults({
   const [patient, setPatient] = useState<Patient | null>(null);
   useEffect(() => {
     const fetchData = async () => {
-      const res = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${selectedTest?.doctorId}`
-      );
-      const res2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedTest?.patientId}`
-      );
-      setDoctor(res.data);
-      setPatient(res2.data);
+      if (selectedTest?.doctorId && selectedTest?.patientId) {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${selectedTest?.doctorId}`
+        );
+        const res2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedTest?.patientId}`
+        );
+        setDoctor(res.data);
+        setPatient(res2.data);
+      }
     };
     fetchData();
   }, [selectedTest]);

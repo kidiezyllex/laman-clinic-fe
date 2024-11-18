@@ -135,6 +135,18 @@ export interface Receptionist {
   schedule?: Schedule[];
 }
 
+export interface LaboratoryTechnician {
+  _id: string;
+  numberId?: string;
+  fullName?: string;
+  dateOfBirth?: Date;
+  gender?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  schedule?: Schedule[];
+}
+
 export interface Staff {
   _id: string;
   numberId?: string;

@@ -79,7 +79,7 @@ export default function PatientProfile() {
       </p>
       {patient && (
         <>
-          <div className="flex items-center space-x-4 border rounded-md p-4 ">
+          <div className="flex items-center space-x-4 border rounded-md p-4 bg-primary-foreground border-blue-300 dark:border-secondary">
             {patient.gender?.toLowerCase() === "male" ? (
               <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
                 <Dog className="text-blue-500" />
@@ -90,35 +90,59 @@ export default function PatientProfile() {
               </div>
             )}
             <div>
-              <p className="text-base font-semibold">{patient.fullName}</p>
-              <p className="text-slate-500">Mã bệnh nhân: {patient._id}</p>
+              <p className="text-base font-semibold text-start text-slate-600 dark:text-primary">
+                {patient.fullName}
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
+                Mã bệnh nhân: {patient._id}
+              </p>
             </div>
           </div>
-          <div className="space-y-4 border rounded-md p-4">
-            <div className="flex items-center space-x-3">
+          <div className="space-y-4 border rounded-md p-4 bg-primary-foreground border-blue-300 dark:border-secondary">
+            <div className="flex items-center space-x-2 ">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
-              <span className=" text-base">
-                Ngày sinh: {formatDate(patient.dateOfBirth)}
-              </span>
+              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+                Ngày sinh:
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
+                {formatDate(patient.dateOfBirth)}
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <UserIcon className="text-blue-500 h-4 w-4" />
-              <span className=" text-base">
-                Giới tính:{" "}
+              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+                Giới tính:
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
                 {patient.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
-              </span>
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
-              <MapPinIcon className="text-blue-500 h-4 w-4" />
-              <span className=" text-base">Địa chỉ: {patient.address}</span>
+            <div className="flex items-center space-x-2 ">
+              <MapPinIcon className="text-blue-500 h-4 w-4 " />
+              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+                Địa chỉ:
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
+                {patient.address}
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
-              <span className=" text-base">Số ĐT: {patient.phone}</span>
+              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+                Số ĐT:
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
+                {patient.phone}
+              </p>
             </div>
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2">
               <MailIcon className="text-blue-500 h-4 w-4" />
-              <span className=" text-base">Email: {patient.email}</span>
+              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+                Email:
+              </p>
+              <p className="text-slate-600 text-start dark:text-slate-300">
+                {patient.email}
+              </p>
             </div>
           </div>
           <div
@@ -134,7 +158,7 @@ export default function PatientProfile() {
             </Button>
             <Button
               variant="outline"
-              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+              className="flex items-center space-x-2 hover:text-white text-white bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
               onClick={() => setShowUpdateForm(true)}
             >
               Cập nhật

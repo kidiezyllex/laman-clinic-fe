@@ -73,9 +73,9 @@ export default function NavBar() {
               <Button
                 variant="outline"
                 size="icon"
-                className="rounded-full bg-secondary dark:bg-background dark:border-blue-500 border border-blue-500"
+                className="rounded-full bg-secondary dark:bg-background "
               >
-                <User className="h-[1.2rem] w-[1.2rem] text-blue-500" />
+                <User className="h-[1.2rem] w-[1.2rem] text-slate-600 dark:text-primary" />
               </Button>
               <ModeToggle></ModeToggle>
               <DropdownMenuToggle></DropdownMenuToggle>
@@ -100,7 +100,9 @@ export default function NavBar() {
           <Button variant="outline">Đăng ký</Button>
         </Link>
         <Link href={"/sign-in"}>
-          <Button className="border-2 border-secondary">Đăng nhập</Button>
+          <Button className="w-fit flex items-center self-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white dark:bg-blue-500 dark:hover:bg-blue-600 border-2 border-blue-400 dark:border-slate-800">
+            Đăng nhập
+          </Button>
         </Link>
         {/* Dark Mode */}
         <ModeToggle></ModeToggle>
@@ -136,7 +138,7 @@ export default function NavBar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm hover:text-primary"
+                  className="text-sm hover:text-primary font-medium text-slate-600 dark:text-primary"
                 >
                   {link.label}
                 </Link>

@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
-import { formatDate } from "../../../../lib/utils";
+import { formatDate } from "../../../lib/utils";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 

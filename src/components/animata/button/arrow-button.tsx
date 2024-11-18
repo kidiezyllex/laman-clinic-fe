@@ -37,7 +37,7 @@ export default function ArrowButton({
       <span
         style={{ background: buttonOverlayColor }}
         className={cn(
-          "ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-blue-400 text-white duration-300 group-hover:translate-x-0"
+          "ease absolute inset-0 flex h-full w-full -translate-x-full items-center justify-center bg-blue-500 text-white duration-300 group-hover:translate-x-0"
         )}
       >
         <MoveRight style={{ color: iconColor }} />

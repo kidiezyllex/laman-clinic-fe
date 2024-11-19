@@ -154,7 +154,7 @@ export default function ViewAppointment({
                 className="flex flex-col gap-2 border-r-2 last:border-r-0"
               >
                 <div className="flex flex-row gap-2 items-center justify-center h-20 border-b-2">
-                  <div className="font-semibold text-sm">
+                  <div className="font-semibold text-sm text-slate-600 dark:text-slate-300">
                     {Intl.DateTimeFormat("vi-VN", { weekday: "short" }).format(
                       day
                     )}
@@ -163,7 +163,7 @@ export default function ViewAppointment({
                     className={`w-8 h-6 flex justify-center items-center rounded-md ${
                       isSameDay(day, new Date())
                         ? "bg-blue-500 text-white"
-                        : "bg-secondary text-foreground"
+                        : "bg-secondary text-slate-600 dark:text-slate-300"
                     }`}
                   >
                     <p className="text-sm">{format(day, "d")}</p>
@@ -181,16 +181,16 @@ export default function ViewAppointment({
                       .map((appointment, index) => (
                         <div
                           key={(appointment as any).patientId + index}
-                          className="rounded-sm border border-slate-400 p-2 flex flex-col gap-2 items-center bg-secondary cursor-pointer"
+                          className="rounded-sm border border-blue-300 dark:border-secondary p-2 flex flex-col gap-2 items-center bg-secondary dark:bg-background cursor-pointer"
                           onClick={() => openAppointmentDetails(appointment)}
                         >
-                          <div className="h-12 w-12 border border-slate-400 rounded-full flex flex-row justify-center items-center bg-slate-200">
-                            <User className="text-slate-500" />
+                          <div className="h-12 w-12 border border-blue-500  rounded-full flex flex-row justify-center items-center bg-blue-100">
+                            <User className="text-blue-500" />
                           </div>
-                          <p className="text-xs font-semibold text-center">
+                          <p className="text-xs font-semibold text-center text-blue-500 dark:text-blue-500">
                             {appointment.patientId}
                           </p>
-                          <p className="text-xs font-semibold text-center text-slate-700 dark:text-slate-400">
+                          <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300">
                             Lý do: {appointment.reason}
                           </p>
                         </div>

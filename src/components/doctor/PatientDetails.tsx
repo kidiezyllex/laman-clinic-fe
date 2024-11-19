@@ -447,35 +447,29 @@ export default function PatientDetails({
       <Dialog open={isOpen || false} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           {selectedAppointment && (
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
+            <div className="flex flex-col gap-4 ">
+              <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
                 {selectedAppointment?.gender?.toLowerCase() === "male" ? (
-                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border-2 border-blue-500">
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border border-blue-500">
                     <Dog className="text-blue-500" />
                   </div>
                 ) : (
-                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200 border-2 border-pink-500">
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200 border border-pink-500">
                     <Cat className="text-pink-500" />
                   </div>
                 )}
                 <div>
                   <p className="text-base font-semibold ">
-                    {selectedAppointment?.gender?.toLowerCase() === "male" ? (
-                      <span className="text-blue-500">
-                        {selectedAppointment?.fullName}
-                      </span>
-                    ) : (
-                      <span className="text-pink-500">
-                        {selectedAppointment?.fullName}
-                      </span>
-                    )}
+                    <span className="text-slate-600 dark:text-slate-300">
+                      {selectedAppointment?.fullName}
+                    </span>
                   </p>
                   <p className="text-slate-500">
                     Mã bệnh nhân: {selectedAppointment?.patientId}
                   </p>
                 </div>
               </div>
-              <div className="grid grid-cols-2 border rounded-md p-4 mr-4">
+              <div className="grid grid-cols-2 border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
                 <div className="flex flex-col gap-3">
                   <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
                   <div className="flex items-center gap-2">
@@ -531,7 +525,7 @@ export default function PatientDetails({
                   </div>
                 </div>
               </div>
-              <div className="border rounded-md p-4 mr-4">
+              <div className="border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
                 <div className="flex flex-col gap-1 w-full">
                   <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
                   {selectedAppointment?.medicalHistory?.length === 0 ? (
@@ -580,7 +574,7 @@ export default function PatientDetails({
                 </div>
               </div>
               {showPrescriptionForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold self-center">
                     Tạo đơn thuốc
                   </h3>
@@ -685,12 +679,18 @@ export default function PatientDetails({
                       {isLoading ? (
                         <>
                           Đang xử lý
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2
+                            className="
+                          h-4 w-4 animate-spin"
+                          />
                         </>
                       ) : (
                         <>
                           Tạo đơn thuốc
-                          <Pill className="mr-2 h-4 w-4" />
+                          <Pill
+                            className="
+                          h-4 w-4"
+                          />
                         </>
                       )}
                     </Button>
@@ -699,7 +699,7 @@ export default function PatientDetails({
               )}
 
               {showDiagnosticResultsForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold mr-4 self-center">
                     Nhập kết quả khám bệnh/chẩn đoán bệnh
                   </h3>
@@ -790,18 +790,24 @@ export default function PatientDetails({
                         </Button>
                         <Button
                           type="submit"
-                          className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                          className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                           variant={"secondary"}
                         >
                           {isLoading ? (
                             <>
                               Đang xử lý
-                              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                              <Loader2
+                                className="
+                              h-4 w-4 animate-spin"
+                              />
                             </>
                           ) : (
                             <>
                               Hoàn thành
-                              <CircleCheckBig className="mr-2 h-4 w-4" />
+                              <CircleCheckBig
+                                className="
+                              h-4 w-4"
+                              />
                             </>
                           )}
                         </Button>
@@ -812,7 +818,7 @@ export default function PatientDetails({
               )}
 
               {showLabTestsForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground bg-secondary text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold self-center">
                     Tạo xét nghiệm
                   </h3>
@@ -889,12 +895,18 @@ export default function PatientDetails({
                       {isLoading ? (
                         <>
                           Đang xử lý
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2
+                            className="
+                          h-4 w-4 animate-spin"
+                          />
                         </>
                       ) : (
                         <>
                           Tạo xét nghiệm
-                          <FlaskConical className="mr-2 h-4 w-4" />
+                          <FlaskConical
+                            className="
+                          h-4 w-4"
+                          />
                         </>
                       )}
                     </Button>
@@ -903,7 +915,7 @@ export default function PatientDetails({
               )}
 
               {showReExaminationForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold mr-4 self-center">
                     Thông tin tái khám
                   </h3>
@@ -940,17 +952,23 @@ export default function PatientDetails({
                         handleCreateReExamination(selectedAppointment)
                       }
                       variant={"secondary"}
-                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600 text-white "
                     >
                       {isLoading ? (
                         <>
                           Đang xử lý
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          <Loader2
+                            className="
+                          h-4 w-4 animate-spin"
+                          />
                         </>
                       ) : (
                         <>
                           Tạo tái khám
-                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          <CalendarIcon
+                            className="
+                          h-4 w-4"
+                          />
                         </>
                       )}
                     </Button>
@@ -961,39 +979,50 @@ export default function PatientDetails({
                 <div className="flex flex-row gap-4 mr-4 justify-end items-end flex-grow">
                   <Button
                     variant="outline"
+                    className="bg-secondary text-slate-600 dark:text-slate-300"
                     onClick={() => {
                       setShowLabTestsForm(!showLabTestsForm);
                       setMainShow(false);
                     }}
                   >
                     Tạo xét nghiệm
+                    <FlaskConical className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
+                    className="bg-secondary text-slate-600 dark:text-slate-300"
                     onClick={() => {
                       setShowReExaminationForm(!showReExaminationForm);
                       setMainShow(false);
                     }}
                   >
                     Tạo tái khám
+                    <CalendarIcon className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="outline"
+                    className="bg-secondary text-slate-600 dark:text-slate-300"
                     onClick={() => {
                       setShowPrescriptionForm(!showPrescriptionForm);
                       setMainShow(false);
                     }}
                   >
                     Tạo đơn thuốc
+                    <Pill className="h-4 w-4" />
                   </Button>
                   <Button
                     variant="secondary"
+                    className="w-fit flex items-center space-x-2 bg-blue-500 hover:text-white hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     onClick={() => {
                       setShowDiagnosticResultsForm(!showDiagnosticResultsForm);
                       setMainShow(false);
                     }}
                   >
                     Hoàn thành khám
+                    <CircleCheckBig
+                      className="
+                    h-4 w-4"
+                    />
                   </Button>
                 </div>
               )}

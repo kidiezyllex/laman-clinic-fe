@@ -58,7 +58,7 @@ export default function Page() {
                   className={
                     activeSection === "online" || activeSection === "offline"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
-                      : "flex items-center gap-3 rounded-md px-3 py-2 text-slate-500"
+                      : "flex items-center gap-3 rounded-md px-3 py-2 text-slate-500 font-semibold"
                   }
                 >
                   <CalendarRange className="h-4 w-4" />
@@ -89,9 +89,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all ${
+                  className={`flex items-center gap-3 rounded-md font-semibold px-3 py-2 transition-all ${
                     activeSection === "profile"
-                      ? "bg-muted text-blue-500 font-semibold"
+                      ? "bg-muted text-blue-500 "
                       : "text-slate-500"
                   }`}
                 >

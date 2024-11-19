@@ -114,31 +114,31 @@ export default function CompletedPrescription() {
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (
           <Card key={prescription._id + ""} className="mb-6">
-            <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
-              <p className="flex items-center text-sm">
+            <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md text-slate-600 dark:text-slate-300">
+              <p className="flex items-center text-sm font-semibold">
                 <Calendar className="h-4 w-4 mr-2" />
                 Ngày lập đơn:{" "}
                 {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
               </p>
               {prescription.patientId.includes("BN-VL") ? (
                 <>
-                  <p className="flex items-center text-sm">
+                  <p className="flex items-center text-sm font-semibold">
                     <User className="h-4 w-4 mr-2" />
                     Tên Bệnh nhân: {prescription.visitorName}
                   </p>
-                  <p className="flex items-center text-sm">
+                  <p className="flex items-center text-sm font-semibold">
                     <User className="h-4 w-4 mr-2" />
                     SĐT: {prescription.visitorPhone}
                   </p>
                 </>
               ) : (
-                <p className="flex items-center text-sm">
+                <p className="flex items-center text-sm font-semibold">
                   <User className="h-4 w-4 mr-2" />
                   Mã Bệnh nhân: {prescription.patientId}
                 </p>
               )}
 
-              <p className="flex items-center text-sm">
+              <p className="flex items-center text-sm font-semibold">
                 <Stethoscope className="h-4 w-4 mr-2" />
                 Mã Đơn thuốc: {prescription._id}
               </p>
@@ -155,7 +155,7 @@ export default function CompletedPrescription() {
                   <TableHead>Cách dùng</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="text-slate-600 dark:text-slate-300">
                 {prescription.medications.map((medication) => (
                   <TableRow key={medication._id + ""}>
                     <TableCell>{medication.medicationName}</TableCell>

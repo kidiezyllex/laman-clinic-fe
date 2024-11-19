@@ -1,7 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Bell, CircleCheck, ContactRound, Edit, User } from "lucide-react";
+import {
+  ArrowUpFromLine,
+  Bell,
+  CircleCheck,
+  ContactRound,
+  Edit,
+  User,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -103,7 +110,7 @@ export default function Page() {
       {showUpdateRNForm ? (
         <Alert className="mt-4">
           <Edit className="h-4 w-4" />
-          <AlertTitle>
+          <AlertTitle className="text-slate-600 dark:text-slate-300">
             VUI LÒNG CẬP NHẬT SỐ PHÒNG KHÁM SAU KHI ĐĂNG NHẬP
           </AlertTitle>
           <AlertDescription>
@@ -114,8 +121,13 @@ export default function Page() {
                 onChange={(e) => setRoomNumber(e.target.value)}
                 className="bg-transparent"
               ></Input>
-              <Button onClick={handleUpdateRoomNumber} variant={"secondary"}>
+              <Button
+                onClick={handleUpdateRoomNumber}
+                variant={"secondary"}
+                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+              >
                 Cập nhật
+                <ArrowUpFromLine className="w-4 h-4" />
               </Button>
             </div>
           </AlertDescription>

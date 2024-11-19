@@ -18,7 +18,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import TestRequest from "@/components/laboratory-technician/TestRequest";
-import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 import CompletedTest from "@/components/laboratory-technician/CompletedTest";
 import TestsManagement from "@/components/test/TestTypesManagement";

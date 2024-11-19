@@ -42,7 +42,7 @@ export default function MedicalHistory() {
       <p className="text-base font-semibold text-blue-500 uppercase">
         Lịch sử khám bệnh
       </p>
-      <div className="w-full border rounded-md p-4">
+      <div className="w-full border rounded-md p-4 bg-primary-foreground">
         {!patient || patient?.medicalHistory?.length === 0 ? (
           <p className="text-slate-500 text-sm">Chưa có lịch sử khám bệnh</p>
         ) : (

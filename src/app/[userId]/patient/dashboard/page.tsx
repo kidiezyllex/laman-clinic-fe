@@ -64,10 +64,10 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("patientProfile")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
+                  className={`flex items-center gap-3 rounded-lg font-semibold px-3 py-2 transition-all  ${
                     activeSection === "patientProfile"
-                      ? "bg-muted text-blue-500 font-semibold"
-                      : "text-slate-500"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500 "
                   }`}
                 >
                   <ContactRound className="h-4 w-4" />
@@ -76,9 +76,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("medicalHistory")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
+                  className={`flex items-center gap-3 font-semibold rounded-lg px-3 py-2 transition-all  ${
                     activeSection === "medicalHistory"
-                      ? "bg-muted text-blue-500 font-semibold"
+                      ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >
@@ -88,9 +88,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("bookedAppointments")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
+                  className={`flex items-center gap-3 rounded-lg font-semibold px-3 py-2 transition-all  ${
                     activeSection === "bookedAppointments"
-                      ? "bg-muted text-blue-500 font-semibold"
+                      ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >
@@ -100,9 +100,9 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all  ${
+                  className={`flex items-center gap-3 rounded-lg font-semibold px-3 py-2 transition-all  ${
                     activeSection === "notification"
-                      ? "bg-muted text-blue-500 font-semibold"
+                      ? "bg-muted text-blue-500"
                       : "text-slate-500"
                   }`}
                 >

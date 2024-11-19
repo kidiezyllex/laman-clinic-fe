@@ -61,7 +61,7 @@ export default function BookedAppointments() {
       <p className="text-base font-semibold text-blue-500 uppercase">
         Danh sách lịch hẹn đã đặt
       </p>
-      <div className="w-full border rounded-md p-4">
+      <div className="w-full border rounded-md p-4 bg-primary-foreground">
         {!appointmentByPatients || appointmentByPatients?.length === 0 ? (
           <p className="text-slate-500 text-sm">Chưa có lịch đã đặt</p>
         ) : (

@@ -262,7 +262,7 @@ export default function OnlineAppointment() {
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
-          <div className="flex items-center space-x-4 border rounded-md p-4 mr-4">
+          <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
             {selectedAppointment?.gender?.toLowerCase() === "male" ? (
               <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                 <Dog className="text-blue-500" />
@@ -281,7 +281,7 @@ export default function OnlineAppointment() {
               </p>
             </div>
           </div>
-          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300">
+          <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
             <div className="flex flex-col gap-3">
               <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
               <div className="flex items-center gap-2">
@@ -388,7 +388,7 @@ export default function OnlineAppointment() {
                   {getHoursBetweenDates(
                     selectedAppointment.appointmentDateByPatient
                   )}{" "}
-                  giờ
+                  giờ.
                 </p>
               </div>
             ) : (

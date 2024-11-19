@@ -22,6 +22,7 @@ import {
   Receipt,
   RotateCcw,
   SearchIcon,
+  UserRoundSearch,
 } from "lucide-react";
 import {
   Select,
@@ -31,7 +32,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import axios from "axios";
-import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { medicationData } from "../../../lib/hardcoded-data";
 import { MedicationRow, Patient } from "../../../lib/entity-types";
@@ -249,10 +249,11 @@ export default function Visitor() {
               />
             </div>
             <Button
-              variant={"secondary"}
+              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
               onClick={() => handleSearchPatientProfile()}
             >
-              Tìm hồ sơ bệnh nhân
+              Tìm hồ sơ
+              <UserRoundSearch className="h-4 w-4" />
             </Button>
           </div>
           <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-2 mb-4">
@@ -297,7 +298,9 @@ export default function Visitor() {
                 name="fullName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Họ tên</FormLabel>
+                    <FormLabel className="text-slate-600 dark:text-slate-300">
+                      Họ tên
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -310,7 +313,9 @@ export default function Visitor() {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Số điện thoại</FormLabel>
+                    <FormLabel className="text-slate-600 dark:text-slate-300">
+                      Số điện thoại
+                    </FormLabel>
                     <FormControl>
                       <Input {...field} />
                     </FormControl>
@@ -327,13 +332,21 @@ export default function Visitor() {
           <Form {...form}>
             <form className="space-y-4">
               <div className="grid grid-cols-5 gap-4 font-medium border p-3 rounded-md bg-background">
-                <Label className="align-middle text-center">Tên thuốc</Label>
-                <Label className="align-middle text-center">Liều lượng</Label>
-                <Label className="align-middle text-center">Số lượng</Label>
-                <Label className="align-middle text-center">
+                <Label className="align-middle text-center text-slate-600 dark:text-slate-300">
+                  Tên thuốc
+                </Label>
+                <Label className="align-middle text-center text-slate-600 dark:text-slate-300">
+                  Liều lượng
+                </Label>
+                <Label className="align-middle text-center text-slate-600 dark:text-slate-300">
+                  Số lượng
+                </Label>
+                <Label className="align-middle text-center text-slate-600 dark:text-slate-300">
                   Đơn giá (VNĐ)
                 </Label>
-                <Label className="align-middle text-center">Hướng dẫn</Label>
+                <Label className="align-middle text-center text-slate-600 dark:text-slate-300">
+                  Hướng dẫn
+                </Label>
               </div>
 
               {rows.map((row) => (

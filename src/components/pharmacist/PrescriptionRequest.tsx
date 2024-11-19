@@ -259,7 +259,6 @@ export default function PrescriptionRequest() {
       return updatedQuantities;
     });
 
-    // Reset newMedication when toggling customize
     setNewMedication((prev) => ({
       ...prev,
       [prescriptionId]: [],
@@ -299,7 +298,7 @@ export default function PrescriptionRequest() {
       <div className="grid gap-6 md:grid-cols-1">
         {filteredPrescriptions.map((prescription) => (
           <Card key={prescription._id} className="mb-6">
-            <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md">
+            <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md font-semibold text-slate-600 dark:text-slate-300">
               <p className="flex items-center text-sm">
                 <Calendar className="h-4 w-4 mr-2" />
                 Ngày yêu cầu: {formatDate(prescription.dateIssued)}
@@ -309,7 +308,7 @@ export default function PrescriptionRequest() {
                 BS yêu cầu:{" "}
                 <Badge
                   variant={"default"}
-                  className="ml-2 cursor-pointer"
+                  className="ml-2 cursor-pointer bg-slate-700 dark:bg-slate-300"
                   onClick={() =>
                     handleViewDoctorName(
                       prescription.doctorId,
@@ -347,7 +346,7 @@ export default function PrescriptionRequest() {
                   <TableHead>Cách dùng</TableHead>
                 </TableRow>
               </TableHeader>
-              <TableBody>
+              <TableBody className="text-slate-600 dark:text-slate-300">
                 {prescription.medications.map((medication, index) => (
                   <TableRow key={`${medication.medicationName}-${index}`}>
                     {showCheckboxes.isShow &&
@@ -410,12 +409,12 @@ export default function PrescriptionRequest() {
                     id: prescription._id,
                   })
                 }
-                variant={"outline"}
+                variant="outline"
                 className={
                   showCheckboxes.id === prescription._id &&
                   showCheckboxes.isShow
                     ? "hidden"
-                    : ""
+                    : "bg-secondary text-slate-600 dark:text-slate-300"
                 }
               >
                 Lịch sử bệnh lý
@@ -436,7 +435,8 @@ export default function PrescriptionRequest() {
                 </Button>
               ) : (
                 <Button
-                  variant={"outline"}
+                  variant="outline"
+                  className="bg-secondary text-slate-600 dark:text-slate-300"
                   onClick={() => handleCustomizeToggle(prescription._id)}
                 >
                   Tuỳ chỉnh đơn
@@ -457,6 +457,7 @@ export default function PrescriptionRequest() {
               ) : (
                 <Button
                   variant="outline"
+                  className="bg-secondary text-slate-600 dark:text-slate-300"
                   onClick={() => {
                     setShowInvoice({ isShow: true, id: prescription._id });
                   }}

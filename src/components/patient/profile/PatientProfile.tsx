@@ -90,7 +90,7 @@ export default function PatientProfile() {
               </div>
             )}
             <div>
-              <p className="text-base font-semibold text-start text-slate-600 dark:text-primary">
+              <p className="text-base font-semibold text-start text-slate-600 dark:text-slate-300">
                 {patient.fullName}
               </p>
               <p className="text-slate-600 text-start dark:text-slate-300">
@@ -98,49 +98,49 @@ export default function PatientProfile() {
               </p>
             </div>
           </div>
-          <div className="space-y-4 border rounded-md p-4 bg-primary-foreground border-blue-300 dark:border-secondary">
+          <div className="flex flex-col gap-3 border rounded-md p-4 bg-primary-foreground border-blue-300 dark:border-secondary">
             <div className="flex items-center space-x-2 ">
               <CalendarIcon className="text-blue-500 h-4 w-4" />
-              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
                 Ngày sinh:
               </p>
-              <p className="text-slate-600 text-start dark:text-slate-300">
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {formatDate(patient.dateOfBirth)}
               </p>
             </div>
             <div className="flex items-center space-x-2">
               <UserIcon className="text-blue-500 h-4 w-4" />
-              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
                 Giới tính:
               </p>
-              <p className="text-slate-600 text-start dark:text-slate-300">
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {patient.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
               </p>
             </div>
             <div className="flex items-center space-x-2 ">
               <MapPinIcon className="text-blue-500 h-4 w-4 " />
-              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
                 Địa chỉ:
               </p>
-              <p className="text-slate-600 text-start dark:text-slate-300">
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {patient.address}
               </p>
             </div>
             <div className="flex items-center space-x-2">
               <PhoneIcon className="text-blue-500 h-4 w-4" />
-              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
                 Số ĐT:
               </p>
-              <p className="text-slate-600 text-start dark:text-slate-300">
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {patient.phone}
               </p>
             </div>
             <div className="flex items-center space-x-2">
               <MailIcon className="text-blue-500 h-4 w-4" />
-              <p className="text-base font-medium text-start text-slate-600 dark:text-slate-300">
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
                 Email:
               </p>
-              <p className="text-slate-600 text-start dark:text-slate-300">
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {patient.email}
               </p>
             </div>

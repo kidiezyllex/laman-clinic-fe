@@ -129,6 +129,7 @@ export default function PrescriptionRequest() {
       return 0;
     });
 
+  // Hoàn thành đơn thuốc
   const handleCompletePrescription = async (
     prescriptionId: string,
     prescriptionMedications: any

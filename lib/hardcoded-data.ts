@@ -390,4 +390,22 @@ export const apmtData = [
     _id: "CH-K4E64V",
     __v: 0,
   },
+  {
+    patientId: "BN-ZRVR3W",
+    appointmentDate: "2024-11-19T02:00:00.000Z",
+    reason: "Kiểm tra trả kim?",
+    status: "Scheduled",
+    specialization: "Cardiology",
+    priority: false,
+    _id: "CH-K4E64V",
+  },
+  {
+    patientId: "BN-7UHDY1",
+    appointmentDate: "2024-11-19T02:00:00.000Z",
+    reason: "Thuỷ tổ Gò Vấp",
+    status: "Scheduled",
+    specialization: "Cardiology",
+    priority: false,
+    _id: "CH-K4E64V",
+  },
 ];

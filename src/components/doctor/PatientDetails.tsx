@@ -131,7 +131,7 @@ export default function PatientDetails({
   });
 
   // Toggle Form tạo đơn thuốc
-  const handleCanclePrescription = () => {
+  const handleCancel = () => {
     setRows([
       {
         id: 1,
@@ -143,7 +143,13 @@ export default function PatientDetails({
         quantityRemaining: 0,
       },
     ]);
-    setShowPrescriptionForm(!showPrescriptionForm);
+    setReason("");
+    setSelectedTests([]);
+    setTestTypes([]);
+    setShowPrescriptionForm(false);
+    setShowDiagnosticResultsForm(false);
+    setShowLabTestsForm(false);
+    setShowReExaminationForm(false);
     setMainShow(true);
   };
   // Thêm 1 row
@@ -270,10 +276,7 @@ export default function PatientDetails({
         description: error + "",
       });
     } finally {
-      setReasonRequestTest("");
-      setSelectedTests([]);
-      setIsLoading(false);
-      // setIsOpen(false);
+      handleCancel();
     }
   };
 
@@ -347,15 +350,7 @@ export default function PatientDetails({
       });
     } finally {
       setIsLoading(false);
-      setShowDiagnosticResultsForm(false);
-      setMainShow(true);
-      setFormData({
-        medicalHistory: "",
-        diagnosis: "",
-        testResults: "",
-        treatment: "",
-        otherTreatment: "",
-      });
+      handleCancel();
       setIsOpen(false);
       fetchAppointments();
     }
@@ -392,6 +387,7 @@ export default function PatientDetails({
         description: "Đã tạo đơn thuốc cho bệnh nhân!",
       });
       setIsLoading(false);
+      handleCancel();
     }
   };
 
@@ -433,17 +429,17 @@ export default function PatientDetails({
         description: error + "",
       });
     } finally {
-      setIsLoading(false);
       toast({
         variant: "default",
         title: "Thành công!",
         description: "Đã tạo tái khám cho bệnh nhân!",
       });
+      setIsLoading(false);
+      handleCancel();
     }
   };
   return (
     <div>
-      {/* Dialog chi tiết bệnh nhân */}
       <Dialog open={isOpen || false} onOpenChange={setIsOpen}>
         <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
           {selectedAppointment && (
@@ -664,10 +660,7 @@ export default function PatientDetails({
                       Thêm dòng
                       <Plus className="w-4 h-4" />
                     </Button>
-                    <Button
-                      variant="destructive"
-                      onClick={() => handleCanclePrescription()}
-                    >
+                    <Button variant="destructive" onClick={handleCancel}>
                       Huỷ đơn
                       <X className="w-4 h-4" />
                     </Button>
@@ -697,7 +690,6 @@ export default function PatientDetails({
                   </div>
                 </div>
               )}
-
               {showDiagnosticResultsForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold mr-4 self-center">
@@ -760,7 +752,6 @@ export default function PatientDetails({
                           </SelectContent>
                         </Select>
                       </div>
-
                       {formData.treatment === "Khác" && (
                         <div className="space-y-2">
                           <Label htmlFor="otherTreatment">
@@ -776,15 +767,7 @@ export default function PatientDetails({
                         </div>
                       )}
                       <div className="flex flex-row gap-4 w-full justify-end">
-                        <Button
-                          variant="destructive"
-                          onClick={() => {
-                            setShowDiagnosticResultsForm(
-                              !showDiagnosticResultsForm
-                            );
-                            setMainShow(true);
-                          }}
-                        >
+                        <Button variant="destructive" onClick={handleCancel}>
                           Huỷ
                           <X className="w-4 h-4" />
                         </Button>
@@ -816,7 +799,6 @@ export default function PatientDetails({
                   </Form>
                 </div>
               )}
-
               {showLabTestsForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground bg-secondary text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold self-center">
@@ -875,15 +857,7 @@ export default function PatientDetails({
                     </div>
                   </div>
                   <div className="flex flex-row flex-grow gap-4 w-full justify-end mt-4 items-end">
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        setShowLabTestsForm(false);
-                        setMainShow(true);
-                        setTestTypes([]);
-                        setSelectedTests([]);
-                      }}
-                    >
+                    <Button variant="destructive" onClick={handleCancel}>
                       Huỷ
                       <X className="w-4 h-4" />
                     </Button>
@@ -913,7 +887,6 @@ export default function PatientDetails({
                   </div>
                 </div>
               )}
-
               {showReExaminationForm && (
                 <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold mr-4 self-center">
@@ -934,16 +907,8 @@ export default function PatientDetails({
                   <CalendarSelector
                     setSelectedDate={setSelectedDate}
                   ></CalendarSelector>
-
                   <div className="flex flex-row gap-4 w-full justify-end">
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        setShowReExaminationForm(!showReExaminationForm);
-                        setMainShow(true);
-                        setReason("");
-                      }}
-                    >
+                    <Button variant="destructive" onClick={handleCancel}>
                       Huỷ
                       <X className="w-4 h-4" />
                     </Button>

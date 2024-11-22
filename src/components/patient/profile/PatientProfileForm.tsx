@@ -179,7 +179,7 @@ export default function PatientProfileForm({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-md">
+    <div className="p-4 border rounded-md">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
         TẠO HỒ SƠ BỆNH NHÂN
       </h3>
@@ -189,7 +189,7 @@ export default function PatientProfileForm({
             control={form.control}
             name="fullName"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-slate-600 dark:text-slate-300">
                   Họ và tên
                 </FormLabel>
@@ -205,7 +205,7 @@ export default function PatientProfileForm({
             control={form.control}
             name="phone"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-slate-600 dark:text-slate-300">
                   Số điện thoại
                 </FormLabel>
@@ -217,7 +217,7 @@ export default function PatientProfileForm({
             )}
           />
 
-          <div className="space-y-2">
+          <div className="flex flex-col items-start gap-2">
             <Label className="text-slate-600 dark:text-slate-300">
               Ngày sinh
             </Label>
@@ -314,7 +314,7 @@ export default function PatientProfileForm({
             control={form.control}
             name="gender"
             render={({ field }) => (
-              <FormItem className="space-y-2">
+              <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-slate-600 dark:text-slate-300">
                   Giới tính
                 </FormLabel>
@@ -343,7 +343,7 @@ export default function PatientProfileForm({
             control={form.control}
             name="email"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-slate-600 dark:text-slate-300">
                   Email
                 </FormLabel>
@@ -362,7 +362,7 @@ export default function PatientProfileForm({
             control={form.control}
             name="password"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex flex-col items-start gap-2">
                 <FormLabel className="text-slate-600 dark:text-slate-300">
                   Mật khẩu
                 </FormLabel>
@@ -380,7 +380,7 @@ export default function PatientProfileForm({
                 control={form.control}
                 name="province"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col items-start gap-2">
                     <FormLabel className="text-slate-600 dark:text-slate-300">
                       Chọn Tỉnh/Thành phố
                     </FormLabel>
@@ -415,7 +415,7 @@ export default function PatientProfileForm({
                 control={form.control}
                 name="district"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="flex flex-col items-start gap-2">
                     <FormLabel className="text-slate-600 dark:text-slate-300">
                       Chọn Quận/Huyện/Thị xã
                     </FormLabel>

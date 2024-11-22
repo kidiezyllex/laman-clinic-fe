@@ -10,16 +10,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
-import {
-  Calendar,
-  CreditCard,
-  LogOut,
-  Menu,
-  User,
-  UserPlus,
-} from "lucide-react";
+import { Calendar, LogOut, Menu, User } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 export default function UserMenu() {
@@ -35,7 +27,7 @@ export default function UserMenu() {
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/clerk/${userId}`
         );
-        if (response2.data === "") {
+        if (response2.data === null) {
           setCurrentId(userId);
         } else {
           setCurrentId(response2.data._id);

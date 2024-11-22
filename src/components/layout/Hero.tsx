@@ -1,7 +1,7 @@
 "use client";
 import { Calendar } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 
 import {
@@ -22,6 +22,9 @@ import TextFlip from "../animata/text/text-flip";
 import Container from "../Container";
 import ArrowButton from "../animata/button/arrow-button";
 import AvatarList from "../animata/list/avatar-list";
+import { useAuth } from "@clerk/nextjs";
+import axios from "axios";
+import Link from "next/link";
 
 const chartData = [
   { month: "Th.1", desktop: 50000 },
@@ -43,6 +46,36 @@ export default function Hero() {
   const pathname = usePathname();
   const isHomePage = pathname === "/";
   const router = useRouter();
+  const { userId } = useAuth();
+  const [currentId, setCurrentId] = useState("");
+
+  useEffect(() => {
+    // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
+    if (userId) {
+      const setId = async () => {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/clerk/${userId}`
+        );
+        if (res.data === null) {
+          setCurrentId(userId);
+        } else {
+          setCurrentId(res?.data?._id);
+        }
+      };
+      setId();
+    }
+    // Còn nếu đăng nhập bằng tài khoản thì userId 0 có data, currentId vẫn sẽ có data trong localStorage
+    else {
+      const setId2 = async () => {
+        const currentEmail = localStorage.getItem("currentEmail");
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
+        );
+        setCurrentId(res?.data?._id || "");
+      };
+      setId2();
+    }
+  }, [userId]);
   return isHomePage ? (
     <Container>
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%] gap-5 items-center">
@@ -63,13 +96,15 @@ export default function Hero() {
                 router.push("/sign-up");
               }}
             ></ArrowButton>
-            <Button
-              className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-              variant="outline"
-            >
-              Đặt lịch khám
-              <Calendar className="h-4 w-4" />
-            </Button>
+            <Link href={`/${currentId}/patient/profile`}>
+              <Button
+                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                variant="outline"
+              >
+                Đặt lịch khám
+                <Calendar className="h-4 w-4" />
+              </Button>
+            </Link>
           </div>
           <AvatarList />
 

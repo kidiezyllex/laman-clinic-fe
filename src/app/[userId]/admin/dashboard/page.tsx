@@ -1,7 +1,15 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Pill, TestTubes, User, Users } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  ClipboardMinus,
+  Pill,
+  SquareActivity,
+  TestTubes,
+  User,
+  Users,
+} from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -117,6 +125,42 @@ export default function Page() {
                 >
                   <Pill className="h-4 w-4" />
                   Kho thuốc
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("thong-ke")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "thong-ke"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
+                  }`}
+                >
+                  <ChartNoAxesCombined className="h-4 w-4" />
+                  Thống kê
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("bao-cao")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "bao-cao"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
+                  }`}
+                >
+                  <ClipboardMinus className="h-4 w-4" />
+                  Phòng ban
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("medicine-")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
+                    activeSection === "medicine-"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
+                  }`}
+                >
+                  <SquareActivity className="h-4 w-4" />
+                  Phòng ban
                 </Link>
                 <Link
                   href="#"

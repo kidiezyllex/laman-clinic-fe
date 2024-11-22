@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
@@ -32,7 +31,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
 import { formatDate } from "../../../lib/utils";
-
 export default function CompletedAppointments() {
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
@@ -43,7 +41,6 @@ export default function CompletedAppointments() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
   const itemsPerPage = 10;
-
   const fetchData = async () => {
     try {
       const response = await axios.get(
@@ -54,7 +51,6 @@ export default function CompletedAppointments() {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);

@@ -1,18 +1,14 @@
 "use client";
-
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-
 export default function CalendarSelector({
   setSelectedDate,
 }: {
   setSelectedDate: (date: Date) => void;
 }) {
   const [date, setDate] = useState<Date | undefined>(undefined);
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate && selectedDate >= today) {
       setDate(selectedDate);
@@ -23,7 +19,6 @@ export default function CalendarSelector({
   const isDateDisabled = (date: Date) => {
     return date < today;
   };
-
 
   return (
     <div className="w-full flex flex-col gap-4">

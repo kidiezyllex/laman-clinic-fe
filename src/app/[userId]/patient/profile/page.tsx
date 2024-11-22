@@ -85,7 +85,7 @@ export default function CreatePatientProfile() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="w-full mx-auto mt-8 ">
+      <CardContent className="w-full mx-auto mt-8 ">
         <div className="text-center ">
           {patient && (
             <div className="p-4 border rounded-md flex flex-col gap-3 bg-background">
@@ -170,60 +170,16 @@ export default function CreatePatientProfile() {
               </div>
             </div>
           )}
-
-          {!patient && (
-            <div>Bạn đã từng đặt khám tại Đa khoa Laman Clinic?</div>
-          )}
-        </div>
-        {!patient && (
-          <CardContent className="space-y-4">
-            <div className="flex justify-center space-x-4">
-              <Button
-                variant={selectedOption === "existing" ? "default" : "outline"}
-                onClick={() => setSelectedOption("existing")}
-                className={
-                  selectedOption === "existing" ? "bg-blue-500 w-fit" : "w-fit"
-                }
-              >
-                Đã có hồ sơ
-              </Button>
-              <Button
-                variant={selectedOption === "new" ? "default" : "outline"}
-                onClick={() => setSelectedOption("new")}
-                className={
-                  selectedOption === "new" ? "bg-blue-500 w-fit" : "w-fit"
-                }
-              >
-                Chưa có hồ sơ
-              </Button>
-            </div>
-
-            {selectedOption === "existing" && (
-              <div className="mt-4 p-4 border border-blue-500 rounded-md flex flex-col gap-3">
-                <h3 className="text-lg font-semibold text-blue-500">
-                  VUI LÒNG NHẬP MÃ SỐ BỆNH NHÂN
-                </h3>
-                <Input placeholder="Ví dụ: N11-XXXXXXX" className="w-[50%]" />
-                <Button className="w-fit bg-blue-500">Xác nhận</Button>
-                <Link className="text-red-500 text-sm" href="">
-                  Bạn quên mã bệnh của mình?
-                </Link>
-              </div>
-            )}
-
-            {selectedOption === "new" && (
+          <div className="w-full h-[100%] bg-background rounded-xl">
+            {!patient && (
               <PatientProfileForm
-                setSearchTerm={function (section: string): void {
-                  throw new Error("Function not implemented.");
-                }}
-                setShowCreatePatientProfile={function (section: boolean): void {
-                  throw new Error("Function not implemented.");
-                }}
-              ></PatientProfileForm>
+                setSearchTerm={() => {}}
+                setShowCreatePatientProfile={() => {}}
+              />
             )}
-          </CardContent>
-        )}
-      </div>
+          </div>
+        </div>
+      </CardContent>
     </div>
   );
 }

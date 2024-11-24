@@ -33,9 +33,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
+import { usePathname } from "next/navigation";
 
 export default function TestTypesManagement() {
   const { toast } = useToast();
+  const userId = usePathname().split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -182,7 +184,10 @@ export default function TestTypesManagement() {
           onClick={() => setIsDialogOpen(true)}
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
         >
-          Thêm loại xét nghiệm
+          {userId.includes("QTV")
+            ? "Thêm loại xét nghiệm"
+            : "Yêu cầu thêm loại xét nghiệm"}
+
           <CirclePlus className="h-4 w-4" />
         </Button>
       </div>
@@ -193,7 +198,10 @@ export default function TestTypesManagement() {
             <TableHead>Tên xét nghiệm</TableHead>
             <TableHead>Mô tả</TableHead>
             <TableHead>Giá (VND)</TableHead>
-            <TableHead className="w-[100px]">Thao tác</TableHead>
+
+            {userId.includes("QTV") ? (
+              <TableHead className="w-[100px]">Thao tác</TableHead>
+            ) : null}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -237,8 +245,8 @@ export default function TestTypesManagement() {
                   test.price.toLocaleString("vi-VN")
                 )}
               </TableCell>
-              <TableCell>
-                <TableCell className="flex flex-row gap-2 p-0">
+              {userId.includes("QTV") ? (
+                <TableCell className="flex flex-row gap-2">
                   {editingId === test._id ? (
                     <Button
                       onClick={handleSave}
@@ -262,7 +270,7 @@ export default function TestTypesManagement() {
                     <Trash className="w-4 h-4" />
                   </Button>
                 </TableCell>
-              </TableCell>
+              ) : null}
             </TableRow>
           ))}
         </TableBody>

@@ -25,7 +25,6 @@ import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
 import TechnicianProfile from "@/components/laboratory-technician/TechnicianProfile";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("request");
-
   const renderMainContent = () => {
     switch (activeSection) {
       case "request":
@@ -38,8 +37,6 @@ export default function Page() {
         return <CompletedTest />;
       case "test-types":
         return <TestsManagement />;
-      case "medicine-warehouse":
-        return <MedicineWarehouse />;
       default:
         return null;
     }
@@ -116,18 +113,6 @@ export default function Page() {
                 >
                   <TestTubes className="h-4 w-4" />
                   Loại xét nghiệm
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("medicine-warehouse")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
-                    activeSection === "medicine-warehouse"
-                      ? "bg-muted text-blue-500"
-                      : "text-slate-500"
-                  }`}
-                >
-                  <Pill className="h-4 w-4" />
-                  Kho thuốc
                 </Link>
                 <Link
                   href="#"

@@ -48,9 +48,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { formatDate } from "../../../lib/utils";
 import MedicationFluctuations from "../medicine-warehouse/MedicationFluctuations";
+import { usePathname } from "next/navigation";
 
 export default function MedicineWarehouse() {
   const { toast } = useToast();
+  const userId = usePathname().split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
@@ -165,13 +167,16 @@ export default function MedicineWarehouse() {
           Biến động
           <TrendingDown className="h-4 w-4" />
         </Button>
-        <Button
-          onClick={() => setIsDialogOpen(true)}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          Thêm thuốc
-          <CirclePlus className="h-4 w-4" />
-        </Button>
+        {userId.includes("QTV") ? (
+          <Button
+            onClick={() => setIsDialogOpen(true)}
+            className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          >
+            Thêm thuốc
+            <CirclePlus className="h-4 w-4" />
+          </Button>
+        ) : null}
+
         <Button variant="outline" size="icon" onClick={fetchData}>
           <RotateCcw className="h-4 w-4" />
         </Button>
@@ -187,7 +192,7 @@ export default function MedicineWarehouse() {
             <TableHead>Giá</TableHead>
             <TableHead>Hướng dẫn sử dụng</TableHead>
             <TableHead>Ngày hết hạn</TableHead>
-            <TableHead>Thao tác</TableHead>
+            {userId.includes("QTV") ? <TableHead>Thao tác</TableHead> : null}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -201,19 +206,21 @@ export default function MedicineWarehouse() {
               <TableCell>{medication.price}</TableCell>
               <TableCell>{medication.instructions}</TableCell>
               <TableCell>{formatDate(medication.expirationDate)}</TableCell>
-              <TableCell className="flex flex-row gap-2">
-                <Button
-                  variant="secondary"
-                  className="border border-slate-300 dark:border-none"
-                >
-                  Sửa
-                  <Edit2 className="w-4 h-4" />
-                </Button>
-                <Button variant="destructive">
-                  Xoá
-                  <Trash className="w-4 h-4" />
-                </Button>
-              </TableCell>
+              {userId.includes("QTV") ? (
+                <TableCell className="flex flex-row gap-2">
+                  <Button
+                    variant="secondary"
+                    className="border border-slate-300 dark:border-none"
+                  >
+                    Sửa
+                    <Edit2 className="w-4 h-4" />
+                  </Button>
+                  <Button variant="destructive">
+                    Xoá
+                    <Trash className="w-4 h-4" />
+                  </Button>
+                </TableCell>
+              ) : null}
             </TableRow>
           ))}
         </TableBody>

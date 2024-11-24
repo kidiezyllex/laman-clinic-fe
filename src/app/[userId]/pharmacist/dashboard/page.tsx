@@ -148,18 +148,6 @@ export default function Page() {
                 </Link>
                 <Link
                   href="#"
-                  onClick={() => setActiveSection("report")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
-                    activeSection === "report"
-                      ? "bg-muted text-blue-500"
-                      : "text-slate-500"
-                  }`}
-                >
-                  <Newspaper className="h-4 w-4" />
-                  Báo cáo
-                </Link>
-                <Link
-                  href="#"
                   onClick={() => setActiveSection("profile")}
                   className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
                     activeSection === "profile"

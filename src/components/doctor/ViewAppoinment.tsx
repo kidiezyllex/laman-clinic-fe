@@ -76,14 +76,14 @@ export default function ViewAppointment({
       setTests(response2.data);
       const roomN = response.data.roomNumber;
       if (roomN.toString().trim() !== "000") {
-        // const response = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-        // );
-        // setAppointments(response.data);
-        setAppointments(apmtData);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
+        );
+        setAppointments(response.data);
+        // setAppointments(apmtData);
       } else {
-        // setAppointments([]);
-        setAppointments(apmtData);
+        setAppointments([]);
+        // setAppointments(apmtData);
       }
     } catch (err) {
       console.log(err + "");

@@ -76,30 +76,36 @@ export default function MedicationFluctuations({
 
   return (
     <Dialog open={isOpenMF || false} onOpenChange={setIsOpenMF}>
-      <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+      <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto flex flex-col gap-4">
         <DialogTitle className="text-md font-semibold self-center text-blue-500 mb-4">
           THÔNG TIN BIẾN ĐỘNG CỦA THUỐC
         </DialogTitle>
-        <Table>
+        <Table className="border">
           <TableHeader>
             <TableRow>
-              <TableHead>Xem chi tiết</TableHead>
-              <TableHead>Tên thuốc</TableHead>
-              <TableHead className="w-[200px]">Số đơn thuốc chứa</TableHead>
-              <TableHead className="w-[200px]">
+              <TableHead className="text-slate-600 dark:text-slate-300">
+                Xem chi tiết
+              </TableHead>
+              <TableHead className="text-slate-600 dark:text-slate-300">
+                Tên thuốc
+              </TableHead>
+              <TableHead className="w-[200px] text-slate-600 dark:text-slate-300">
+                Số đơn thuốc chứa
+              </TableHead>
+              <TableHead className="w-[200px] text-slate-600 dark:text-slate-300">
                 Tổng số lượng thuốc đã bán
               </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {medicationData.map((medication) => {
+            {medicationData.map((medication, index) => {
               const { totalPrescriptions, totalQuantity } = calculateTotals(
                 medication.prescriptions
               );
               return (
                 <>
                   <TableRow
-                    key={medication.medicationName}
+                    key={index}
                     onClick={() => toggleRow(medication.medicationName)}
                   >
                     <TableCell>

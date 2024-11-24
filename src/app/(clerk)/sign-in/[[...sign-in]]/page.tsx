@@ -44,11 +44,6 @@ export default function Page() {
 
       if (data.status === "success") {
         if (data.data?.role === "doctor") {
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Bác sĩ.",
-          });
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${
               (data as any)?.data?.email
@@ -56,12 +51,12 @@ export default function Page() {
           );
           router.push(`/${res.data._id}/doctor/dashboard`);
           localStorage.setItem("currentId", res.data._id);
-        } else if (data.data?.role === "receptionist") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: "Đăng nhập với quyền Lễ tân.",
+            description: "Đăng nhập với quyền Bác sĩ.",
           });
+        } else if (data.data?.role === "receptionist") {
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${
               (data as any)?.data?.email
@@ -69,26 +64,25 @@ export default function Page() {
           );
           router.push(`/${res.data._id}/receptionist/dashboard`);
           localStorage.setItem("currentId", res.data._id);
-        } else if (data.data?.role === "pharmacist") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: "Đăng nhập với quyền Dược sĩ.",
+            description: "Đăng nhập với quyền Lễ tân.",
           });
+        } else if (data.data?.role === "pharmacist") {
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${
               (data as any)?.data?.email
             }`
           );
-          console.log(res);
           router.push(`/${res.data._id}/pharmacist/dashboard`);
           localStorage.setItem("currentId", res.data._id);
-        } else if (data.data?.role === "laboratory-technician") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: "Đăng nhập với quyền Y tá xét nghiệm.",
+            description: "Đăng nhập với quyền Dược sĩ.",
           });
+        } else if (data.data?.role === "laboratory-technician") {
           const res = await axios.get(
             `${
               process.env.NEXT_PUBLIC_BACKEND_API_URL
@@ -96,12 +90,12 @@ export default function Page() {
           );
           router.push(`/${res.data._id}/laboratory-technician/dashboard`);
           localStorage.setItem("currentId", res.data._id);
-        } else if (data.data?.role === "cashier") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: "Đăng nhập với quyền Thu ngân.",
+            description: "Đăng nhập với quyền Y tá xét nghiệm.",
           });
+        } else if (data.data?.role === "cashier") {
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cashiers/?email=${
               (data as any)?.data?.email
@@ -109,21 +103,24 @@ export default function Page() {
           );
           router.push(`/${res.data._id}/cashier/dashboard`);
           localStorage.setItem("currentId", res.data._id);
-        } else if (data.data?.role === "admin") {
           toast({
             variant: "default",
             title: "Thành công!",
-            description: "Đăng nhập với quyền Quản trị viên.",
+            description: "Đăng nhập với quyền Thu ngân.",
           });
+        } else if (data.data?.role === "admin") {
           const res = await axios.get(
             `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admins/?email=${
               (data as any)?.data?.email
             }`
           );
-          console.log(res);
-          console.log(res.data._id);
           router.push(`/${res.data._id}/admin/dashboard`);
           localStorage.setItem("currentId", res.data._id);
+          toast({
+            variant: "default",
+            title: "Thành công!",
+            description: "Đăng nhập với quyền Quản trị viên.",
+          });
         } else router.push("/");
       } else {
         toast({
@@ -133,7 +130,11 @@ export default function Page() {
         });
       }
     } catch (error) {
-      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
     } finally {
       setIsLoading(false);
     }

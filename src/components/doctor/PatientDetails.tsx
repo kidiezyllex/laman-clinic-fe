@@ -20,6 +20,7 @@ import {
   CalendarIcon,
   Cat,
   CircleCheckBig,
+  ClipboardPlus,
   Dog,
   FileText,
   FlaskConical,
@@ -97,8 +98,15 @@ export default function PatientDetails({
   });
   // state
   const [tests, setTests] = useState<TestType[]>([]);
+  const [services, setServices] = useState([
+    { _id: "", serviceName: "", cost: 0 },
+  ]);
+  const [selectedServices, setSelectedServices] = useState([
+    { _id: "", serviceName: "", cost: 0 },
+  ]);
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
   const [showReExaminationForm, setShowReExaminationForm] = useState(false);
+  const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [showLabTestsForm, setShowLabTestsForm] = useState(false);
   const [mainShow, setMainShow] = useState(true);
@@ -118,6 +126,7 @@ export default function PatientDetails({
   ]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedTests, setSelectedTests] = useState<String[]>([]);
+  const [selectedServiceIds, setSelectedServiceIds] = useState<String[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [reasonRequestTest, setReasonRequestTest] = useState("");
   const [testTypes, setTestTypes] = useState<TestType[]>([]);
@@ -146,11 +155,15 @@ export default function PatientDetails({
     setReason("");
     setSelectedTests([]);
     setTestTypes([]);
+    setSelectedServiceIds([]);
+    setSelectedServices([]);
     setShowPrescriptionForm(false);
+    setShowServiceForm(false);
     setShowDiagnosticResultsForm(false);
     setShowLabTestsForm(false);
     setShowReExaminationForm(false);
     setMainShow(true);
+    setIsLoading(false);
   };
   // Thêm 1 row
   const addRow = () => {
@@ -206,36 +219,68 @@ export default function PatientDetails({
   };
 
   useEffect(() => {
-    const selected = tests.filter((test) => selectedTests.includes(test._id));
-    setTestTypes(selected as any);
-  }, [selectedTests]);
+    const selectedTs = tests.filter((test) => selectedTests.includes(test._id));
+    const selectedSv = services.filter((sv) =>
+      selectedServiceIds.includes(sv._id)
+    );
+    setTestTypes(selectedTs as any);
+    setSelectedServices(selectedSv as any);
+  }, [selectedTests, selectedServiceIds]);
   const fetchData = async () => {
     try {
-      const response = await axios.get(
+      const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`
       );
-      const response2 = await axios.get(
+      const res2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
       );
-      setMedications(response2.data);
-      setTests(response.data);
+      const res3 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/services`
+      );
+      setTests(res.data);
+      setMedications(res2.data);
+      setServices(res3.data);
     } catch (error) {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchServiceList = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/services-list`
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchServiceList();
+  }, [showServiceForm]);
+
   const filteredTests = tests.filter((test) =>
     test.testName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const filteredServices = services.filter((test) =>
+    test.serviceName.toLowerCase().includes(searchTerm.toLowerCase())
+  );
   const handleTestToggle = (testId: String) => {
     setSelectedTests((prev) =>
       prev.includes(testId)
         ? prev.filter((id) => id !== testId)
         : [...prev, testId]
+    );
+  };
+
+  const handleServiceToggle = (serviceId: String) => {
+    setSelectedServiceIds((prev) =>
+      prev.includes(serviceId)
+        ? prev.filter((_id) => _id !== serviceId)
+        : [...prev, serviceId]
     );
   };
 
@@ -250,7 +295,6 @@ export default function PatientDetails({
         requestDate: new Date(),
         reason: reasonRequestTest,
       };
-      console.log(payload);
       if (reasonRequestTest.trim() === "" || testTypes.length === 0) {
         toast({
           variant: "destructive",
@@ -435,6 +479,35 @@ export default function PatientDetails({
         description: "Đã tạo tái khám cho bệnh nhân!",
       });
       setIsLoading(false);
+      handleCancel();
+    }
+  };
+
+  // Tạo dịch vụ
+  const handleCreateServices = async () => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorId,
+        services: selectedServices,
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-service-list`,
+        payload
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo dịch vụ cho bệnh nhân!",
+      });
       handleCancel();
     }
   };
@@ -800,7 +873,7 @@ export default function PatientDetails({
                 </div>
               )}
               {showLabTestsForm && (
-                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground bg-secondary text-slate-600 dark:text-slate-300">
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
                   <h3 className="text-md font-semibold self-center">
                     Tạo xét nghiệm
                   </h3>
@@ -838,7 +911,11 @@ export default function PatientDetails({
                       </h3>
                       <div className="flex flex-row flex-wrap gap-4">
                         {testTypes.map((test, index) => (
-                          <Badge variant={"secondary"} key={index}>
+                          <Badge
+                            variant={"secondary"}
+                            key={index}
+                            className="border border-slate-300 dark:border-none"
+                          >
                             {test.testName}
                           </Badge>
                         ))}
@@ -878,6 +955,87 @@ export default function PatientDetails({
                         <>
                           Tạo xét nghiệm
                           <FlaskConical
+                            className="
+                          h-4 w-4"
+                          />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
+              )}
+              {showServiceForm && (
+                <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
+                  <h3 className="text-md font-semibold self-center">
+                    Tạo dịch vụ
+                  </h3>
+                  <div className="">
+                    <Input
+                      type="search"
+                      placeholder="Tìm kiếm nhanh..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="w-full mb-4"
+                    />
+                    <div className="rounded-md border p-4 grid grid-cols-2 gap-2 mb-4 dark:bg-slate-950 bg-white">
+                      {filteredServices.map((sv) => (
+                        <Label
+                          key={sv._id}
+                          className="flex items-center space-x-2 mb-2 p-2 border rounded-md cursor-pointer"
+                        >
+                          <Checkbox
+                            id={`sv-${sv._id}`}
+                            checked={selectedServiceIds.includes(sv._id)}
+                            onCheckedChange={() => handleServiceToggle(sv._id)}
+                          />
+                          <Label
+                            key={sv._id}
+                            className="text-sm font-semibold cursor-pointer"
+                          >
+                            {sv.serviceName}
+                          </Label>
+                        </Label>
+                      ))}
+                    </div>
+                    <div className="flex flex-col gap-4">
+                      <h3 className="text-sm font-semibold">
+                        Các dịch vụ đã chọn:
+                      </h3>
+                      <div className="flex flex-row flex-wrap gap-4">
+                        {selectedServices.map((sv, index) => (
+                          <Badge
+                            variant={"secondary"}
+                            key={index}
+                            className="border border-slate-300 dark:border-none"
+                          >
+                            {sv.serviceName}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-row flex-grow gap-4 w-full justify-end mt-4 items-end">
+                    <Button variant="destructive" onClick={handleCancel}>
+                      Huỷ
+                      <X className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      onClick={() => handleCreateServices()}
+                      disabled={isLoading}
+                      className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                      {isLoading ? (
+                        <>
+                          Đang xử lý
+                          <Loader2
+                            className="
+                          h-4 w-4 animate-spin"
+                          />
+                        </>
+                      ) : (
+                        <>
+                          Tạo dịch vụ
+                          <ClipboardPlus
                             className="
                           h-4 w-4"
                           />
@@ -944,7 +1102,18 @@ export default function PatientDetails({
                 <div className="flex flex-row gap-4 mr-4 justify-end items-end flex-grow">
                   <Button
                     variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300"
+                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
+                    onClick={() => {
+                      setShowServiceForm(!showServiceForm);
+                      setMainShow(false);
+                    }}
+                  >
+                    Tạo dịch vụ
+                    <ClipboardPlus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     onClick={() => {
                       setShowLabTestsForm(!showLabTestsForm);
                       setMainShow(false);
@@ -955,7 +1124,7 @@ export default function PatientDetails({
                   </Button>
                   <Button
                     variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300"
+                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     onClick={() => {
                       setShowReExaminationForm(!showReExaminationForm);
                       setMainShow(false);
@@ -966,7 +1135,7 @@ export default function PatientDetails({
                   </Button>
                   <Button
                     variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300"
+                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     onClick={() => {
                       setShowPrescriptionForm(!showPrescriptionForm);
                       setMainShow(false);

@@ -11,14 +11,7 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import {
-  Cat,
-  ChevronLeft,
-  ChevronRight,
-  Dog,
-  RotateCcw,
-  User,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, RotateCcw, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -83,10 +76,11 @@ export default function ViewAppointment({
       setTests(response2.data);
       const roomN = response.data.roomNumber;
       if (roomN.toString().trim() !== "000") {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-        );
-        setAppointments(response.data);
+        // const response = await axios.get(
+        //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
+        // );
+        // setAppointments(response.data);
+        setAppointments(apmtData);
       } else {
         // setAppointments([]);
         setAppointments(apmtData);

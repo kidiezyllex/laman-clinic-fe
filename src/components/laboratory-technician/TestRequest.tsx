@@ -70,6 +70,7 @@ export default function TestRequest() {
       referenceRange: string;
       measurementUnit: string;
       equipment: string;
+      price: number;
     }>
   >([]);
 
@@ -134,6 +135,7 @@ export default function TestRequest() {
                 referenceRange: "",
                 measurementUnit: "",
                 equipment: "",
+                price: test.price,
               },
             ];
           }
@@ -169,6 +171,7 @@ export default function TestRequest() {
             referenceRange: "",
             measurementUnit: "",
             equipment: "",
+            price: 0,
           },
         ];
       }

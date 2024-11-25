@@ -104,7 +104,7 @@ export default function OnlineAppointment() {
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?._id,
+        patientId: selectedAppointment?.patientId,
         appointmentDate: new Date(),
         reason,
         specialization: selectedAppointment?.specialization,
@@ -380,6 +380,19 @@ export default function OnlineAppointment() {
               placeholder="Nhập lý do hẹn khám"
             />
           </div>
+          <h3 className="text-md font-semibold text-slate-600 dark:text-slate-300">
+            Chọn loại dịch vụ khám
+          </h3>
+          <Select value={filterType} onValueChange={setFilterType}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Lọc theo ngày" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Tất cả</SelectItem>
+              <SelectItem value="today">Hôm nay</SelectItem>
+              <SelectItem value="new">Gần nhất</SelectItem>
+            </SelectContent>
+          </Select>
           <div className="mr-4">
             {selectedAppointment?.appointmentDateByPatient ? (
               <div className="w-full p-4 bg-primary-foreground rounded-md border">

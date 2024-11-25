@@ -52,7 +52,6 @@
     "next-themes": "^0.3.0",
     "nextjs-toploader": "^3.6.15",
     "openai": "^4.60.0",
-    "prisma": "^5.21.1",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",
     "react": "^18",

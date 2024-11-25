@@ -170,3 +170,151 @@ export const renderRole = (role: string) => {
   };
   return roles[role] || "";
 };
+
+export enum Department {
+  InternalMedicine = "Khoa Nội tổng quát",
+  GeneralSurgery = "Khoa Ngoại tổng quát",
+  Pediatrics = "Khoa Nhi",
+  ObstetricsGynecology = "Khoa Sản",
+  Cardiology = "Khoa Tim mạch",
+  Neurology = "Khoa Thần kinh",
+  Pulmonology = "Khoa Phổi",
+  Dermatology = "Khoa Da liễu",
+  Gastroenterology = "Khoa Tiêu hóa",
+  NephrologyUrology = "Khoa Thận - Tiết niệu",
+  Hematology = "Khoa Huyết học",
+  Otolaryngology = "Khoa Tai Mũi Họng",
+  Ophthalmology = "Khoa Mắt",
+  OralMaxillofacialSurgery = "Khoa Răng Hàm Mặt",
+  PhysicalMedicineRehabilitation = "Khoa Phục hồi chức năng",
+  ClinicalPsychology = "Khoa Tâm lý học",
+}
+
+export enum Service {
+  GeneralExamination = "Khám tổng quát",
+  PeriodicHealthCheck = "Khám sức khỏe định kỳ",
+  SpecialtyExamination = "Khám chuyên khoa",
+  ComprehensiveHealthPackage = "Gói khám sức khỏe toàn diện",
+  DiagnosticImaging = "Khám chẩn đoán hình ảnh",
+}
+
+export type PriceList = {
+  [key in Department]: {
+    [key in Service]: number;
+  };
+};
+
+export const priceList: PriceList = {
+  [Department.InternalMedicine]: {
+    [Service.GeneralExamination]: 150000,
+    [Service.PeriodicHealthCheck]: 500000,
+    [Service.SpecialtyExamination]: 200000,
+    [Service.ComprehensiveHealthPackage]: 1500000,
+    [Service.DiagnosticImaging]: 500000,
+  },
+  [Department.GeneralSurgery]: {
+    [Service.GeneralExamination]: 200000,
+    [Service.PeriodicHealthCheck]: 600000,
+    [Service.SpecialtyExamination]: 250000,
+    [Service.ComprehensiveHealthPackage]: 2000000,
+    [Service.DiagnosticImaging]: 700000,
+  },
+  [Department.Pediatrics]: {
+    [Service.GeneralExamination]: 120000,
+    [Service.PeriodicHealthCheck]: 400000,
+    [Service.SpecialtyExamination]: 180000,
+    [Service.ComprehensiveHealthPackage]: 1200000,
+    [Service.DiagnosticImaging]: 450000,
+  },
+  [Department.ObstetricsGynecology]: {
+    [Service.GeneralExamination]: 180000,
+    [Service.PeriodicHealthCheck]: 550000,
+    [Service.SpecialtyExamination]: 220000,
+    [Service.ComprehensiveHealthPackage]: 1800000,
+    [Service.DiagnosticImaging]: 600000,
+  },
+  [Department.Cardiology]: {
+    [Service.GeneralExamination]: 250000,
+    [Service.PeriodicHealthCheck]: 800000,
+    [Service.SpecialtyExamination]: 300000,
+    [Service.ComprehensiveHealthPackage]: 2500000,
+    [Service.DiagnosticImaging]: 1000000,
+  },
+  [Department.Neurology]: {
+    [Service.GeneralExamination]: 220000,
+    [Service.PeriodicHealthCheck]: 700000,
+    [Service.SpecialtyExamination]: 280000,
+    [Service.ComprehensiveHealthPackage]: 2200000,
+    [Service.DiagnosticImaging]: 900000,
+  },
+  [Department.Pulmonology]: {
+    [Service.GeneralExamination]: 180000,
+    [Service.PeriodicHealthCheck]: 600000,
+    [Service.SpecialtyExamination]: 230000,
+    [Service.ComprehensiveHealthPackage]: 1900000,
+    [Service.DiagnosticImaging]: 800000,
+  },
+  [Department.Dermatology]: {
+    [Service.GeneralExamination]: 160000,
+    [Service.PeriodicHealthCheck]: 500000,
+    [Service.SpecialtyExamination]: 200000,
+    [Service.ComprehensiveHealthPackage]: 1600000,
+    [Service.DiagnosticImaging]: 550000,
+  },
+  [Department.Gastroenterology]: {
+    [Service.GeneralExamination]: 190000,
+    [Service.PeriodicHealthCheck]: 650000,
+    [Service.SpecialtyExamination]: 240000,
+    [Service.ComprehensiveHealthPackage]: 2000000,
+    [Service.DiagnosticImaging]: 850000,
+  },
+  [Department.NephrologyUrology]: {
+    [Service.GeneralExamination]: 200000,
+    [Service.PeriodicHealthCheck]: 700000,
+    [Service.SpecialtyExamination]: 250000,
+    [Service.ComprehensiveHealthPackage]: 2100000,
+    [Service.DiagnosticImaging]: 900000,
+  },
+  [Department.Hematology]: {
+    [Service.GeneralExamination]: 210000,
+    [Service.PeriodicHealthCheck]: 750000,
+    [Service.SpecialtyExamination]: 270000,
+    [Service.ComprehensiveHealthPackage]: 2300000,
+    [Service.DiagnosticImaging]: 950000,
+  },
+  [Department.Otolaryngology]: {
+    [Service.GeneralExamination]: 170000,
+    [Service.PeriodicHealthCheck]: 550000,
+    [Service.SpecialtyExamination]: 220000,
+    [Service.ComprehensiveHealthPackage]: 1700000,
+    [Service.DiagnosticImaging]: 600000,
+  },
+  [Department.Ophthalmology]: {
+    [Service.GeneralExamination]: 160000,
+    [Service.PeriodicHealthCheck]: 500000,
+    [Service.SpecialtyExamination]: 200000,
+    [Service.ComprehensiveHealthPackage]: 1600000,
+    [Service.DiagnosticImaging]: 550000,
+  },
+  [Department.OralMaxillofacialSurgery]: {
+    [Service.GeneralExamination]: 180000,
+    [Service.PeriodicHealthCheck]: 600000,
+    [Service.SpecialtyExamination]: 230000,
+    [Service.ComprehensiveHealthPackage]: 1900000,
+    [Service.DiagnosticImaging]: 700000,
+  },
+  [Department.PhysicalMedicineRehabilitation]: {
+    [Service.GeneralExamination]: 150000,
+    [Service.PeriodicHealthCheck]: 500000,
+    [Service.SpecialtyExamination]: 190000,
+    [Service.ComprehensiveHealthPackage]: 1500000,
+    [Service.DiagnosticImaging]: 550000,
+  },
+  [Department.ClinicalPsychology]: {
+    [Service.GeneralExamination]: 200000,
+    [Service.PeriodicHealthCheck]: 650000,
+    [Service.SpecialtyExamination]: 250000,
+    [Service.ComprehensiveHealthPackage]: 2000000,
+    [Service.DiagnosticImaging]: 700000,
+  },
+};

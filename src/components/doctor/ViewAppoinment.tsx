@@ -24,7 +24,7 @@ import { usePathname } from "next/navigation";
 import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
 import { apmtData } from "../../../lib/hardcoded-data";
-
+import { formatDate } from "../../../lib/utils";
 export default function ViewAppointment({
   roomNumber,
 }: {
@@ -52,6 +52,7 @@ export default function ViewAppointment({
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${appointment.patientId}`
     );
+    // console.log(appointment);
     setSelectedAppointment({ ...response.data, ...appointment });
     setIsOpen(true);
   };
@@ -79,6 +80,7 @@ export default function ViewAppointment({
         // const response = await axios.get(
         //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
         // );
+
         // setAppointments(response.data);
         setAppointments(apmtData);
       } else {
@@ -173,7 +175,13 @@ export default function ViewAppointment({
                         )
                       )
                       .map((appointment, index) => (
-                        <div
+                        <Button
+                          disabled={
+                            index !== 0 ||
+                            formatDate(
+                              new Date(appointment.appointmentDate)
+                            ) !== formatDate(new Date())
+                          }
                           key={(appointment as any).patientId + index}
                           className="rounded-sm border border-blue-300 dark:border-secondary p-2 flex flex-col gap-2 items-center bg-secondary dark:bg-background cursor-pointer"
                           onClick={() => openAppointmentDetails(appointment)}
@@ -187,7 +195,7 @@ export default function ViewAppointment({
                           <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300">
                             Lý do: {appointment.reason}
                           </p>
-                        </div>
+                        </Button>
                       ))}
                 </div>
               </div>

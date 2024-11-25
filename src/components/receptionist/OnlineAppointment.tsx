@@ -105,7 +105,7 @@ export default function OnlineAppointment() {
       setIsLoading(true);
       const payload = {
         patientId: selectedAppointment?.patientId,
-        appointmentDate: new Date(),
+        appointmentDate: selectedAppointment?.appointmentDateByPatient,
         reason,
         specialization: selectedAppointment?.specialization,
       };

@@ -104,8 +104,8 @@ export default function OnlineAppointment() {
     try {
       setIsLoading(true);
       const payload = {
-        patientId: selectedAppointment?._id,
-        appointmentDate: new Date(),
+        patientId: selectedAppointment?.patientId,
+        appointmentDate: selectedAppointment?.appointmentDateByPatient,
         reason,
         specialization: selectedAppointment?.specialization,
       };
@@ -198,7 +198,7 @@ export default function OnlineAppointment() {
           >
             <div className="flex flex-row gap-4 items-center w-full self-start">
               {appointment.gender.toLowerCase() === "male" ||
-              appointment.gender.toLowerCase() === "nam" ? (
+                appointment.gender.toLowerCase() === "nam" ? (
                 <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
                   <Dog className="text-blue-500" />
                 </div>
@@ -350,7 +350,7 @@ export default function OnlineAppointment() {
                 </span>
               </div>
               {!selectedAppointment?.doctorId ||
-              selectedAppointment?.reExamination ? null : (
+                selectedAppointment?.reExamination ? null : (
                 <div className="flex items-center gap-2">
                   <Timer className="w-4 h-4 text-blue-500" />
                   <span className="text-sm">

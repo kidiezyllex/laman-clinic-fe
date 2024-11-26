@@ -379,7 +379,7 @@ export const reqTestData = [
 
 export const apmtData = [
   {
-    patientId: "BN-5C662W",
+    patientId: "BN-AK67YT",
     appointmentDate: "2024-11-25T02:00:00.000Z",
     reason: "Kiểm tra định kỳ",
     status: "Scheduled",
@@ -415,8 +415,17 @@ export const apmtData = [
     __v: 0,
   },
   {
-    patientId: "BN-ZRVR3W",
-    appointmentDate: "2024-11-27T02:00:00.000Z",
+    patientId: "BN-6J2EFD",
+    appointmentDate: "2024-11-26T02:00:00.000Z",
+    reason: "Kiểm tra trả kim?",
+    status: "Scheduled",
+    specialization: "Cardiology",
+    priority: false,
+    _id: "CH-K4E64V",
+  },
+  {
+    patientId: "BN-7UHDY1",
+    appointmentDate: "2024-11-26T02:00:00.000Z",
     reason: "Kiểm tra trả kim?",
     status: "Scheduled",
     specialization: "Cardiology",

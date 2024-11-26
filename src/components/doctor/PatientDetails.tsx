@@ -134,7 +134,6 @@ export default function PatientDetails({
   const [formData, setFormData] = useState({
     medicalHistory: "",
     diagnosis: "",
-    testResults: "",
     treatment: "",
     otherTreatment: "",
   });
@@ -337,12 +336,7 @@ export default function PatientDetails({
         medicalHistory: [
           ...response2.data?.medicalHistory,
           {
-            disease:
-              formData.diagnosis +
-              "_" +
-              formData.medicalHistory +
-              "_" +
-              formData.testResults,
+            disease: formData.diagnosis + "_" + formData.medicalHistory,
             diagnosisDate: new Date(),
             treatment: formData.treatment + "_" + formData.otherTreatment,
           },
@@ -358,12 +352,7 @@ export default function PatientDetails({
       const diagnosisPayload = {
         patientId: selectedAppointment?.patientId,
         doctorId: doctorId,
-        disease:
-          formData.diagnosis +
-          "_" +
-          formData.medicalHistory +
-          "_" +
-          formData.testResults,
+        disease: formData.diagnosis + "_" + formData.medicalHistory,
         diagnosisDate: new Date(),
         treatment: formData.treatment + "_" + formData.otherTreatment,
       };
@@ -793,20 +782,6 @@ export default function PatientDetails({
                           placeholder="Nhập chẩn đoán bệnh"
                         />
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="testResults">
-                          Kết quả xét nghiệm (nếu có)
-                        </Label>
-                        <Input
-                          id="testResults"
-                          name="testResults"
-                          value={formData.testResults}
-                          onChange={handleChange}
-                          placeholder="Nhập kết quả xét nghiệm"
-                        />
-                      </div>
-
                       <div className="space-y-2">
                         <Label htmlFor="treatment">Điều trị</Label>
                         <Select onValueChange={handleSelectChange}>

@@ -25,6 +25,7 @@ import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./PatientDetails";
 import { apmtData } from "../../../lib/hardcoded-data";
 import { formatDate } from "../../../lib/utils";
+import { Badge } from "../ui/badge";
 export default function ViewAppointment({
   roomNumber,
 }: {
@@ -40,6 +41,7 @@ export default function ViewAppointment({
   const weekStart = startOfWeek(currentDate, { weekStartsOn: 1 });
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const [selectedTests, setSelectedTests] = useState<String[]>([]);
+  const [pendingTestList, setPendingTestList] = useState<String[]>([]);
   const [testType, setTestType] = useState<string[]>([]);
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
@@ -82,7 +84,12 @@ export default function ViewAppointment({
         // );
 
         // setAppointments(response.data);
+
         setAppointments(apmtData);
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/check/?doctorId=${doctorId}`
+        );
+        setPendingTestList(res.data.patientIds);
       } else {
         setAppointments([]);
         setAppointments(apmtData);
@@ -95,6 +102,23 @@ export default function ViewAppointment({
   useEffect(() => {
     fetchAppointments();
   }, [roomNumber]);
+
+  const disabled = (appointments: any, appointment: any, index: number) => {
+    let flag = false;
+    if (
+      formatDate(new Date(appointment.appointmentDate)) !==
+      formatDate(new Date())
+    )
+      flag = true;
+    if (pendingTestList.includes(appointment.patientId)) flag = false;
+    else flag = true;
+    if (
+      index - 1 >= 0 &&
+      pendingTestList.includes(appointments[index]?.patientId)
+    )
+      flag = false;
+    return flag;
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <div className="flex justify-between items-center mb-2">
@@ -176,12 +200,7 @@ export default function ViewAppointment({
                       )
                       .map((appointment, index) => (
                         <Button
-                          disabled={
-                            index !== 0 ||
-                            formatDate(
-                              new Date(appointment.appointmentDate)
-                            ) !== formatDate(new Date())
-                          }
+                          disabled={disabled(appointments, appointment, index)}
                           key={(appointment as any).patientId + index}
                           variant={"outline"}
                           className="h-fit w-full flex flex-col gap-2"
@@ -196,6 +215,11 @@ export default function ViewAppointment({
                           <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300 break-words text-wrap">
                             Lý do: {appointment.reason}
                           </p>
+                          {pendingTestList.includes(appointment.patientId) ? (
+                            <Badge className="bg-yellow-600 dark:text-slate-300 hover:bg-yellow-700">
+                              Chờ kết quả XN
+                            </Badge>
+                          ) : null}
                         </Button>
                       ))}
                 </div>

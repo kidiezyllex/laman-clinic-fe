@@ -4,6 +4,7 @@ import {
   Calendar,
   Cat,
   Dog,
+  Eye,
   FileText,
   Mail,
   MapPin,
@@ -18,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
 
 interface PatientInfoProps {
   selectedAppointment: Appointment;
@@ -110,8 +112,8 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                   <TableHead>Ngày khám</TableHead>
                   <TableHead>Tiền sử bệnh</TableHead>
                   <TableHead>Chẩn đoán bệnh</TableHead>
-                  <TableHead>KQ Xét nghiệm</TableHead>
                   <TableHead>Phương pháp điều trị</TableHead>
+                  <TableHead>Đơn thuốc</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,10 +126,18 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                       </TableCell>
                       <TableCell>{history.disease.split("_")[0]}</TableCell>
                       <TableCell>{history.disease.split("_")[1]}</TableCell>
-                      <TableCell>{history.disease.split("_")[2]}</TableCell>
                       <TableCell>
                         {history.treatment.split("_")[0] +
                           history.treatment.split("_")[1]}
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          variant="secondary"
+                          className="border border-slate-00 dark:border-none pointer-events-auto"
+                        >
+                          Xem đơn
+                          <Eye className="w-4 h-4" />
+                        </Button>
                       </TableCell>
                     </TableRow>
                   )

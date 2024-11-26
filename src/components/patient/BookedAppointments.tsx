@@ -35,9 +35,14 @@ export default function BookedAppointments() {
   const fetchData = async () => {
     if (!pathname.split("_").includes("/user")) {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?patientId=${patientId}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
       );
-      setAppointmentByPatients(response.data);
+      const newBookedApmts = response.data.filter(
+        (item: AppointmentByPatient) => {
+          return item.patientId === patientId;
+        }
+      );
+      setAppointmentByPatients(newBookedApmts);
     } else {
       setAppointmentByPatients([]);
     }
@@ -79,7 +84,7 @@ export default function BookedAppointments() {
             <TableBody>
               {appointmentByPatients &&
                 appointmentByPatients?.map((item: any, index) => (
-                  <TableRow key={item.diagnosisDate}>
+                  <TableRow key={item.diagnosisDate + index}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       {formatDate(item?.appointmentDateByPatient)}

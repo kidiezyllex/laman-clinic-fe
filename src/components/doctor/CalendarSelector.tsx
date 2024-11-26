@@ -15,11 +15,9 @@ export default function CalendarSelector({
       setSelectedDate(selectedDate);
     }
   };
-
   const isDateDisabled = (date: Date) => {
     return date < today;
   };
-
   return (
     <div className="w-full flex flex-col gap-4">
       <Calendar

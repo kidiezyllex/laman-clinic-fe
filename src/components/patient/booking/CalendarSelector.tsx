@@ -121,8 +121,8 @@ export default function CalendarSelector({
                   <span
                     className={
                       selectedSlot === slot
-                        ? "text-white"
-                        : "text-slate-600 dark:text-primary"
+                        ? "text-slate-300 dark:text-slate-950"
+                        : "text-slate-600 dark:text-slate-300"
                     }
                   >
                     {slot}
@@ -147,14 +147,13 @@ export default function CalendarSelector({
         ) : (
           <div></div>
         )}
-
         <ArrowButton
           disabled={!date}
           className="w-fit self-end"
           text={"Tiếp tục"}
           onClick={() => {
             if (selectedDoctor) {
-              setActiveSection("payment");
+              setActiveSection("confirm");
             } else setActiveSection("specialtySelector");
           }}
         />

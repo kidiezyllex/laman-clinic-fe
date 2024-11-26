@@ -72,6 +72,7 @@ export default function OnlineAppointment() {
     "Gói khám sức khỏe toàn diện",
     "Khám chẩn đoán hình ảnh",
   ];
+
   const filteredAppointments = appointmentByPatient
     .filter((appointment) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -209,6 +210,7 @@ export default function OnlineAppointment() {
       console.error(err);
     }
   };
+
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">

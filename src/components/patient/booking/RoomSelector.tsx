@@ -72,7 +72,7 @@ export default function RoomSelector({
             className="overflow-hidden transition-shadow duration-300 rounded-md mb-4 bg-background border"
           >
             <div className="p-6">
-              <div className="items-center mb-4 grid grid-cols-3">
+              <div className="items-center mb-4 flex flex-row justify-between">
                 <div className="flex flex-row gap-2 items-center">
                   <Stethoscope className="w-4 h-4 text-blue-500" />
                   <span className="text-slate-600 dark:text-primary text-base font-medium">
@@ -157,7 +157,7 @@ export default function RoomSelector({
           className="w-fit"
           text={"Tiếp tục"}
           onClick={() => {
-            setActiveSection("payment");
+            setActiveSection("confirm");
           }}
         ></ArrowButton>
       </div>

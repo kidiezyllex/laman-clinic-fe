@@ -13,7 +13,7 @@ import SpecialtySelector from "@/components/patient/booking/SpecialtySelector";
 import axios from "axios";
 import RoomSelector from "@/components/patient/booking/RoomSelector";
 import { Fingerprint, Hospital, Stethoscope } from "lucide-react";
-import Payment from "@/components/patient/booking/Payment";
+import Confirm from "@/components/patient/booking/Confirm";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../../lib/entity-types";
 import { formatDate, renderSpecialty } from "../../../../../lib/utils";
@@ -70,15 +70,15 @@ export default function Page() {
             setSelectedDate={setSelectedDate}
           ></RoomSelector>
         );
-      case "payment":
+      case "confirm":
         return (
-          <Payment
+          <Confirm
             setActiveSection={setActiveSection}
             selectedSpe={selectedSpe}
             selectedDate={selectedDate}
             patient={patient as any}
             selectedDoctor={null}
-          ></Payment>
+          ></Confirm>
         );
       default:
         return null;
@@ -118,50 +118,50 @@ export default function Page() {
               <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
                 <Fingerprint className="text-blue-500"></Fingerprint>
               </div>
-              <p className="text-base font-semibold text-primary-foreground dark:text-primary ">
+              <p className="text-base font-semibold text-primary-foreground dark:text-primary">
                 Thông tin bệnh nhân
               </p>
             </div>
             <div className="flex flex-col dark:text-slate-300">
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Mã BN:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {patient?._id}
                 </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3 break-words">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Tên:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {patient?.fullName}
                 </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Giới tính:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {patient?.gender?.toLocaleLowerCase() === "female"
                     ? "Nữ"
                     : "Nam"}
                 </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   SĐT:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {patient?.phone}
                 </span>
               </div>
               <div className="text-sm grid grid-cols-2 border p-2 px-3 break-words">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Email:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {patient?.email}
                 </span>
               </div>
@@ -172,7 +172,7 @@ export default function Page() {
               <div className="h-10 w-10 bg-primary-foreground rounded-full flex flex-row items-center justify-center">
                 <Stethoscope className="text-blue-500"></Stethoscope>
               </div>
-              <p className="text-base font-semibold text-primary-foreground dark:text-primary ">
+              <p className="text-base font-semibold text-primary-foreground dark:text-primary">
                 Thông tin khám bệnh
               </p>
             </div>
@@ -184,18 +184,18 @@ export default function Page() {
                 </span>
               </div>
               <p className="text-sm">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Ngày khám:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {selectedDate ? formatDate(selectedDate) : null}
                 </span>
               </p>
               <p className="text-sm">
-                <span className="font-semibold text-slate-600 dark:text-primary">
+                <span className="font-semibold text-slate-600 dark:text-slate-300">
                   Chuyên khoa:
                 </span>{" "}
-                <span className="text-slate-500 dark:text-primary">
+                <span className="text-slate-500 dark:text-slate-300">
                   {renderSpecialty(selectedSpe + "")}
                 </span>
               </p>
@@ -211,7 +211,7 @@ export default function Page() {
                   className={
                     activeSection === "calendarSelector"
                       ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
-                      : "text-base text-slate-500 dark:text-primary"
+                      : "text-base text-slate-500 dark:text-slate-300"
                   }
                 >
                   Ngày khám
@@ -223,7 +223,7 @@ export default function Page() {
                   className={
                     activeSection === "specialtySelector"
                       ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
-                      : "text-base text-slate-500 dark:text-primary"
+                      : "text-base text-slate-500 dark:text-slate-300"
                   }
                 >
                   Chuyên khoa
@@ -235,7 +235,7 @@ export default function Page() {
                   className={
                     activeSection === "roomSelector"
                       ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
-                      : "text-base text-slate-500 dark:text-primary"
+                      : "text-base text-slate-500 dark:text-slate-300"
                   }
                 >
                   Phòng khám, giờ khám
@@ -245,12 +245,12 @@ export default function Page() {
               <BreadcrumbItem>
                 <BreadcrumbPage
                   className={
-                    activeSection === "payment"
+                    activeSection === "confirm"
                       ? "text-base text-blue-500 dark:text-blue-500 font-semibold"
-                      : "text-base text-slate-500 dark:text-primary"
+                      : "text-base text-slate-500 dark:text-slate-300"
                   }
                 >
-                  Thanh toán
+                  Xác nhận thông tin
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

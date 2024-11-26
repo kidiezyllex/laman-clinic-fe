@@ -101,7 +101,7 @@ export default function PatientProfileForm({
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     const pathName = pathname.split("/");
-    const payload = {
+    const patientPayload = {
       fullName: data.fullName,
       gender: data.gender,
       password: data.password,
@@ -120,10 +120,10 @@ export default function PatientProfileForm({
     try {
       const res1 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`,
-        payload
+        patientPayload
       );
 
-      const newUser = {
+      const userPayload = {
         fullName: data.fullName,
         gender: data.gender,
         email: data.email,
@@ -135,7 +135,7 @@ export default function PatientProfileForm({
       };
       const res2 = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
-        newUser
+        userPayload
       );
       toast({
         title: "Tạo hồ sơ thành công!",
@@ -156,24 +156,10 @@ export default function PatientProfileForm({
         pathname.split("/").includes("dashboard")
       ) {
         localStorage.setItem("currentEmail", data.email);
-        const response2 = await axios.get(
+        const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
         );
-        const newUser = {
-          email: data.email,
-          password: data.password,
-          role: "patient",
-          fullName: data.fullName,
-          phone: data.phone.startsWith("0")
-            ? "+84" + data.phone.slice(1)
-            : data.phone,
-          gender: data.gender,
-        };
-        const response3 = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
-          newUser
-        );
-        router.push(`/${(response2?.data as any)._id}/patient/dashboard`);
+        router.push(`/${(res?.data as any)._id}/patient/dashboard`);
       }
     }
   };

@@ -92,36 +92,34 @@ export default function CreatePatientProfile() {
               <h3 className="text-lg font-semibold text-blue-500 text-center">
                 HỒ SƠ HIỆN TẠI
               </h3>
-              <div className="grid grid-cols-3 gap-4 ">
+              <div className="grid grid-cols-3 gap-4 text-slate-600 dark:text-slate-300">
                 <div className="col-span-1 flex items-center space-x-3 border border-blue-300 dark:border-secondary rounded-md p-4 bg-primary-foreground">
                   {patient.gender?.toLocaleLowerCase() === "male" ? (
-                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
+                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200 border border-blue-500">
                       <Dog className="text-blue-500" />
                     </div>
                   ) : (
-                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200">
+                    <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-pink-200 border border-pink-500">
                       <Cat className="text-pink-500" />
                     </div>
                   )}
                   <div>
-                    <p className="text-base font-semibold text-start text-slate-600 dark:text-primary">
+                    <p className="text-base font-semibold text-start text-blue-500">
                       {patient.fullName}
                     </p>
-                    <p className="text-slate-500 text-start">
-                      Mã bệnh nhân: {patient._id}
-                    </p>
+                    <p className="text-start">Mã bệnh nhân: {patient._id}</p>
                   </div>
                 </div>
                 <div className="col-span-2 grid grid-cols-2 gap-3 border border-blue-300 dark:border-secondary rounded-md p-4 bg-primary-foreground">
                   <div className="flex items-center space-x-3">
                     <CalendarIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-sm">
                       Ngày sinh: {formatDate(patient.dateOfBirth)}
                     </span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <UserIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-500 text-sm">
+                    <span className="text-sm">
                       Giới tính:{" "}
                       {patient.gender?.toLowerCase() === "female"
                         ? "Nữ"
@@ -130,21 +128,15 @@ export default function CreatePatientProfile() {
                   </div>
                   <div className="flex items-center space-x-3">
                     <MapPinIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-500 text-sm">
-                      Địa chỉ: {patient.address}
-                    </span>
+                    <span className="text-sm">Địa chỉ: {patient.address}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <PhoneIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-500 text-sm">
-                      Số ĐT: {patient.phone}
-                    </span>
+                    <span className="text-sm">Số ĐT: {patient.phone}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <MailIcon className="text-blue-500 h-4 w-4" />
-                    <span className="text-slate-500 text-sm">
-                      Email: {patient.email}
-                    </span>
+                    <span className="text-sm">Email: {patient.email}</span>
                   </div>
                 </div>
               </div>
@@ -154,7 +146,7 @@ export default function CreatePatientProfile() {
                     className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     variant={"secondary"}
                   >
-                    Đặt lịch khám theo ngày
+                    Đặt lịch theo ngày
                     <Calendar className="h-4 w-4" />
                   </Button>
                 </Link>
@@ -163,7 +155,7 @@ export default function CreatePatientProfile() {
                     className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     variant={"secondary"}
                   >
-                    Đặt lịch khám theo bác sĩ
+                    Đặt lịch theo bác sĩ
                     <Stethoscope className="h-4 w-4" />
                   </Button>
                 </Link>

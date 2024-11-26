@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SearchIcon } from "lucide-react";
+import { RefreshCw, RotateCw, SearchIcon } from "lucide-react";
 import axios from "axios";
 import { CompletedAppointment } from "../../../lib/entity-types";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -41,12 +41,16 @@ export default function CompletedAppointments() {
   const [currentPage, setCurrentPage] = useState(1);
   const [filterType, setFilterType] = useState("all");
   const itemsPerPage = 10;
+  const [isLoading, setIsLoading] = useState(false);
+
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
       );
       setCompletedAppointments(response.data.appointmentList);
+      setIsLoading(false);
     } catch (error) {
       console.error(error);
     }
@@ -105,6 +109,14 @@ export default function CompletedAppointments() {
             <SelectItem value="old">Cũ nhất</SelectItem>
           </SelectContent>
         </Select>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchData}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+        </Button>
       </div>
       <div className="max-w-full border rounded-md p-4">
         <ScrollArea className="w-full whitespace-nowrap">

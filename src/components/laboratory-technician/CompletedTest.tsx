@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -10,18 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Calendar,
-  Download,
-  FlaskConical,
-  Receipt,
-  RotateCcw,
-  SearchIcon,
-  Stethoscope,
-  User,
-} from "lucide-react";
+import { FlaskConical, RotateCcw, SearchIcon } from "lucide-react";
 import axios from "axios";
-import { Doctor, Patient, Test, TestResult } from "../../../lib/entity-types";
+import { Test } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
 import { formatDate } from "../../../lib/utils";
 import { usePathname } from "next/navigation";
@@ -35,6 +25,7 @@ import {
 } from "@/components/ui/select";
 import TestResults from "./TestResults";
 export default function CompletedTest() {
+  // State
   const { toast } = useToast();
   const technicianId = usePathname().split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
@@ -46,20 +37,6 @@ export default function CompletedTest() {
     id: "",
   });
   const [filterType, setFilterType] = useState("all");
-  const fetchData = async () => {
-    const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests`
-    );
-    setTests(
-      response.data.filter(
-        (item: { technicianId: string }) => item.technicianId === technicianId
-      )
-    );
-  };
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const filteredTests = tests
     .filter((item) => {
       const searchTermLower = searchTerm.toLowerCase();
@@ -81,6 +58,19 @@ export default function CompletedTest() {
       }
       return 0;
     });
+
+  // Function
+  const fetchData = async () => {
+    const response = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests`
+    );
+    setTests(
+      response.data.filter(
+        (item: { technicianId: string }) => item.technicianId === technicianId
+      )
+    );
+  };
+
   const handleViewDoctorName = async (doctorId: string, id: string) => {
     try {
       const response = await axios.get(
@@ -95,6 +85,11 @@ export default function CompletedTest() {
       });
     }
   };
+
+  // UseEff
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">

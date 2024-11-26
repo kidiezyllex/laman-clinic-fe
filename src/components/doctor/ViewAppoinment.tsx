@@ -11,7 +11,7 @@ import {
   subMonths,
   addMonths,
 } from "date-fns";
-import { ChevronLeft, ChevronRight, RotateCcw, User } from "lucide-react";
+import { ChevronLeft, ChevronRight, RefreshCw, User } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -22,7 +22,7 @@ import {
 import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
-import PatientDetails from "./PatientDetails";
+import PatientDetails from "./patient-details/PatientDetails";
 import { apmtData } from "../../../lib/hardcoded-data";
 import { formatDate } from "../../../lib/utils";
 import { Badge } from "../ui/badge";
@@ -33,6 +33,7 @@ export default function ViewAppointment({
 }) {
   const { toast } = useToast();
   // state
+  const doctorId = usePathname().split("/")[1];
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedAppointment, setSelectedAppointment] =
     useState<Appointment | null>(null);
@@ -42,12 +43,12 @@ export default function ViewAppointment({
   const days = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
   const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [pendingTestList, setPendingTestList] = useState<String[]>([]);
+  const [completedTestList, setCompletedTestList] = useState<String[]>([]);
   const [testType, setTestType] = useState<string[]>([]);
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
-  const pathname = usePathname();
-  const doctorId = pathname.split("/")[1];
   const [tests, setTests] = useState<TestType[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Chi tiết lịch hẹn
   const openAppointmentDetails = async (appointment: Appointment) => {
@@ -69,6 +70,7 @@ export default function ViewAppointment({
   // Fecth Data
   const fetchAppointments = async () => {
     try {
+      setIsLoading(true);
       // Lấy roomN của bác sĩ trong data
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${doctorId}`
@@ -86,10 +88,19 @@ export default function ViewAppointment({
         // setAppointments(response.data);
 
         setAppointments(apmtData);
+
+        // Lấy danh sách PatientId đang chờ xét nghiệm
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/check/?doctorId=${doctorId}`
         );
         setPendingTestList(res.data.patientIds);
+
+        // Lấy danh sách PatientId đã có kết quả xét nghiệm
+        const res2 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/check/?doctorId=${doctorId}`
+        );
+        setCompletedTestList(res2.data.patientIds);
+        setIsLoading(false);
       } else {
         setAppointments([]);
         setAppointments(apmtData);
@@ -110,7 +121,11 @@ export default function ViewAppointment({
       formatDate(new Date())
     )
       flag = true;
-    if (pendingTestList.includes(appointment.patientId)) flag = false;
+    if (
+      pendingTestList.includes(appointment.patientId) ||
+      completedTestList.includes(appointment.patientId)
+    )
+      flag = false;
     else flag = true;
     if (
       index - 1 >= 0 &&
@@ -160,8 +175,15 @@ export default function ViewAppointment({
           <Button variant="outline" size="icon" onClick={handleNextWeek}>
             <ChevronRight className="h-4 w-4" />
           </Button>
-          <Button variant="outline" size="icon" onClick={fetchAppointments}>
-            <RotateCcw className="h-4 w-4" />
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={fetchAppointments}
+            disabled={isLoading}
+          >
+            <RefreshCw
+              className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+            />
           </Button>
         </div>
       </div>
@@ -217,7 +239,12 @@ export default function ViewAppointment({
                           </p>
                           {pendingTestList.includes(appointment.patientId) ? (
                             <Badge className="bg-yellow-600 dark:text-slate-300 hover:bg-yellow-700">
-                              Chờ kết quả XN
+                              Đang chờ KQXN
+                            </Badge>
+                          ) : null}
+                          {completedTestList.includes(appointment.patientId) ? (
+                            <Badge className="bg-green-600 dark:text-slate-300 hover:bg-green-700">
+                              Đã có KQXN
                             </Badge>
                           ) : null}
                         </Button>

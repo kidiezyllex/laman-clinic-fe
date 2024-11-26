@@ -59,7 +59,7 @@ export default function PatientPrescriptionInvoice({
       >
         <div className="border border-slate-950">
           <div className="flex flex-row gap-16 items-center justify-center h-full my-4">
-            <div className="w-32 h-32 relative z-0 rounded-full border-4 border-blue-500">
+            <div className="w-32 h-32 relative z-0 rounded-full border-2 border-blue-500">
               <Image
                 src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726685609/learning-webdev-blog/clinic/medical-care-logo-icon-design-vector-22560842_j6xhlk.jpg"
                 alt="logo-image"

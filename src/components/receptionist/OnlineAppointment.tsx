@@ -577,39 +577,45 @@ export default function OnlineAppointment() {
                 <Table>
                   <TableHeader>
                     <TableRow className="pointer-events-none">
-                      <TableHead className="text-black">Chuyên khoa</TableHead>
-                      <TableHead className="text-black">Loại dịch vụ</TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
+                        Chuyên khoa
+                      </TableHead>
+                      <TableHead className="text-black dark:text-black">
+                        Loại dịch vụ
+                      </TableHead>
+                      <TableHead className="text-black dark:text-black">
                         Đơn giá (VNĐ)
                       </TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
                         Bảo hiểm y tế
                       </TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
                         Thành tiền (VNĐ)
                       </TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     <TableRow className="pointer-events-none">
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
                         {" "}
                         {renderSpecialty(
                           selectedAppointment?.specialization + ""
                         )}
                       </TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
                         {" "}
                         {serviceName[parseInt(selectedService)]}
                       </TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
                         {renderPriceBySpeAndService(
                           selectedAppointment?.specialization + "",
                           parseInt(selectedService)
                         ).toLocaleString("vi-VN")}
                       </TableHead>
-                      <TableHead className="text-black">Không</TableHead>
-                      <TableHead className="text-black">
+                      <TableHead className="text-black dark:text-black">
+                        Không
+                      </TableHead>
+                      <TableHead className="text-black dark:text-black">
                         {renderPriceBySpeAndService(
                           selectedAppointment?.specialization + "",
                           parseInt(selectedService)

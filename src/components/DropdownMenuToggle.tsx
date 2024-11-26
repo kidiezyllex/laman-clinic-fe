@@ -39,12 +39,13 @@ export default function UserMenu() {
     else {
       const setId2 = async () => {
         const currentEmail = localStorage.getItem("currentEmail");
-        const response2 = await axios.get(
+        const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
         );
-        setCurrentId(response2.data._id || "");
+        setCurrentId(res.data._id || "");
       };
-      setId2();
+      const role = localStorage.getItem("role");
+      if (role === "patient") setId2();
     }
   }, [userId]);
 

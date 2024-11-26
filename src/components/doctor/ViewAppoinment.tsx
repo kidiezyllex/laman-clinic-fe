@@ -128,9 +128,6 @@ export default function ViewAppointment({
           >
             Hôm nay
           </Button>
-          <Button variant="outline" size="icon" onClick={fetchAppointments}>
-            <RotateCcw className="h-4 w-4" />
-          </Button>
         </div>
         <div className="flex space-x-2">
           <Button variant="outline" size="icon" onClick={handlePreviousWeek}>
@@ -138,6 +135,9 @@ export default function ViewAppointment({
           </Button>
           <Button variant="outline" size="icon" onClick={handleNextWeek}>
             <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button variant="outline" size="icon" onClick={fetchAppointments}>
+            <RotateCcw className="h-4 w-4" />
           </Button>
         </div>
       </div>
@@ -183,7 +183,8 @@ export default function ViewAppointment({
                             ) !== formatDate(new Date())
                           }
                           key={(appointment as any).patientId + index}
-                          className="rounded-sm border border-blue-300 dark:border-secondary p-2 flex flex-col gap-2 items-center bg-secondary dark:bg-background cursor-pointer"
+                          variant={"outline"}
+                          className="h-fit w-full flex flex-col gap-2"
                           onClick={() => openAppointmentDetails(appointment)}
                         >
                           <div className="h-12 w-12 border border-blue-500  rounded-full flex flex-row justify-center items-center bg-blue-100">
@@ -192,7 +193,7 @@ export default function ViewAppointment({
                           <p className="text-xs font-semibold text-center text-blue-500 dark:text-blue-500">
                             {appointment.patientId}
                           </p>
-                          <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300">
+                          <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300 break-words text-wrap">
                             Lý do: {appointment.reason}
                           </p>
                         </Button>

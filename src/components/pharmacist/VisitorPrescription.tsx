@@ -53,7 +53,7 @@ const customerInfoSchema = z.object({
   phone: z.string().min(1, "Số điện thoại không được để trống"),
 });
 
-export default function Visitor() {
+export default function VisitorPrescription() {
   const { toast } = useToast();
   const [showInvoice, setShowInvoice] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");

@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { usePathname } from "next/navigation";
 import axios from "axios";
 import {
   Appointment,
   Medication,
+  Test,
   TestType,
 } from "../../../../lib/entity-types";
 import {
@@ -23,6 +24,7 @@ import PrescriptionForm from "./PrescriptionForm";
 import ReExaminationForm from "./ReExaminationForm";
 import LabTestsForm from "./LabTestsForm";
 import DiagnosticResultsForm from "./DiagnosticResultsForm";
+import TestResults from "./TestResults";
 
 export default function PatientDetails({
   roomNumber,
@@ -38,11 +40,11 @@ export default function PatientDetails({
   selectedAppointment: Appointment | null;
 }) {
   const { toast } = useToast();
-  const pathname = usePathname();
-  const doctorId = pathname.split("/")[1];
+  const doctorId = usePathname().split("/")[1];
 
   // state
   const [tests, setTests] = useState<TestType[]>([]);
+  const [testResults, setTestResults] = useState<Test | null>(null);
   const [services, setServices] = useState([
     { _id: "", serviceName: "", cost: 0 },
   ]);
@@ -94,17 +96,21 @@ export default function PatientDetails({
       const res3 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/services`
       );
+
+      const res4 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?patientId=${selectedAppointment?.patientId}&doctorId=${doctorId}`
+      );
       setTests(res.data);
       setMedications(res2.data);
       setServices(res3.data);
+      setTestResults(res4.data);
     } catch (error) {
       console.error(error);
     }
   };
-
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [isOpen]);
 
   useEffect(() => {
     const fetchServiceList = async () => {
@@ -328,10 +334,14 @@ export default function PatientDetails({
   return (
     <div>
       <Dialog open={isOpen || false} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+        <DialogTitle></DialogTitle>
+        <DialogContent className="max-w-[1000px] w-[95%] h-[90%] overflow-y-auto">
           {selectedAppointment && (
             <div className="flex flex-col gap-4">
               <PatientInfo selectedAppointment={selectedAppointment} />
+              {testResults && (
+                <TestResults testResults={testResults}></TestResults>
+              )}
               {showPrescriptionForm && (
                 <PrescriptionForm
                   medications={medications}
@@ -378,7 +388,11 @@ export default function PatientDetails({
                   </Button>
                   <Button
                     variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
+                    className={
+                      testResults
+                        ? "hidden"
+                        : "bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
+                    }
                     onClick={() => {
                       setShowLabTestsForm(!showLabTestsForm);
                       setMainShow(false);

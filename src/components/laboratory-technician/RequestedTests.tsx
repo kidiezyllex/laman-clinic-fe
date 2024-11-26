@@ -46,7 +46,7 @@ import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { usePathname } from "next/navigation";
 
-export default function TestRequest() {
+export default function RequestedTests() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [requestTests, setRequestTests] = useState<RequestTest[]>([]);

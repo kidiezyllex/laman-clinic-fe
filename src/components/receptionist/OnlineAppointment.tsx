@@ -314,7 +314,7 @@ export default function OnlineAppointment() {
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+        <DialogContent className="max-w-[1000px] w-[95%]  h-[90%] overflow-y-auto">
           <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
             {selectedAppointment?.gender?.toLowerCase() === "male" ? (
               <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">

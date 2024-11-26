@@ -23,8 +23,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import TestResults from "./TestResults";
-export default function CompletedTest() {
+import TestResult from "./TestResult";
+export default function CompletedTests() {
   // State
   const { toast } = useToast();
   const technicianId = usePathname().split("/")[1];
@@ -169,11 +169,11 @@ export default function CompletedTest() {
           ))}
         </TableBody>
       </Table>
-      <TestResults
+      <TestResult
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         selectedTest={selectedTest}
-      ></TestResults>
+      ></TestResult>
     </div>
   );
 }

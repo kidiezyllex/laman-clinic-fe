@@ -17,7 +17,7 @@ import { Dialog, DialogContent } from "../ui/dialog";
 import { Doctor, Patient, Test } from "../../../lib/entity-types";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export default function TestResults({
+export default function TestResult({
   isOpen,
   setIsOpen,
   selectedTest,

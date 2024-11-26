@@ -16,10 +16,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import PrescriptionRequest from "@/components/pharmacist/PrescriptionRequest";
+import RequestedPrescriptions from "@/components/pharmacist/RequestedPrescriptions";
 import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
-import Visitor from "@/components/pharmacist/Visitor";
-import CompletedPrescription from "@/components/pharmacist/CompletedPrescription";
+import VisitorPrescription from "@/components/pharmacist/VisitorPrescription";
+import CompletedPrescriptions from "@/components/pharmacist/CompletedPrescriptions";
 import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("prescriptions");
@@ -27,13 +27,13 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "prescriptions":
-        return <PrescriptionRequest />;
+        return <RequestedPrescriptions />;
       case "profile":
         return <PharmacistProfile />;
       case "visitor":
-        return <Visitor />;
+        return <VisitorPrescription />;
       case "completed":
-        return <CompletedPrescription />;
+        return <CompletedPrescriptions />;
       case "medicine-warehouse":
         return <MedicineWarehouse />;
       default:

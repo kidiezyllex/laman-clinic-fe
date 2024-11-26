@@ -17,26 +17,22 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import TestRequest from "@/components/laboratory-technician/TestRequest";
-import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
-import CompletedTest from "@/components/laboratory-technician/CompletedTest";
-import TestsManagement from "@/components/test/TestTypesManagement";
-import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
+import RequestedTests from "@/components/laboratory-technician/RequestedTests";
+import CompletedTests from "@/components/laboratory-technician/CompletedTests";
+import TestTypesManagement from "@/components/test/TestTypesManagement";
 import TechnicianProfile from "@/components/laboratory-technician/TechnicianProfile";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("request");
   const renderMainContent = () => {
     switch (activeSection) {
       case "request":
-        return <TestRequest />;
-      case "type":
-        return <DirectAppoinment />;
+        return <RequestedTests />;
       case "profile":
         return <TechnicianProfile />;
       case "completed":
-        return <CompletedTest />;
+        return <CompletedTests />;
       case "test-types":
-        return <TestsManagement />;
+        return <TestTypesManagement />;
       default:
         return null;
     }

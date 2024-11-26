@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { formatDate } from "../../../lib/utils";
-export default function CompletedPrescription() {
+export default function CompletedPrescriptions() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);

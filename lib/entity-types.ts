@@ -195,6 +195,7 @@ export interface Test {
   datePerformed: Date;
   dateRequested: Date;
   testsPerformed: [TestType];
+  labTestId: string;
 }
 export interface LoginResponse {
   status: string;

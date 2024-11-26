@@ -98,12 +98,12 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
         </div>
       </div>
       <div className="border rounded-md p-4 mr-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
-        <div className="flex flex-col gap-1 w-full">
-          <h3 className="text-md font-semibold">Lịch sử khám bệnh</h3>
+        <div className="flex flex-col w-full">
+          <h3 className="text-md font-semibold mb-2">Lịch sử khám bệnh</h3>
           {selectedAppointment?.medicalHistory?.length === 0 ? (
             <p className="text-slate-500 text-sm">Chưa có lịch sử khám bệnh</p>
           ) : (
-            <Table>
+            <Table className="border bg-background pointer-events-none">
               <TableHeader>
                 <TableRow>
                   <TableHead>STT</TableHead>

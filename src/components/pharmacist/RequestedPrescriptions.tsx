@@ -38,7 +38,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "../ui/badge";
 
-export default function PrescriptionRequest() {
+export default function RequestedPrescriptions() {
   const { toast } = useToast();
   const [customQuantities, setCustomQuantities] = useState<{
     [key: string]: { [key: string]: number };

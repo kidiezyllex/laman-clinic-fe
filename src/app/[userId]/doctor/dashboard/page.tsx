@@ -19,7 +19,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import ViewAppointment from "@/components/doctor/ViewAppoinment";
+import ViewAppointments from "@/components/doctor/ViewAppoinments";
 import DoctorProfile from "@/components/doctor/DoctorProfile";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -38,7 +38,7 @@ export default function Page() {
   const renderMainContent = () => {
     switch (activeSection) {
       case "appoinments":
-        return <ViewAppointment roomNumber={roomNumber} />;
+        return <ViewAppointments roomNumber={roomNumber} />;
       case "profile":
         return <DoctorProfile />;
       case "completedApt":

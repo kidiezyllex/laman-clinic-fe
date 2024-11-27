@@ -14,6 +14,8 @@ import {
   Mail,
   MapPin,
   Phone,
+  ReceiptText,
+  RefreshCw,
   RotateCcw,
   SearchIcon,
   Stethoscope,
@@ -45,24 +47,27 @@ import { Separator } from "../ui/separator";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { usePathname } from "next/navigation";
+import TestBill from "../bill/TestBill";
+import test from "node:test";
 
 export default function RequestedTests() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
   const [requestTests, setRequestTests] = useState<RequestTest[]>([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpen2, setIsOpen2] = useState(false);
   const [selectedRequestTest, setSelectedRequestTest] =
     useState<RequestTest | null>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
   const [selectedPatientId, setSelectedPatientId] = useState("");
   const [performedTests, setPerformedTests] = useState<TestType[]>([]);
   const [filterType, setFilterType] = useState("all");
-  const technicianId = usePathname().split("/")[1];
+  const userId = usePathname().split("/")[1];
   const [viewDoctorName, setViewDoctorName] = useState({
     doctorName: "",
     id: "",
   });
-
+  const [isLoading, setIsLoading] = useState(false);
   const [testResults, setTestResults] = useState<
     Array<{
       testName: string;
@@ -81,7 +86,10 @@ export default function RequestedTests() {
       if (filterType === "today")
         return formatDate(item.requestDate) === formatDate(new Date());
       return (
-        item.patientId.toLowerCase().includes(searchTermLower) ||
+        item?.patientId?._id?.toLowerCase().includes(searchTermLower) ||
+        item?.patientId?.fullName?.toLowerCase().includes(searchTermLower) ||
+        item?.patientId?.email?.toLowerCase().includes(searchTermLower) ||
+        item?.patientId?.phone?.toLowerCase().includes(searchTermLower) ||
         item.testTypes.some((it) => {
           return it.testName.toLowerCase().includes(searchTermLower);
         })
@@ -102,6 +110,7 @@ export default function RequestedTests() {
 
   // Fetch Data
   const fetchData = async () => {
+    setIsLoading(true);
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests`
     );
@@ -110,6 +119,7 @@ export default function RequestedTests() {
     );
     setRequestTests(res.data);
     setSelectedPatient(res2.data);
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -184,7 +194,7 @@ export default function RequestedTests() {
         patientId: selectedRequestTest?.patientId,
         doctorId: selectedRequestTest?.doctorId,
         labTestId: "PTN-01",
-        technicianId: technicianId,
+        technicianId: userId,
         results: testResults,
         reasonByDoctor: selectedRequestTest?.reason,
         datePerformed: new Date(),
@@ -237,15 +247,17 @@ export default function RequestedTests() {
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <p className="text-base font-semibold text-blue-500">
-        DANH SÁCH CÁC XÉT NGHIỆM ĐƯỢC YÊU CẦU
+      <p className="text-base font-semibold text-blue-500 uppercase">
+        {userId.includes("LT")
+          ? "Danh sách hoá đơn xét nghiệm"
+          : "Danh sách các xét nghiệm được yêu cầu"}
       </p>
       <div className="flex flex-row gap-3">
         <div className="relative flex-grow">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="search"
-            placeholder="Nhập mã bệnh nhân hoặc tên loại xét nghiệm..."
+            placeholder="Nhập mã, tên, email, sđt bệnh nhân hoặc tên loại xét nghiệm..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -261,8 +273,13 @@ export default function RequestedTests() {
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={fetchData}>
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchData}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
@@ -280,7 +297,7 @@ export default function RequestedTests() {
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
                     Mã bệnh nhân:{" "}
                     <span className="text-muted-foreground font-normal">
-                      {requestTest.patientId}
+                      {requestTest.patientId._id}
                     </span>
                   </p>
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
@@ -339,19 +356,46 @@ export default function RequestedTests() {
                   </Badge>
                 ))}
               </div>
+              {requestTest?.isTestInvoiceCreated ? (
+                <>
+                  <div className="flex flex-row gap-2 items-center">
+                    <ReceiptText className="h-4 w-4 text-blue-500"></ReceiptText>
+                    <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                      Hoá đơn:
+                    </span>
+                  </div>
+                  <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white w-fit">
+                    Đã xuất hoá đơn xét nghiệm
+                  </Badge>
+                </>
+              ) : null}
             </div>
             <div className="flex-grow flex flex-col justify-end">
-              <Button
-                className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                onClick={() => {
-                  setSelectedRequestTest(requestTest);
-                  setSelectedPatientId(requestTest?.patientId + "");
-                  setIsOpen(true);
-                }}
-              >
-                Hoàn thành
-                <FlaskConical className="h-4 w-4" />
-              </Button>
+              {userId.includes("LT") ? (
+                <Button
+                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                  onClick={() => {
+                    setSelectedRequestTest(requestTest);
+                    setSelectedPatientId(requestTest?.patientId._id + "");
+                    setIsOpen2(true);
+                  }}
+                >
+                  Hoá đơn
+                  <ReceiptText className="h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                  onClick={() => {
+                    setSelectedRequestTest(requestTest);
+                    setSelectedPatientId(requestTest?.patientId + "");
+                    setIsOpen(true);
+                  }}
+                >
+                  Hoàn thành
+                  <FlaskConical className="h-4 w-4" />
+                </Button>
+              )}
             </div>
           </Card>
         ))}
@@ -384,7 +428,7 @@ export default function RequestedTests() {
                     )}
                   </p>
                   <p className="text-slate-500">
-                    Mã bệnh nhân: {selectedRequestTest?.patientId}
+                    Mã bệnh nhân: {selectedRequestTest?.patientId._id}
                   </p>
                 </div>
               </div>
@@ -671,6 +715,15 @@ export default function RequestedTests() {
               </div>
             </div>
           )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isOpen2} onOpenChange={setIsOpen2}>
+        <DialogTitle></DialogTitle>
+        <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+          <TestBill
+            selectedTest={selectedRequestTest}
+            fetchData={fetchData}
+          ></TestBill>
         </DialogContent>
       </Dialog>
     </div>

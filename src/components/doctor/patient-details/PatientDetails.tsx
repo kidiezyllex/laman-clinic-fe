@@ -62,7 +62,6 @@ export default function PatientDetails({
   const [selectedServiceIds, setSelectedServiceIds] = useState<String[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
 
-  // Toggle Form tạo đơn thuốc
   const handleCancel = () => {
     setSelectedServiceIds([]);
     setSelectedServices([]);
@@ -73,6 +72,7 @@ export default function PatientDetails({
     setShowReExaminationForm(false);
     setMainShow(true);
     setIsLoading(false);
+    fetchAppointments();
   };
 
   const fetchData = async () => {

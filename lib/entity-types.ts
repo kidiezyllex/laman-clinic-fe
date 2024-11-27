@@ -171,10 +171,11 @@ export interface TestType {
 export interface RequestTest {
   _id: string;
   testTypes: TestType[];
-  patientId: string;
+  patientId: Patient;
   doctorId: string;
   reason: string;
   requestDate: Date;
+  isTestInvoiceCreated: boolean;
 }
 
 export interface TestResult {

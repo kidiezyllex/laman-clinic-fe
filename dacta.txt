@@ -1,0 +1,19 @@
+Tên use case: Đặt lịch khám 
+Actor: Bệnh nhân
+Mô tả sơ lược: Bệnh nhân đặt lịch hẹn khám theo ngày hoặc theo bác sĩ.
+Tiền điều kiện (Precondition): Đã đăng nhập thành công với vai trò là bệnh nhân và đã có hồ sơ bệnh nhân. 
+Hậu điều kiện (Postcondition): Lịch hẹn đã được tạo trên hệ thống và ở trạng thái chờ duyệt, bệnh nhân có thể xem lại lịch đã đặt.
+Luồng sự kiện chính (Basic flow) 
+Actor (Người dùng) | (Hệ thống) System 
+
+Luồng sự kiện thay thế (Alternate flow) 
+Actor (Người dùng) | (Hệ thống) System
+
++ Đặc tả giúp tôi chức năng Đặt lịch khám, Bổ sung vào 2 cột Actor, System, nhớ đánh số các luồng cho hợp lí.
++ Luồng hoạt động như sau:
+Người dùng chọn "Đặt lịch khám" trên Dropdown Menu, hệ thống sẽ chuyển đến trang hiển thị "Hồ sơ hiện tại" và 2 button "Đặt lịch theo ngày" và "Đặt lịch theo bác sĩ". 
+* Nếu người dùng nhấn chọn "Đặt lịch theo ngày", hệ thống sẽ chuyển đến trang đặt lịch theo ngày và hiển thị giao diện "Chọn ngày khám", người dùng nhấn chọn ngày khám trên lịch, sau đó nhấn nút "Tiếp tục", hệ thống chuyển đến giao diện "Chọn Chuyên khoa", người dùng chọn chuyên khoa, sau đó nhấn nút "Tiếp tục", hệ thống chuyển đến giao diện hiển thị "Danh sách bác sĩ, giờ khám" tương ứng với thông tin bạn đã chọn, sau đó nhấn nút "Tiếp tục", hệ thống hiển thị giao diện "XÁC NHẬN THÔNG TIN HẸN KHÁM",
+nhấn nút "Đặt khám", hệ thống chuyển hướng đến trang "Lịch hẹn đã đặt" của bệnh nhân.
+* Nếu người dùng nhấn chọn "Đặt lịch theo bác sĩ", hệ thống sẽ chuyển đến trang đặt lịch theo bác sĩ và hiển thị giao diện "Bác sĩ & chuyên khoa", người dùng nhấn chọn bác sĩ trên danh sách, sau đó nhấn nút "Tiếp tục", hệ thống chuyển đến giao diện "Chọn ngày khám", người dùng nhấn chọn ngày khám trên lịch, sau đó chọn ca khám, sau đó nhấn nút "Tiếp tục", hệ thống hiển thị giao diện "XÁC NHẬN THÔNG TIN HẸN KHÁM", nhấn nút "Đặt khám", hệ thống chuyển hướng đến trang "Lịch hẹn đã đặt" của bệnh nhân.
+
++ Thêm các trường hợp có Luồng sự kiện thay thế, chẳng hạn như các trường hợp mà điều kiện sai, hoặc các trường hợp khác mà tuỳ bạn đề xuất cho tôi.

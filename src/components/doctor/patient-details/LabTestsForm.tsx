@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -6,38 +6,93 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, FlaskConical, X } from "lucide-react";
-import { TestType } from "../../../../lib/entity-types";
+import { Appointment, TestType } from "../../../../lib/entity-types";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
+import { usePathname } from "next/navigation";
 
 interface LabTestsFormProps {
-  tests: TestType[];
-  handleCreateRequestTest: () => Promise<void>;
   handleCancel: () => void;
   isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  tests: TestType[];
+  selectedAppointment: Appointment;
 }
 
 export default function LabTestsForm({
-  tests,
-  handleCreateRequestTest,
   handleCancel,
   isLoading,
+  setIsLoading,
+  tests,
+  selectedAppointment,
 }: LabTestsFormProps) {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [reasonRequestTest, setReasonRequestTest] = useState("");
   const [testTypes, setTestTypes] = useState<TestType[]>([]);
+  const { toast } = useToast();
+  const doctorId = usePathname().split("/")[1];
+  const [selectedTestTypeIds, setSelectedTestTypeIds] = useState<String[]>([]);
+  const [selectedTests, setSelectedTests] = useState<TestType[]>([]);
 
   const filteredTests = tests.filter((test) =>
     test.testName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    const selectedTs = tests.filter((test) =>
+      selectedTestTypeIds.includes(test._id)
+    );
+    setSelectedTests(selectedTs as any);
+  }, [selectedTestTypeIds]);
+
   const handleTestToggle = (testId: String) => {
-    setSelectedTests((prev) =>
+    setSelectedTestTypeIds((prev: any) =>
       prev.includes(testId)
-        ? prev.filter((id) => id !== testId)
+        ? prev.filter((id: String) => id !== testId)
         : [...prev, testId]
     );
   };
 
+  // Tạo xét nghiệm / Yêu cầu xét nghiệm
+  const handleCreateRequestTest = async () => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        testTypes: selectedTests,
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorId,
+        requestDate: new Date(),
+        reason: reasonRequestTest,
+      };
+      if (selectedTests.length === 0) {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: "Vui lòng chọn ít nhất một xét nghiệm!",
+        });
+        return;
+      } else {
+        const res3 = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
+          payload
+        );
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
+        });
+      }
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      handleCancel();
+      setSelectedTestTypeIds([]);
+    }
+  };
   return (
     <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
       <h3 className="text-md font-semibold self-center">Tạo xét nghiệm</h3>
@@ -57,7 +112,7 @@ export default function LabTestsForm({
             >
               <Checkbox
                 id={`test-${test._id}`}
-                checked={selectedTests.includes(test._id)}
+                checked={selectedTestTypeIds.includes(test._id)}
                 onCheckedChange={() => handleTestToggle(test._id)}
               />
               <Label
@@ -72,7 +127,7 @@ export default function LabTestsForm({
         <div className="flex flex-col gap-4">
           <h3 className="text-sm font-semibold">Các xét nghiệm đã chọn:</h3>
           <div className="flex flex-row flex-wrap gap-4">
-            {testTypes.map((test, index) => (
+            {selectedTests.map((test, index) => (
               <Badge
                 variant={"secondary"}
                 key={index}

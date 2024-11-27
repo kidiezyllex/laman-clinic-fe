@@ -116,17 +116,20 @@ export default function ViewAppointment({
 
   const disabled = (appointments: any, appointment: any, index: number) => {
     let flag = false;
+    // Nếu khác ngày hoặc index !==0 thì disable
     if (
       formatDate(new Date(appointment.appointmentDate)) !==
-      formatDate(new Date())
+        formatDate(new Date()) ||
+      index !== 0
     )
       flag = true;
+    //
+    //Nếu đang chờ xét nghiệm hoặc có kết quả XN thì enable
     if (
       pendingTestList.includes(appointment.patientId) ||
       completedTestList.includes(appointment.patientId)
     )
       flag = false;
-    else flag = true;
     if (
       index - 1 >= 0 &&
       pendingTestList.includes(appointments[index]?.patientId)

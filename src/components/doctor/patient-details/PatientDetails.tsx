@@ -59,13 +59,11 @@ export default function PatientDetails({
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [selectedServiceIds, setSelectedServiceIds] = useState<String[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
 
   // Toggle Form tạo đơn thuốc
   const handleCancel = () => {
-    setSelectedTests([]);
     setSelectedServiceIds([]);
     setSelectedServices([]);
     setShowPrescriptionForm(false);
@@ -76,14 +74,6 @@ export default function PatientDetails({
     setMainShow(true);
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    const selectedTs = tests.filter((test) => selectedTests.includes(test._id));
-    const selectedSv = services.filter((sv) =>
-      selectedServiceIds.includes(sv._id)
-    );
-    setSelectedServices(selectedSv as any);
-  }, [selectedTests, selectedServiceIds, tests, services]);
 
   const fetchData = async () => {
     try {
@@ -124,46 +114,6 @@ export default function PatientDetails({
     };
     fetchServiceList();
   }, [showServiceForm]);
-
-  // Tạo xét nghiệm / Yêu cầu xét nghiệm
-  const handleCreateRequestTest = async () => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        testTypes: selectedTests,
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorId,
-        requestDate: new Date(),
-        reason: "",
-      };
-      if (selectedTests.length === 0) {
-        toast({
-          variant: "destructive",
-          title: "Lỗi!",
-          description: "Vui lòng chọn ít nhất một xét nghiệm!",
-        });
-        return;
-      } else {
-        const res3 = await axios.post(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
-          payload
-        );
-        toast({
-          variant: "default",
-          title: "Thành công!",
-          description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
-        });
-      }
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-    } finally {
-      handleCancel();
-    }
-  };
 
   // Hoàn thành khám
   const handleCreateDiagnosticResults = async (e: React.FormEvent) => {
@@ -359,10 +309,11 @@ export default function PatientDetails({
               )}
               {showLabTestsForm && (
                 <LabTestsForm
-                  tests={tests}
-                  handleCreateRequestTest={handleCreateRequestTest}
+                  selectedAppointment={selectedAppointment}
                   handleCancel={handleCancel}
                   isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  tests={tests}
                 />
               )}
               {showReExaminationForm && (

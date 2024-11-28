@@ -57,6 +57,7 @@ export default function OnlineAppointment() {
   const [isLoading, setIsLoading] = useState(false);
   const [filterType, setFilterType] = useState("all");
   const [selectedService, setSelectedService] = useState("");
+  const [checked, setChecked] = useState(false);
 
   const filteredAppointments = appointmentByPatient
     .filter((appointment) => {
@@ -121,6 +122,7 @@ export default function OnlineAppointment() {
         appointmentDate: selectedAppointment?.appointmentDateByPatient,
         reason,
         specialization: selectedAppointment?.specialization,
+        priority: checked,
       };
 
       // Xuất hoá đơn
@@ -456,6 +458,19 @@ export default function OnlineAppointment() {
                   <SelectItem value="4">Khám chẩn đoán hình ảnh</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div className="flex flex-col gap-3">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
+                Vui lòng chọn ưu tiên (tuỳ chọn)
+              </p>
+              <input
+                className="h-10 w-10"
+                type="checkbox"
+                checked={checked}
+                onChange={() => {
+                  setChecked(!checked);
+                }}
+              />
             </div>
           </div>
           <div className={selectedService !== "" ? "mr-4 border" : "hidden"}>

@@ -34,17 +34,6 @@ export default function MedicalBill({
   selectedService,
   inputSpecialization,
 }: MedicalBillProps) {
-  const [viewName, setViewName] = useState("");
-  const handleViewName = async (technicianId: string) => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/laboratory-technicians/${technicianId}`
-      );
-      setViewName(response.data.fullName);
-    } catch (error) {
-      console.error(error);
-    }
-  };
   const serviceName = [
     "Khám tổng quát",
     "Khám sức khỏe định kỳ",

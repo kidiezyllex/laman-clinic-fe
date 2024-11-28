@@ -21,7 +21,12 @@ import {
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
 import PatientProfileForm from "../patient/profile/PatientProfileForm";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -34,9 +39,12 @@ import { formatDate, renderSpecialty } from "../../../lib/utils";
 import MedicalBill from "../bill/MedicalBill";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { useUploadThing } from "@/utils/uploadthing";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
+  const { startUpload } = useUploadThing("imageUploader");
+
   const [selectedService, setSelectedService] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -114,6 +122,9 @@ export default function DirectAppoinment() {
       // Xuất hoá đơn
       await exportToPDF();
 
+      // Lưu hoá đơn bằng Uploadthing
+      await exportAndUploadImage();
+
       // Kafka xử lý
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
@@ -153,10 +164,38 @@ export default function DirectAppoinment() {
       console.error(err);
     }
   };
+
+  const exportAndUploadImage = async () => {
+    try {
+      const input = document.getElementById("preview");
+      if (!input) throw new Error("Preview element not found");
+
+      const canvas = await html2canvas(input);
+
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve: any) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      // Create a File object from the blob
+      const file = new File([blob], "export.png", { type: "image/png" });
+
+      // Upload the file
+      const res = await startUpload([file]);
+
+      if (res && res[0]) {
+        console.log("Upload completed:", res[0]);
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        TẠO HẸN KHÁM MỚI (DÀNH CHO BỆNH NHÂN ĐĂNG KÝ TRỰC TIẾP
+        TẠO HẸN KHÁM MỚI (DÀNH CHO BỆNH NHÂN ĐĂNG KÝ TRỰC TIẾP)
       </p>
       <div className="flex flex-row w-full gap-3">
         <div className="relative flex-grow">
@@ -234,6 +273,7 @@ export default function DirectAppoinment() {
         ></PatientProfileForm>
       )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogTitle></DialogTitle>
         <DialogContent className="max-w-[1000px] w-[95%] h-[90%] overflow-y-auto">
           <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
             {selectedPatient?.gender?.toLowerCase() === "male" ? (

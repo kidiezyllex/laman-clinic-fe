@@ -1,13 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Bell,
-  CalendarRange,
-  ClipboardList,
-  ReceiptText,
-  User,
-} from "lucide-react";
+import { CalendarRange, ReceiptText, User } from "lucide-react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -129,6 +123,17 @@ export default function Page() {
                   }`}
                 >
                   <p className="ml-7">Dịch vụ khác</p>
+                </Link>
+                <Link
+                  href="#"
+                  onClick={() => setActiveSection("storage")}
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                    activeSection === "storage"
+                      ? "bg-muted text-primary"
+                      : "text-muted-foreground"
+                  }`}
+                >
+                  <p className="ml-7">Lưu trữ</p>
                 </Link>
                 <Link
                   href="#"

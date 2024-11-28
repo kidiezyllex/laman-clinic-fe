@@ -14,7 +14,7 @@ import {
   Mail,
   MapPin,
   Phone,
-  RotateCcw,
+  RefreshCw,
   SearchIcon,
   SquareActivity,
   Timer,
@@ -30,7 +30,6 @@ import {
   formatDate3,
   generateExamination,
   getHoursBetweenDates,
-  renderPriceBySpeAndService,
   renderSpecialty,
 } from "../../../lib/utils";
 import { AppointmentByPatient } from "../../../lib/entity-types";
@@ -42,14 +41,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Image from "next/image";
-import {
-  Table,
-  TableBody,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import MedicalBill from "../bill/MedicalBill";
@@ -77,6 +68,7 @@ export default function OnlineAppointment() {
         );
       return (
         appointment.fullName.toLowerCase().includes(searchTermLower) ||
+        appointment.patientId.toLowerCase().includes(searchTermLower) ||
         (appointment.phone && appointment.phone.includes(searchTerm)) ||
         (appointment.email &&
           appointment.email.toLowerCase().includes(searchTermLower))
@@ -98,6 +90,7 @@ export default function OnlineAppointment() {
     });
 
   const fetchData = async () => {
+    setIsLoading(true);
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
     );
@@ -108,6 +101,7 @@ export default function OnlineAppointment() {
       );
     });
     setAppointmentByPatient(newApmts);
+    setIsLoading(false);
   };
   useEffect(() => {
     fetchData();
@@ -195,10 +189,7 @@ export default function OnlineAppointment() {
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(
-        `${
-          selectedAppointment?.patientId +
-          formatDate(selectedAppointment?.appointmentDateByPatient)
-        }.pdf`
+        `${selectedAppointment?.patientId + formatDate(new Date())}.pdf`
       );
     } catch (err) {
       console.error(err);
@@ -215,7 +206,7 @@ export default function OnlineAppointment() {
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="search"
-            placeholder="Nhập mã hoặc tên bệnh nhân..."
+            placeholder="Nhập mã, tên, email, sđt bệnh nhân..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -233,8 +224,13 @@ export default function OnlineAppointment() {
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={fetchData}>
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchData}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
@@ -464,6 +460,8 @@ export default function OnlineAppointment() {
           </div>
           <div className={selectedService !== "" ? "mr-4 border" : "hidden"}>
             <MedicalBill
+              inputSpecialization={null}
+              selectedPatient={null}
               selectedAppointment={selectedAppointment}
               reason={reason}
               selectedService={selectedService}

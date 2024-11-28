@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
-import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
+import PrescriptionBill from "../bill/PrescriptionBill";
 import { formatDate } from "../../../lib/utils";
 import { Medication, Patient, Prescription } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
@@ -95,17 +95,10 @@ export default function RequestedPrescriptions() {
           );
           setSelectedPatientMedicalHistory(response.data);
         } catch (error) {
-          console.error("Error fetching patient medical history:", error);
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description:
-              "Failed to fetch patient medical history. Please try again.",
-          });
+          console.error(error);
         }
       }
     };
-
     fetchData();
   }, [selectedPatientId, toast]);
 
@@ -114,7 +107,9 @@ export default function RequestedPrescriptions() {
       const searchTermLower = searchTerm.toLowerCase();
       if (filterType === "today")
         return formatDate(prescription.dateIssued) === formatDate(new Date());
-      return prescription.patientId.toLowerCase().includes(searchTermLower);
+      return prescription?.patientId?._id
+        ?.toLowerCase()
+        .includes(searchTermLower);
     })
     .sort((a, b) => {
       if (filterType === "old") {
@@ -325,7 +320,7 @@ export default function RequestedPrescriptions() {
               </p>
               <p className="flex items-center text-sm">
                 <User className="h-4 w-4 mr-2" />
-                Mã Bệnh nhân: {prescription.patientId}
+                Mã Bệnh nhân: {prescription.patientId._id}
               </p>
               <p className="flex items-center text-sm">
                 <Stethoscope className="h-4 w-4 mr-2" />
@@ -406,7 +401,7 @@ export default function RequestedPrescriptions() {
               <Button
                 onClick={() =>
                   setSelectedPatientId({
-                    patientId: prescription.patientId,
+                    patientId: prescription.patientId._id + "",
                     id: prescription._id,
                   })
                 }
@@ -482,7 +477,7 @@ export default function RequestedPrescriptions() {
             </div>
 
             {showInvoice.id === prescription._id && showInvoice.isShow && (
-              <PatientPrescriptionInvoice
+              <PrescriptionBill
                 prescription={prescription}
                 newMedication={newMedication[prescription._id] || []}
               />

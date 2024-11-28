@@ -31,9 +31,13 @@ import {
 } from "../ui/select";
 import { Patient } from "../../../lib/entity-types";
 import { formatDate, renderSpecialty } from "../../../lib/utils";
+import MedicalBill from "../bill/MedicalBill";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
+  const [selectedService, setSelectedService] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
@@ -107,6 +111,9 @@ export default function DirectAppoinment() {
         priority: checked,
       };
 
+      // Xuất hoá đơn
+      await exportToPDF();
+
       // Kafka xử lý
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
@@ -129,10 +136,27 @@ export default function DirectAppoinment() {
       });
     }
   };
+
+  const exportToPDF = async () => {
+    try {
+      const input = document.getElementById("preview");
+      if (!input) throw new Error("Preview element not found");
+
+      const canvas = await html2canvas(input);
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("portrait");
+      const imgWidth = pdf.internal.pageSize.getWidth();
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+      pdf.save(`${selectedPatient?._id + formatDate(new Date())}.pdf`);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        TẠO HẸN KHÁM MỚI (DÀNH CHO BỆNH NHÂN ĐĂNG KÝ TRỰC TIẾP)
+        TẠO HẸN KHÁM MỚI (DÀNH CHO BỆNH NHÂN ĐĂNG KÝ TRỰC TIẾP
       </p>
       <div className="flex flex-row w-full gap-3">
         <div className="relative flex-grow">
@@ -274,18 +298,18 @@ export default function DirectAppoinment() {
               </div>
             </div>
           </div>
-          <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
-            Vui lòng nhập lý do hẹn khám
-          </p>
-          <div className="mr-4">
-            <Input
-              id="reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder="Nhập lý do hẹn khám"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-6 mr-4">
+            <div className="flex flex-col gap-3">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
+                Vui lòng nhập lý do hẹn khám
+              </p>
+              <Input
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Nhập lý do hẹn khám"
+              />
+            </div>
             <div className="flex flex-col gap-3">
               <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Vui lòng chọn chuyên ngành
@@ -306,6 +330,23 @@ export default function DirectAppoinment() {
               </div>
             </div>
             <div className="flex flex-col gap-3">
+              <p className="text-md font-semibold text-slate-600 dark:text-slate-300">
+                Chọn loại dịch vụ khám
+              </p>
+              <Select onValueChange={setSelectedService}>
+                <SelectTrigger className="w-full text-slate-600 dark:text-slate-300">
+                  <SelectValue placeholder="Chọn loại dịch vụ khám" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0">Khám tổng quát</SelectItem>
+                  <SelectItem value="1">Khám sức khỏe định kỳ</SelectItem>
+                  <SelectItem value="2">Khám chuyên khoa</SelectItem>
+                  <SelectItem value="3">Gói khám sức khỏe toàn diện</SelectItem>
+                  <SelectItem value="4">Khám chẩn đoán hình ảnh</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex flex-col gap-3">
               <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Vui lòng chọn ưu tiên (tuỳ chọn)
               </p>
@@ -318,6 +359,15 @@ export default function DirectAppoinment() {
                 }}
               />
             </div>
+          </div>
+          <div className={selectedService !== "" ? "mr-4 border" : "hidden"}>
+            <MedicalBill
+              selectedAppointment={null}
+              selectedPatient={selectedPatient}
+              reason={reason}
+              selectedService={selectedService}
+              inputSpecialization={specialization}
+            ></MedicalBill>
           </div>
           <DialogFooter className="flex-grow items-end mr-4">
             <Button

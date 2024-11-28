@@ -10,7 +10,7 @@ import { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
-import { AppointmentByPatient } from "../../../lib/entity-types";
+import { AppointmentByPatient, Patient } from "../../../lib/entity-types";
 import {
   formatDate,
   formatDate3,
@@ -20,15 +20,19 @@ import {
 } from "../../../lib/utils";
 
 interface MedicalBillProps {
+  selectedPatient: Patient | null;
   selectedAppointment: AppointmentByPatient | null;
   reason: string;
   selectedService: string;
+  inputSpecialization: string | null;
 }
 
 export default function MedicalBill({
+  selectedPatient,
   selectedAppointment,
   reason,
   selectedService,
+  inputSpecialization,
 }: MedicalBillProps) {
   const [viewName, setViewName] = useState("");
   const handleViewName = async (technicianId: string) => {
@@ -118,16 +122,20 @@ export default function MedicalBill({
         <Separator className="bg-slate-950"></Separator>
         <div className="p-4 flex flex-col gap-2">
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Mã bệnh nhân (Patient Id): {selectedAppointment?.patientId}
+            Mã bệnh nhân (Patient Id):{" "}
+            {selectedAppointment?.patientId || selectedPatient?._id}
           </p>
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Tên bệnh nhân (Patient): {selectedAppointment?.fullName}
+            Tên bệnh nhân (Patient):{" "}
+            {selectedAppointment?.fullName || selectedPatient?.fullName}
           </p>
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Số điện thoại (Phone): {selectedAppointment?.phone}
+            Số điện thoại (Phone):{" "}
+            {selectedAppointment?.phone || selectedPatient?.phone}
           </p>
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Địa chỉ (Address): {selectedAppointment?.address}
+            Địa chỉ (Address):{" "}
+            {selectedAppointment?.address || selectedPatient?.address}
           </p>
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
             Hình thức thanh toán: Chuyển khoản/Tiền mặt
@@ -135,19 +143,25 @@ export default function MedicalBill({
         </div>
         <Separator className="bg-slate-950"></Separator>
         <div className="p-4 flex flex-col gap-2">
-          <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Mã bác sĩ (Doctor): {selectedAppointment?.doctorId}
-          </p>
+          {selectedAppointment?.doctorId ? (
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Mã bác sĩ (Doctor): {selectedAppointment?.doctorId}
+            </p>
+          ) : null}
+
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
             Chuyên khoa (Specialization):{" "}
-            {renderSpecialty(selectedAppointment?.specialization + "")}
+            {renderSpecialty(selectedAppointment?.specialization + "") ||
+              renderSpecialty(inputSpecialization + "")}
           </p>
-          <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-            Ca khám (Examination):{" "}
-            {generateExamination(
-              formatDate3(selectedAppointment?.appointmentDateByPatient)
-            )}
-          </p>
+          {selectedAppointment?.doctorId ? (
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Ca khám (Examination):{" "}
+              {generateExamination(
+                formatDate3(selectedAppointment?.appointmentDateByPatient)
+              )}
+            </p>
+          ) : null}
           <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
             Lý do khám (Reason): {reason}
           </p>
@@ -177,26 +191,37 @@ export default function MedicalBill({
             <TableRow className="pointer-events-none">
               <TableHead className="text-black dark:text-black">
                 {" "}
-                {renderSpecialty(selectedAppointment?.specialization + "")}
+                {renderSpecialty(selectedAppointment?.specialization + "") ||
+                  renderSpecialty(inputSpecialization + "")}
               </TableHead>
               <TableHead className="text-black dark:text-black">
                 {" "}
                 {serviceName[parseInt(selectedService)]}
               </TableHead>
               <TableHead className="text-black dark:text-black">
-                {renderPriceBySpeAndService(
-                  selectedAppointment?.specialization + "",
-                  parseInt(selectedService)
-                ).toLocaleString("vi-VN")}
+                {inputSpecialization
+                  ? renderPriceBySpeAndService(
+                      inputSpecialization + "",
+                      parseInt(selectedService)
+                    ).toLocaleString("vi-VN")
+                  : renderPriceBySpeAndService(
+                      selectedAppointment?.specialization + "",
+                      parseInt(selectedService)
+                    ).toLocaleString("vi-VN")}
               </TableHead>
               <TableHead className="text-black dark:text-black">
                 Không
               </TableHead>
               <TableHead className="text-black dark:text-black">
-                {renderPriceBySpeAndService(
-                  selectedAppointment?.specialization + "",
-                  parseInt(selectedService)
-                ).toLocaleString("vi-VN")}
+                {inputSpecialization
+                  ? renderPriceBySpeAndService(
+                      inputSpecialization + "",
+                      parseInt(selectedService)
+                    ).toLocaleString("vi-VN")
+                  : renderPriceBySpeAndService(
+                      selectedAppointment?.specialization + "",
+                      parseInt(selectedService)
+                    ).toLocaleString("vi-VN")}
               </TableHead>
             </TableRow>
           </TableBody>

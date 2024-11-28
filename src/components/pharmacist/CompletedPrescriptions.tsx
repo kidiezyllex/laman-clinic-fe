@@ -19,7 +19,7 @@ import {
   User,
 } from "lucide-react";
 import axios from "axios";
-import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
+import PrescriptionBill from "../bill/PrescriptionBill";
 import { Medication, Patient, Prescription } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -60,10 +60,10 @@ export default function CompletedPrescriptions() {
       if (filterType === "today")
         return formatDate(prescription.dateIssued) === formatDate(new Date());
       else if (filterType === "visitor")
-        return prescription.patientId.includes("BN-VL");
+        return prescription?.patientId?._id?.includes("BN-VL");
       return (
-        prescription.patientId
-          .toLowerCase()
+        prescription?.patientId?._id
+          ?.toLowerCase()
           .includes(searchTermLower.toLowerCase()) ||
         prescription?.visitorName
           ?.toLowerCase()
@@ -120,7 +120,7 @@ export default function CompletedPrescriptions() {
                 Ngày lập đơn:{" "}
                 {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
               </p>
-              {prescription.patientId.includes("BN-VL") ? (
+              {prescription?.patientId?._id?.includes("BN-VL") ? (
                 <>
                   <p className="flex items-center text-sm font-semibold">
                     <User className="h-4 w-4 mr-2" />
@@ -134,7 +134,7 @@ export default function CompletedPrescriptions() {
               ) : (
                 <p className="flex items-center text-sm font-semibold">
                   <User className="h-4 w-4 mr-2" />
-                  Mã Bệnh nhân: {prescription.patientId}
+                  Mã Bệnh nhân: {prescription.patientId._id}
                 </p>
               )}
 
@@ -197,7 +197,7 @@ export default function CompletedPrescriptions() {
 
             {/* Invoice component */}
             {showInvoice.id === prescription._id && showInvoice.isShow && (
-              <PatientPrescriptionInvoice
+              <PrescriptionBill
                 prescription={prescription}
                 newMedication={newMedication}
               />

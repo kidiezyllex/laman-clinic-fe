@@ -264,12 +264,14 @@ export default function RequestedTests() {
           />
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[220px]">
             <SelectValue placeholder="Lọc theo ngày" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="today">
+              Hôm nay ({formatDate(new Date())})
+            </SelectItem>
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
@@ -290,14 +292,21 @@ export default function RequestedTests() {
           >
             <div className="flex flex-col gap-4 w-full">
               <div className="flex flex-row gap-4 items-center w-full">
-                <div className="bg-background h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 ">
-                  <User className="text-blue-500" />
-                </div>
+                {requestTest?.patientId?.gender?.toLowerCase() === "male" ||
+                requestTest?.patientId?.gender?.toLowerCase() === "nam" ? (
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-blue-500 bg-blue-200">
+                    <Dog className="text-blue-500" />
+                  </div>
+                ) : (
+                  <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center border border-pink-500 bg-pink-200">
+                    <Cat className="text-pink-500" />
+                  </div>
+                )}
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
-                    Mã bệnh nhân:{" "}
+                    Tên bệnh nhân:{" "}
                     <span className="text-muted-foreground font-normal">
-                      {requestTest.patientId._id}
+                      {requestTest.patientId.fullName}
                     </span>
                   </p>
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
@@ -388,7 +397,7 @@ export default function RequestedTests() {
                   className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                   onClick={() => {
                     setSelectedRequestTest(requestTest);
-                    setSelectedPatientId(requestTest?.patientId + "");
+                    setSelectedPatientId(requestTest?.patientId._id + "");
                     setIsOpen(true);
                   }}
                 >

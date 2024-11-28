@@ -37,7 +37,9 @@ export default function ReceptionistProfile() {
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
-      <p className="text-base font-semibold text-blue-500">HỒ SƠ LỄ TÂN</p>
+      <p className="text-base font-semibold text-blue-500">
+        HỒ SƠ LỄ TÂN - THU NGÂN
+      </p>
       {receptionist && (
         <div className="flex flex-col border rounded-md p-4 gap-3 bg-primary-foreground">
           <div className="flex gap-3 items-center">
@@ -52,10 +54,10 @@ export default function ReceptionistProfile() {
             )}
             <div>
               <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
-                Lễ tân: {receptionist.fullName}
+                Lễ tân - Thu ngân: {receptionist.fullName}
               </p>
               <p className="text-slate-600 dark:text-slate-300">
-                Mã Lễ tân: {receptionist?._id}
+                Mã nhân viên: {receptionist?._id}
               </p>
             </div>
           </div>

@@ -11,11 +11,11 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { formatDate } from "../../../../lib/utils";
-import { PatientPrescriptionInvoiceProps } from "../../../../lib/entity-types";
+import { formatDate } from "../../../lib/utils";
+import { PatientPrescriptionInvoiceProps } from "../../../lib/entity-types";
 import { FileImage, FileText } from "lucide-react";
 
-export default function PatientPrescriptionInvoice({
+export default function PrescriptionBill({
   prescription,
   newMedication,
 }: PatientPrescriptionInvoiceProps) {
@@ -58,7 +58,7 @@ export default function PatientPrescriptionInvoice({
         id="preview"
       >
         <div className="border border-slate-950">
-          <div className="flex flex-row gap-16 items-center justify-center h-full my-4">
+          <div className="flex flex-row items-start justify-between h-full my-4 px-5">
             <div className="w-32 h-32 relative z-0 rounded-full border-2 border-blue-500">
               <Image
                 src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726685609/learning-webdev-blog/clinic/medical-care-logo-icon-design-vector-22560842_j6xhlk.jpg"
@@ -67,7 +67,7 @@ export default function PatientPrescriptionInvoice({
                 layout="fill"
               />
             </div>
-            <div className="flex flex-col gap-1 items-center">
+            <div className="flex flex-col items-center">
               <p className="text-2xl font-bold font-['Times_New_Roman',_Times,_serif]">
                 HÓA ĐƠN GIÁ TRỊ GIA TĂNG
               </p>
@@ -92,6 +92,31 @@ export default function PatientPrescriptionInvoice({
                 Số (No.):
               </p>
             </div>
+          </div>
+          <p className="text-2xl text-center font-bold font-['Times_New_Roman',_Times,_serif] mb-4">
+            HOÁ ĐƠN THUỐC
+          </p>
+          <Separator className="bg-slate-950"></Separator>
+          <div className="p-4 flex flex-col gap-2">
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Đơn vị bán hàng (Seller): CÔNG TY TRÁCH NHIỆM HỮU HẠN LAMAN CLINIC
+            </p>
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Mã số thuế (Tax code): 330187899
+            </p>
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Địa chỉ (Address): 2012 Phạm Huy Thông, Phường 17, Gò Vấp, T.P Hồ
+              Chí Minh
+            </p>
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Điện thoại (Tel): 098765674323
+            </p>
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Số tài khoản (Account No.): 179232999
+            </p>
+            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
+              Ngân hàng (Bank): Ngân hàng BIDV Đầu tư và Phát triển Việt Nam
+            </p>
           </div>
           <Separator className="bg-slate-950"></Separator>
           <div className="p-4 flex flex-col gap-2">
@@ -118,22 +143,19 @@ export default function PatientPrescriptionInvoice({
           <Separator className="bg-slate-950"></Separator>
           <div className="p-4 flex flex-col gap-2">
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Họ tên người mua (CustomerName):
+              Mã bệnh nhân (Patient Id): {prescription?.patientId._id}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Tên đơn vị (CompanyName):
+              Tên bệnh nhân (Patient): {prescription?.patientId.fullName}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Mã số thuế (Tax code):
+              Số điện thoại (Phone): {prescription?.patientId?.phone}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Địa chỉ (Address):
+              Địa chỉ (Address): {prescription?.patientId?.address}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Hình thức thanh toán (Payment Method): Tiền mặt
-            </p>
-            <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Ghi chú (Note):
+              Hình thức thanh toán: Chuyển khoản/Tiền mặt
             </p>
           </div>
           <Separator className="bg-slate-950"></Separator>

@@ -26,7 +26,7 @@ import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
 import AdminProfile from "@/components/admin/AdminProfile";
 
 export default function Page() {
-  const [activeSection, setActiveSection] = useState("medicine-warehouse");
+  const [activeSection, setActiveSection] = useState("accounts");
   const { toast } = useToast();
   const renderMainContent = () => {
     switch (activeSection) {

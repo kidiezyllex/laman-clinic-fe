@@ -35,7 +35,7 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import PatientDetails from "./accounts/PatientDetails";
 import StaffDetails from "./accounts/StaffDetails";
-import PatientProfileForm from "../patient/profile/PatientProfileForm";
+import CreateProfileForm from "../patient/profile/CreateProfileForm";
 import AddStaffForm from "./accounts/AddStaffForm";
 export default function AccountsManagement() {
   const { toast } = useToast();
@@ -81,10 +81,10 @@ export default function AccountsManagement() {
     switch (role) {
       case "patient":
         return (
-          <PatientProfileForm
+          <CreateProfileForm
             setSearchTerm={function (section: string): void {}}
             setShowCreatePatientProfile={function (section: boolean): void {}}
-          ></PatientProfileForm>
+          ></CreateProfileForm>
         );
       case "receptionist":
         return <AddStaffForm role={"receptionist"}></AddStaffForm>;

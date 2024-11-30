@@ -401,7 +401,7 @@ export default function RequestedTests() {
                     setIsOpen(true);
                   }}
                 >
-                  Hoàn thành
+                  Nhập kết quả
                   <FlaskConical className="h-4 w-4" />
                 </Button>
               )}

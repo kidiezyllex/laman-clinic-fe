@@ -19,7 +19,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import PatientProfileForm from "@/components/patient/profile/PatientProfileForm";
+import CreateProfileForm from "@/components/patient/profile/CreateProfileForm";
 export default function Page() {
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   return (
@@ -91,14 +91,14 @@ export default function Page() {
           )}
 
           {selectedOption === "new" && (
-            <PatientProfileForm
+            <CreateProfileForm
               setSearchTerm={function (section: string): void {
                 throw new Error("Function not implemented.");
               }}
               setShowCreatePatientProfile={function (section: boolean): void {
                 throw new Error("Function not implemented.");
               }}
-            ></PatientProfileForm>
+            ></CreateProfileForm>
           )}
         </CardContent>
       </Card>

@@ -61,13 +61,11 @@ const Confirm = ({
         payload
       );
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast({
-          variant: "destructive",
-          title: "Thất bại!",
-          description: "Trùng hồ sơ. Vui lòng dùng hồ sơ khác!",
-        });
-      }
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: "Trùng hồ sơ. Vui lòng dùng hồ sơ khác!",
+      });
     } finally {
       toast({
         variant: "default",

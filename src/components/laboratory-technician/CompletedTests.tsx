@@ -161,7 +161,7 @@ export default function CompletedTests() {
                   variant="secondary"
                   className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                 >
-                  Kết quả
+                  Xem kết quả
                   <FlaskConical className="w-4 h-4" />
                 </Button>
               </TableCell>

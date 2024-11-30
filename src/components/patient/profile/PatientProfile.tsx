@@ -22,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import PatientProfileForm from "./PatientProfileForm";
+import CreateProfileForm from "./CreateProfileForm";
 import { usePathname } from "next/navigation";
 import { Patient } from "../../../../lib/entity-types";
 import { formatDate } from "../../../../lib/utils";
@@ -168,7 +168,7 @@ export default function PatientProfile() {
         </>
       )}
       {!patient && (
-        <PatientProfileForm
+        <CreateProfileForm
           setSearchTerm={() => {}}
           setShowCreatePatientProfile={() => {}}
         />
@@ -177,18 +177,25 @@ export default function PatientProfile() {
         <UpdateProfileForm setShowUpdateForm={setShowUpdateForm} />
       )}
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-primary-foreground">
           <AlertDialogHeader>
-            <AlertDialogTitle>Bạn có chắc chắn muốn xoá?</AlertDialogTitle>
+            <AlertDialogTitle className="dark:text-slate-300 text-slate-600">
+              Bạn có chắc chắn muốn xoá?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Hành động này không thể hoàn tác. Điều này sẽ xoá vĩnh viễn dữ
               liệu của bạn khỏi máy chủ của chúng tôi.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Huỷ</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
-              Xác nhận xoá
+            <AlertDialogCancel className="border-none bg-red-500 dark:bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600 hover:text-white">
+              Huỷ
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="border-none bg-blue-500 dark:bg-blue-500 text-white dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white"
+            >
+              Xác nhận
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

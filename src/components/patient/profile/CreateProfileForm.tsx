@@ -25,7 +25,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useAuth } from "@clerk/nextjs";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowUpFromLine, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -47,7 +46,7 @@ const formSchema = z.object({
   district: z.string().min(1, { message: "Không hợp lệ" }),
 });
 
-export default function PatientProfileForm({
+export default function CreateProfileForm({
   setSearchTerm,
   setShowCreatePatientProfile,
 }: {
@@ -56,7 +55,6 @@ export default function PatientProfileForm({
 }) {
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
-  const { userId } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -138,6 +136,7 @@ export default function PatientProfileForm({
         userPayload
       );
       toast({
+        variant: "default",
         title: "Tạo hồ sơ thành công!",
         description: "Hồ sơ bệnh nhân đã được tạo.",
       });

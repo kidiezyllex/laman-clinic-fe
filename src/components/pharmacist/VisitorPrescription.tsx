@@ -36,7 +36,7 @@ import { Label } from "../ui/label";
 import { medicationData } from "../../../lib/hardcoded-data";
 import { MedicationRow, Patient } from "../../../lib/entity-types";
 import { Card } from "../ui/card";
-import PatientPrescriptionInvoice from "./prescription/PatientPrescriptionInvoice";
+import PrescriptionBill from "../bill/PrescriptionBill";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
@@ -466,12 +466,12 @@ export default function VisitorPrescription() {
           <Pill className="h-4 w-4" />
         </Button>
       </div>
-      {showInvoice && (
+      {/* {showInvoice && (
         <div className="border rounded-md">
-          <PatientPrescriptionInvoice
+          <PrescriptionBill
             prescription={{
               _id: "",
-              patientId: "",
+              patient: Patiet,
               doctorId: "",
               medications: [],
               dateIssued: new Date(),
@@ -481,7 +481,7 @@ export default function VisitorPrescription() {
             newMedication={[...rows] as any}
           />
         </div>
-      )}
+      )} */}
     </div>
   );
 }

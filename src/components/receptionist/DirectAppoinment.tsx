@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/hooks/use-toast";
-import PatientProfileForm from "../patient/profile/PatientProfileForm";
+import CreateProfileForm from "../patient/profile/CreateProfileForm";
 import {
   Dialog,
   DialogContent,
@@ -267,10 +267,10 @@ export default function DirectAppoinment() {
         ))}
       </div>
       {showCreatePatientProfile && (
-        <PatientProfileForm
+        <CreateProfileForm
           setSearchTerm={setSearchTerm}
           setShowCreatePatientProfile={setShowCreatePatientProfile}
-        ></PatientProfileForm>
+        ></CreateProfileForm>
       )}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTitle></DialogTitle>

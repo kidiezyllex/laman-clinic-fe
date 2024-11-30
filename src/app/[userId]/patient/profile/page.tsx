@@ -2,14 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { CardContent } from "@/components/ui/card";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,7 +12,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import PatientProfileForm from "@/components/patient/profile/PatientProfileForm";
+import CreateProfileForm from "@/components/patient/profile/CreateProfileForm";
 import {
   Calendar,
   CalendarIcon,
@@ -36,7 +29,6 @@ import { usePathname } from "next/navigation";
 import { Patient } from "../../../../../lib/entity-types";
 import { formatDate } from "../../../../../lib/utils";
 export default function CreatePatientProfile() {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [patient, setPatient] = useState<Patient | null>(null);
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
@@ -164,7 +156,7 @@ export default function CreatePatientProfile() {
           )}
           <div className="w-full h-[100%] bg-background rounded-xl">
             {!patient && (
-              <PatientProfileForm
+              <CreateProfileForm
                 setSearchTerm={() => {}}
                 setShowCreatePatientProfile={() => {}}
               />

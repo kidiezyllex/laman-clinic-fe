@@ -37,11 +37,16 @@ export default function BookedAppointments() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient`
       );
-      const newBookedApmts = response.data.filter(
-        (item: AppointmentByPatient) => {
+      const newBookedApmts = response.data
+        .filter((item: AppointmentByPatient) => {
           return item.patientId === patientId;
-        }
-      );
+        })
+        .sort((a: any, b: any) => {
+          return (
+            new Date(a.appointmentDateByPatient).getTime() -
+            new Date(b.appointmentDateByPatient).getTime()
+          );
+        });
       setAppointmentByPatients(newBookedApmts);
     } else {
       setAppointmentByPatients([]);
@@ -115,18 +120,25 @@ export default function BookedAppointments() {
         )}
       </div>
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent>
+        <AlertDialogContent className="dark:bg-primary-foreground">
           <AlertDialogHeader>
-            <AlertDialogTitle>Bạn có chắc chắn muốn xoá?</AlertDialogTitle>
+            <AlertDialogTitle className="dark:text-slate-300 text-slate-600">
+              Bạn có chắc chắn muốn xoá?
+            </AlertDialogTitle>
             <AlertDialogDescription>
               Hành động này không thể hoàn tác. Điều này sẽ xoá vĩnh viễn dữ
               liệu của bạn khỏi máy chủ của chúng tôi.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Huỷ</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteAppointmentByPatient}>
-              Xác nhận xoá
+            <AlertDialogCancel className="border-none bg-red-500 dark:bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600 hover:text-white">
+              Huỷ
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeleteAppointmentByPatient}
+              className="border-none bg-blue-500 dark:bg-blue-500 text-white dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white"
+            >
+              Xác nhận
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

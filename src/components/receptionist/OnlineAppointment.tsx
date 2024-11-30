@@ -27,6 +27,7 @@ import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import {
   formatDate,
+  formatDate2,
   formatDate3,
   generateExamination,
   getHoursBetweenDates,
@@ -44,8 +45,20 @@ import {
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import MedicalBill from "../bill/MedicalBill";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { useUploadThing } from "@/utils/uploadthing";
+import { usePathname } from "next/navigation";
 export default function OnlineAppointment() {
   const { toast } = useToast();
+  const pathname = usePathname();
+  const userId = pathname.split("/")[1];
   const [searchTerm, setSearchTerm] = useState("");
   const [appointmentByPatient, setAppointmentByPatient] = useState<
     AppointmentByPatient[]
@@ -58,6 +71,9 @@ export default function OnlineAppointment() {
   const [filterType, setFilterType] = useState("all");
   const [selectedService, setSelectedService] = useState("");
   const [checked, setChecked] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const { startUpload } = useUploadThing("imageUploader");
 
   const filteredAppointments = appointmentByPatient
     .filter((appointment) => {
@@ -128,6 +144,9 @@ export default function OnlineAppointment() {
       // Xuất hoá đơn
       await exportToPDF();
 
+      // Upload hoá đơn
+      await exportAndUploadImage();
+
       // Kafka xử lý
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
@@ -153,7 +172,7 @@ export default function OnlineAppointment() {
       toast({
         variant: "default",
         title: "Thành công!",
-        description: "Hệ thống đang xử lý ca khám!",
+        description: "Hệ thống đang xử lý lịch hẹn!",
       });
     }
   };
@@ -198,10 +217,56 @@ export default function OnlineAppointment() {
     }
   };
 
+  const exportAndUploadImage = async () => {
+    try {
+      const input = document.getElementById("preview");
+      if (!input) throw new Error("Preview element not found");
+
+      const canvas = await html2canvas(input);
+
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve: any) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      // Create a File object from the blob
+      const file = new File(
+        [blob],
+        `${selectedAppointment?.patientId}-${formatDate2(new Date())}.png`,
+        { type: "image/png" }
+      );
+
+      // Upload the file
+      const res = await startUpload([file]);
+
+      if (res && res[0]) {
+        const payload = {
+          paymentMethod: "Cash",
+          status: "Paid",
+          type: "Hoá đơn khám bệnh",
+          image: res[0].url,
+          staffId: userId,
+          staffRole: "Lễ tân",
+        };
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,
+          payload
+        );
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const totalPages = Math.ceil(filteredAppointments.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentAppointments = filteredAppointments.slice(startIndex, endIndex);
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
-        DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEB
+        DANH SÁCH BỆNH NHÂN ĐÃ ĐĂNG KÝ HẸN KHÁM TRÊN WEBSITE
       </p>
       <div className="flex flex-row gap-3">
         <div className="relative flex-grow">
@@ -236,9 +301,9 @@ export default function OnlineAppointment() {
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-        {filteredAppointments.map((appointment) => (
+        {currentAppointments.map((appointment, index) => (
           <Card
-            key={appointment._id + ""}
+            key={appointment._id + index}
             className="flex flex-col gap-6 items-center p-4 bg-primary-foreground"
           >
             <div className="flex flex-row gap-4 items-center w-full self-start">
@@ -297,14 +362,47 @@ export default function OnlineAppointment() {
                 className="self-end w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreateAppointment(appointment)}
               >
-                Tạo ca khám
+                Tạo hẹn khám
                 <CalendarIcon className="mr-2 h-4 w-4" />
               </Button>
             </div>
           </Card>
         ))}
       </div>
-
+      <Pagination className="self-end flex-grow items-end">
+        <PaginationContent>
+          <PaginationItem>
+            <Button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              variant="ghost"
+            >
+              <PaginationPrevious />
+            </Button>
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
+                onClick={() => setCurrentPage(i + 1)}
+                isActive={currentPage === i + 1}
+              >
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <Button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              variant="ghost"
+            >
+              <PaginationNext />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="max-w-[1000px] w-[95%]  h-[90%] overflow-y-auto">
           <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
@@ -505,7 +603,7 @@ export default function OnlineAppointment() {
                 </>
               ) : (
                 <>
-                  Tạo ca khám
+                  Tạo hẹn khám
                   <CalendarIcon className="mr-2 h-4 w-4" />
                 </>
               )}

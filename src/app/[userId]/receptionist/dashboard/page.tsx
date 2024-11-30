@@ -14,6 +14,7 @@ import ViewAppointment from "@/components/receptionist/OnlineAppointment";
 import ReceptionistProfile from "@/components/receptionist/ReceptionistProfile";
 import DirectAppoinment from "@/components/receptionist/DirectAppoinment";
 import RequestedTests from "@/components/laboratory-technician/RequestedTests";
+import Invoices from "@/components/receptionist/Invoices";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("online");
   const renderMainContent = () => {
@@ -26,6 +27,8 @@ export default function Page() {
         return <ReceptionistProfile />;
       case "test":
         return <RequestedTests />;
+      case "storage":
+        return <Invoices />;
       default:
         return null;
     }
@@ -94,7 +97,8 @@ export default function Page() {
                 <div
                   className={
                     activeSection === "test" ||
-                    activeSection === "other-service"
+                    activeSection === "other-service" ||
+                    activeSection === "storage"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
                       : "flex items-center gap-3 rounded-md px-3 py-2 text-slate-500 font-semibold"
                   }

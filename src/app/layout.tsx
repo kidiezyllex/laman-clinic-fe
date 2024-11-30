@@ -13,6 +13,7 @@ import dynamic from "next/dynamic";
 import { Toaster } from "@/components/ui/toaster";
 import { Suspense } from "react";
 import { AuthProvider } from "./auth-context";
+import { LoadingProvider } from "@/components/LoadingProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 const LocomotiveScrollWrapper = dynamic(
@@ -49,14 +50,15 @@ export default function RootLayout({
               {/* <LocomotiveScrollWrapper> */}
               <main className="flex flex-col min-h-screen bg-secondary">
                 <section className="flex flex-grow">
-                  <Container>{children}</Container>
+                  <Container>
+                    <LoadingProvider>{children}</LoadingProvider>
+                  </Container>
                 </section>
                 <Hero />
                 <Section />
                 <Footer />
               </main>
             </AuthProvider>
-
             {/* </LocomotiveScrollWrapper> */}
           </ThemeProvider>
         </body>

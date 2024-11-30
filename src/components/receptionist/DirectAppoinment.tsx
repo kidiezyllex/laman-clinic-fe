@@ -35,16 +35,18 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Patient } from "../../../lib/entity-types";
-import { formatDate, renderSpecialty } from "../../../lib/utils";
+import { formatDate, formatDate2, renderSpecialty } from "../../../lib/utils";
 import MedicalBill from "../bill/MedicalBill";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useUploadThing } from "@/utils/uploadthing";
+import { usePathname } from "next/navigation";
 
 export default function DirectAppoinment() {
   const { toast } = useToast();
   const { startUpload } = useUploadThing("imageUploader");
-
+  const pathname = usePathname();
+  const userId = pathname.split("/")[1];
   const [selectedService, setSelectedService] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -64,7 +66,7 @@ export default function DirectAppoinment() {
       toast({
         variant: "destructive",
         title: "Thất bại!",
-        description: "Vui lòng nhập mã bệnh nhân!",
+        description: "Vui lòng nhập thông tin tìm kiếm!",
       });
       return;
     }
@@ -178,13 +180,28 @@ export default function DirectAppoinment() {
       );
 
       // Create a File object from the blob
-      const file = new File([blob], "export.png", { type: "image/png" });
+      const file = new File(
+        [blob],
+        `${selectedPatient?._id}-${formatDate2(new Date())}.png`,
+        { type: "image/png" }
+      );
 
       // Upload the file
       const res = await startUpload([file]);
 
       if (res && res[0]) {
-        console.log("Upload completed:", res[0]);
+        const payload = {
+          paymentMethod: "Cash",
+          status: "Paid",
+          type: "Hoá đơn khám bệnh",
+          image: res[0].url,
+          staffId: userId,
+          staffRole: "Lễ tân",
+        };
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,
+          payload
+        );
       } else {
         throw new Error("Upload failed");
       }
@@ -218,9 +235,9 @@ export default function DirectAppoinment() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-        {filteredPatients.map((patient) => (
+        {filteredPatients.map((patient, index) => (
           <Card
-            key={patient?._id + ""}
+            key={patient?._id + "" + index}
             className="flex flex-col gap-6 justify-center items-center p-4"
           >
             <div className="flex flex-row gap-2 items-center w-full">
@@ -259,7 +276,7 @@ export default function DirectAppoinment() {
                 className="w-fit bg-blue-500 hover:bg-blue-600 dark:bg-blue-500 dark:text-white text-white dark:hover:bg-blue-600"
                 onClick={() => handleCreatePatient(patient)}
               >
-                Tạo ca khám
+                Tạo hẹn khám
                 <CalendarIcon className="mr-2 h-4 w-4" />
               </Button>
             </div>

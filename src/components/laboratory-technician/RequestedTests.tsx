@@ -373,7 +373,7 @@ export default function RequestedTests() {
                       Hoá đơn:
                     </span>
                   </div>
-                  <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white w-fit">
+                  <Badge className="bg-blue-500 dark:bg-blue-500 pointer-events-none dark:text-white w-fit">
                     Đã xuất hoá đơn xét nghiệm
                   </Badge>
                 </>
@@ -389,7 +389,7 @@ export default function RequestedTests() {
                     setIsOpen2(true);
                   }}
                 >
-                  Hoá đơn
+                  Xem hoá đơn
                   <ReceiptText className="h-4 w-4" />
                 </Button>
               ) : (

@@ -191,8 +191,6 @@ export default function AccountsManagement() {
                 <TableRow
                   key={item._id}
                   onClick={() => {
-                    console.log(item.role);
-                    console.log(item.email);
                     setSelectedUserEmail(item.email + "");
                     setSelectedUserRole(item.role + "");
                     setIsOpen(true);
@@ -215,7 +213,7 @@ export default function AccountsManagement() {
           <ScrollBar orientation="horizontal" />
         </ScrollArea>
       </div>
-      <Pagination>
+      <Pagination className="self-end flex-grow items-end">
         <PaginationContent>
           <PaginationItem>
             <Button

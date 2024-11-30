@@ -222,3 +222,14 @@ export interface User {
   password?: string;
   role?: string;
 }
+
+export interface Invoice {
+  _id: string;
+  issueDate: Date;
+  paymentMethod: string;
+  status: string;
+  type: string;
+  image: string;
+  staffId: string;
+  staffRole: string;
+}

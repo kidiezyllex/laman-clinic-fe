@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import axios from "axios";
-import { Clock, FileCog, Stethoscope, User, Warehouse } from "lucide-react";
+import { Clock, FileCog, Stethoscope, User } from "lucide-react";
 import ArrowButton from "@/components/animata/button/arrow-button";
 import { Schedule } from "../../../../lib/entity-types";
 import {
@@ -11,24 +11,19 @@ import {
   getDayOfWeek,
   renderDayOfWeek,
   renderSpecialty,
-  setTimeToDate,
 } from "../../../../lib/utils";
 export default function RoomSelector({
   setActiveSection,
   selectedSpe,
   selectedDate,
-  setSelectedDate,
 }: {
   setActiveSection: (section: string) => void;
   selectedSpe: number | null;
   selectedDate: Date | undefined;
-  setSelectedDate: (date: Date) => void;
 }) {
   const [doctorsBySpecialization, setDoctorsBySpecialization] = useState<[]>(
     []
   );
-  const [selectedSlot, setSelectedSlot] = useState("");
-  const [selectedSlotId, setSelectedSlotId] = useState("");
   const [selectedDate2, setSelectedDate2] = useState<Date>(
     selectedDate || new Date()
   );
@@ -51,15 +46,6 @@ export default function RoomSelector({
     fetchDoctors();
   }, []);
 
-  const handleSetSelectedDate = (slot: string, scheduleItemId: string) => {
-    setSelectedSlot(slot);
-    setSelectedSlotId(scheduleItemId);
-    const newDate = setTimeToDate(
-      selectedDate || new Date(),
-      slot.split("-")[0]
-    );
-    setSelectedDate(newDate);
-  };
   return (
     <div className="w-full flex flex-col gap-4">
       <p className="text-base font-semibold text-blue-500">
@@ -75,19 +61,19 @@ export default function RoomSelector({
               <div className="items-center mb-4 flex flex-row justify-between">
                 <div className="flex flex-row gap-2 items-center">
                   <Stethoscope className="w-4 h-4 text-blue-500" />
-                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                  <span className="text-slate-600 dark:text-slate-300 text-base font-medium">
                     Bác sĩ:
                   </span>
-                  <span className="text-slate-500 dark:text-primary">
+                  <span className="text-slate-500 dark:text-slate-300">
                     {(doctor as any)?.fullName}
                   </span>
                 </div>
                 <div className="flex flex-row gap-2 items-center">
                   <User className="w-4 h-4 text-blue-500" />
-                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                  <span className="text-slate-600 dark:text-slate-300 text-base font-medium">
                     Giới tính:
                   </span>
-                  <span className="text-slate-500 dark:text-primary">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {(doctor as any)?.gender.toLocaleLowerCase() === "male"
                       ? "Nam"
                       : "Nữ"}
@@ -95,10 +81,10 @@ export default function RoomSelector({
                 </div>
                 <div className="flex flex-row gap-2 items-center">
                   <FileCog className="w-4 h-4 text-blue-500" />
-                  <span className="text-slate-600 dark:text-primary text-base font-medium">
+                  <span className="text-slate-600 dark:text-slate-300 text-base font-medium">
                     Chuyên khoa:
                   </span>
-                  <span className="text-slate-500 dark:text-primary">
+                  <span className="text-slate-500 dark:text-slate-300">
                     {renderSpecialty((doctor as any)?.specialization)}
                   </span>
                 </div>
@@ -130,7 +116,7 @@ export default function RoomSelector({
                             variant={"outline"}
                             className="pointer-events-none"
                           >
-                            <span className="text-slate-600 dark:text-primary">
+                            <span className="text-slate-600 dark:text-slate-300">
                               {slot}
                             </span>
                           </Button>

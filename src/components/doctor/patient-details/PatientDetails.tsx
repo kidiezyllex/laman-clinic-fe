@@ -35,13 +35,15 @@ export default function PatientDetails({
   selectedAppointment,
   fetchAppointments,
   createdPresList,
+  pendingTestList,
 }: {
   roomNumber: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   fetchAppointments: () => void;
   selectedAppointment: Appointment | null;
-  createdPresList: [];
+  createdPresList: String[];
+  pendingTestList: String[];
 }) {
   const { toast } = useToast();
   const doctorId = usePathname().split("/")[1];
@@ -213,7 +215,8 @@ export default function PatientDetails({
                   <Button
                     variant="outline"
                     className={
-                      testResults
+                      testResults ||
+                      pendingTestList.includes(selectedAppointment.patientId)
                         ? "hidden"
                         : "bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     }
@@ -239,7 +242,7 @@ export default function PatientDetails({
                   <Button
                     variant="outline"
                     className={
-                      createdPresList
+                      createdPresList.includes(selectedAppointment._id)
                         ? "hidden"
                         : "bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     }

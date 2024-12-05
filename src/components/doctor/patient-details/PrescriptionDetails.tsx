@@ -8,8 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Calendar, FlaskConical, Stethoscope, User } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Calendar, Stethoscope } from "lucide-react";
 import { useState } from "react";
 import axios from "axios";
 

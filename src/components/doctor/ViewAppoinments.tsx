@@ -120,12 +120,7 @@ export default function ViewAppointment({
   const disabled = (appointments: any, appointment: any, index: number) => {
     let flag = false;
     // Nếu khác ngày hoặc index !==0 thì disable
-    if (
-      formatDate(new Date(appointment.appointmentDate)) !==
-        formatDate(new Date()) ||
-      index !== 0
-    )
-      flag = true;
+    if (index !== 0) flag = true;
     //Nếu đang chờ xét nghiệm hoặc có kết quả XN thì enable
     if (
       pendingTestList.includes(appointment.patientId) ||
@@ -137,6 +132,11 @@ export default function ViewAppointment({
       pendingTestList.includes(appointments[index]?.patientId)
     )
       flag = false;
+    if (
+      formatDate(new Date(appointment.appointmentDate)) !==
+      formatDate(new Date())
+    )
+      flag = true;
     return flag;
   };
   return (
@@ -254,7 +254,7 @@ export default function ViewAppointment({
                           ) : null}
                           {createdPresList.includes(appointment._id) ? (
                             <Badge className="bg-green-600 dark:text-slate-300 hover:bg-green-700">
-                              Đã tạo đơn thuốc
+                              Đã tạo Đ.TH
                             </Badge>
                           ) : null}
                         </Button>
@@ -272,6 +272,7 @@ export default function ViewAppointment({
         selectedAppointment={selectedAppointment}
         fetchAppointments={fetchAppointments}
         createdPresList={createdPresList}
+        pendingTestList={pendingTestList}
       />
     </div>
   );

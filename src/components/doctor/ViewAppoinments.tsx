@@ -25,7 +25,6 @@ import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./patient-details/PatientDetails";
 import { formatDate } from "../../../lib/utils";
 import { Badge } from "../ui/badge";
-import { apmtData } from "../../../lib/hardcoded-data";
 export default function ViewAppointment({
   roomNumber,
 }: {
@@ -44,6 +43,7 @@ export default function ViewAppointment({
   const [selectedTests, setSelectedTests] = useState<String[]>([]);
   const [pendingTestList, setPendingTestList] = useState<String[]>([]);
   const [completedTestList, setCompletedTestList] = useState<String[]>([]);
+  const [createdPresList, setCreatedPresList] = useState<String[]>([]);
   const [testType, setTestType] = useState<string[]>([]);
   const handlePreviousWeek = () => setCurrentDate(addDays(currentDate, -7));
   const handleNextWeek = () => setCurrentDate(addDays(currentDate, 7));
@@ -96,6 +96,12 @@ export default function ViewAppointment({
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/check/?doctorId=${doctorId}`
         );
         setCompletedTestList(res2.data.patientIds);
+
+        // Lấy danh sách ID lịch hẹn theo ID bác sĩ
+        const res3 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/check/?doctorId=${doctorId}`
+        );
+        setCreatedPresList(res3.data);
         setIsLoading(false);
       } else {
         setAppointments([]);
@@ -103,6 +109,7 @@ export default function ViewAppointment({
       }
     } catch (err) {
       console.log(err + "");
+      setIsLoading(false);
     }
   };
 
@@ -245,6 +252,11 @@ export default function ViewAppointment({
                               Đã có KQXN
                             </Badge>
                           ) : null}
+                          {createdPresList.includes(appointment._id) ? (
+                            <Badge className="bg-green-600 dark:text-slate-300 hover:bg-green-700">
+                              Đã tạo đơn thuốc
+                            </Badge>
+                          ) : null}
                         </Button>
                       ))}
                 </div>
@@ -259,6 +271,7 @@ export default function ViewAppointment({
         setIsOpen={setIsOpen}
         selectedAppointment={selectedAppointment}
         fetchAppointments={fetchAppointments}
+        createdPresList={createdPresList}
       />
     </div>
   );

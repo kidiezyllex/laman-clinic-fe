@@ -97,7 +97,7 @@ export default function Page() {
                   className={
                     activeSection === "test" ||
                     activeSection === "other-service" ||
-                    activeSection === "storage"
+                    activeSection === "all"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
                       : "flex items-center gap-3 rounded-md px-3 py-2 text-slate-500 font-semibold"
                   }

@@ -39,7 +39,9 @@ export default function Page() {
             data.data?.role
           }s/?email=${(data as any)?.data?.email}`
         );
-        router.push(`/${res.data._id}/${data.data?.role}/dashboard`);
+        if (data.data?.role === "patient") {
+          router.push("/");
+        } else router.push(`/${res.data._id}/${data.data?.role}/dashboard`);
         localStorage.setItem("currentId", res.data._id);
         toast({
           variant: "default",

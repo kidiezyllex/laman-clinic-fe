@@ -34,12 +34,14 @@ export default function PatientDetails({
   setIsOpen,
   selectedAppointment,
   fetchAppointments,
+  createdPresList,
 }: {
   roomNumber: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   fetchAppointments: () => void;
   selectedAppointment: Appointment | null;
+  createdPresList: [];
 }) {
   const { toast } = useToast();
   const doctorId = usePathname().split("/")[1];
@@ -236,7 +238,11 @@ export default function PatientDetails({
                   </Button>
                   <Button
                     variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
+                    className={
+                      createdPresList
+                        ? "hidden"
+                        : "bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
+                    }
                     onClick={() => {
                       setShowPrescriptionForm(!showPrescriptionForm);
                       setMainShow(false);

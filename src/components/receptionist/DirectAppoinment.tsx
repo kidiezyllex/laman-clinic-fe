@@ -263,11 +263,11 @@ export default function DirectAppoinment() {
                     {patient._id}
                   </span>
                 </p>
-                <p className="text-base">
-                  <span className="font-semibold text-base text-slate-600 dark:text-slate-300">
+                <p className="text-sm">
+                  <span className="font-semibold text-slate-600 dark:text-slate-300">
                     Tên:{" "}
                   </span>
-                  <span className="text-base text-slate-600 dark:text-slate-300">
+                  <span className="text-slate-600 dark:text-slate-300">
                     {patient.fullName}
                   </span>
                 </p>

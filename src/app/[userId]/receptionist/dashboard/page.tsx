@@ -95,9 +95,7 @@ export default function Page() {
                 </Link>
                 <div
                   className={
-                    activeSection === "test" ||
-                    activeSection === "other-service" ||
-                    activeSection === "all"
+                    activeSection === "test" || activeSection === "all"
                       ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
                       : "flex items-center gap-3 rounded-md px-3 py-2 text-slate-500 font-semibold"
                   }
@@ -115,17 +113,6 @@ export default function Page() {
                   }`}
                 >
                   <p className="ml-7">Xét nghiệm</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("other-service")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "other-service"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <p className="ml-7">Dịch vụ khác</p>
                 </Link>
                 <Link
                   href="#"

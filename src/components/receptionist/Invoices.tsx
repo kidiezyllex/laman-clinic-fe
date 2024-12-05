@@ -111,7 +111,6 @@ export default function Invoices() {
             <SelectItem value="all">Tất cả</SelectItem>
             <SelectItem value="medicalInvoice">Hoá đơn khám bệnh</SelectItem>
             <SelectItem value="testInvoice">Hoá đơn xét nghiệm</SelectItem>
-            <SelectItem value="serviceInvoice">Hoá đơn dịch vụ</SelectItem>
           </SelectContent>
         </Select>
         <Button

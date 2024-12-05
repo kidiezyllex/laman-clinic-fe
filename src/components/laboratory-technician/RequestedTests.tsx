@@ -383,14 +383,18 @@ export default function RequestedTests() {
             <div className="flex-grow flex flex-col justify-end">
               {userId.includes("LT") ? (
                 <Button
-                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                  className={
+                    requestTest?.isTestInvoiceCreated
+                      ? "hidden"
+                      : "flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                  }
                   onClick={() => {
                     setSelectedRequestTest(requestTest);
                     setSelectedPatientId(requestTest?.patientId._id + "");
                     setIsOpen2(true);
                   }}
                 >
-                  Xem hoá đơn
+                  Tạo hoá đơn
                   <ReceiptText className="h-4 w-4" />
                 </Button>
               ) : (

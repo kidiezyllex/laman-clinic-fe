@@ -11,10 +11,14 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { formatDate } from "../../../lib/utils";
-import { FileImage, FileText } from "lucide-react";
+import { formatDate, formatDate2 } from "../../../lib/utils";
+import { FileImage, FileText, Loader2, Receipt } from "lucide-react";
 import { RequestTest } from "../../../lib/entity-types";
 import axios from "axios";
+import { useUploadThing } from "@/utils/uploadthing";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function TestBill({
   selectedTest,
@@ -23,6 +27,11 @@ export default function TestBill({
   selectedTest: RequestTest | null;
   fetchData: () => void;
 }) {
+  const { startUpload } = useUploadThing("imageUploader");
+  const pathname = usePathname();
+  const userId = pathname.split("/")[1];
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   const exportToPDF = async () => {
     try {
       const input = document.getElementById("preview");
@@ -49,30 +58,63 @@ export default function TestBill({
     }
   };
 
-  const exportToImage = async () => {
+  const exportAndUploadImage = async () => {
     try {
       const input = document.getElementById("preview");
       if (!input) throw new Error("Preview element not found");
 
       const canvas = await html2canvas(input);
-      const link = document.createElement("a");
-      link.download = `TB-${selectedTest?.patientId._id}-${formatDate(
-        new Date()
-      )}.png`;
-      link.href = canvas.toDataURL();
-      link.click();
-      const res = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/${selectedTest?._id}`,
-        {
-          isTestInvoiceCreated: true,
-        }
+
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve: any) =>
+        canvas.toBlob(resolve, "image/png")
       );
-      fetchData();
+
+      // Create a File object from the blob
+      const file = new File(
+        [blob],
+        `${selectedTest?.patientId}-${formatDate2(new Date())}.png`,
+        { type: "image/png" }
+      );
+
+      // Upload the file
+      const res = await startUpload([file]);
+
+      if (res && res[0]) {
+        const payload = {
+          paymentMethod: "Cash",
+          status: "Paid",
+          type: "testInvoice",
+          image: res[0].url,
+          staffId: userId,
+          staffRole: "Lễ tân",
+          issueDate: new Date(),
+          patientId: selectedTest?.patientId,
+        };
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,
+          payload
+        );
+        console.log(response.data);
+      } else {
+        throw new Error("Upload failed");
+      }
     } catch (err) {
       console.error(err);
     }
   };
 
+  const handleCreateTestBill = async () => {
+    setIsLoading(true);
+    await exportAndUploadImage();
+    await exportToPDF();
+    setIsLoading(false);
+    toast({
+      variant: "default",
+      title: "Thành công!",
+      description: "Đã tạo hoá đơn xét nghiệm!",
+    });
+  };
   return (
     <div>
       <div
@@ -214,18 +256,25 @@ export default function TestBill({
       </div>
       <div className="flex justify-end m-4 gap-3">
         <Button
-          onClick={exportToPDF}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          disabled={isLoading}
+          onClick={handleCreateTestBill}
+          className={
+            selectedTest?.isTestInvoiceCreated
+              ? "hidden"
+              : "flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          }
         >
-          Xuất File PDF
-          <FileText className="mr-2 h-4 w-4" />
-        </Button>
-        <Button
-          onClick={exportToImage}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          Xuất File Ảnh
-          <FileImage className="mr-2 h-4 w-4" />
+          {isLoading ? (
+            <>
+              Đang xử lý
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            <>
+              Tạo hoá đơn
+              <Receipt className="h-4 w-4" />{" "}
+            </>
+          )}
         </Button>
       </div>
     </div>

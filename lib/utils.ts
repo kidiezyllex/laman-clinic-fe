@@ -171,6 +171,15 @@ export const renderRole = (role: string) => {
   return roles[role] || "";
 };
 
+export const renderInvoiceType = (invoice: string) => {
+  const invoices: { [key: string]: string } = {
+    medicalInvoice: "Hoá đơn khám bệnh",
+    testInvoice: "Hoá đơn xét nghiệm",
+    serviceInvoice: "Hoá đơn dịch vụ",
+  };
+  return invoices[invoice] || "";
+};
+
 export const ServiceNames = [
   "Khám tổng quát",
   "Khám sức khỏe định kỳ",

@@ -112,7 +112,7 @@ export default function CreateProfileForm({
       dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
       address:
         data.district.split("-").slice(1).join("-") +
-        "," +
+        ", " +
         data.province.split("-").slice(1).join("-"),
     };
     try {
@@ -121,30 +121,36 @@ export default function CreateProfileForm({
         patientPayload
       );
 
-      const userPayload = {
-        fullName: data.fullName,
-        gender: data.gender,
-        email: data.email,
-        password: data.password,
-        role: "patient",
-        phone: data.phone.startsWith("0")
-          ? "+84" + data.phone.slice(1)
-          : data.phone,
-      };
-      const res2 = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
-        userPayload
-      );
+      // Nếu là lễ tân hoặc đăng nhập = clerk
+      if (
+        pathname.split("_").includes("/user") ||
+        pathname.split("/").includes("receptionist")
+      ) {
+        const userPayload = {
+          fullName: data.fullName,
+          gender: data.gender,
+          email: data.email,
+          password: data.password,
+          role: "patient",
+          phone: data.phone.startsWith("0")
+            ? "+84" + data.phone.slice(1)
+            : data.phone,
+        };
+        const res2 = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/users`,
+          userPayload
+        );
+      }
       toast({
         variant: "default",
         title: "Tạo hồ sơ thành công!",
-        description: "Hồ sơ bệnh nhân đã được tạo.",
+        description: "Hồ sơ bệnh nhân đã được tạo!",
       });
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Tạo hồ sơ thất bại!",
-        description: "Đã xảy ra lỗi.",
+        description: "Đã xảy ra lỗi!",
       });
     } finally {
       setIsLoading(false);

@@ -36,7 +36,6 @@ import { Label } from "../ui/label";
 import { medicationData } from "../../../lib/hardcoded-data";
 import { MedicationRow, Patient } from "../../../lib/entity-types";
 import { Card } from "../ui/card";
-import PrescriptionBill from "../bill/PrescriptionBill";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),

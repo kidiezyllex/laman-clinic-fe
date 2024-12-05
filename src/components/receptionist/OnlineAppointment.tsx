@@ -144,7 +144,7 @@ export default function OnlineAppointment() {
       // Xuất hoá đơn
       await exportToPDF();
 
-      // Upload hoá đơn
+      // Lưu hoá đơn bằng Uploadthing
       await exportAndUploadImage();
 
       // Kafka xử lý
@@ -169,6 +169,8 @@ export default function OnlineAppointment() {
       setIsLoading(false);
       setIsDialogOpen(false);
       setReason("");
+      setChecked(false);
+      setSelectedService("");
       toast({
         variant: "default",
         title: "Thành công!",
@@ -243,15 +245,18 @@ export default function OnlineAppointment() {
         const payload = {
           paymentMethod: "Cash",
           status: "Paid",
-          type: "Hoá đơn khám bệnh",
+          type: "medicalInvoice",
           image: res[0].url,
           staffId: userId,
           staffRole: "Lễ tân",
+          issueDate: new Date(),
+          patientId: selectedAppointment?.patientId,
         };
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,
           payload
         );
+        console.log(response.data);
       } else {
         throw new Error("Upload failed");
       }

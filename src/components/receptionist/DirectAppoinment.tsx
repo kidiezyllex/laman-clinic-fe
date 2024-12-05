@@ -193,10 +193,12 @@ export default function DirectAppoinment() {
         const payload = {
           paymentMethod: "Cash",
           status: "Paid",
-          type: "Hoá đơn khám bệnh",
+          type: "medicalInvoice",
           image: res[0].url,
           staffId: userId,
           staffRole: "Lễ tân",
+          issueDate: new Date(),
+          patientId: selectedPatient?._id,
         };
         const response = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,

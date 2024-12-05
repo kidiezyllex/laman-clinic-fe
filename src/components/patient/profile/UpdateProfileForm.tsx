@@ -52,7 +52,6 @@ export default function UpdateProfileForm({
 }) {
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
-  const { userId } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -94,7 +93,6 @@ export default function UpdateProfileForm({
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true);
-    const pathName = pathname.split("/");
     const payload = {
       fullName: data.fullName,
       gender: data.gender,
@@ -104,11 +102,11 @@ export default function UpdateProfileForm({
       dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
       address:
         data.district.split("-").slice(1).join("-") +
-        "," +
+        ", " +
         data.province.split("-").slice(1).join("-"),
     };
     try {
-      const response = await axios.patch(
+      const res = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${
           pathname.split("/")[1]
         }`,
@@ -116,7 +114,7 @@ export default function UpdateProfileForm({
       );
       toast({
         title: "Thành công!",
-        description: "Hồ sơ đã được cập nhật!",
+        description: "Cập nhật hồ sơ thành công!",
       });
     } catch (error) {
       toast({
@@ -142,7 +140,7 @@ export default function UpdateProfileForm({
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-md bg-primary-foreground border-blue-300 dark:border-secondary">
+    <div className="p-4 border rounded-md bg-primary-foreground border-blue-300 dark:border-secondary">
       <h3 className="text-lg font-semibold text-blue-500 mb-4">
         CẬP NHẬT HỒ SƠ BỆNH NHÂN
       </h3>

@@ -75,7 +75,7 @@ export default function PatientProfile() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-full">
       <p className="text-base font-semibold text-blue-500">
-        {!patient ? "VUI LÒNG TẠO HỒ SƠ" : "HỒ SƠ BỆNH NHÂN"}
+        {!patient ? "VUI LÒNG TẠO HỒ SƠ ĐỂ ĐẶT LỊCH KHÁM" : "HỒ SƠ BỆNH NHÂN"}
       </p>
       {patient && (
         <>

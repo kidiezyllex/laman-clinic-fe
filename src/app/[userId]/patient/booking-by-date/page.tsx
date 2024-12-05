@@ -28,17 +28,13 @@ export default function Page() {
   // Fetch Data Bệnh nhân
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      try {
-        if (!pathname.split("_").includes("/user")) {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
-          );
-          setPatient(response.data);
-        } else {
-          setPatient(null);
-        }
-      } catch (error) {
-        console.error(error);
+      if (!pathname.split("_").includes("/user")) {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${patientId}`
+        );
+        setPatient(response.data);
+      } else {
+        setPatient(null);
       }
     };
 
@@ -67,7 +63,6 @@ export default function Page() {
             setActiveSection={setActiveSection}
             selectedDate={selectedDate}
             selectedSpe={selectedSpe}
-            setSelectedDate={setSelectedDate}
           ></RoomSelector>
         );
       case "confirm":

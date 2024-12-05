@@ -101,3 +101,9 @@ Thêm border-2 và border-secondary cho Button primary để cho 2 cái button �
 text-slate-500 dark:text-primary
 
 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+
+
+Fix:
++ Loading khúc nhập roomNumber
++ Lỗi search chuyên khoa đặt lịch khám
++ Lúc tạo ca khám onlien xong cho 1 item, thì set các giá trị về ban đầu

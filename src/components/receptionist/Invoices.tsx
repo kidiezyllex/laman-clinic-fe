@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate2 } from "../../../lib/utils";
+import { formatDate2, renderInvoiceType } from "../../../lib/utils";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
@@ -55,6 +55,7 @@ export default function Invoices() {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`
       );
+      // Lọc theo ID lễ tân
       setInvoices(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -66,11 +67,15 @@ export default function Invoices() {
     fetchData();
   }, []);
 
-  const filteredInvoices = invoices.filter(
-    (invoice) =>
-      invoice?.type?.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (filterRole === "all" || invoice.type === filterRole)
-  );
+  const filteredInvoices = invoices
+    .filter(
+      (invoice) =>
+        invoice?.type?.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (filterRole === "all" || invoice.type === filterRole)
+    )
+    .sort((a, b) => {
+      return new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime();
+    });
 
   const totalPages = Math.ceil(filteredInvoices.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -104,9 +109,9 @@ export default function Invoices() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="medical">Hoá đơn khám bệnh</SelectItem>
-            <SelectItem value="test">Hoá đơn xét nghiệm</SelectItem>
-            <SelectItem value="service">Hoá đơn dịch vụ</SelectItem>
+            <SelectItem value="medicalInvoice">Hoá đơn khám bệnh</SelectItem>
+            <SelectItem value="testInvoice">Hoá đơn xét nghiệm</SelectItem>
+            <SelectItem value="serviceInvoice">Hoá đơn dịch vụ</SelectItem>
           </SelectContent>
         </Select>
         <Button
@@ -135,7 +140,7 @@ export default function Invoices() {
               {currentInvoices.map((item, index) => (
                 <TableRow key={item._id}>
                   <TableCell>{startIndex + index + 1}</TableCell>
-                  <TableCell>{item.type}</TableCell>
+                  <TableCell>{renderInvoiceType(item.type)}</TableCell>
                   <TableCell>{formatDate2(item.issueDate)}</TableCell>
                   <TableCell>{item.staffRole}</TableCell>
                   <TableCell>

@@ -23,9 +23,9 @@ import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Appointment, Doctor, TestType } from "../../../lib/entity-types";
 import PatientDetails from "./patient-details/PatientDetails";
-import { apmtData } from "../../../lib/hardcoded-data";
 import { formatDate } from "../../../lib/utils";
 import { Badge } from "../ui/badge";
+import { apmtData } from "../../../lib/hardcoded-data";
 export default function ViewAppointment({
   roomNumber,
 }: {
@@ -55,7 +55,6 @@ export default function ViewAppointment({
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${appointment.patientId}`
     );
-    // console.log(appointment);
     setSelectedAppointment({ ...response.data, ...appointment });
     setIsOpen(true);
   };
@@ -86,7 +85,6 @@ export default function ViewAppointment({
         // );
 
         // setAppointments(response.data);
-
         setAppointments(apmtData);
 
         // Lấy danh sách PatientId đang chờ xét nghiệm

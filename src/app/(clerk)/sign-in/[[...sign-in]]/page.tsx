@@ -9,9 +9,8 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
-import { LoginResponse } from "../../../../../lib/entity-types";
 import { Loader2, LogIn } from "lucide-react";
-
+import { renderRole } from "../../../../../lib/utils";
 export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,23 +18,15 @@ export default function Page() {
   const router = useRouter();
   const { toast } = useToast();
   const { setToken } = useAuthContext();
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
+        { email, password }
       );
-
-      const data: LoginResponse = await response.json();
+      const data = response.data;
       const dummyToken =
         "dummy_token_" + Math.random().toString(36).substr(2, 9);
       setToken(dummyToken);
@@ -43,90 +34,17 @@ export default function Page() {
       localStorage.setItem("role", (data as any)?.data?.role);
 
       if (data.status === "success") {
-        if (data.data?.role === "doctor") {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/?email=${
-              (data as any)?.data?.email
-            }`
-          );
-          router.push(`/${res.data._id}/doctor/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Bác sĩ.",
-          });
-        } else if (data.data?.role === "receptionist") {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/?email=${
-              (data as any)?.data?.email
-            }`
-          );
-          router.push(`/${res.data._id}/receptionist/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Lễ tân.",
-          });
-        } else if (data.data?.role === "pharmacist") {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/pharmacists/?email=${
-              (data as any)?.data?.email
-            }`
-          );
-          router.push(`/${res.data._id}/pharmacist/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Dược sĩ.",
-          });
-        } else if (data.data?.role === "laboratory-technician") {
-          const res = await axios.get(
-            `${
-              process.env.NEXT_PUBLIC_BACKEND_API_URL
-            }/laboratory-technicians/?email=${(data as any)?.data?.email}`
-          );
-          router.push(`/${res.data._id}/laboratory-technician/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Y tá xét nghiệm.",
-          });
-        } else if (data.data?.role === "cashier") {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/cashiers/?email=${
-              (data as any)?.data?.email
-            }`
-          );
-          router.push(`/${res.data._id}/cashier/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Thu ngân.",
-          });
-        } else if (data.data?.role === "admin") {
-          const res = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/admins/?email=${
-              (data as any)?.data?.email
-            }`
-          );
-          router.push(`/${res.data._id}/admin/dashboard`);
-          localStorage.setItem("currentId", res.data._id);
-          toast({
-            variant: "default",
-            title: "Thành công!",
-            description: "Đăng nhập với quyền Quản trị viên.",
-          });
-        } else router.push("/");
-      } else {
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
+            data.data?.role
+          }s/?email=${(data as any)?.data?.email}`
+        );
+        router.push(`/${res.data._id}/${data.data?.role}/dashboard`);
+        localStorage.setItem("currentId", res.data._id);
         toast({
-          variant: "destructive",
-          title: "Thất bại!",
-          description: data.message,
+          variant: "default",
+          title: "Thành công!",
+          description: `Đăng nhập với quyền ${renderRole(data.data?.role)}!`,
         });
       }
     } catch (error) {

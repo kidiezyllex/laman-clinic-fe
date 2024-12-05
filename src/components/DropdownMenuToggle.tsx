@@ -27,10 +27,10 @@ export default function UserMenu() {
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/clerk/${userId}`
         );
-        if (response2.data === null) {
+        if (response2?.data === null) {
           setCurrentId(userId);
         } else {
-          setCurrentId(response2.data._id);
+          setCurrentId(response2?.data?._id);
         }
       };
       setId();
@@ -42,7 +42,7 @@ export default function UserMenu() {
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
         );
-        setCurrentId(res.data._id || "");
+        setCurrentId(res?.data?._id || "");
       };
       const role = localStorage.getItem("role");
       if (role === "patient") setId2();

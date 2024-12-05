@@ -99,7 +99,7 @@ export interface Medication {
 
 export interface Prescription {
   _id: string;
-  patientId: Patient;
+  patientId: string;
   doctorId: string;
   medications: Medication[];
   dateIssued: Date;

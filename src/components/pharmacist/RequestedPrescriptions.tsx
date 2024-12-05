@@ -16,7 +16,10 @@ import {
   CircleCheckBig,
   Edit,
   Eye,
+  FlaskConical,
   History,
+  Pill,
+  RefreshCw,
   RotateCcw,
   SearchIcon,
   Stethoscope,
@@ -26,8 +29,13 @@ import {
 import axios from "axios";
 import { Checkbox } from "@/components/ui/checkbox";
 import PrescriptionBill from "../bill/PrescriptionBill";
-import { formatDate } from "../../../lib/utils";
-import { Medication, Patient, Prescription } from "../../../lib/entity-types";
+import { formatDate, formatDate2 } from "../../../lib/utils";
+import {
+  Medication,
+  Patient,
+  Prescription,
+  Test,
+} from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
 import {
   Select,
@@ -37,8 +45,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "../ui/badge";
+import { usePathname } from "next/navigation";
+import PrescriptionDetails from "../doctor/patient-details/PrescriptionDetails";
+import TestResults from "../doctor/patient-details/TestResults";
+import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
 export default function RequestedPrescriptions() {
+  const userId = usePathname().split("/")[1];
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [customQuantities, setCustomQuantities] = useState<{
     [key: string]: { [key: string]: number };
@@ -66,6 +80,7 @@ export default function RequestedPrescriptions() {
   const [filterType, setFilterType] = useState("all");
   const fetchPrescriptions = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`
       );
@@ -74,12 +89,14 @@ export default function RequestedPrescriptions() {
           (item: { status: string }) => item.status === "Scheduled"
         )
       );
+      setIsLoading(false);
     } catch (error) {
       toast({
         variant: "destructive",
         title: "Thất bại",
         description: error + "",
       });
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -107,9 +124,7 @@ export default function RequestedPrescriptions() {
       const searchTermLower = searchTerm.toLowerCase();
       if (filterType === "today")
         return formatDate(prescription.dateIssued) === formatDate(new Date());
-      return prescription?.patientId?._id
-        ?.toLowerCase()
-        .includes(searchTermLower);
+      return prescription?.patientId?.toLowerCase()?.includes(searchTermLower);
     })
     .sort((a, b) => {
       if (filterType === "old") {
@@ -139,6 +154,7 @@ export default function RequestedPrescriptions() {
           status: "Completed",
           dateIssued: new Date(),
           medications: finalMedications,
+          pharmacistId: userId,
         }
       );
       finalMedications.forEach(async (item: any) => {
@@ -260,7 +276,25 @@ export default function RequestedPrescriptions() {
       [prescriptionId]: [],
     }));
   };
+  const [selectedPrescription, setSelectedPrescription] =
+    useState<Prescription | null>(null);
+  const [selectedTest, setSelectedTest] = useState<Test | null>(null);
+  const [selectedTestIndex, setSelectedTestIndex] = useState(-1);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedPresIndex, setSelectedPresIndex] = useState(-1);
+  const handleViewPrescriptionDetails = async (appointmentId: string) => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/?appointmentId=${appointmentId}`
+    );
+    setSelectedPrescription(res.data);
+  };
 
+  const handleViewTestDetails = async (appointmentId: string) => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?appointmentId=${appointmentId}`
+    );
+    setSelectedTest(res.data);
+  };
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500">
@@ -287,8 +321,13 @@ export default function RequestedPrescriptions() {
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={fetchPrescriptions}>
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchPrescriptions}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1">
@@ -320,7 +359,7 @@ export default function RequestedPrescriptions() {
               </p>
               <p className="flex items-center text-sm">
                 <User className="h-4 w-4 mr-2" />
-                Mã Bệnh nhân: {prescription.patientId._id}
+                Mã Bệnh nhân: {prescription.patientId}
               </p>
               <p className="flex items-center text-sm">
                 <Stethoscope className="h-4 w-4 mr-2" />
@@ -401,7 +440,7 @@ export default function RequestedPrescriptions() {
               <Button
                 onClick={() =>
                   setSelectedPatientId({
-                    patientId: prescription.patientId._id + "",
+                    patientId: prescription.patientId + "",
                     id: prescription._id,
                   })
                 }
@@ -505,24 +544,24 @@ export default function RequestedPrescriptions() {
                       Số ĐT: {selectedPatientMedicalHistory?.phone}
                     </p>
                   </div>
-                  <Table>
+                  <Table className="border bg-background pointer-events-none">
                     <TableHeader>
                       <TableRow>
                         <TableHead>STT</TableHead>
-                        <TableHead>Ngày khám</TableHead>
+                        <TableHead>Ngày giờ khám</TableHead>
                         <TableHead>Tiền sử bệnh</TableHead>
                         <TableHead>Chẩn đoán bệnh</TableHead>
-                        <TableHead>KQ Xét nghiệm</TableHead>
                         <TableHead>Phương pháp điều trị</TableHead>
+                        <TableHead>Đơn thuốc</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {selectedPatientMedicalHistory?.medicalHistory?.map(
-                        (history: any, index: number) => (
+                        (history: any, index) => (
                           <TableRow key={history.diagnosisDate}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell>
-                              {formatDate(history?.diagnosisDate)}
+                              {formatDate2(history?.diagnosisDate)}
                             </TableCell>
                             <TableCell>
                               {history.disease.split("_")[0]}
@@ -531,17 +570,44 @@ export default function RequestedPrescriptions() {
                               {history.disease.split("_")[1]}
                             </TableCell>
                             <TableCell>
-                              {history.disease.split("_")[2]}
-                            </TableCell>
-                            <TableCell>
                               {history.treatment.split("_")[0] +
                                 history.treatment.split("_")[1]}
+                            </TableCell>
+                            <TableCell>
+                              <Button
+                                onClick={() => {
+                                  setSelectedPresIndex(index);
+                                  handleViewPrescriptionDetails(
+                                    history?.appointmentId
+                                  );
+                                  setIsOpen(true);
+                                }}
+                                variant="secondary"
+                                className={
+                                  index === selectedPresIndex
+                                    ? "w-fit flex items-center space-x-2 bg-blue-500 hover:text-white hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                                    : "border border-slate-00 dark:border-none pointer-events-auto"
+                                }
+                              >
+                                Chi tiết
+                                <Pill className="w-4 h-4" />
+                              </Button>
                             </TableCell>
                           </TableRow>
                         )
                       )}
                     </TableBody>
                   </Table>
+                  <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                    <DialogTitle></DialogTitle>
+                    <DialogContent className="max-w-[900px] w-[90%] h-[90%] overflow-y-auto">
+                      {selectedPrescription && (
+                        <PrescriptionDetails
+                          selectedPrescription={selectedPrescription}
+                        ></PrescriptionDetails>
+                      )}
+                    </DialogContent>
+                  </Dialog>
                 </div>
               ))}
           </Card>

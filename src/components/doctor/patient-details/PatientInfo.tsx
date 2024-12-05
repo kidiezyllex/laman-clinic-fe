@@ -1,5 +1,5 @@
 import { formatDate, formatDate2 } from "../../../../lib/utils";
-import { Appointment, Prescription } from "../../../../lib/entity-types";
+import { Appointment, Prescription, Test } from "../../../../lib/entity-types";
 import {
   Calendar,
   Cat,
@@ -25,6 +25,7 @@ import { Button } from "@/components/ui/button";
 import axios from "axios";
 import PrescriptionDetails from "./PrescriptionDetails";
 import { useState } from "react";
+import TestResults from "./TestResults";
 
 interface PatientInfoProps {
   selectedAppointment: Appointment;
@@ -33,12 +34,21 @@ interface PatientInfoProps {
 export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
   const [selectedPrescription, setSelectedPrescription] =
     useState<Prescription | null>(null);
+  const [selectedTest, setSelectedTest] = useState<Test | null>(null);
+  const [selectedTestIndex, setSelectedTestIndex] = useState(-1);
+  const [selectedPresIndex, setSelectedPresIndex] = useState(-1);
   const handleViewPrescriptionDetails = async (appointmentId: string) => {
-    console.log(appointmentId);
     const res = await axios.get(
       `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/?appointmentId=${appointmentId}`
     );
     setSelectedPrescription(res.data);
+  };
+
+  const handleViewTestDetails = async (appointmentId: string) => {
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?appointmentId=${appointmentId}`
+    );
+    setSelectedTest(res.data);
   };
   return (
     <>
@@ -147,13 +157,18 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                       </TableCell>
                       <TableCell>
                         <Button
-                          onClick={() =>
+                          onClick={() => {
+                            setSelectedPresIndex(index);
                             handleViewPrescriptionDetails(
                               history?.appointmentId
-                            )
-                          }
+                            );
+                          }}
                           variant="secondary"
-                          className="border border-slate-00 dark:border-none pointer-events-auto"
+                          className={
+                            index === selectedPresIndex
+                              ? "w-fit flex items-center space-x-2 bg-blue-500 hover:text-white hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                              : "border border-slate-00 dark:border-none pointer-events-auto"
+                          }
                         >
                           Chi tiết
                           <Pill className="w-4 h-4" />
@@ -161,13 +176,16 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                       </TableCell>
                       <TableCell>
                         <Button
-                          onClick={() =>
-                            handleViewPrescriptionDetails(
-                              history?.appointmentId
-                            )
-                          }
+                          onClick={() => {
+                            setSelectedTestIndex(index);
+                            handleViewTestDetails(history?.appointmentId);
+                          }}
                           variant="secondary"
-                          className="border border-slate-00 dark:border-none pointer-events-auto"
+                          className={
+                            index === selectedTestIndex
+                              ? "w-fit flex items-center space-x-2 bg-blue-500 hover:text-white hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                              : "border border-slate-00 dark:border-none pointer-events-auto"
+                          }
                         >
                           Chi tiết
                           <FlaskConical className="w-4 h-4" />
@@ -186,6 +204,7 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
           selectedPrescription={selectedPrescription}
         ></PrescriptionDetails>
       )}
+      {selectedTest && <TestResults testResults={selectedTest}></TestResults>}
     </>
   );
 }

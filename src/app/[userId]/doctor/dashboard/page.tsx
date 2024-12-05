@@ -151,38 +151,17 @@ export default function Page() {
                   <ContactRound className="h-4 w-4" />
                   Lịch hẹn
                 </Link>
-                <div
-                  className={
-                    activeSection === "completedApt" ||
-                    activeSection === "completedSv"
-                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
-                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
-                  }
-                >
-                  <CircleCheck className="h-4 w-4" />
-                  Hoàn thành
-                </div>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("completedApt")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all ${
                     activeSection === "completedApt"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500"
+                      : "text-slate-500"
                   }`}
                 >
-                  <p className="ml-7">Hẹn khám</p>
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("completedSv")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
-                    activeSection === "completedSv"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  <p className="ml-7">Dịch vụ</p>
+                  <CircleCheck className="h-4 w-4" />
+                  Hoàn thành
                 </Link>
                 <Link
                   href="#"

@@ -13,7 +13,7 @@ import { FlaskConical, RotateCcw, SearchIcon } from "lucide-react";
 import axios from "axios";
 import { Test } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, formatDate2 } from "../../../lib/utils";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import {
@@ -137,8 +137,8 @@ export default function CompletedTests() {
           {filteredTests.map((test, index) => (
             <TableRow key={test._id}>
               <TableCell>{index + 1}</TableCell>
-              <TableCell>{formatDate(test.dateRequested)}</TableCell>
-              <TableCell>{formatDate(test.datePerformed)}</TableCell>
+              <TableCell>{formatDate2(test.dateRequested)}</TableCell>
+              <TableCell>{formatDate2(test.datePerformed)}</TableCell>
               <TableCell>{test.patientId}</TableCell>
               <TableCell>
                 <Badge

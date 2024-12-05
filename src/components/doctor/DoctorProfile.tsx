@@ -9,6 +9,7 @@ import {
   ArrowUpFromLine,
   MapPinIcon,
   UserIcon,
+  SquareActivity,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -18,6 +19,7 @@ import {
   formatDate,
   generateTimeSlots,
   renderDayOfWeek,
+  renderSpecialty,
 } from "../../../lib/utils";
 import { Separator } from "../ui/separator";
 export default function DoctorProfile() {
@@ -103,6 +105,15 @@ export default function DoctorProfile() {
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
                 {doctor.email}
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <SquareActivity className="text-blue-500 h-4 w-4" />
+              <p className="text-sm font-medium text-start text-slate-600 dark:text-slate-300">
+                Chuyên khoa:
+              </p>
+              <p className="text-sm text-slate-600 text-start dark:text-slate-300">
+                {renderSpecialty(doctor.specialization + "")}
               </p>
             </div>
           </div>

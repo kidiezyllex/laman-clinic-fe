@@ -1,14 +1,16 @@
-import { formatDate } from "../../../../lib/utils";
-import { Appointment } from "../../../../lib/entity-types";
+import { formatDate, formatDate2 } from "../../../../lib/utils";
+import { Appointment, Prescription } from "../../../../lib/entity-types";
 import {
   Calendar,
   Cat,
   Dog,
   Eye,
   FileText,
+  FlaskConical,
   Mail,
   MapPin,
   Phone,
+  Pill,
   User,
 } from "lucide-react";
 import {
@@ -20,12 +22,24 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
+import axios from "axios";
+import PrescriptionDetails from "./PrescriptionDetails";
+import { useState } from "react";
 
 interface PatientInfoProps {
   selectedAppointment: Appointment;
 }
 
 export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
+  const [selectedPrescription, setSelectedPrescription] =
+    useState<Prescription | null>(null);
+  const handleViewPrescriptionDetails = async (appointmentId: string) => {
+    console.log(appointmentId);
+    const res = await axios.get(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions/?appointmentId=${appointmentId}`
+    );
+    setSelectedPrescription(res.data);
+  };
   return (
     <>
       <div className="flex items-center space-x-4 border rounded-md p-4 mr-4 bg-primary-foreground">
@@ -109,11 +123,12 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
               <TableHeader>
                 <TableRow>
                   <TableHead>STT</TableHead>
-                  <TableHead>Ngày khám</TableHead>
+                  <TableHead>Ngày giờ khám</TableHead>
                   <TableHead>Tiền sử bệnh</TableHead>
                   <TableHead>Chẩn đoán bệnh</TableHead>
                   <TableHead>Phương pháp điều trị</TableHead>
                   <TableHead>Đơn thuốc</TableHead>
+                  <TableHead>Kết quả xét nghiệm</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -122,7 +137,7 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                     <TableRow key={history.diagnosisDate}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>
-                        {formatDate(history?.diagnosisDate)}
+                        {formatDate2(history?.diagnosisDate)}
                       </TableCell>
                       <TableCell>{history.disease.split("_")[0]}</TableCell>
                       <TableCell>{history.disease.split("_")[1]}</TableCell>
@@ -132,11 +147,30 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                       </TableCell>
                       <TableCell>
                         <Button
+                          onClick={() =>
+                            handleViewPrescriptionDetails(
+                              history?.appointmentId
+                            )
+                          }
                           variant="secondary"
                           className="border border-slate-00 dark:border-none pointer-events-auto"
                         >
-                          Xem đơn
-                          <Eye className="w-4 h-4" />
+                          Chi tiết
+                          <Pill className="w-4 h-4" />
+                        </Button>
+                      </TableCell>
+                      <TableCell>
+                        <Button
+                          onClick={() =>
+                            handleViewPrescriptionDetails(
+                              history?.appointmentId
+                            )
+                          }
+                          variant="secondary"
+                          className="border border-slate-00 dark:border-none pointer-events-auto"
+                        >
+                          Chi tiết
+                          <FlaskConical className="w-4 h-4" />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -147,6 +181,11 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
           )}
         </div>
       </div>
+      {selectedPrescription && (
+        <PrescriptionDetails
+          selectedPrescription={selectedPrescription}
+        ></PrescriptionDetails>
+      )}
     </>
   );
 }

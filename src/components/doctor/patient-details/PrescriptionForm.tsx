@@ -14,7 +14,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, Pill, Plus, X } from "lucide-react";
-import { Medication, MedicationRow } from "../../../../lib/entity-types";
+import {
+  Appointment,
+  Medication,
+  MedicationRow,
+} from "../../../../lib/entity-types";
+import { usePathname } from "next/navigation";
+import axios from "axios";
+import { useToast } from "@/hooks/use-toast";
 
 const medicationSchema = z.object({
   medicationName: z.string().min(1, "Vui lòng chọn thuốc"),
@@ -29,17 +36,21 @@ const formSchema = z.object({
 
 interface PrescriptionFormProps {
   medications: Medication[];
-  handleCreatePrescription: () => Promise<void>;
   handleCancel: () => void;
   isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  selectedAppointment: Appointment;
 }
 
 export default function PrescriptionForm({
   medications,
-  handleCreatePrescription,
   handleCancel,
   isLoading,
+  setIsLoading,
+  selectedAppointment,
 }: PrescriptionFormProps) {
+  const doctorId = usePathname().split("/")[1];
+  const { toast } = useToast();
   const [rows, setRows] = useState<MedicationRow[]>([
     {
       id: 1,
@@ -99,6 +110,38 @@ export default function PrescriptionForm({
         row.id === rowId ? { ...row, ...findMedication } : row
       )
     );
+  };
+
+  // Tạo đơn thuốc
+  const handleCreatePrescription = async () => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        patientId: selectedAppointment?.patientId,
+        doctorId: doctorId,
+        medications: rows,
+        dateIssued: new Date(),
+        appointmentId: selectedAppointment?._id,
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
+        payload
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo đơn thuốc cho bệnh nhân!",
+      });
+      setIsLoading(false);
+      handleCancel();
+    }
   };
 
   return (

@@ -4,25 +4,66 @@ import { Input } from "@/components/ui/input";
 import { Loader2, CalendarIcon, X } from "lucide-react";
 import CalendarSelector from "./CalendarSelector";
 import { Appointment } from "../../../../lib/entity-types";
+import { useToast } from "@/hooks/use-toast";
+import { usePathname } from "next/navigation";
+import axios from "axios";
 
 interface ReExaminationFormProps {
-  handleCreateReExamination: (
-    selectedAppointment: Appointment
-  ) => Promise<void>;
   handleCancel: () => void;
   isLoading: boolean;
   selectedAppointment: Appointment;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 export default function ReExaminationForm({
-  handleCreateReExamination,
   handleCancel,
   isLoading,
   selectedAppointment,
+  setIsLoading,
 }: ReExaminationFormProps) {
   const [reason, setReason] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date>();
-
+  const { toast } = useToast();
+  const doctorId = usePathname().split("/")[1];
+  // Tạo tái khám
+  const handleCreateReExamination = async (
+    selectedAppointment: Appointment
+  ) => {
+    try {
+      setIsLoading(true);
+      const payload = {
+        patientId: selectedAppointment?.patientId + "",
+        appointmentDateByPatient: new Date(),
+        specialization: selectedAppointment?.specialization,
+        fullName: selectedAppointment.fullName,
+        dateOfBirth: selectedAppointment.dateOfBirth || new Date(),
+        gender: selectedAppointment.gender || "",
+        address: selectedAppointment.address,
+        phone: selectedAppointment.phone || "",
+        email: selectedAppointment.email,
+        doctorId: doctorId,
+        reason: "",
+      };
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
+        payload
+      );
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã tạo tái khám cho bệnh nhân!",
+      });
+      setIsLoading(false);
+      handleCancel();
+    }
+  };
   return (
     <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
       <h3 className="text-md font-semibold mr-4 self-center">

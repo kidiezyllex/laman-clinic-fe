@@ -200,6 +200,7 @@ export default function RequestedTests() {
         datePerformed: new Date(),
         dateRequested: selectedRequestTest?.requestDate,
         status: "Completed",
+        appointmentId: selectedRequestTest?.appointmentId,
       };
       // Post lên Test
       const res = await axios.post(

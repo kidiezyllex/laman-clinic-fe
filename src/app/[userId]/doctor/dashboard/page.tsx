@@ -171,7 +171,7 @@ export default function Page() {
                       : "text-muted-foreground"
                   }`}
                 >
-                  <p className="ml-7">Ca khám</p>
+                  <p className="ml-7">Hẹn khám</p>
                 </Link>
                 <Link
                   href="#"

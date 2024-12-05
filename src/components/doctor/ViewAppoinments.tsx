@@ -80,12 +80,10 @@ export default function ViewAppointment({
       setTests(response2.data);
       const roomN = response.data.roomNumber;
       if (roomN.toString().trim() !== "000") {
-        // const response = await axios.get(
-        //   `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
-        // );
-
-        // setAppointments(response.data);
-        setAppointments(apmtData);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/get-appointments/${roomN}`
+        );
+        setAppointments(response.data);
 
         // Lấy danh sách PatientId đang chờ xét nghiệm
         const res = await axios.get(
@@ -101,7 +99,7 @@ export default function ViewAppointment({
         setIsLoading(false);
       } else {
         setAppointments([]);
-        setAppointments(apmtData);
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err + "");
@@ -121,7 +119,6 @@ export default function ViewAppointment({
       index !== 0
     )
       flag = true;
-    //
     //Nếu đang chờ xét nghiệm hoặc có kết quả XN thì enable
     if (
       pendingTestList.includes(appointment.patientId) ||
@@ -256,7 +253,6 @@ export default function ViewAppointment({
           </div>
         </div>
       </div>
-      {/* Dialog chi tiết bệnh nhân */}
       <PatientDetails
         roomNumber={roomNumber}
         isOpen={isOpen}

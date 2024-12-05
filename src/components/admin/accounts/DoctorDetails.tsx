@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import {
   ArrowUpFromLine,
+  Calendar,
   Cat,
   Clock,
   Dog,
@@ -15,6 +16,7 @@ import {
 } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import {
+  formatDate,
   generateTimeSlots,
   renderDayOfWeek,
   renderSpecialty,
@@ -71,13 +73,15 @@ export default function DoctorDetails({
                     : "Thông tin Bác Sĩ"}
                 </h3>
                 <div className="gap-3 grid grid-cols-2">
-                  {/* <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">
                       Ngày sinh:{" "}
-                      {formatDate(selectedDoctor?.dateOfBirth | new Date())}
+                      {formatDate(
+                        new Date((selectedDoctor as any)?.dateOfBirth)
+                      )}
                     </span>
-                  </div> */}
+                  </div>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-blue-500" />
                     <span className="text-sm">

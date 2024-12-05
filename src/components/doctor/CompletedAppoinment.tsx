@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, formatDate2 } from "../../../lib/utils";
 export default function CompletedAppointments() {
   const pathname = usePathname();
   const doctorId = pathname.split("/")[1];
@@ -124,23 +124,27 @@ export default function CompletedAppointments() {
             <TableHeader>
               <TableRow>
                 <TableHead>STT</TableHead>
-                <TableHead>Mã ca khám</TableHead>
-                <TableHead>Mã bệnh nhân</TableHead>
-                <TableHead>Ngày khám</TableHead>
+                <TableHead>Ngày giờ khám</TableHead>
                 <TableHead>Lý do khám</TableHead>
                 <TableHead>Bệnh nhân</TableHead>
+                <TableHead>Đơn thuốc</TableHead>
+                <TableHead>Xét nghiệm</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentCA.map((item, index) => (
                 <TableRow key={`${item._id}-${index}`}>
                   <TableCell>{startIndex + index + 1}</TableCell>
-                  <TableCell>{item._id}</TableCell>
-                  <TableCell>{item.patientId}</TableCell>
                   <TableCell>
-                    {formatDate(new Date(item.appointmentDate))}
+                    {formatDate2(new Date(item.appointmentDate))}
                   </TableCell>
                   <TableCell>{item.reason}</TableCell>
+                  <TableCell>
+                    <Button variant={"outline"}>Xem chi tiết</Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant={"outline"}>Xem chi tiết</Button>
+                  </TableCell>
                   <TableCell>
                     <Button variant={"outline"}>Xem chi tiết</Button>
                   </TableCell>

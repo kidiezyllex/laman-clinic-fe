@@ -33,7 +33,6 @@ export default function LabTestsForm({
   const doctorId = usePathname().split("/")[1];
   const [selectedTestTypeIds, setSelectedTestTypeIds] = useState<String[]>([]);
   const [selectedTests, setSelectedTests] = useState<TestType[]>([]);
-
   const filteredTests = tests.filter((test) =>
     test.testName.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -63,6 +62,7 @@ export default function LabTestsForm({
         doctorId: doctorId,
         requestDate: new Date(),
         reason: reasonRequestTest,
+        appointmentId: selectedAppointment?._id,
       };
       if (selectedTests.length === 0) {
         toast({

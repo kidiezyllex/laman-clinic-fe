@@ -15,11 +15,19 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2, CircleCheckBig, X } from "lucide-react";
+import axios from "axios";
+import { Appointment } from "../../../../lib/entity-types";
+import { usePathname } from "next/navigation";
+import { useToast } from "@/hooks/use-toast";
 
 interface DiagnosticResultsFormProps {
-  handleCreateDiagnosticResults: (e: React.FormEvent) => Promise<void>;
   handleCancel: () => void;
   isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
+  selectedAppointment: Appointment;
+  roomNumber: string;
+  fetchAppointments: () => void;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 const medicationSchema = z.object({
@@ -33,10 +41,16 @@ const formSchema = z.object({
   medications: z.array(medicationSchema),
 });
 export default function DiagnosticResultsForm({
-  handleCreateDiagnosticResults,
   handleCancel,
   isLoading,
+  setIsLoading,
+  selectedAppointment,
+  roomNumber,
+  fetchAppointments,
+  setIsOpen,
 }: DiagnosticResultsFormProps) {
+  const { toast } = useToast();
+  const doctorId = usePathname().split("/")[1];
   const [formData, setFormData] = useState({
     medicalHistory: "",
     diagnosis: "",
@@ -74,6 +88,61 @@ export default function DiagnosticResultsForm({
       ],
     },
   });
+
+  // Hoàn thành khám
+  const handleCreateDiagnosticResults = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      // Lấy thông tin medicalHistory trước đó
+      const response2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`
+      );
+      const payload = {
+        medicalHistory: [
+          ...response2.data?.medicalHistory,
+          {
+            disease: formData.medicalHistory + "_" + formData.diagnosis,
+            diagnosisDate: new Date(),
+            treatment: formData.treatment + "_" + formData.otherTreatment,
+            appointmentId: selectedAppointment._id,
+          },
+        ],
+      };
+      // Cập nhật vào MedicalHistory của bệnh nhân
+      const response3 = await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`,
+        payload
+      );
+
+      // Xoá khỏi Kafka
+      const res = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
+        {
+          roomNumber: roomNumber,
+          patientId: selectedAppointment?.patientId,
+          doctorId: doctorId,
+        }
+      );
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Đã lưu thông tin khám bệnh/chẩn đoán bệnh",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Thất bại!",
+        description: error + "",
+      });
+    } finally {
+      setIsLoading(false);
+      handleCancel();
+      setIsOpen(false);
+      fetchAppointments();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-4 h-full mr-4 border rounded-md p-4 bg-primary-foreground text-slate-600 dark:text-slate-300">
       <h3 className="text-md font-semibold mr-4 self-center">

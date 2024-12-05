@@ -48,6 +48,7 @@ export interface MedicalHistory {
   disease: string;
   diagnosisDate: string;
   treatment: string;
+  appointmentId: string;
 }
 export interface Appointment {
   _id: string;
@@ -104,6 +105,7 @@ export interface Prescription {
   dateIssued: Date;
   visitorName: string;
   visitorPhone: string;
+  appointmentId: string;
 }
 
 export interface PatientPrescriptionInvoiceProps {
@@ -176,6 +178,7 @@ export interface RequestTest {
   reason: string;
   requestDate: Date;
   isTestInvoiceCreated: boolean;
+  appointmentId: string;
 }
 
 export interface TestResult {
@@ -197,6 +200,7 @@ export interface Test {
   dateRequested: Date;
   testsPerformed: [TestType];
   labTestId: string;
+  appointmentId: string;
 }
 export interface LoginResponse {
   status: string;

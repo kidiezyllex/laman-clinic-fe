@@ -9,6 +9,7 @@ import axios from "axios";
 import {
   Appointment,
   Medication,
+  Prescription,
   Test,
   TestType,
 } from "../../../../lib/entity-types";
@@ -25,6 +26,7 @@ import ReExaminationForm from "./ReExaminationForm";
 import LabTestsForm from "./LabTestsForm";
 import DiagnosticResultsForm from "./DiagnosticResultsForm";
 import TestResults from "./TestResults";
+import PrescriptionDetails from "./PrescriptionDetails";
 
 export default function PatientDetails({
   roomNumber,
@@ -115,143 +117,6 @@ export default function PatientDetails({
     fetchServiceList();
   }, [showServiceForm]);
 
-  // Hoàn thành khám
-  const handleCreateDiagnosticResults = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      setIsLoading(true);
-      // Lấy thông tin medicalHistory trước đó
-      const response2 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`
-      );
-      const payload = {
-        medicalHistory: [
-          ...response2.data?.medicalHistory,
-          {
-            disease: "",
-            diagnosisDate: new Date(),
-            treatment: "",
-          },
-        ],
-      };
-      // Cập nhật vào MedicalHistory của bệnh nhân
-      const response3 = await axios.put(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${selectedAppointment?.patientId}`,
-        payload
-      );
-
-      // Tạo 1 Diagnosis mới
-      const diagnosisPayload = {
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorId,
-        disease: "",
-        diagnosisDate: new Date(),
-        treatment: "",
-      };
-      const response4 = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/diagnoses`,
-        diagnosisPayload
-      );
-
-      // Xoá khỏi Kafka
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/complete`,
-        {
-          roomNumber: roomNumber,
-          patientId: selectedAppointment?.patientId,
-          doctorId: doctorId,
-        }
-      );
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã lưu thông tin khám bệnh/chẩn đoán bệnh",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-    } finally {
-      setIsLoading(false);
-      handleCancel();
-      setIsOpen(false);
-      fetchAppointments();
-    }
-  };
-
-  // Tạo đơn thuốc
-  const handleCreatePrescription = async () => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorId,
-        medications: [],
-        dateIssued: new Date(),
-      };
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
-        payload
-      );
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-    } finally {
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo đơn thuốc cho bệnh nhân!",
-      });
-      setIsLoading(false);
-      handleCancel();
-    }
-  };
-
-  // Tạo tái khám
-  const handleCreateReExamination = async (
-    selectedAppointment: Appointment
-  ) => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        patientId: selectedAppointment?.patientId + "",
-        appointmentDateByPatient: new Date(),
-        specialization: selectedAppointment?.specialization,
-        fullName: selectedAppointment.fullName,
-        dateOfBirth: selectedAppointment.dateOfBirth || new Date(),
-        gender: selectedAppointment.gender || "",
-        address: selectedAppointment.address,
-        phone: selectedAppointment.phone || "",
-        email: selectedAppointment.email,
-        doctorId: doctorId,
-        reason: "",
-      };
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
-        payload
-      );
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-    } finally {
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo tái khám cho bệnh nhân!",
-      });
-      setIsLoading(false);
-      handleCancel();
-    }
-  };
-
   // Tạo dịch vụ
   const handleCreateServices = async () => {
     try {
@@ -292,19 +157,25 @@ export default function PatientDetails({
               {testResults && (
                 <TestResults testResults={testResults}></TestResults>
               )}
+
               {showPrescriptionForm && (
                 <PrescriptionForm
                   medications={medications}
-                  handleCreatePrescription={handleCreatePrescription}
+                  setIsLoading={setIsLoading}
                   handleCancel={handleCancel}
                   isLoading={isLoading}
+                  selectedAppointment={selectedAppointment}
                 />
               )}
               {showDiagnosticResultsForm && (
                 <DiagnosticResultsForm
-                  handleCreateDiagnosticResults={handleCreateDiagnosticResults}
                   handleCancel={handleCancel}
                   isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  selectedAppointment={selectedAppointment}
+                  roomNumber={roomNumber}
+                  fetchAppointments={fetchAppointments}
+                  setIsOpen={setIsOpen}
                 />
               )}
               {showLabTestsForm && (
@@ -318,7 +189,7 @@ export default function PatientDetails({
               )}
               {showReExaminationForm && (
                 <ReExaminationForm
-                  handleCreateReExamination={handleCreateReExamination}
+                  setIsLoading={setIsLoading}
                   handleCancel={handleCancel}
                   isLoading={isLoading}
                   selectedAppointment={selectedAppointment}

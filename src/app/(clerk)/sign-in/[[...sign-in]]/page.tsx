@@ -63,7 +63,7 @@ export default function Page() {
   return (
     <Card className="w-fit max-w-full bg-white">
       <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-blue-400">
+        <CardTitle className="text-2xl font-bold text-blue-500">
           Đăng nhập
         </CardTitle>
       </CardHeader>
@@ -79,8 +79,8 @@ export default function Page() {
               formFieldLabel: "hidden",
               formField: "hidden",
               footer: "hidden",
-              socialButtons: "p-2",
-              socialButtonsBlockButton: "zIndex: 100",
+              socialButtons: "flex flex-row items-center p-2",
+              socialButtonsBlockButton: "zIndex: 100 w-full self-center py-2",
             },
           }}
         />

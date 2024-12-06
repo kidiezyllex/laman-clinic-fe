@@ -33,7 +33,6 @@ export default function Page() {
         return null;
     }
   };
-
   return (
     <div>
       <Breadcrumb className="mt-4">
@@ -95,18 +94,6 @@ export default function Page() {
                 >
                   <Calendar className="h-4 w-4" />
                   Lịch hẹn đã đặt
-                </Link>
-                <Link
-                  href="#"
-                  onClick={() => setActiveSection("notification")}
-                  className={`flex items-center gap-3 rounded-lg font-semibold px-3 py-2 transition-all  ${
-                    activeSection === "notification"
-                      ? "bg-muted text-blue-500"
-                      : "text-slate-500"
-                  }`}
-                >
-                  <Bell className="h-4 w-4" />
-                  Thông báo
                 </Link>
               </nav>
             </div>

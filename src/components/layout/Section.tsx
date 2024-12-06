@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator";
 import { PieChartCpn } from "../PieChartCpn";
 import { TabsCpn } from "../TabsCpn";
 import { DoctorsCpn } from "../DoctorsCpn";
-import HuggingFaceAssistant from "../HuggingFaceAssistant";
 import { usePathname, useRouter } from "next/navigation";
 import Specialties from "../Specialties";
 import TypingText from "../animata/text/typing-text";

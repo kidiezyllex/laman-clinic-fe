@@ -28,6 +28,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { ArrowUpFromLine, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import { useAuthContext } from "@/app/auth-context";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),
@@ -59,6 +60,7 @@ export default function CreateProfileForm({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { email2, password2 } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -68,8 +70,8 @@ export default function CreateProfileForm({
       birthMonth: "",
       birthYear: "",
       gender: "Male",
-      password: "",
-      email: "",
+      password: password2 || "",
+      email: email2 || "",
       province: "",
       district: "",
     },
@@ -343,6 +345,7 @@ export default function CreateProfileForm({
                     type="email"
                     placeholder="Nhập địa chỉ email"
                     {...field}
+                    value={email2 || field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -358,7 +361,12 @@ export default function CreateProfileForm({
                   Mật khẩu
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="Nhập password" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="Nhập password"
+                    {...field}
+                    value={password2 || field.value}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

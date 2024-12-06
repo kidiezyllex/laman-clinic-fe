@@ -17,13 +17,9 @@ export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
-  const [currentId, setCurrentId] = useState("");
-  const [role, setRole] = useState("");
   const pathName = usePathname();
-  const { token, setToken } = useAuthContext();
+  const { token, setToken, role } = useAuthContext();
   useEffect(() => {
-    setCurrentId(localStorage.getItem("currentId") || "");
-    setRole(localStorage.getItem("role") || "");
     renderNavBar();
   }, [token]);
   const navLinks = [

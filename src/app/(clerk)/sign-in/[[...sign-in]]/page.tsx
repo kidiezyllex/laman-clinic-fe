@@ -17,7 +17,8 @@ export default function Page() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { setToken } = useAuthContext();
+  const { setToken, setEmail2, setPassword2, setRole, setCurrentId } =
+    useAuthContext();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -30,19 +31,29 @@ export default function Page() {
       const dummyToken =
         "dummy_token_" + Math.random().toString(36).substr(2, 9);
       setToken(dummyToken);
-      localStorage.setItem("currentEmail", (data as any)?.data?.email);
-      localStorage.setItem("role", (data as any)?.data?.role);
+      setEmail2((data as any)?.data?.email);
+      setPassword2(password);
+      setEmail2((data as any)?.data?.email);
+      setRole((data as any)?.data?.role);
 
       if (data.status === "success") {
+        // Tìm hồ sơ = email
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
             data.data?.role
           }s/?email=${(data as any)?.data?.email}`
         );
+
         if (data.data?.role === "patient") {
           router.push("/");
-        } else router.push(`/${res.data._id}/${data.data?.role}/dashboard`);
-        localStorage.setItem("currentId", res.data._id);
+        } else router.push(`/${res?.data?._id}/${data.data?.role}/dashboard`);
+        // Nếu có hồ sơ
+        if (res?.data?._id) {
+          setCurrentId(res?.data?._id);
+        } else {
+          setCurrentId(`user_${(data as any)?.data?.id}`);
+        }
+
         toast({
           variant: "default",
           title: "Thành công!",

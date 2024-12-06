@@ -12,14 +12,12 @@ import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { Calendar, LogOut, Menu, User } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function UserMenu() {
   const { userId } = useAuth();
-  const [currentId, setCurrentId] = useState("");
-  const { token, setToken } = useAuthContext();
+  const { setToken, currentId, setCurrentId } = useAuthContext();
   const { toast } = useToast();
-
   useEffect(() => {
     // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
     if (userId) {
@@ -35,20 +33,7 @@ export default function UserMenu() {
       };
       setId();
     }
-    // Còn nếu đăng nhập bằng tài khoản thì userId 0 có data, currentId vẫn sẽ có data trong localStorage
-    else {
-      const setId2 = async () => {
-        const currentEmail = localStorage.getItem("currentEmail");
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${currentEmail}`
-        );
-        setCurrentId(res?.data?._id || "");
-      };
-      const role = localStorage.getItem("role");
-      if (role === "patient") setId2();
-    }
   }, [userId]);
-
   const handleLogOut = async () => {
     setToken(null);
     toast({

@@ -18,10 +18,11 @@ export default function UserMenu() {
   const { userId } = useAuth();
   const { setToken, currentId, setCurrentId } = useAuthContext();
   const { toast } = useToast();
+  console.log(userId);
   useEffect(() => {
     // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
-    if (userId) {
-      const setId = async () => {
+    const setId = async () => {
+      if (userId) {
         const response2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/clerk/${userId}`
         );
@@ -30,9 +31,9 @@ export default function UserMenu() {
         } else {
           setCurrentId(response2?.data?._id);
         }
-      };
+      }
       setId();
-    }
+    };
   }, [userId]);
   const handleLogOut = async () => {
     setToken(null);

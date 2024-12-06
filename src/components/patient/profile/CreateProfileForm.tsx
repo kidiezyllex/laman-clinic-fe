@@ -60,7 +60,7 @@ export default function CreateProfileForm({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { email2, password2 } = useAuthContext();
+  const { email2, password2, setEmail2 } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -70,8 +70,16 @@ export default function CreateProfileForm({
       birthMonth: "",
       birthYear: "",
       gender: "Male",
-      password: password2 || "",
-      email: email2 || "",
+      password:
+        pathname.split("_").includes("/user") ||
+        pathname.split("/").includes("receptionist")
+          ? ""
+          : password2,
+      email:
+        pathname.split("_").includes("/user") ||
+        pathname.split("/").includes("receptionist")
+          ? ""
+          : email2,
       province: "",
       district: "",
     },
@@ -145,24 +153,29 @@ export default function CreateProfileForm({
       }
       toast({
         variant: "default",
-        title: "Tạo hồ sơ thành công!",
-        description: "Hồ sơ bệnh nhân đã được tạo!",
+        title: "Thành công!",
+        description: "Tạo hồ sơ thành công!",
       });
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Tạo hồ sơ thất bại!",
-        description: "Đã xảy ra lỗi!",
-      });
+      // toast({
+      //   variant: "destructive",
+      //   title: "Tạo hồ sơ thất bại!",
+      //   description: "Đã xảy ra lỗi!",
+      // });
     } finally {
       setIsLoading(false);
       setSearchTerm(data.email);
       setShowCreatePatientProfile(false);
+      toast({
+        variant: "default",
+        title: "Thành công!",
+        description: "Tạo hồ sơ thành công!",
+      });
       if (
         pathname.split("/").includes("patient") &&
         pathname.split("/").includes("dashboard")
       ) {
-        localStorage.setItem("currentEmail", data.email);
+        setEmail2(data.email);
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
         );
@@ -345,7 +358,6 @@ export default function CreateProfileForm({
                     type="email"
                     placeholder="Nhập địa chỉ email"
                     {...field}
-                    value={email2 || field.value}
                   />
                 </FormControl>
                 <FormMessage />
@@ -365,9 +377,9 @@ export default function CreateProfileForm({
                     type="password"
                     placeholder="Nhập password"
                     {...field}
-                    value={password2 || field.value}
                   />
                 </FormControl>
+
                 <FormMessage />
               </FormItem>
             )}

@@ -360,17 +360,6 @@ export default function DirectAppoinment() {
           <div className="grid grid-cols-2 gap-6 mr-4">
             <div className="flex flex-col gap-3">
               <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
-                Vui lòng nhập lý do hẹn khám
-              </p>
-              <Input
-                id="reason"
-                value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                placeholder="Nhập lý do hẹn khám"
-              />
-            </div>
-            <div className="flex flex-col gap-3">
-              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
                 Vui lòng chọn chuyên ngành
               </p>
               <div className="w-full">
@@ -388,6 +377,18 @@ export default function DirectAppoinment() {
                 </Select>
               </div>
             </div>
+            <div className="flex flex-col gap-3">
+              <p className="text-base font-semibold text-slate-600 dark:text-slate-300">
+                Vui lòng nhập lý do hẹn khám
+              </p>
+              <Input
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="Nhập lý do hẹn khám"
+              />
+            </div>
+
             <div className="flex flex-col gap-3">
               <p className="text-md font-semibold text-slate-600 dark:text-slate-300">
                 Chọn loại dịch vụ khám

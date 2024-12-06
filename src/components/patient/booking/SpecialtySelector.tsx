@@ -35,7 +35,9 @@ export default function SpecialtySelector({
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/specializations`
       );
       const filteredSpecialties = response.data.filter((specialty: string) =>
-        specialty.toLowerCase().includes(searchTerm.toLowerCase())
+        renderSpecialty(specialty)
+          .toLowerCase()
+          .includes(searchTerm.toLowerCase())
       );
       setSpecializations(filteredSpecialties);
     };

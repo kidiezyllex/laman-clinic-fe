@@ -1,13 +1,10 @@
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
-import axios from "axios";
 import Image from "next/image";
 import { Separator } from "../ui/separator";
 import { AppointmentByPatient, Patient } from "../../../lib/entity-types";

@@ -161,7 +161,7 @@ export default function DirectAppoinment() {
       const imgWidth = pdf.internal.pageSize.getWidth();
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save(`${selectedPatient?._id + formatDate(new Date())}.pdf`);
+      pdf.save(`HDKB-${selectedPatient?._id + formatDate(new Date())}.pdf`);
     } catch (err) {
       console.error(err);
     }
@@ -182,7 +182,7 @@ export default function DirectAppoinment() {
       // Create a File object from the blob
       const file = new File(
         [blob],
-        `${selectedPatient?._id}-${formatDate2(new Date())}.png`,
+        `HDKB-${selectedPatient?._id}-${formatDate2(new Date())}.png`,
         { type: "image/png" }
       );
 

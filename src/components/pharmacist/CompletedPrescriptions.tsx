@@ -14,6 +14,7 @@ import {
   Calendar,
   ChevronUp,
   Eye,
+  ReceiptText,
   SearchIcon,
   Stethoscope,
   User,
@@ -29,7 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, formatDate2 } from "../../../lib/utils";
 export default function CompletedPrescriptions() {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,9 +61,9 @@ export default function CompletedPrescriptions() {
       if (filterType === "today")
         return formatDate(prescription.dateIssued) === formatDate(new Date());
       else if (filterType === "visitor")
-        return prescription?.patientId?._id?.includes("BN-VL");
+        return prescription?.patientId?.includes("BN-VL");
       return (
-        prescription?.patientId?._id
+        prescription?.patientId
           ?.toLowerCase()
           .includes(searchTermLower.toLowerCase()) ||
         prescription?.visitorName
@@ -93,7 +94,7 @@ export default function CompletedPrescriptions() {
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <Input
             type="search"
-            placeholder="Nhập mã hoặc tên hoặc SĐT của Bệnh nhân..."
+            placeholder="Nhập mã, tên hoặc sđt của bệnh nhân..."
             className="pl-10"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -117,10 +118,10 @@ export default function CompletedPrescriptions() {
             <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md text-slate-600 dark:text-slate-300">
               <p className="flex items-center text-sm font-semibold">
                 <Calendar className="h-4 w-4 mr-2" />
-                Ngày lập đơn:{" "}
-                {new Date(prescription.dateIssued).toLocaleDateString("vi-VN")}
+                Ngày giờ lập đơn:{" "}
+                {formatDate2(new Date(prescription.dateIssued))}
               </p>
-              {prescription?.patientId?._id?.includes("BN-VL") ? (
+              {prescription?.patientId?.includes("BN-VL") ? (
                 <>
                   <p className="flex items-center text-sm font-semibold">
                     <User className="h-4 w-4 mr-2" />
@@ -134,7 +135,7 @@ export default function CompletedPrescriptions() {
               ) : (
                 <p className="flex items-center text-sm font-semibold">
                   <User className="h-4 w-4 mr-2" />
-                  Mã Bệnh nhân: {prescription.patientId._id}
+                  Mã Bệnh nhân: {prescription.patientId}
                 </p>
               )}
 
@@ -144,7 +145,6 @@ export default function CompletedPrescriptions() {
               </p>
             </div>
 
-            {/* Medications table */}
             <Table>
               <TableHeader>
                 <TableRow>
@@ -184,18 +184,17 @@ export default function CompletedPrescriptions() {
                 </Button>
               ) : (
                 <Button
-                  variant="outline"
+                  className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                   onClick={() => {
                     setShowInvoice({ isShow: true, id: prescription._id + "" });
                   }}
                 >
-                  Xem hoá đơn
-                  <Eye className="h-4 w-4" />
+                  Tạo hoá đơn
+                  <ReceiptText className="h-4 w-4" />
                 </Button>
               )}
             </div>
 
-            {/* Invoice component */}
             {showInvoice.id === prescription._id && showInvoice.isShow && (
               <PrescriptionBill
                 prescription={prescription}

@@ -175,7 +175,7 @@ export const renderInvoiceType = (invoice: string) => {
   const invoices: { [key: string]: string } = {
     medicalInvoice: "Hoá đơn khám bệnh",
     testInvoice: "Hoá đơn xét nghiệm",
-    serviceInvoice: "Hoá đơn dịch vụ",
+    presInvoice: "Hoá đơn đơn thuốc",
   };
   return invoices[invoice] || "";
 };

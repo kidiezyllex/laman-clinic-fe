@@ -47,11 +47,21 @@ import {
 import { Badge } from "../ui/badge";
 import { usePathname } from "next/navigation";
 import PrescriptionDetails from "../doctor/patient-details/PrescriptionDetails";
-import TestResults from "../doctor/patient-details/TestResults";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 
 export default function RequestedPrescriptions() {
   const userId = usePathname().split("/")[1];
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [customQuantities, setCustomQuantities] = useState<{
@@ -336,7 +346,7 @@ export default function RequestedPrescriptions() {
             <div className="flex flex-row items-center gap-3 justify-between p-4 bg-secondary rounded-t-md font-semibold text-slate-600 dark:text-slate-300">
               <p className="flex items-center text-sm">
                 <Calendar className="h-4 w-4 mr-2" />
-                Ngày yêu cầu: {formatDate(prescription.dateIssued)}
+                Ngày giờ yêu cầu: {formatDate2(prescription.dateIssued)}
               </p>
               <p className="flex items-center text-sm">
                 <Stethoscope className="h-4 w-4 mr-2" />
@@ -360,10 +370,6 @@ export default function RequestedPrescriptions() {
               <p className="flex items-center text-sm">
                 <User className="h-4 w-4 mr-2" />
                 Mã Bệnh nhân: {prescription.patientId}
-              </p>
-              <p className="flex items-center text-sm">
-                <Stethoscope className="h-4 w-4 mr-2" />
-                Mã Đơn thuốc: {prescription._id}
               </p>
             </div>
 
@@ -478,41 +484,42 @@ export default function RequestedPrescriptions() {
                   <Edit className="h-4 w-4 ml-2" />
                 </Button>
               )}
-
-              {showInvoice.id === prescription._id && showInvoice.isShow ? (
-                <Button
-                  variant="destructive"
-                  onClick={() =>
-                    setShowInvoice({ isShow: false, id: prescription._id })
-                  }
-                >
-                  Thu gọn
-                  <ChevronUp className="h-4 w-4 ml-2" />
-                </Button>
-              ) : (
-                <Button
-                  variant="outline"
-                  className="bg-secondary text-slate-600 dark:text-slate-300"
-                  onClick={() => {
-                    setShowInvoice({ isShow: true, id: prescription._id });
-                  }}
-                >
-                  Xem hoá đơn
-                  <Eye className="h-4 w-4 ml-2" />
-                </Button>
-              )}
               <Button
                 className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                onClick={() =>
-                  handleCompletePrescription(
-                    prescription._id,
-                    prescription.medications
-                  )
-                }
+                onClick={() => setIsAlertOpen(true)}
               >
                 Hoàn thành đơn
                 <CircleCheckBig className="h-4 w-4 ml-2" />
               </Button>
+              <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+                <AlertDialogContent className="dark:bg-primary-foreground">
+                  <AlertDialogHeader>
+                    <AlertDialogTitle className="dark:text-slate-300 text-slate-600">
+                      Xác nhận hoàn thành đơn thuốc!
+                    </AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Đơn thuốc được yêu cầu sẽ được cập nhật trong cơ sở dữ
+                      liệu với trạng thái hoàn thành.
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel className="border-none bg-red-500 dark:bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600 hover:text-white">
+                      Huỷ
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() =>
+                        handleCompletePrescription(
+                          prescription._id,
+                          prescription.medications
+                        )
+                      }
+                      className="border-none bg-blue-500 dark:bg-blue-500 text-white dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white"
+                    >
+                      Xác nhận
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
             </div>
 
             {showInvoice.id === prescription._id && showInvoice.isShow && (

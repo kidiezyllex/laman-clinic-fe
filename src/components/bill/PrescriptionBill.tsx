@@ -11,14 +11,38 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
-import { formatDate } from "../../../lib/utils";
-import { PatientPrescriptionInvoiceProps } from "../../../lib/entity-types";
-import { FileImage, FileText } from "lucide-react";
+import { formatDate, formatDate2 } from "../../../lib/utils";
+import {
+  Patient,
+  PatientPrescriptionInvoiceProps,
+} from "../../../lib/entity-types";
+import { FileImage, FileText, Loader2, Receipt } from "lucide-react";
+import { useUploadThing } from "@/utils/uploadthing";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 export default function PrescriptionBill({
   prescription,
   newMedication,
 }: PatientPrescriptionInvoiceProps) {
+  const { startUpload } = useUploadThing("imageUploader");
+  const pathname = usePathname();
+  const userId = pathname.split("/")[1];
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const [patient, setPatient] = useState<Patient | null>(null);
+  useEffect(() => {
+    const fetchPatientByAccountId = async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${prescription.patientId}`
+      );
+      setPatient(response.data);
+    };
+
+    fetchPatientByAccountId();
+  }, []);
   const exportToPDF = async () => {
     try {
       const input = document.getElementById("preview");
@@ -30,25 +54,68 @@ export default function PrescriptionBill({
       const imgWidth = pdf.internal.pageSize.getWidth();
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save("export.pdf");
+      pdf.save(`HDT-${prescription.patientId}-${formatDate(new Date())}.pdf`);
     } catch (err) {
       console.error(err);
     }
   };
 
-  const exportToImage = async () => {
+  const exportAndUploadImage = async () => {
     try {
       const input = document.getElementById("preview");
       if (!input) throw new Error("Preview element not found");
 
       const canvas = await html2canvas(input);
-      const link = document.createElement("a");
-      link.download = "export.png";
-      link.href = canvas.toDataURL();
-      link.click();
+
+      // Convert canvas to blob
+      const blob = await new Promise<Blob>((resolve: any) =>
+        canvas.toBlob(resolve, "image/png")
+      );
+
+      // Create a File object from the blob
+      const file = new File(
+        [blob],
+        `HDT-${prescription.patientId}-${formatDate2(new Date())}.png`,
+        { type: "image/png" }
+      );
+
+      // Upload the file
+      const res = await startUpload([file]);
+
+      if (res && res[0]) {
+        const payload = {
+          paymentMethod: "Cash",
+          status: "Paid",
+          type: "presInvoice",
+          image: res[0].url,
+          staffId: userId,
+          staffRole: "Y tá xét nghiệm",
+          issueDate: new Date(),
+          patientId: prescription?.patientId,
+        };
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/invoices`,
+          payload
+        );
+        console.log(response.data);
+      } else {
+        throw new Error("Upload failed");
+      }
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const handleCreateTestBill = async () => {
+    setIsLoading(true);
+    await exportAndUploadImage();
+    await exportToPDF();
+    setIsLoading(false);
+    toast({
+      variant: "default",
+      title: "Thành công!",
+      description: "Đã tạo hoá đơn đơn thuốc!",
+    });
   };
 
   return (
@@ -143,16 +210,16 @@ export default function PrescriptionBill({
           <Separator className="bg-slate-950"></Separator>
           <div className="p-4 flex flex-col gap-2">
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Mã bệnh nhân (Patient Id): {prescription?.patientId._id}
+              Mã bệnh nhân (Patient Id): {patient?._id}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Tên bệnh nhân (Patient): {prescription?.patientId.fullName}
+              Tên bệnh nhân (Patient): {patient?.fullName}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Số điện thoại (Phone): {prescription?.patientId?.phone}
+              Số điện thoại (Phone): {patient?.phone}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
-              Địa chỉ (Address): {prescription?.patientId?.address}
+              Địa chỉ (Address): {patient?.address}
             </p>
             <p className="text-base font-bold font-['Times_New_Roman',_Times,_serif]">
               Hình thức thanh toán: Chuyển khoản/Tiền mặt
@@ -231,18 +298,21 @@ export default function PrescriptionBill({
       </div>
       <div className="flex justify-end m-4 gap-3">
         <Button
-          onClick={exportToPDF}
+          disabled={isLoading}
+          onClick={handleCreateTestBill}
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
         >
-          Xuất File PDF
-          <FileText className="mr-2 h-4 w-4" />
-        </Button>
-        <Button
-          onClick={exportToImage}
-          className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          Xuất File Ảnh
-          <FileImage className="mr-2 h-4 w-4" />
+          {isLoading ? (
+            <>
+              Đang xử lý
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            </>
+          ) : (
+            <>
+              Tạo hoá đơn
+              <Receipt className="h-4 w-4" />{" "}
+            </>
+          )}
         </Button>
       </div>
     </div>

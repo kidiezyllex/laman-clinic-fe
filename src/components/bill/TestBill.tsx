@@ -44,7 +44,7 @@ export default function TestBill({
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(
-        `TB-${selectedTest?.patientId._id}-${formatDate(new Date())}.pdf`
+        `HDXN-${selectedTest?.patientId._id}-${formatDate(new Date())}.pdf`
       );
       const res = await axios.put(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/${selectedTest?._id}`,
@@ -73,7 +73,7 @@ export default function TestBill({
       // Create a File object from the blob
       const file = new File(
         [blob],
-        `${selectedTest?.patientId}-${formatDate2(new Date())}.png`,
+        `HDXN-${selectedTest?.patientId}-${formatDate2(new Date())}.png`,
         { type: "image/png" }
       );
 

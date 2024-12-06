@@ -6,6 +6,7 @@ import {
   Database,
   Newspaper,
   Pill,
+  Receipt,
   User,
 } from "lucide-react";
 import {
@@ -21,6 +22,7 @@ import PharmacistProfile from "@/components/pharmacist/PharmacistProfile";
 import VisitorPrescription from "@/components/pharmacist/VisitorPrescription";
 import CompletedPrescriptions from "@/components/pharmacist/CompletedPrescriptions";
 import MedicineWarehouse from "@/components/admin/MedicineWarehouse";
+import Invoices from "@/components/pharmacist/Invoices";
 export default function Page() {
   const [activeSection, setActiveSection] = useState("prescriptions");
 
@@ -36,6 +38,8 @@ export default function Page() {
         return <CompletedPrescriptions />;
       case "medicine-warehouse":
         return <MedicineWarehouse />;
+      case "invoices":
+        return <Invoices />;
       default:
         return null;
     }
@@ -96,7 +100,7 @@ export default function Page() {
                   className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all ${
                     activeSection === "visitor"
                       ? "bg-muted text-blue-500"
-                      : "text-slate-500"
+                      : "text-muted-foreground"
                   }`}
                 >
                   <p className="ml-7">Khách vãng lai</p>
@@ -112,27 +116,17 @@ export default function Page() {
                 >
                   <p className="ml-7">Hoàn thành</p>
                 </Link>
-                <div
-                  className={
-                    activeSection === "invoices" ||
-                    activeSection === "completed"
-                      ? "flex items-center gap-3 rounded-md px-3 py-2 transition-all text-blue-500 font-semibold"
-                      : "flex items-center gap-3 rounded-md px-3 py-2 font-semibold text-slate-500"
-                  }
-                >
-                  <Database className="h-4 w-4" />
-                  Lưu trữ
-                </div>
                 <Link
                   href="#"
                   onClick={() => setActiveSection("invoices")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all hover:text-primary ${
+                  className={`flex items-center gap-3 rounded-md px-3 py-2 font-semibold transition-all hover:text-primary ${
                     activeSection === "invoices"
-                      ? "bg-muted text-primary"
-                      : "text-muted-foreground"
+                      ? "bg-muted text-blue-500 hover:text-blue-700"
+                      : "text-slate-500"
                   }`}
                 >
-                  <p className="ml-7">Hoá đơn</p>
+                  <Receipt className="h-4 w-4" />
+                  Hoá đơn
                 </Link>
                 <Link
                   href="#"

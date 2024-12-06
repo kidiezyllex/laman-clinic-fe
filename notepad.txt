@@ -107,3 +107,7 @@ Fix:
 + Loading khúc nhập roomNumber
 + Lỗi search chuyên khoa đặt lịch khám
 + Lúc tạo ca khám onlien xong cho 1 item, thì set các giá trị về ban đầu
+
+
+Chào thầy cô và các bạn, chuyên ngành Kỹ thuật phần mềm, trường Đại học công nghiệp thành phố Hồ Chí Minh. Chúng em thuộc nhóm một trăm hai lăm, môn Khoá luận tốt nghiệp, hôm nay nhóm em sẽ trình bày phần Demo về đề tài "Hệ thống hỗ trợ quản lý phòng khám Đa khoa". Trước tiên, em xin điểm qua phần giao diện người dùng và bệnh nhân có thể nhìn thấy và tương tác trên Website. Hệ thống có hỗ trợ chế độ sáng tối để đáp ứng nhu cầu trải nghiệm cá nhân của người dùng.
+Tiếp theo là phần Đăng ký tài khoản, người dùng nhập các thông tin như Tên, Email, Mật khẩu để tạo 1 tài khoản và có thể sử dụng các chức năng trên website. Sau khi nhập xong thông tin, nhấn nút tiếp tục, website sẽ yêu cầu xác thực email bằng mã, người dùng truy cập vào gmail để lấy mã xác thực. Sau khi xác thực, website sẽ tự động đăng nhập vào tài khoản mà người dùng vừa đăng ký. Người dùng có thể xem Quản lý tài khoản hoặc đăng xuất tài khoản.

@@ -26,7 +26,6 @@ import ReExaminationForm from "./ReExaminationForm";
 import LabTestsForm from "./LabTestsForm";
 import DiagnosticResultsForm from "./DiagnosticResultsForm";
 import TestResults from "./TestResults";
-import PrescriptionDetails from "./PrescriptionDetails";
 
 export default function PatientDetails({
   roomNumber,
@@ -121,35 +120,6 @@ export default function PatientDetails({
     fetchServiceList();
   }, [showServiceForm]);
 
-  // Tạo dịch vụ
-  const handleCreateServices = async () => {
-    try {
-      setIsLoading(true);
-      const payload = {
-        patientId: selectedAppointment?.patientId,
-        doctorId: doctorId,
-        services: selectedServices,
-      };
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-service-list`,
-        payload
-      );
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Thất bại!",
-        description: error + "",
-      });
-    } finally {
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo dịch vụ cho bệnh nhân!",
-      });
-      handleCancel();
-    }
-  };
-
   return (
     <div>
       <Dialog open={isOpen || false} onOpenChange={setIsOpen}>
@@ -201,17 +171,6 @@ export default function PatientDetails({
               )}
               {mainShow && (
                 <div className="flex flex-row gap-3 mr-4 justify-end items-end flex-grow">
-                  <Button
-                    variant="outline"
-                    className="bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
-                    onClick={() => {
-                      setShowServiceForm(!showServiceForm);
-                      setMainShow(false);
-                    }}
-                  >
-                    Tạo dịch vụ
-                    <ClipboardPlus className="h-4 w-4" />
-                  </Button>
                   <Button
                     variant="outline"
                     className={

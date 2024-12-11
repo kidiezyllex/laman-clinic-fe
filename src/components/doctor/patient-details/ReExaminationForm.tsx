@@ -44,10 +44,24 @@ export default function ReExaminationForm({
         doctorId: doctorId,
         reason: reason,
       };
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
-        payload
-      );
+      if (reason.trim() === "") {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: "Vui lòng điền lý do tái khám!",
+        });
+      } else {
+        const res = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,
+          payload
+        );
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Đã tạo tái khám cho bệnh nhân!",
+        });
+        handleCancel();
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -55,13 +69,7 @@ export default function ReExaminationForm({
         description: error + "",
       });
     } finally {
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Đã tạo tái khám cho bệnh nhân!",
-      });
       setIsLoading(false);
-      handleCancel();
     }
   };
   return (

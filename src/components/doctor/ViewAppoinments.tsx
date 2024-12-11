@@ -247,12 +247,12 @@ export default function ViewAppointment({
                           <p className="text-xs font-semibold text-center text-slate-600 dark:text-slate-300 break-words text-wrap">
                             Lý do: {appointment.reason}
                           </p>
-                          {pendingTestList.includes(appointment.patientId) ? (
+                          {pendingTestList.includes(appointment._id) ? (
                             <Badge className="bg-yellow-600 dark:text-slate-300 hover:bg-yellow-700">
                               Đang chờ KQXN
                             </Badge>
                           ) : null}
-                          {completedTestList.includes(appointment.patientId) ? (
+                          {completedTestList.includes(appointment._id) ? (
                             <Badge className="bg-green-600 dark:text-slate-300 hover:bg-green-700">
                               Đã có KQXN
                             </Badge>

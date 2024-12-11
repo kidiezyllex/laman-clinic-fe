@@ -80,12 +80,14 @@ export default function PatientDetails({
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
       );
 
-      const res4 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?patientId=${selectedAppointment?.patientId}&doctorId=${doctorId}`
-      );
+      if (selectedAppointment) {
+        const res4 = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?appointmentId=${selectedAppointment?._id}`
+        );
+        setTestResults(res4.data);
+      }
       setTests(res.data);
       setMedications(res2.data);
-      setTestResults(res4.data);
     } catch (error) {
       console.error(error);
     }
@@ -93,20 +95,6 @@ export default function PatientDetails({
   useEffect(() => {
     fetchData();
   }, [isOpen]);
-
-  useEffect(() => {
-    const fetchServiceList = async () => {
-      try {
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/services-list`
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchServiceList();
-  }, [showServiceForm]);
-
   return (
     <div>
       <Dialog open={isOpen || false} onOpenChange={setIsOpen}>
@@ -162,7 +150,7 @@ export default function PatientDetails({
                     variant="outline"
                     className={
                       testResults ||
-                      pendingTestList.includes(selectedAppointment.patientId)
+                      pendingTestList.includes(selectedAppointment._id)
                         ? "hidden"
                         : "bg-secondary text-slate-600 dark:text-slate-300 border border-slate-400"
                     }

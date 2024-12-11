@@ -123,7 +123,7 @@ export default function CompletedTests() {
           />
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[220px]">
             <SelectValue placeholder="Lọc theo ngày" />
           </SelectTrigger>
           <SelectContent>

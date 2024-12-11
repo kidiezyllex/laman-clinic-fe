@@ -62,7 +62,7 @@ export default function CreateProfileForm({
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const { email2, password2, setEmail2 } = useAuthContext();
+  const { email2, password2, setEmail2, setCurrentId } = useAuthContext();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -181,6 +181,7 @@ export default function CreateProfileForm({
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/?email=${data.email}`
         );
+        setCurrentId((res?.data as any)._id);
         router.push(`/${(res?.data as any)._id}/patient/dashboard`);
       }
     }

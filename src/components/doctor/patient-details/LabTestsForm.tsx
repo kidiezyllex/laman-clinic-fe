@@ -70,7 +70,12 @@ export default function LabTestsForm({
           title: "Lỗi!",
           description: "Vui lòng chọn ít nhất một xét nghiệm!",
         });
-        return;
+      } else if (reasonRequestTest.trim() === "") {
+        toast({
+          variant: "destructive",
+          title: "Lỗi!",
+          description: "Vui lòng điền lý do xét nghiệm!",
+        });
       } else {
         const res3 = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/create-request-test`,
@@ -79,8 +84,10 @@ export default function LabTestsForm({
         toast({
           variant: "default",
           title: "Thành công!",
-          description: "Đã tạo yêu cầu xét nghiệm cho bệnh nhân!",
+          description: "Đã tạo yêu cầu xét nghiệm!",
         });
+        handleCancel();
+        setSelectedTestTypeIds([]);
       }
     } catch (error) {
       toast({
@@ -89,8 +96,7 @@ export default function LabTestsForm({
         description: error + "",
       });
     } finally {
-      handleCancel();
-      setSelectedTestTypeIds([]);
+      setIsLoading(false);
     }
   };
   return (

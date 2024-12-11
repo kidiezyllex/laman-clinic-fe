@@ -3,6 +3,7 @@ import { Appointment, Prescription, Test } from "../../../../lib/entity-types";
 import {
   Calendar,
   Cat,
+  ChevronUp,
   Dog,
   Eye,
   FileText,
@@ -138,7 +139,7 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
                   <TableHead>Chẩn đoán bệnh</TableHead>
                   <TableHead>Phương pháp điều trị</TableHead>
                   <TableHead>Đơn thuốc</TableHead>
-                  <TableHead>Kết quả xét nghiệm</TableHead>
+                  <TableHead>Kết quả XN</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -197,14 +198,33 @@ export default function PatientInfo({ selectedAppointment }: PatientInfoProps) {
               </TableBody>
             </Table>
           )}
+          {selectedPrescription && (
+            <PrescriptionDetails
+              selectedPrescription={selectedPrescription}
+            ></PrescriptionDetails>
+          )}
+          {selectedTest && (
+            <TestResults testResults={selectedTest}></TestResults>
+          )}
+          <Button
+            onClick={() => {
+              setSelectedTest(null);
+              setSelectedPrescription(null);
+              setSelectedTestIndex(-1);
+              setSelectedPresIndex(-1);
+            }}
+            type="submit"
+            className={
+              selectedPrescription || selectedTest
+                ? "mt-4 w-fit flex items-center self-end space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                : "hidden"
+            }
+          >
+            Thu gọn
+            <ChevronUp className="w-4 h-4" />
+          </Button>
         </div>
       </div>
-      {selectedPrescription && (
-        <PrescriptionDetails
-          selectedPrescription={selectedPrescription}
-        ></PrescriptionDetails>
-      )}
-      {selectedTest && <TestResults testResults={selectedTest}></TestResults>}
     </>
   );
 }

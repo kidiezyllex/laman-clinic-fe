@@ -41,7 +41,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useUploadThing } from "@/utils/uploadthing";
 import { usePathname } from "next/navigation";
- 
+
 export default function DirectAppoinment() {
   const { toast } = useToast();
   const { startUpload } = useUploadThing("imageUploader");

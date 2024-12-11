@@ -37,6 +37,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -78,7 +86,8 @@ export default function RequestedTests() {
       price: number;
     }>
   >([]);
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   // Filter Data
   const filteredRequestTests = requestTests
     .filter((item) => {
@@ -108,6 +117,10 @@ export default function RequestedTests() {
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredRequestTests.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentRequestTests = filteredRequestTests.slice(startIndex, endIndex);
   // Fetch Data
   const fetchData = async () => {
     setIsLoading(true);
@@ -250,7 +263,7 @@ export default function RequestedTests() {
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
       <p className="text-base font-semibold text-blue-500 uppercase">
         {userId.includes("LT")
-          ? "Danh sách hoá đơn xét nghiệm"
+          ? "Danh sách xét nghiệm cần tạo hoá đơn"
           : "Danh sách các xét nghiệm được yêu cầu"}
       </p>
       <div className="flex flex-row gap-3">
@@ -286,7 +299,7 @@ export default function RequestedTests() {
         </Button>
       </div>
       <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-        {filteredRequestTests.map((requestTest) => (
+        {currentRequestTests.map((requestTest) => (
           <Card
             key={(requestTest as any)._id}
             className="flex flex-col gap-6 items-center p-4 bg-primary-foreground "
@@ -740,6 +753,40 @@ export default function RequestedTests() {
           ></TestBill>
         </DialogContent>
       </Dialog>
+      <Pagination className="self-end flex-grow items-end">
+        <PaginationContent>
+          <PaginationItem>
+            <Button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              variant="ghost"
+            >
+              <PaginationPrevious />
+            </Button>
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
+                onClick={() => setCurrentPage(i + 1)}
+                isActive={currentPage === i + 1}
+              >
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <Button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              variant="ghost"
+            >
+              <PaginationNext />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

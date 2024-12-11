@@ -9,7 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FlaskConical, RotateCcw, SearchIcon } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { FlaskConical, RefreshCw, RotateCcw, SearchIcon } from "lucide-react";
 import axios from "axios";
 import { Test } from "../../../lib/entity-types";
 import { useToast } from "@/hooks/use-toast";
@@ -36,6 +44,9 @@ export default function CompletedTests() {
     doctorName: "",
     id: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [isLoading, setIsLoading] = useState(false);
   const [filterType, setFilterType] = useState("all");
   const filteredTests = tests
     .filter((item) => {
@@ -59,6 +70,10 @@ export default function CompletedTests() {
       return 0;
     });
 
+  const totalPages = Math.ceil(filteredTests.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentTests = filteredTests.slice(startIndex, endIndex);
   // Function
   const fetchData = async () => {
     const response = await axios.get(
@@ -113,12 +128,19 @@ export default function CompletedTests() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="today">
+              Hôm nay ({formatDate(new Date())})
+            </SelectItem>
             <SelectItem value="new">Gần nhất</SelectItem>
           </SelectContent>
         </Select>
-        <Button variant="outline" size="icon" onClick={fetchData}>
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchData}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
       <Table className="border">
@@ -144,7 +166,7 @@ export default function CompletedTests() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredTests.map((test, index) => (
+          {currentTests.map((test, index) => (
             <TableRow key={test._id}>
               <TableCell>{index + 1}</TableCell>
               <TableCell>{formatDate2(test.dateRequested)}</TableCell>
@@ -184,6 +206,40 @@ export default function CompletedTests() {
         setIsOpen={setIsOpen}
         selectedTest={selectedTest}
       ></TestResult>
+      <Pagination className="self-end flex-grow items-end">
+        <PaginationContent>
+          <PaginationItem>
+            <Button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              variant="ghost"
+            >
+              <PaginationPrevious />
+            </Button>
+          </PaginationItem>
+          {[...Array(totalPages)].map((_, i) => (
+            <PaginationItem key={i}>
+              <PaginationLink
+                onClick={() => setCurrentPage(i + 1)}
+                isActive={currentPage === i + 1}
+              >
+                {i + 1}
+              </PaginationLink>
+            </PaginationItem>
+          ))}
+          <PaginationItem>
+            <Button
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              variant="ghost"
+            >
+              <PaginationNext />
+            </Button>
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
     </div>
   );
 }

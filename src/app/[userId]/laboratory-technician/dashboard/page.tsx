@@ -113,7 +113,7 @@ export default function Page() {
                 <Link
                   href="#"
                   onClick={() => setActiveSection("profile")}
-                  className={`flex items-center gap-3 rounded-md px-3 py-2 transition-all ${
+                  className={`flex items-center gap-3 rounded-md font-semibold px-3 py-2 transition-all ${
                     activeSection === "profile"
                       ? "bg-muted text-blue-500"
                       : "text-slate-500"

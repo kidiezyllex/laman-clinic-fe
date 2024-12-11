@@ -50,12 +50,6 @@ export default function PatientDetails({
   // state
   const [tests, setTests] = useState<TestType[]>([]);
   const [testResults, setTestResults] = useState<Test | null>(null);
-  const [services, setServices] = useState([
-    { _id: "", serviceName: "", cost: 0 },
-  ]);
-  const [selectedServices, setSelectedServices] = useState([
-    { _id: "", serviceName: "", cost: 0 },
-  ]);
   const [showPrescriptionForm, setShowPrescriptionForm] = useState(false);
   const [showReExaminationForm, setShowReExaminationForm] = useState(false);
   const [showServiceForm, setShowServiceForm] = useState(false);
@@ -64,12 +58,9 @@ export default function PatientDetails({
   const [showDiagnosticResultsForm, setShowDiagnosticResultsForm] =
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedServiceIds, setSelectedServiceIds] = useState<String[]>([]);
   const [medications, setMedications] = useState<Medication[]>([]);
 
   const handleCancel = () => {
-    setSelectedServiceIds([]);
-    setSelectedServices([]);
     setShowPrescriptionForm(false);
     setShowServiceForm(false);
     setShowDiagnosticResultsForm(false);
@@ -88,16 +79,12 @@ export default function PatientDetails({
       const res2 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
       );
-      const res3 = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/services`
-      );
 
       const res4 = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/?patientId=${selectedAppointment?.patientId}&doctorId=${doctorId}`
       );
       setTests(res.data);
       setMedications(res2.data);
-      setServices(res3.data);
       setTestResults(res4.data);
     } catch (error) {
       console.error(error);

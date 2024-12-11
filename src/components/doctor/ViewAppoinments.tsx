@@ -85,17 +85,17 @@ export default function ViewAppointment({
         );
         setAppointments(response.data);
 
-        // Lấy danh sách PatientId đang chờ xét nghiệm
+        // Lấy danh sách appointmentId đang chờ xét nghiệm
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/request-tests/check/?doctorId=${doctorId}`
         );
-        setPendingTestList(res.data.patientIds);
+        setPendingTestList(res.data.appointmentIds);
 
-        // Lấy danh sách PatientId đã có kết quả xét nghiệm
+        // Lấy danh sách appointmentId đã có kết quả xét nghiệm
         const res2 = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/tests/check/?doctorId=${doctorId}`
         );
-        setCompletedTestList(res2.data.patientIds);
+        setCompletedTestList(res2.data.appointmentIds);
 
         // Lấy danh sách ID lịch hẹn theo ID bác sĩ
         const res3 = await axios.get(
@@ -123,18 +123,18 @@ export default function ViewAppointment({
     if (index !== 0) flag = true;
     //Nếu đang chờ xét nghiệm hoặc có kết quả XN thì enable
     if (
-      pendingTestList.includes(appointment.patientId) ||
-      completedTestList.includes(appointment.patientId)
+      pendingTestList.includes(appointment._id) ||
+      completedTestList.includes(appointment._id)
     )
       flag = false;
     if (
       index - 1 >= 0 &&
-      pendingTestList.includes(appointments[index - 1]?.patientId)
+      pendingTestList.includes(appointments[index - 1]?._id)
     )
       flag = false;
     if (
       index - 1 >= 0 &&
-      completedTestList.includes(appointments[index - 1]?.patientId)
+      completedTestList.includes(appointments[index - 1]?._id)
     )
       flag = false;
     if (

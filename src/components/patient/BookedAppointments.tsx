@@ -78,30 +78,46 @@ export default function BookedAppointments() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Ngày đặt khám</TableHead>
-                <TableHead>Đặt lịch theo</TableHead>
-                <TableHead>Chuyên khoa</TableHead>
-                <TableHead>Đặt vào lúc</TableHead>
-                <TableHead>Thao tác</TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  STT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Ngày đặt khám
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Đặt lịch theo
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Chuyên khoa
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Đặt vào lúc
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Thao tác
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {appointmentByPatients &&
                 appointmentByPatients?.map((item: any, index) => (
                   <TableRow key={item.diagnosisDate + index}>
-                    <TableCell>{index + 1}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
+                      {index + 1}
+                    </TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
                       {formatDate(item?.appointmentDateByPatient)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
                       {item.doctorId ? "Đặt theo Bác sĩ" : "Đặt theo ngày"}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
                       {renderSpecialty(item.specialization)}
                     </TableCell>
-                    <TableCell>{formatDate2(item?.createdAt)}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
+                      {formatDate2(item?.createdAt)}
+                    </TableCell>
+                    <TableCell className="text-slate-600 dark:text-slate-300">
                       <Button
                         variant={"destructive"}
                         onClick={() => {

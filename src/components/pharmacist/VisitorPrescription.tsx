@@ -262,7 +262,7 @@ export default function VisitorPrescription() {
                 className="flex flex-col gap-6 justify-center items-center p-4 hover:border-blue-500"
                 onClick={() => handlePatientCardClick(patient)}
               >
-                <div className="flex flex-row gap-2 items-center w-full">
+                <div className="flex flex-row gap-2 items-center w-full py-3">
                   {patient?.gender?.toLowerCase() === "male" ||
                   patient?.gender?.toLowerCase() === "nam" ? (
                     <div className="h-12 w-12 rounded-full flex flex-row justify-center items-center bg-blue-200">
@@ -275,13 +275,13 @@ export default function VisitorPrescription() {
                   )}
 
                   <div>
-                    <p className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-600 dark:text-slate-300">
                       <span className="font-semibold text-sm">
                         Mã bệnh nhân:{" "}
                       </span>{" "}
                       {patient._id}
                     </p>
-                    <p className="text-base">
+                    <p className="text-base text-slate-600 dark:text-slate-300">
                       <span className="font-semibold text-base">Tên: </span>{" "}
                       {patient.fullName}
                     </p>

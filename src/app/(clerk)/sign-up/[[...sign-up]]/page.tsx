@@ -18,6 +18,8 @@ export default function Page() {
           footerActionText: "text-base font-semibold",
           footerActionLink: "text-base",
           formButtonPrimary: "py-2",
+          internal: "hidden",
+          footer: "bg-white",
         },
         layout: {
           socialButtonsPlacement: "bottom",

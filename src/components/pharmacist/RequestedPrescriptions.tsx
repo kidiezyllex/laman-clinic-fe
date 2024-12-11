@@ -378,13 +378,25 @@ export default function RequestedPrescriptions() {
                 <TableRow>
                   {showCheckboxes.isShow &&
                     showCheckboxes.id === prescription._id && (
-                      <TableHead className="w-[50px]">Chọn</TableHead>
+                      <TableHead className="w-[50px] text-blue-500 font-semibold">
+                        Chọn
+                      </TableHead>
                     )}
-                  <TableHead>Tên thuốc</TableHead>
-                  <TableHead>Liều lượng</TableHead>
-                  <TableHead>Số lượng</TableHead>
-                  <TableHead>Đơn giá (VNĐ)</TableHead>
-                  <TableHead>Cách dùng</TableHead>
+                  <TableHead className="text-blue-500 font-semibold">
+                    Tên thuốc
+                  </TableHead>
+                  <TableHead className="text-blue-500 font-semibold">
+                    Liều lượng
+                  </TableHead>
+                  <TableHead className="text-blue-500 font-semibold">
+                    Số lượng
+                  </TableHead>
+                  <TableHead className="text-blue-500 font-semibold">
+                    Đơn giá (VNĐ)
+                  </TableHead>
+                  <TableHead className="text-blue-500 font-semibold">
+                    Cách dùng
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody className="text-slate-600 dark:text-slate-300">

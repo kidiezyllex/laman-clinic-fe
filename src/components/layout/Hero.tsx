@@ -51,7 +51,6 @@ export default function Hero() {
       <div className="w-[100%] grid grid-cols-1 md:grid-cols-[40%_60%] gap-5 items-center">
         <div className="w-full flex flex-col gap-3">
           <TextFlip />
-
           <p className="text-1xl text-zinc-400 italic">
             Laman Clinic là một nền tảng trực tuyến giúp người dùng dễ dàng đặt
             lịch hẹn tại các phòng khám đa khoa uy tín. Với giao diện thân thiện
@@ -77,7 +76,6 @@ export default function Hero() {
             </Link>
           </div>
           <AvatarList />
-
           {/* chart */}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 px-5">

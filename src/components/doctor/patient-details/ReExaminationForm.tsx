@@ -42,7 +42,7 @@ export default function ReExaminationForm({
         phone: selectedAppointment.phone || "",
         email: selectedAppointment.email,
         doctorId: doctorId,
-        reason: "",
+        reason: reason,
       };
       const res = await axios.post(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/reExamination`,

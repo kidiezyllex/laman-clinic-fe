@@ -1,19 +1,7 @@
-import {
-  authMiddleware,
-  clerkMiddleware,
-  createRouteMatcher,
-} from "@clerk/nextjs/server";
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
-const publicRoutes = createRouteMatcher([
-  "/",
-  "/hotel-details/:id",
-  "/api/uploadthing",
-]);
+export default clerkMiddleware();
 
-export default clerkMiddleware((auth, req) => {
-  if (publicRoutes(req)) return; // if it's a public route, do nothing
-  auth().protect(); // for any other route, require auth
-});
 export const config = {
   matcher: [
     // Skip Next.js internals and all static files, unless found in search params

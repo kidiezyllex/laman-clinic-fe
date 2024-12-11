@@ -1,5 +1,5 @@
 "use client";
-import { Search } from "lucide-react";
+import { CircleHelp, Search } from "lucide-react";
 import Image from "next/image";
 import {
   Breadcrumb,
@@ -77,13 +77,28 @@ Phí tiện ích: là phí hỗ trợ việc đăng ký trực tuyến qua phầ
 export default function Page() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-full h-52 flex relative mt-4">
-        <Image
-          layout="fill"
-          src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1730003049/learning-webdev-blog/clinic/quy-trinh-kham-benh-va-nhung-dieu-can-luu-y-1_c1wsab.jpg"
-          alt="Hotel Image"
-          className="object-cover rounded-md"
-        />
+      <div className="flex flex-col gap-4">
+        <div className="w-full h-64 flex relative mt-4">
+          <Image
+            layout="fill"
+            src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1733645303/learning-webdev-blog/clinic/Thi%E1%BA%BFt_k%E1%BA%BF_ch%C6%B0a_c%C3%B3_t%C3%AAn_dokdbk.png"
+            alt="Clinic Image"
+            className="object-cover rounded-md opacity-80"
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-secondary opacity-80 p-4 rounded-full flex items-center gap-2">
+              <Button
+                size="icon"
+                className="pointer-events-none rounded-full bg-blue-500 "
+              >
+                <CircleHelp className="text-white w-12 h-12" />
+              </Button>
+              <p className="text-blue-500 text-2xl font-bold">
+                GIẢI ĐÁP THẮC MẮC{" "}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
       <Breadcrumb>
         <BreadcrumbList>
@@ -103,29 +118,34 @@ export default function Page() {
       <Separator></Separator>
       <div className="grid grid-cols-4 mt-4 gap-6 ">
         {/* Sidebar */}
-        <div className="col-span-1 flex flex-col gap-3 dark:bg-slate-950 border rounded-md p-4">
+        <div className="col-span-1 flex flex-col gap-3 dark:bg-slate-950 border rounded-md p-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
           <h2 className="text-base font-semibold text-blue">
             TÌM NHANH CÂU HỎI
           </h2>
           <div className="flex flex-row gap-2">
             <Input placeholder="Nhập tìm kiếm" className="pr-10" />
-            <Button variant={"outline"}>
+            <Button
+              variant={"outline"}
+              className="w-fit flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white dark:bg-blue-500 dark:hover:bg-blue-600 hover:text-white"
+            >
               <Search className="h-4 w-4" />
             </Button>
           </div>
           <div className="space-y-2 p-2 border rounded-md">
-            <h3 className="text-sm text-blue-500">Vấn đề chung</h3>
+            <h3 className="text-sm text-blue-500 font-semibold">
+              Vấn đề chung
+            </h3>
             <h3 className="text-sm">Vấn đề về tài khoản</h3>
             <h3 className="text-sm">Vấn đề về quy trình đặt khám</h3>
             <h3 className="text-sm">Vấn đề về thanh toán</h3>
           </div>
         </div>
 
-        <div className="col-span-3 flex-1">
+        <div className="col-span-3 flex-1 text-slate-600 dark:text-slate-300">
           <Accordion type="single" collapsible className="space-y-4">
             {questionData.map((item, index) => (
               <AccordionItem value={`item-${item.id}`} key={index}>
-                <AccordionTrigger className="text-left bg-secondary px-4 dark:bg-slate-950 border dark:border-slate-950">
+                <AccordionTrigger className="text-left bg-primary-foreground px-4 dark:bg-slate-950 border dark:border-slate-950">
                   {item.trigger}
                 </AccordionTrigger>
                 <AccordionContent className="border dark:border-slate-950 p-4 border-t-0">

@@ -61,33 +61,55 @@ export default function MedicalHistory() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Ngày giờ khám</TableHead>
-                <TableHead>Tiền sử bệnh</TableHead>
-                <TableHead>Chẩn đoán bệnh</TableHead>
-                <TableHead>Phương pháp điều trị</TableHead>
-                <TableHead>Đơn thuốc</TableHead>
-                <TableHead>Kết quả xét nghiệm</TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  STT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Ngày giờ khám
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Tiền sử bệnh
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Chẩn đoán bệnh
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Phương pháp điều trị
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Đơn thuốc
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Kết quả xét nghiệm
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {patient?.medicalHistory?.map((history: any, index) => (
                 <TableRow key={history.diagnosisDate}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{formatDate2(history?.diagnosisDate)}</TableCell>
-                  <TableCell>{history.disease.split("_")[0]}</TableCell>
-                  <TableCell>{history.disease.split("_")[1]}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
+                    {index + 1}
+                  </TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
+                    {formatDate2(history?.diagnosisDate)}
+                  </TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
+                    {history.disease.split("_")[0]}
+                  </TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
+                    {history.disease.split("_")[1]}
+                  </TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
                     {history.treatment.split("_")[0] +
                       history.treatment.split("_")[1]}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-slate-600 dark:text-slate-300">
                     <Button
                       onClick={() =>
                         handleViewPrescriptionDetails(history?.appointmentId)
                       }
                       variant="secondary"
-                      className="border border-slate-00 dark:border-none pointer-events-auto"
+                      className="flex items-center space-x-2 hover:text-white text-white bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       Chi tiết
                       <Pill className="w-4 h-4" />
@@ -99,7 +121,7 @@ export default function MedicalHistory() {
                         handleViewPrescriptionDetails(history?.appointmentId)
                       }
                       variant="secondary"
-                      className="border border-slate-00 dark:border-none pointer-events-auto"
+                      className="flex items-center space-x-2 hover:text-white text-white bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                     >
                       Chi tiết
                       <FlaskConical className="w-4 h-4" />

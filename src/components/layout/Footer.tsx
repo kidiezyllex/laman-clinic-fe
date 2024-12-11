@@ -23,7 +23,7 @@ export default function Footer() {
     pathname === "/contact";
   const router = useRouter();
   return isHomePage ? (
-    <div className="mx-auto p-8 dark:bg-slate-950 border mt-8 ">
+    <div className="mx-auto p-8 dark:bg-slate-950 border mt-8 bg-background">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <div className="flex flex-row justify-center">
           <div>

@@ -111,3 +111,13 @@ Fix:
 
 Chào thầy cô và các bạn, chuyên ngành Kỹ thuật phần mềm, trường Đại học công nghiệp thành phố Hồ Chí Minh. Chúng em thuộc nhóm một trăm hai lăm, môn Khoá luận tốt nghiệp, hôm nay nhóm em sẽ trình bày phần Demo về đề tài "Hệ thống hỗ trợ quản lý phòng khám Đa khoa". Trước tiên, em xin điểm qua phần giao diện người dùng và bệnh nhân có thể nhìn thấy và tương tác trên Website. Hệ thống có hỗ trợ chế độ sáng tối để đáp ứng nhu cầu trải nghiệm cá nhân của người dùng.
 Tiếp theo là phần Đăng ký tài khoản, người dùng nhập các thông tin như Tên, Email, Mật khẩu để tạo 1 tài khoản và có thể sử dụng các chức năng trên website. Sau khi nhập xong thông tin, nhấn nút tiếp tục, website sẽ yêu cầu xác thực email bằng mã, người dùng truy cập vào gmail để lấy mã xác thực. Sau khi xác thực, website sẽ tự động đăng nhập vào tài khoản mà người dùng vừa đăng ký. Người dùng có thể xem Quản lý tài khoản hoặc đăng xuất tài khoản.
+
+Tiếp theo là phần Đăng nhập, có hai phương thức chính để đăng nhập.
+Phương thức một, người dùng có thể đăng nhập bằng Google, bằng cách chọn một tài khoản Google để đăng nhập.
+Phương thức hai, người dùng có thể đăng nhập bằng email và mật khẩu đã được dùng để đăng ký tài khoản trước đó.
+
+Tiếp theo là phần Tạo hồ sơ, để thực hiện đặt khám thì người dùng phải bổ sung hoặc tạo mới hồ sơ của mình sau khi tạo tài khoản đăng nhập. Khi tạo hồ sơ thành công, website sẽ tự động hiển thị hồ sơ. Người dùng có thể cập nhật hồ sơ. Hoặc có thể xoá hồ sơ và sau khi xoá thì website sẽ hiển thị lại Form để tạo lại hồ sơ.
+
+Tiếp theo là phần Đặt lịch khám, sau khi nhấn chọn đặt lịch khám, website sẽ hiển thị hồ sơ của người dùng, nếu người dùng chưa tạo hồ sơ, website sẽ hiển thị Form Tạo hồ sơ thay thế. Người dùng có thể đặt lịch theo ngày hoặc đặt lịch theo bác sĩ.
+Phần bên trái là thông tin hồ sơ bệnh nhân và thông tin đặt khám. Sau khi điền các thông tin đặt khám theo yêu cầu, phần Thông tin đặt khám bên trái sẽ tự động được cập nhật. Với đặt lịch theo ngày, thông tin phòng khám và giờ khám sẽ được hệ thống tự động phân bổ khi bệnh nhân đến xác nhận lịch hẹn tại phòng khám, bệnh nhân có thể xem các ca khám của các bác sĩ theo chuyên khoa và giờ khám mà mình đã chọn. Cuối cùng, người dùng xác nhận lại các thông tin sau đó nhấn đặt khám. Để xem lại các lịch đã đặt mà chưa được duyệt, người dùng có thể vào mục Lịch hẹn đã đặt. Người dùng cũng có thể xoá những lịch hẹn đã đặt đó.
+Với đặt lịch theo bác sĩ, người dùng có thể chọn ca khám.

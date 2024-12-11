@@ -129,11 +129,16 @@ export default function ViewAppointment({
       flag = false;
     if (
       index - 1 >= 0 &&
-      pendingTestList.includes(appointments[index]?.patientId)
+      pendingTestList.includes(appointments[index - 1]?.patientId)
     )
       flag = false;
     if (
-      formatDate(new Date(appointment.appointmentDate)) !==
+      index - 1 >= 0 &&
+      completedTestList.includes(appointments[index - 1]?.patientId)
+    )
+      flag = false;
+    if (
+      formatDate(new Date(appointment?.appointmentDate)) !==
       formatDate(new Date())
     )
       flag = true;
@@ -230,7 +235,7 @@ export default function ViewAppointment({
                           disabled={disabled(appointments, appointment, index)}
                           key={(appointment as any).patientId + index}
                           variant={"outline"}
-                          className="h-fit w-full flex flex-col gap-2"
+                          className="h-fit w-full flex flex-col gap-2 bg-secondary"
                           onClick={() => openAppointmentDetails(appointment)}
                         >
                           <div className="h-12 w-12 border border-blue-500  rounded-full flex flex-row justify-center items-center bg-blue-100">

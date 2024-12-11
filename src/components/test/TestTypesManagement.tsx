@@ -194,13 +194,19 @@ export default function TestTypesManagement() {
       <Table className="border">
         <TableHeader>
           <TableRow>
-            <TableHead>STT</TableHead>
-            <TableHead>Tên xét nghiệm</TableHead>
-            <TableHead>Mô tả</TableHead>
-            <TableHead>Giá (VND)</TableHead>
+            <TableHead className="text-blue-500 font-semibold">STT</TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Tên xét nghiệm
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold">Mô tả</TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Giá (VND)
+            </TableHead>
 
             {userId.includes("QTV") ? (
-              <TableHead className="w-[100px]">Thao tác</TableHead>
+              <TableHead className="w-[100px] text-blue-500 font-semibold">
+                Thao tác
+              </TableHead>
             ) : null}
           </TableRow>
         </TableHeader>

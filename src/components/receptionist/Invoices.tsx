@@ -127,12 +127,24 @@ export default function Invoices() {
           <Table className="overflow-scroll">
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Loại hoá đơn</TableHead>
-                <TableHead>Ngày giờ lập</TableHead>
-                <TableHead>Người lập</TableHead>
-                <TableHead>Thanh toán</TableHead>
-                <TableHead>Thao tác</TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  STT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Loại hoá đơn
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Ngày giờ lập
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Người lập
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Thanh toán
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Thao tác
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -148,7 +160,7 @@ export default function Invoices() {
                   <TableCell>
                     <Button
                       variant="outline"
-                      className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                      className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white hover:text-white dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                       onClick={() => openLightbox(item.image)}
                     >
                       Xem hoá đơn

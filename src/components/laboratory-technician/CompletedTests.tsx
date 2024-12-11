@@ -124,13 +124,23 @@ export default function CompletedTests() {
       <Table className="border">
         <TableHeader>
           <TableRow>
-            <TableHead>STT</TableHead>
-            <TableHead>Ngày yêu cầu</TableHead>
-            <TableHead>Ngày thực hiện</TableHead>
-            <TableHead>Mã bệnh nhân</TableHead>
-            <TableHead>Bác sĩ yêu cầu</TableHead>
-            <TableHead>Lý do</TableHead>
-            <TableHead>Thao tác</TableHead>
+            <TableHead className="text-blue-500 font-semibold">STT</TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Ngày yêu cầu
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Ngày thực hiện
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Mã bệnh nhân
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Bác sĩ yêu cầu
+            </TableHead>
+            <TableHead className="text-blue-500 font-semibold">Lý do</TableHead>
+            <TableHead className="text-blue-500 font-semibold">
+              Thao tác
+            </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

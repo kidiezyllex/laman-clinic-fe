@@ -47,7 +47,7 @@ export default function AccountsManagement() {
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [selectedUserRole, setSelectedUserRole] = useState("");
   const [role, setRole] = useState("patient");
-  const itemsPerPage = 10;
+  const itemsPerPage = 7;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const fetchData = async () => {
     try {
@@ -178,12 +178,24 @@ export default function AccountsManagement() {
           <Table className="overflow-scroll">
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Họ tên</TableHead>
-                <TableHead>Giới tính</TableHead>
-                <TableHead>Số ĐT</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Vai trò</TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  STT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Họ tên
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Giới tính
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Số ĐT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Email
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Vai trò
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

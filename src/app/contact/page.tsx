@@ -33,13 +33,26 @@ import { Textarea } from "@/components/ui/textarea";
 export default function Page() {
   return (
     <div className="flex flex-col gap-4">
-      <div className="w-full h-52 flex relative mt-4">
-        <Image
-          layout="fill"
-          src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1730003049/learning-webdev-blog/clinic/quy-trinh-kham-benh-va-nhung-dieu-can-luu-y-1_c1wsab.jpg"
-          alt="Hotel Image"
-          className="object-cover rounded-md"
-        />
+      <div className="flex flex-col gap-4">
+        <div className="w-full h-64 flex relative mt-4">
+          <Image
+            layout="fill"
+            src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1733645303/learning-webdev-blog/clinic/Thi%E1%BA%BFt_k%E1%BA%BF_ch%C6%B0a_c%C3%B3_t%C3%AAn_dokdbk.png"
+            alt="Clinic Image"
+            className="object-cover rounded-md opacity-80"
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="bg-secondary opacity-80 p-4 rounded-full flex items-center gap-2">
+              <Button
+                size="icon"
+                className="pointer-events-none rounded-full bg-blue-500 "
+              >
+                <PhoneCall className="text-white w-12 h-12" />
+              </Button>
+              <p className="text-blue-500 text-2xl font-bold">LIÊN HỆ HỖ TRỢ</p>
+            </div>
+          </div>
+        </div>
       </div>
       <Breadcrumb>
         <BreadcrumbList>
@@ -51,14 +64,14 @@ export default function Page() {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbPage className="text-base text-blue-500">
-              LIÊN HỆ
+              LIÊN HỆ HỖ TRỢ
             </BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <Separator></Separator>
       <div className="w-full grid md:grid-cols-3 gap-4 mt-4 bg-primary-foreground p-6 rounded-md border">
-        <div className="space-y-6 col-span-1">
+        <div className="space-y-6 col-span-1 text-slate-600 dark:text-slate-300">
           <div>
             <h2 className="text-md font-medium text-blue-500 mb-2">
               THÔNG TIN CHI TIẾT
@@ -71,7 +84,9 @@ export default function Page() {
           <div className="flex items-start space-x-4">
             <Building2 className="w-6 h-6 text-blue-500 mt-1" />
             <div>
-              <h4 className="font-medium">BỆNH VIỆN ĐẠI HỌC Y DƯỢC TPHCM</h4>
+              <h4 className="text-md font-medium">
+                BỆNH VIỆN ĐẠI HỌC Y DƯỢC TPHCM
+              </h4>
               <p className="text-sm text-blue-500">
                 215 Hồng Bàng, P.11, Q.5, TP.HCM
               </p>
@@ -95,7 +110,7 @@ export default function Page() {
           </div>
         </div>
 
-        <div className="col-span-2">
+        <div className="col-span-2 text-slate-600 dark:text-slate-300">
           <h2 className="text-md font-medium text-blue-500 mb-2">LIÊN HỆ</h2>
           <h3 className="text-lg font-semibold mb-4">
             GIẢI ĐÁP THẮC MẮC, GÓP Ý VỀ DỊCH VỤ
@@ -147,31 +162,53 @@ export default function Page() {
         </div>
       </div>
 
-      <div className="w-full text-center mt-4 bg-primary-foreground p-6 rounded-md border flex flex-col gap-4 items-center">
-        <div className="w-fit font-semibold inline-block px-6 py-2 bg-blue-50 text-blue-500 rounded-full">
+      <div className="w-full text-center mt-4 bg-primary-foreground p-6 rounded-md border flex flex-col gap-4 items-center text-slate-600 dark:text-slate-300">
+        <div className="w-fit border border-blue-300 font-semibold px-4 py-2 bg-blue-50 text-blue-500 rounded-full flex flex-row gap-3 items-center">
           Hỗ trợ
+          <Button
+            size="icon"
+            className="pointer-events-none rounded-full bg-blue-400 "
+          >
+            <PhoneCall className="text-white w-12 h-12" />
+          </Button>
         </div>
         <p className="text-lg font-semibold uppercase">
           Các hình thức hỗ trợ từ UMC Đặt Khám
         </p>
         <p className="text-gray-500">Bệnh nhân chọn các hình thức bên dưới</p>
 
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mt-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-4xl mt-4 text-slate-600 dark:text-slate-300">
           <Card className="p-6 text-center hover:shadow-lg transition-shadow">
             <HeartPulse className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <p className="font-medium mb-2">Hỗ trợ chuyên môn</p>
+            <p className="font-medium mb-2 text-slate-600 dark:text-slate-300">
+              Hỗ trợ chuyên môn
+            </p>
             <p className="text-blue-500">1900-7178</p>
           </Card>
 
           <Card className="p-6 text-center hover:shadow-lg transition-shadow">
             <PhoneCall className="w-12 h-12 text-yellow-500 mx-auto mb-4" />
-            <p className="font-medium mb-2">Hỗ trợ kỹ thuật</p>
+            <p className="font-medium mb-2 text-slate-600 dark:text-slate-300">
+              Hỗ trợ kỹ thuật
+            </p>
             <p className="text-blue-500">1900-2115</p>
           </Card>
 
           <Card className="p-6 text-center hover:shadow-lg transition-shadow">
             <Facebook className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-            <p className="font-medium mb-2">Fanpage Facebook</p>
+            <p className="font-medium mb-2 text-slate-600 dark:text-slate-300">
+              Fanpage Facebook
+            </p>
+            <Button variant="link" className="text-blue-500 ">
+              Bấm vào đây
+            </Button>
+          </Card>
+
+          <Card className="p-6 text-center hover:shadow-lg transition-shadow">
+            <MessageCircle className="w-12 h-12 text-blue-500 mx-auto mb-4" />
+            <p className="font-medium mb-2 text-slate-600 dark:text-slate-300">
+              Hỗ trợ ZALO
+            </p>
             <Button variant="link" className="text-blue-500">
               Bấm vào đây
             </Button>
@@ -179,15 +216,9 @@ export default function Page() {
 
           <Card className="p-6 text-center hover:shadow-lg transition-shadow">
             <MessageCircle className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-            <p className="font-medium mb-2">Hỗ trợ ZALO</p>
-            <Button variant="link" className="text-blue-500">
-              Bấm vào đây
-            </Button>
-          </Card>
-
-          <Card className="p-6 text-center hover:shadow-lg transition-shadow">
-            <MessageCircle className="w-12 h-12 text-blue-500 mx-auto mb-4" />
-            <p className="font-medium mb-2">Chat Facebook</p>
+            <p className="font-medium mb-2 text-slate-600 dark:text-slate-300">
+              Chat Facebook
+            </p>
             <Button variant="link" className="text-blue-500">
               Bấm vào đây
             </Button>

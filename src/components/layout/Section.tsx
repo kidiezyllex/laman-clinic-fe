@@ -139,7 +139,6 @@ export default function Section() {
             borderRadius: 10,
           }}
         ></iframe>
-        {/* <HuggingFaceAssistant></HuggingFaceAssistant> */}
       </Container>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">
@@ -147,14 +146,12 @@ export default function Section() {
         </p>
         <Slider items={treatments}></Slider>
       </Container>
-      <Separator></Separator>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">
           Các chuyên ngành
         </p>
         <Specialties></Specialties>
       </Container>
-      <Separator></Separator>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">
           Dịch vụ phổ biến
@@ -164,7 +161,6 @@ export default function Section() {
           <TabsCpn items={services}></TabsCpn>
         </div>
       </Container>
-      <Separator></Separator>
       <Container>
         <p className="font-bold text-2xl my-5 text-blue-400">Tìm bác sĩ</p>
         <DoctorsCpn items={doctors}></DoctorsCpn>

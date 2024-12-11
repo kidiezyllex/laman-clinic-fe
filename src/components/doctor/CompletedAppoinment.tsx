@@ -123,12 +123,24 @@ export default function CompletedAppointments() {
           <Table className="overflow-scroll">
             <TableHeader>
               <TableRow>
-                <TableHead>STT</TableHead>
-                <TableHead>Ngày giờ khám</TableHead>
-                <TableHead>Lý do khám</TableHead>
-                <TableHead>Bệnh nhân</TableHead>
-                <TableHead>Đơn thuốc</TableHead>
-                <TableHead>Xét nghiệm</TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  STT
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Ngày giờ khám
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Lý do khám
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Bệnh nhân
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Đơn thuốc
+                </TableHead>
+                <TableHead className="text-blue-500 font-semibold">
+                  Xét nghiệm
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>

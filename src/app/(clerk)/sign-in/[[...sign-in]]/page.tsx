@@ -72,13 +72,13 @@ export default function Page() {
   };
 
   return (
-    <Card className="w-fit max-w-full bg-white">
+    <Card className="max-w-full bg-white w-[500px] shadow-xl">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl font-bold text-blue-500">
           Đăng nhập
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col items-center">
         <SignIn
           appearance={{
             elements: {
@@ -95,7 +95,7 @@ export default function Page() {
             },
           }}
         />
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
+        <form onSubmit={handleLogin} className="flex flex-col gap-4 w-full">
           <div className="space-y-2 text-black">
             <Label htmlFor="email">Email</Label>
             <Input

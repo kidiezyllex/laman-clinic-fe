@@ -40,7 +40,7 @@ export default function DoctorsManagement() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterRole, setFilterRole] = useState("all");
-  const itemsPerPage = 10;
+  const itemsPerPage = 7;
   const fetchData = async () => {
     try {
       const response = await axios.get(

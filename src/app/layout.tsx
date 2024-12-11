@@ -45,7 +45,9 @@ export default function RootLayout({
               <main className="flex flex-col min-h-screen bg-secondary">
                 <section className="flex flex-grow">
                   <Container>
-                    <LoadingProvider>{children}</LoadingProvider>
+                    <LoadingProvider>
+                      <Suspense>{children}</Suspense>
+                    </LoadingProvider>
                   </Container>
                 </section>
                 <Hero />

@@ -1,5 +1,4 @@
 "use client";
-
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
@@ -19,7 +18,6 @@ import {
   Dog,
   Pill,
   Plus,
-  Receipt,
   RotateCcw,
   SearchIcon,
   UserRoundSearch,
@@ -33,8 +31,7 @@ import {
 } from "@/components/ui/select";
 import axios from "axios";
 import { Label } from "../ui/label";
-import { medicationData } from "../../../lib/hardcoded-data";
-import { MedicationRow, Patient } from "../../../lib/entity-types";
+import { Medication, MedicationRow, Patient } from "../../../lib/entity-types";
 import { Card } from "../ui/card";
 
 const medicationSchema = z.object({
@@ -54,13 +51,12 @@ const customerInfoSchema = z.object({
 
 export default function VisitorPrescription() {
   const { toast } = useToast();
-  const [showInvoice, setShowInvoice] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedPatientId, setSelectedPatientId] = useState("");
   const [isShow, setIsShow] = useState(false);
   const [patients, setPatients] = useState<Patient[]>([]);
   const [filteredPatients, setFilteredPatients] = useState<Patient[]>([]);
-
+  const [medications, setMedications] = useState<Medication[]>([]);
   const [rows, setRows] = useState<MedicationRow[]>([
     {
       id: 1,
@@ -96,7 +92,7 @@ export default function VisitorPrescription() {
 
   // Fill value trên các row
   const handleSelectMedicationName = (value: string, rowId: number) => {
-    const findMedication = medicationData.find(
+    const findMedication = medications.find(
       (item) => item.medicationName === value
     );
     setRows(
@@ -134,10 +130,15 @@ export default function VisitorPrescription() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await axios.get(
+      const res = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients`
       );
-      setPatients(response.data);
+
+      const res2 = await axios.get(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
+      );
+      setPatients(res.data);
+      setMedications(res2.data);
     };
     fetchData();
   }, [searchTerm]);
@@ -187,6 +188,8 @@ export default function VisitorPrescription() {
           medications: rows,
           status: "Completed",
           dateIssued: new Date(),
+          visitorName: customerInfoForm.getValues("fullName"),
+          visitorPhone: customerInfoForm.getValues("phone"),
         };
         const res = await axios.post(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/prescriptions`,
@@ -361,7 +364,7 @@ export default function VisitorPrescription() {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {medicationData.map((medication, index) => (
+                      {medications.map((medication, index) => (
                         <SelectItem
                           key={medication.medicationName}
                           value={medication.medicationName}
@@ -420,7 +423,6 @@ export default function VisitorPrescription() {
               },
             ]);
             setIsShow(false);
-            setShowInvoice(false);
           }}
           variant="destructive"
           className={isShow ? "" : "hidden"}
@@ -439,24 +441,6 @@ export default function VisitorPrescription() {
         </Button>
         <Button
           type="button"
-          onClick={() => {
-            if (rows[0].quantity !== 0) {
-              setShowInvoice(true);
-            } else
-              toast({
-                variant: "destructive",
-                title: "Thất bại!",
-                description: "Hoá đơn rỗng. Vui lòng Tạo đơn thuốc!",
-              });
-          }}
-          variant="default"
-          className="self-start flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-        >
-          Xem hoá đơn
-          <Receipt className="h-4 w-4" />
-        </Button>
-        <Button
-          type="button"
           onClick={handleCreatePrescription}
           variant="default"
           className="self-start flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
@@ -465,22 +449,6 @@ export default function VisitorPrescription() {
           <Pill className="h-4 w-4" />
         </Button>
       </div>
-      {/* {showInvoice && (
-        <div className="border rounded-md">
-          <PrescriptionBill
-            prescription={{
-              _id: "",
-              patient: Patiet,
-              doctorId: "",
-              medications: [],
-              dateIssued: new Date(),
-              visitorName: "",
-              visitorPhone: "",
-            }}
-            newMedication={[...rows] as any}
-          />
-        </div>
-      )} */}
     </div>
   );
 }

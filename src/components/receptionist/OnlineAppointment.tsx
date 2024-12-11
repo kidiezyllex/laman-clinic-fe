@@ -212,7 +212,7 @@ export default function OnlineAppointment() {
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
       pdf.save(
-        `${selectedAppointment?.patientId + formatDate(new Date())}.pdf`
+        `HDKB-${selectedAppointment?.patientId + formatDate(new Date())}.pdf`
       );
     } catch (err) {
       console.error(err);
@@ -234,7 +234,7 @@ export default function OnlineAppointment() {
       // Create a File object from the blob
       const file = new File(
         [blob],
-        `${selectedAppointment?.patientId}-${formatDate2(new Date())}.png`,
+        `HDKB-${selectedAppointment?.patientId}-${formatDate2(new Date())}.png`,
         { type: "image/png" }
       );
 

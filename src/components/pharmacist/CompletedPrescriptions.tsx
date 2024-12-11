@@ -101,12 +101,14 @@ export default function CompletedPrescriptions() {
           />
         </div>
         <Select value={filterType} onValueChange={setFilterType}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[220px]">
             <SelectValue placeholder="Lọc theo ngày" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
-            <SelectItem value="today">Hôm nay</SelectItem>
+            <SelectItem value="today">
+              Hôm nay ({formatDate(new Date())})
+            </SelectItem>{" "}
             <SelectItem value="new">Gần nhất</SelectItem>
             <SelectItem value="visitor">Khách vãng lai</SelectItem>
           </SelectContent>

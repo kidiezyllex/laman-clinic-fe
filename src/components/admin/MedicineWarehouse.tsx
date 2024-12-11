@@ -31,6 +31,7 @@ import {
   RotateCcw,
   MapPinCheck,
   MapPin,
+  RefreshCw,
 } from "lucide-react";
 import axios from "axios";
 import { Medication, TestType } from "../../../lib/entity-types";
@@ -65,14 +66,17 @@ export default function MedicineWarehouse() {
     description: "",
     price: 0,
   });
+  const [isLoading, setIsLoading] = useState(false);
   const [filterValue, setFilterValue] = useState("all");
 
   const fetchData = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`
       );
       setMedications(response.data);
+      setIsLoading(false);
     } catch (error) {
       toast({
         title: "Thất bại!",
@@ -177,8 +181,13 @@ export default function MedicineWarehouse() {
           </Button>
         ) : null}
 
-        <Button variant="outline" size="icon" onClick={fetchData}>
-          <RotateCcw className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={fetchData}
+          disabled={isLoading}
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
       <Table className="border">

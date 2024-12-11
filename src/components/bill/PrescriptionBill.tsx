@@ -35,10 +35,18 @@ export default function PrescriptionBill({
   const [patient, setPatient] = useState<Patient | null>(null);
   useEffect(() => {
     const fetchPatientByAccountId = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${prescription.patientId}`
-      );
-      setPatient(response.data);
+      if (prescription.patientId !== "BN-VL0000") {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/patients/${prescription.patientId}`
+        );
+        setPatient(response.data);
+      } else
+        setPatient({
+          _id: "",
+          fullName: prescription.visitorName,
+          phone: prescription.visitorPhone,
+          address: "",
+        });
     };
 
     fetchPatientByAccountId();
@@ -54,7 +62,7 @@ export default function PrescriptionBill({
       const imgWidth = pdf.internal.pageSize.getWidth();
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-      pdf.save(`HDT-${prescription.patientId}-${formatDate(new Date())}.pdf`);
+      pdf.save(`HDTH-${prescription.patientId}-${formatDate(new Date())}.pdf`);
     } catch (err) {
       console.error(err);
     }

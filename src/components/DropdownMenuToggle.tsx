@@ -18,7 +18,6 @@ export default function UserMenu() {
   const { userId } = useAuth();
   const { setToken, currentId, setCurrentId } = useAuthContext();
   const { toast } = useToast();
-  console.log(userId);
   useEffect(() => {
     // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
     const setId = async () => {
@@ -32,8 +31,8 @@ export default function UserMenu() {
           setCurrentId(response2?.data?._id);
         }
       }
-      setId();
     };
+    setId();
   }, [userId]);
   const handleLogOut = async () => {
     setToken(null);

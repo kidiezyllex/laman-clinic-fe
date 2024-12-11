@@ -29,6 +29,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowUpFromLine, Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthContext } from "@/app/auth-context";
+import { useAuth } from "@clerk/nextjs";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Họ và tên phải có ít nhất 2 ký tự" }),
@@ -54,6 +55,7 @@ export default function CreateProfileForm({
   setSearchTerm: (section: string) => void;
   setShowCreatePatientProfile: (section: boolean) => void;
 }) {
+  const { userId } = useAuth();
   const [provincesList, setProvincesList] = useState<any[]>([]);
   const [districtsList, setDistrictsList] = useState<any[]>([]);
   const { toast } = useToast();
@@ -118,7 +120,7 @@ export default function CreateProfileForm({
         : data.phone,
       email: data.email,
       medicalHistory: [],
-      clerkId: pathName[1],
+      clerkId: userId,
       dateOfBirth: data.birthYear + "-" + data.birthMonth + "-" + data.birthDay,
       address:
         data.district.split("-").slice(1).join("-") +

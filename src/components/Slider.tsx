@@ -27,7 +27,7 @@ export default function Slider({ items }: SliderProps) {
   return (
     <Carousel
       plugins={[plugin.current]}
-      className="w-ful"
+      className="w-full relative"
       onMouseEnter={plugin.current.stop}
       onMouseLeave={plugin.current.reset}
     >
@@ -54,8 +54,6 @@ export default function Slider({ items }: SliderProps) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
     </Carousel>
   );
 }

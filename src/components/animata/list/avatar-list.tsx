@@ -66,7 +66,7 @@ export default function AvatarList({
   };
 
   return (
-    <div className={cn("flex mt-16 pt-2 ml-4", className)}>
+    <div className={cn("hidden sm:flex mt-16 pt-2 ml-4", className)}>
       {data.map((item) => (
         <div
           key={item.name}

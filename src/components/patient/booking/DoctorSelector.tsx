@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Doctor } from "../../../../lib/entity-types";
 import { renderSpecialty } from "../../../../lib/utils";
-import { Calendar } from "lucide-react";
+import { Calendar, Plus } from "lucide-react";
 export default function DoctorSelector({
   setActiveSection,
   setSelectedSpe,
@@ -61,36 +61,59 @@ export default function DoctorSelector({
         onChange={(e) => setSearchTerm(e.target.value)}
         className="w-full mb-4"
       />
-      <ScrollArea className="h-[400px] w-full rounded-md border bg-background p-4">
+      {/* <div className="w-full border rounded-md p-2 sm:p-4 bg-primary-foreground overflow-x-auto"> */}
+
+      <ScrollArea className="h-[400px] w-full rounded-md border bg-background sm:p-4">
         <Table>
           <TableHeader className="sticky">
             <TableRow>
-              <TableHead>STT</TableHead>
-              <TableHead>Họ và tên</TableHead>
-              <TableHead>Giới tính</TableHead>
-              <TableHead>Chuyên khoa</TableHead>
-              <TableHead>Chọn</TableHead>
+              <TableHead className="text-blue-500 font-semibold sm:text-base">
+                STT
+              </TableHead>
+              <TableHead className="text-blue-500 font-semibold text-xs sm:text-sm">
+                Họ và tên
+              </TableHead>
+              <TableHead className="text-blue-500 font-semibold text-xs sm:text-sm">
+                Giới tính
+              </TableHead>
+              <TableHead className="text-blue-500 font-semibold text-xs sm:text-sm">
+                Chuyên khoa
+              </TableHead>
+              <TableHead className="text-blue-500 font-semibold text-xs sm:text-sm">
+                Chọn
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredDoctors.map((item, index) => (
               <TableRow key={index}>
-                <TableCell>{index + 1}</TableCell>
-                <TableCell>{item.fullName}</TableCell>
-                <TableCell>
+                <TableCell className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
+                  {index + 1}
+                </TableCell>
+                <TableCell className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-semibold">
+                  {item.fullName}
+                </TableCell>
+                <TableCell className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm">
                   {item.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
                 </TableCell>
-                <TableCell>
+                <TableCell className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-semibold">
                   {renderSpecialty(item?.specialization + "")}
                 </TableCell>
 
-                <TableCell>
+                <TableCell className="text-slate-600 dark:text-slate-300 text-xs sm:text-sm font-semibold">
                   <Button
-                    className="bg-blue-500 text-white dark:text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-700"
+                    className="hidden sm:flex bg-blue-500 text-white dark:text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-700"
                     onClick={() => handleSelectDoctor(item)}
                   >
                     Đặt khám
                     <Calendar className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    size={"icon"}
+                    className="flex sm:hidden bg-blue-500 text-white dark:text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-700"
+                    onClick={() => handleSelectDoctor(item)}
+                  >
+                    <Plus className="h-4 w-4" />
                   </Button>
                 </TableCell>
               </TableRow>

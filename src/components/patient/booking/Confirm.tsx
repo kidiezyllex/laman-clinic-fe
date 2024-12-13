@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState } from "react";
 import {
   Calendar,
@@ -22,6 +23,7 @@ import {
   generateExamination,
   renderSpecialty,
 } from "../../../../lib/utils";
+
 const Confirm = ({
   setActiveSection,
   selectedDate,
@@ -78,64 +80,66 @@ const Confirm = ({
   };
 
   return (
-    <div className="w-full flex flex-col gap-4 bg-background rounded-md p-4 border h-full">
-      <p className="text-base font-semibold text-blue-500">
+    <div className="w-full flex flex-col gap-4 bg-background rounded-md p-2 sm:p-4 border h-full">
+      <p className="text-base font-semibold text-blue-500 ml-4 md:ml-0">
         VUI LÒNG XÁC NHẬN THÔNG TIN HẸN KHÁM
       </p>
-      <div className="grid grid-cols-2 space-x-4 border rounded-md p-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:space-x-4 border rounded-md p-2 sm:p-4 text-slate-600 dark:text-slate-300 bg-primary-foreground">
         <div className="flex flex-col gap-3">
           <h3 className="text-md font-semibold">Thông tin bệnh nhân</h3>
           <div className="flex items-center gap-2">
-            <Code className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">Mã bệnh nhân: {patient?._id}</span>
+            <Code className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">
+              Mã bệnh nhân: {patient?._id}
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <User className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">Họ và tên: {patient?.fullName}</span>
+            <User className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">
+              Họ và tên: {patient?.fullName}
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <User className="w-4 h-4 text-blue-500" />
+            <User className="w-4 h-4 text-blue-500 flex-shrink-0" />
             <span className="text-sm">
               Giới tính:{" "}
               {patient?.gender?.toLowerCase() === "female" ? "Nữ" : "Nam"}
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-blue-500" />
+            <Calendar className="w-4 h-4 text-blue-500 flex-shrink-0" />
             <span className="text-sm">
               Ngày sinh: {formatDate(patient?.dateOfBirth)}
             </span>
           </div>
-
           <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">Địa chỉ: {patient?.address}</span>
+            <MapPin className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">
+              Địa chỉ: {patient?.address}
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <Phone className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">Số ĐT: {patient?.phone}</span>
+            <Phone className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">Số ĐT: {patient?.phone}</span>
           </div>
           <div className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">Email: {patient?.email}</span>
+            <Mail className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">Email: {patient?.email}</span>
           </div>
         </div>
-        <div className="flex flex-col gap-3 ">
+        <div className="flex flex-col gap-3">
           <p className="text-md font-semibold">Thông tin lịch hẹn đăng ký</p>
-          {selectedDoctor?._id ? (
+          {selectedDoctor?._id && (
             <div className="flex items-center gap-2">
-              <User className="w-4 h-4 text-blue-500" />
-              <span className="text-sm">
+              <User className="w-4 h-4 text-blue-500 flex-shrink-0" />
+              <span className="text-sm break-all">
                 Bác sĩ: {selectedDoctor?.fullName}
               </span>
             </div>
-          ) : (
-            ""
           )}
-
           <div className="flex items-center gap-2">
-            <SquareActivity className="w-4 h-4 text-blue-500" />
-            <span className="text-sm">
+            <SquareActivity className="w-4 h-4 text-blue-500 flex-shrink-0" />
+            <span className="text-sm break-all">
               Chuyên khoa:{" "}
               {renderSpecialty(
                 selectedDoctor?.specialization + "" || selectedSpe + ""
@@ -143,14 +147,14 @@ const Confirm = ({
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-blue-500" />
+            <Calendar className="w-4 h-4 text-blue-500 flex-shrink-0" />
             <span className="text-sm">
               Ngày khám: {formatDate(selectedDate)}
             </span>
           </div>
-          {!selectedDoctor?._id ? null : (
+          {selectedDoctor?._id && (
             <div className="flex items-center gap-2">
-              <Timer className="w-4 h-4 text-blue-500" />
+              <Timer className="w-4 h-4 text-blue-500 flex-shrink-0" />
               <span className="text-sm">
                 Ca khám: {generateExamination(formatDate3(selectedDate))}
               </span>
@@ -159,9 +163,9 @@ const Confirm = ({
         </div>
       </div>
 
-      <div className="flex flex-row justify-between mt-4 flex-grow">
+      <div className="flex flex-col sm:flex-row justify-between mt-4 gap-2 sm:gap-0">
         <Button
-          className="w-fit dark:hover:bg-slate-900 self-end"
+          className="w-full sm:w-fit dark:hover:bg-slate-900"
           onClick={() => {
             selectedDoctor
               ? setActiveSection("calendarSelector")
@@ -174,18 +178,18 @@ const Confirm = ({
         <Button
           type="submit"
           disabled={isLoading}
-          className="w-fit self-end flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+          className="w-full sm:w-fit flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
           onClick={() => handleBooking()}
         >
           {isLoading ? (
             <>
               Đang xử lý
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin ml-2" />
             </>
           ) : (
             <>
               Đặt khám
-              <Calendar className="w-4 h-4" />
+              <Calendar className="w-4 h-4 ml-2" />
             </>
           )}
         </Button>

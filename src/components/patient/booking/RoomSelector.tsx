@@ -12,6 +12,7 @@ import {
   renderDayOfWeek,
   renderSpecialty,
 } from "../../../../lib/utils";
+
 export default function RoomSelector({
   setActiveSection,
   selectedSpe,
@@ -27,6 +28,7 @@ export default function RoomSelector({
   const [selectedDate2, setSelectedDate2] = useState<Date>(
     selectedDate || new Date()
   );
+
   useEffect(() => {
     const fetchDoctors = async () => {
       const response = await axios.get(
@@ -48,7 +50,7 @@ export default function RoomSelector({
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <p className="text-base font-semibold text-blue-500">
+      <p className="text-base font-semibold text-blue-500 ml-4 md:ml-0">
         DANH SÁCH PHÒNG KHÁM, BÁC SĨ, GIỜ KHÁM BẠN SẼ VÀO
       </p>
       <div className="w-full gap-4">
@@ -57,9 +59,9 @@ export default function RoomSelector({
             key={(doctor as any)._id}
             className="overflow-hidden transition-shadow duration-300 rounded-md mb-4 bg-background border"
           >
-            <div className="p-6">
-              <div className="items-center mb-4 flex flex-row justify-between">
-                <div className="flex flex-row gap-2 items-center">
+            <div className="p-4 sm:p-6">
+              <div className="items-start sm:items-center mb-4 flex flex-col sm:flex-row justify-between">
+                <div className="flex flex-row gap-2 items-center mb-2 sm:mb-0">
                   <Stethoscope className="w-4 h-4 text-blue-500" />
                   <span className="text-slate-600 dark:text-slate-300 text-base font-medium">
                     Bác sĩ:
@@ -68,7 +70,7 @@ export default function RoomSelector({
                     {(doctor as any)?.fullName}
                   </span>
                 </div>
-                <div className="flex flex-row gap-2 items-center">
+                <div className="flex flex-row gap-2 items-center mb-2 sm:mb-0">
                   <User className="w-4 h-4 text-blue-500" />
                   <span className="text-slate-600 dark:text-slate-300 text-base font-medium">
                     Giới tính:
@@ -89,14 +91,14 @@ export default function RoomSelector({
                   </span>
                 </div>
               </div>
-              <div className="space-y-4 ">
+              <div className="space-y-4">
                 {selectedDate &&
                   (doctor as any).schedule.map((scheduleItem: Schedule) => (
                     <div
                       key={scheduleItem.dayOfWeek + scheduleItem.startTime}
                       className={
                         scheduleItem.dayOfWeek === getDayOfWeek(selectedDate2)
-                          ? "p-4 border bg-primary-foreground border-blue-300 dark:border-secondary rounded-md"
+                          ? "p-2 sm:p-4 border bg-primary-foreground border-blue-300 dark:border-secondary rounded-md"
                           : "hidden"
                       }
                     >
@@ -106,7 +108,7 @@ export default function RoomSelector({
                           {renderDayOfWeek(scheduleItem.dayOfWeek)}
                         </p>
                       </h3>
-                      <div className="grid grid-cols-4 gap-2 ">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         {generateTimeSlots(
                           (scheduleItem as any).startTime,
                           (scheduleItem as any).endTime
@@ -114,7 +116,7 @@ export default function RoomSelector({
                           <Button
                             key={slot}
                             variant={"outline"}
-                            className="pointer-events-none"
+                            className="pointer-events-none text-xs sm:text-sm"
                           >
                             <span className="text-slate-600 dark:text-slate-300">
                               {slot}
@@ -129,9 +131,9 @@ export default function RoomSelector({
           </div>
         ))}
       </div>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0">
         <Button
-          className="w-fit dark:hover:bg-slate-900"
+          className="w-full sm:w-fit dark:hover:bg-slate-900"
           onClick={() => {
             setActiveSection("specialtySelector");
           }}
@@ -140,12 +142,12 @@ export default function RoomSelector({
           Quay lại
         </Button>
         <ArrowButton
-          className="w-fit"
+          className="w-full sm:w-fit"
           text={"Tiếp tục"}
           onClick={() => {
             setActiveSection("confirm");
           }}
-        ></ArrowButton>
+        />
       </div>
     </div>
   );

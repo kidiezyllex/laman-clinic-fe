@@ -47,7 +47,7 @@ export default function SpecialtySelector({
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <p className="text-base font-semibold text-blue-500">
+      <p className="text-base font-semibold text-blue-500 ml-4 md:ml-0">
         VUI LÒNG CHỌN MỘT CHUYÊN KHOA
       </p>
       <Input

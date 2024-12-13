@@ -65,7 +65,7 @@ export default function CalendarSelector({
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <p className="text-base font-semibold text-blue-500">
+      <p className="text-base font-semibold text-blue-500 ml-4 md:ml-0">
         VUI LÒNG CHỌN NGÀY KHÁM
       </p>
       <Calendar
@@ -77,17 +77,17 @@ export default function CalendarSelector({
         classNames={{
           head: "h-[30px] flex items-center",
           nav: "h-[35px] flex items-center sm:h-[70px]",
-          head_cell: "w-[35px] sm:w-[100px]",
-          cell: "w-[35px] h-[35px] m-1 sm:h-[70px] sm:w-[100px]",
+          head_cell: "w-[35px] sm:w-[100px] font-medium text-slate-600 mr-2",
+          cell: "w-[35px] h-[35px] m-1 sm:h-[70px] sm:w-[100px] text-slate-600",
           button:
             "w-[35px] h-[35px] border border-slate-400 sm:w-[100px] sm:h-[70px]",
           nav_button:
-            "w-[35px] h-[35px] flex items-center sm:w-[70px] sm:h-[70px]",
+            "w-[35px] h-[35px] border rounded-md flex items-center justify-center sm:w-[70px] sm:h-[70px]",
         }}
       />
       {filteredSchedule[0] && showExamination ? (
         <div className="w-full flex flex-col gap-4">
-          <p className="text-base font-semibold text-blue-500">
+          <p className="text-base font-semibold text-blue-500 ml-4 md:ml-0">
             VUI LÒNG CHỌN CA KHÁM
           </p>
           <div className="space-y-4 bg-background rounded-md p-4">
@@ -98,7 +98,7 @@ export default function CalendarSelector({
                 {renderDayOfWeek(filteredSchedule[0].dayOfWeek)}
               </p>
             </h3>
-            <div className="grid grid-cols-4 gap-2 ">
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 ">
               {generateTimeSlots(
                 filteredSchedule[0].startTime,
                 filteredSchedule[0].endTime

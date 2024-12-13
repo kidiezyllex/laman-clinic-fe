@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Trash2 } from "lucide-react";
+
 export default function BookedAppointments() {
   const pathname = usePathname();
   const patientId = pathname.split("/")[1];
@@ -32,6 +33,7 @@ export default function BookedAppointments() {
   >([]);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [apmtId, setApmtId] = useState("");
+
   const fetchData = async () => {
     if (!pathname.split("_").includes("/user")) {
       const response = await axios.get(
@@ -43,8 +45,7 @@ export default function BookedAppointments() {
         })
         .sort((a: any, b: any) => {
           return (
-            new Date(a.appointmentDateByPatient).getTime() -
-            new Date(b.appointmentDateByPatient).getTime()
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
           );
         });
       setAppointmentByPatients(newBookedApmts);
@@ -52,6 +53,7 @@ export default function BookedAppointments() {
       setAppointmentByPatients([]);
     }
   };
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -66,34 +68,35 @@ export default function BookedAppointments() {
       console.log(error);
     }
   };
+
   return (
-    <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-full">
+    <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-2 sm:p-4 h-full">
       <p className="text-base font-semibold text-blue-500 uppercase">
         Danh sách lịch hẹn đã đặt
       </p>
-      <div className="w-full border rounded-md p-4 bg-primary-foreground">
+      <div className="w-full border rounded-md p-2 sm:p-4 bg-primary-foreground overflow-x-auto">
         {!appointmentByPatients || appointmentByPatients?.length === 0 ? (
           <p className="text-slate-500 text-sm">Chưa có lịch đã đặt</p>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   STT
                 </TableHead>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   Ngày đặt khám
                 </TableHead>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   Đặt lịch theo
                 </TableHead>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   Chuyên khoa
                 </TableHead>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   Đặt vào lúc
                 </TableHead>
-                <TableHead className="text-blue-500 font-semibold">
+                <TableHead className="text-blue-500 font-semibold whitespace-nowrap">
                   Thao tác
                 </TableHead>
               </TableRow>
@@ -102,19 +105,19 @@ export default function BookedAppointments() {
               {appointmentByPatients &&
                 appointmentByPatients?.map((item: any, index) => (
                   <TableRow key={item.diagnosisDate + index}>
-                    <TableCell className="text-slate-600 dark:text-slate-300">
+                    <TableCell className="text-slate-600 dark:text-slate-300 whitespace-nowrap">
                       {index + 1}
                     </TableCell>
-                    <TableCell className="text-slate-600 dark:text-slate-300">
+                    <TableCell className="text-slate-600 dark:text-slate-300 whitespace-nowrap">
                       {formatDate(item?.appointmentDateByPatient)}
                     </TableCell>
-                    <TableCell className="text-slate-600 dark:text-slate-300">
+                    <TableCell className="text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
                       {item.doctorId ? "Đặt theo Bác sĩ" : "Đặt theo ngày"}
                     </TableCell>
-                    <TableCell className="text-slate-600 dark:text-slate-300">
+                    <TableCell className="text-slate-600 dark:text-slate-300 font-semibold whitespace-nowrap">
                       {renderSpecialty(item.specialization)}
                     </TableCell>
-                    <TableCell className="text-slate-600 dark:text-slate-300">
+                    <TableCell className="text-slate-600 dark:text-slate-300 whitespace-nowrap">
                       {formatDate2(item?.createdAt)}
                     </TableCell>
                     <TableCell className="text-slate-600 dark:text-slate-300">
@@ -124,9 +127,10 @@ export default function BookedAppointments() {
                           setApmtId(item._id);
                           setIsAlertOpen(true);
                         }}
+                        className="whitespace-nowrap"
                       >
                         Xoá
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4 ml-2" />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -136,7 +140,7 @@ export default function BookedAppointments() {
         )}
       </div>
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-        <AlertDialogContent className="dark:bg-primary-foreground">
+        <AlertDialogContent className="dark:bg-primary-foreground max-w-[90vw] sm:max-w-[425px]">
           <AlertDialogHeader>
             <AlertDialogTitle className="dark:text-slate-300 text-slate-600">
               Bạn có chắc chắn muốn xoá?
@@ -146,13 +150,13 @@ export default function BookedAppointments() {
               liệu của bạn khỏi máy chủ của chúng tôi.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel className="border-none bg-red-500 dark:bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600 hover:text-white">
+          <AlertDialogFooter className="sm:space-x-0 sm:space-y-2">
+            <AlertDialogCancel className="border-none bg-red-500 dark:bg-red-500 text-white hover:bg-red-600 dark:hover:bg-red-600 hover:text-white w-full sm:w-auto">
               Huỷ
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAppointmentByPatient}
-              className="border-none bg-blue-500 dark:bg-blue-500 text-white dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white"
+              className="border-none bg-blue-500 dark:bg-blue-500 text-white dark:text-white hover:bg-blue-600 dark:hover:bg-blue-600 hover:text-white w-full sm:w-auto"
             >
               Xác nhận
             </AlertDialogAction>

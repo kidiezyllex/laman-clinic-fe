@@ -80,7 +80,7 @@ export default function CreatePatientProfile() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <CardContent className="w-full mx-auto mt-4 sm:mt-8 px-2 sm:px-4">
+      <CardContent className="w-full mx-auto mt-4 sm:mt-8 px-0 sm:px-4">
         <div className="text-center">
           {patient && (
             <div className="p-4 border rounded-md flex flex-col gap-3 bg-background">

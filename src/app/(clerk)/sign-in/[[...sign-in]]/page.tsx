@@ -72,19 +72,17 @@ export default function Page() {
   };
 
   return (
-    <Card className="max-w-full bg-white w-[500px] shadow-xl">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl font-bold text-blue-500">
-          Đăng nhập
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col items-center">
+    <div className="max-w-fit bg-white sm:w-[500px] w-[340px] shadow-xl border rounded-xl p-4 py-8">
+      <div className="text-2xl font-bold text-blue-500 text-center">
+        Đăng nhập
+      </div>
+      <div className="flex flex-col items-center">
         <SignIn
           appearance={{
             elements: {
               formButtonPrimary: "hidden",
+              cardBox: "w-[320px] sm:w-[400px] shadow-none p-0 border-none",
               card: "shadow-none p-0 border-none",
-              cardBox: "shadow-none p-0 border-none",
               header: "hidden",
               formFieldInput: "hidden",
               formFieldLabel: "hidden",
@@ -141,7 +139,7 @@ export default function Page() {
             )}
           </Button>
         </form>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

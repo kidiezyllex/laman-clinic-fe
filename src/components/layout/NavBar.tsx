@@ -106,9 +106,12 @@ export default function NavBar() {
     );
   };
   return (
-    <Card className="sticky top-0 border border-b-primary/10  dark:bg-slate-800 bg-white z-50 rounded-none">
+    <Card className="sticky top-0 border border-b-primary/10 dark:bg-slate-800 bg-white z-50 rounded-none">
       <div className="max-w-[1920px] w-full mx-auto xl:px-14 px-4 py-4 dark:bg-slate-800 bg-white">
-        <div className="items-center justify-between flex flex-row gap-10">
+        <p className="md:hidden block text-xl font-semibold text-center mb-2">
+          PHÒNG KHÁM ĐA KHOA <span className="text-blue-500">LAMAN</span>
+        </p>
+        <div className="items-center justify-between flex flex-row">
           <Link
             className="flex flex-row items-center gap-3 justify-start"
             href={pathName.split("/")[2] === "patient" ? "/" : "#"}
@@ -122,7 +125,9 @@ export default function NavBar() {
               />
             </Avatar>
             <div className="flex flex-col">
-              <p className="text-sm">PHÒNG KHÁM ĐA KHOA</p>
+              <p className="md:block md:text-sm hidden md:font-semibold">
+                PHÒNG KHÁM ĐA KHOA
+              </p>
               <SplitText text="LAMAN Clinic" />
             </div>
           </Link>

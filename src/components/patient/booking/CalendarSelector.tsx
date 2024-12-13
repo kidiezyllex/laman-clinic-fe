@@ -74,25 +74,15 @@ export default function CalendarSelector({
         onSelect={handleSelect}
         disabled={isDateDisabled}
         className="rounded-md border bg-background flex flex-row items-center justify-center"
-        styles={{
-          head: {
-            height: "30px",
-            display: "flex",
-            alignItems: "center",
-          },
-          nav: {
-            height: "70px",
-            display: "flex",
-            alignItems: "center",
-          },
-          head_cell: { width: "100px" },
-          cell: { width: "100px", height: "70px", margin: 1 },
-          button: {
-            width: "100px",
-            height: "70px",
-            border: "1px solid gray",
-          },
-          nav_button: { width: "32px", height: "70px" },
+        classNames={{
+          head: "h-[30px] flex items-center",
+          nav: "h-[35px] flex items-center sm:h-[70px]",
+          head_cell: "w-[35px] sm:w-[100px]",
+          cell: "w-[35px] h-[35px] m-1 sm:h-[70px] sm:w-[100px]",
+          button:
+            "w-[35px] h-[35px] border border-slate-400 sm:w-[100px] sm:h-[70px]",
+          nav_button:
+            "w-[35px] h-[35px] flex items-center sm:w-[70px] sm:h-[70px]",
         }}
       />
       {filteredSchedule[0] && showExamination ? (

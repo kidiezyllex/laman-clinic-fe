@@ -140,25 +140,44 @@ export default function OnlineAppointment() {
         specialization: selectedAppointment?.specialization,
         priority: checked,
       };
+      if (reason.trim() === "") {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: "Vui lòng điền lý do hẹn khám!",
+        });
+      } else {
+        // Xuất hoá đơn
+        await exportToPDF();
 
-      // Xuất hoá đơn
-      await exportToPDF();
+        // Lưu hoá đơn bằng Uploadthing
+        await exportAndUploadImage();
 
-      // Lưu hoá đơn bằng Uploadthing
-      await exportAndUploadImage();
+        // Kafka xử lý
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
+          payload
+        );
 
-      // Kafka xử lý
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
-        payload
-      );
+        // Xoá Data khỏi appointmentsByPatient
+        const response2 = await axios.delete(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?_id=${selectedAppointment?._id}`
+        );
 
-      // Xoá Data khỏi appointmentsByPatient
-      const response2 = await axios.delete(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointmentsByPatient/?_id=${selectedAppointment?._id}`
-      );
-      // Fetch lại data
-      fetchData();
+        // Fetch lại data
+        fetchData();
+
+        setIsDialogOpen(false);
+        setReason("");
+        setChecked(false);
+        setSelectedService("");
+
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Hệ thống đang xử lý lịch hẹn!",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -167,15 +186,6 @@ export default function OnlineAppointment() {
       });
     } finally {
       setIsLoading(false);
-      setIsDialogOpen(false);
-      setReason("");
-      setChecked(false);
-      setSelectedService("");
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Hệ thống đang xử lý lịch hẹn!",
-      });
     }
   };
 
@@ -305,7 +315,7 @@ export default function OnlineAppointment() {
           <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-3">
         {currentAppointments.map((appointment, index) => (
           <Card
             key={appointment._id + index}
@@ -591,6 +601,7 @@ export default function OnlineAppointment() {
               onClick={() => {
                 setIsDialogOpen(false);
                 setReason("");
+                setSelectedService("");
               }}
             >
               Huỷ

@@ -47,7 +47,7 @@ export default function ReExaminationForm({
       if (reason.trim() === "") {
         toast({
           variant: "destructive",
-          title: "Lỗi!",
+          title: "Thất bại!",
           description: "Vui lòng điền lý do tái khám!",
         });
       } else {

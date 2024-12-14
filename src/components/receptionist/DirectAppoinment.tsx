@@ -121,17 +121,33 @@ export default function DirectAppoinment() {
         priority: checked,
       };
 
-      // Xuất hoá đơn
-      await exportToPDF();
+      if (reason.trim() === "") {
+        toast({
+          variant: "destructive",
+          title: "Thất bại!",
+          description: "Vui lòng điền lý do hẹn khám!",
+        });
+      } else {
+        // Xuất hoá đơn
+        await exportToPDF();
 
-      // Lưu hoá đơn bằng Uploadthing
-      await exportAndUploadImage();
+        // Lưu hoá đơn bằng Uploadthing
+        await exportAndUploadImage();
 
-      // Kafka xử lý
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
-        payload
-      );
+        // Kafka xử lý
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/appointments`,
+          payload
+        );
+
+        setIsDialogOpen(false);
+        setReason("");
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: "Hệ thống đang xử lý ca khám!",
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -140,13 +156,6 @@ export default function DirectAppoinment() {
       });
     } finally {
       setIsLoading(false);
-      setIsDialogOpen(false);
-      setReason("");
-      toast({
-        variant: "default",
-        title: "Thành công!",
-        description: "Hệ thống đang xử lý ca khám!",
-      });
     }
   };
 

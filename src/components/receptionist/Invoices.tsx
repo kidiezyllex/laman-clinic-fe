@@ -31,7 +31,7 @@ import {
 } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate2, renderInvoiceType } from "../../../lib/utils";
+import { formatDate, formatDate2, renderInvoiceType } from "../../../lib/utils";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
@@ -70,9 +70,16 @@ export default function Invoices() {
   const filteredInvoices = invoices
     .filter(
       (invoice) =>
+        invoice?.type === "testInvoice" || invoice?.type === "medicalInvoice"
+    )
+    .filter((invoice) => {
+      if (filterRole === "today")
+        return formatDate(invoice.issueDate) === formatDate(new Date());
+      return (
         invoice?.type?.toLowerCase().includes(searchTerm.toLowerCase()) &&
         (filterRole === "all" || invoice.type === filterRole)
-    )
+      );
+    })
     .sort((a, b) => {
       return new Date(b.issueDate).getTime() - new Date(a.issueDate).getTime();
     });
@@ -109,6 +116,9 @@ export default function Invoices() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Tất cả</SelectItem>
+            <SelectItem value="today">
+              Hôm nay ({formatDate(new Date())})
+            </SelectItem>
             <SelectItem value="medicalInvoice">Hoá đơn khám bệnh</SelectItem>
             <SelectItem value="testInvoice">Hoá đơn xét nghiệm</SelectItem>
           </SelectContent>

@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { formatDate } from "../../../lib/utils";
+import { formatDate, formatDate2 } from "../../../lib/utils";
 import { Patient, TestType, RequestTest } from "../../../lib/entity-types";
 import {
   Table,
@@ -111,7 +111,7 @@ export default function RequestedTests() {
         );
       } else if (filterType === "new") {
         return (
-          new Date(a.requestDate).getTime() - new Date(b.requestDate).getTime()
+          new Date(b.requestDate).getTime() - new Date(a.requestDate).getTime()
         );
       }
       return 0;
@@ -298,7 +298,7 @@ export default function RequestedTests() {
           <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
         </Button>
       </div>
-      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-1 lg:grid-cols-3">
         {currentRequestTests.map((requestTest) => (
           <Card
             key={(requestTest as any)._id}
@@ -318,7 +318,7 @@ export default function RequestedTests() {
                 )}
                 <div className="flex flex-col gap-1">
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
-                    Tên bệnh nhân:{" "}
+                    Tên BN:{" "}
                     <span className="text-muted-foreground font-normal">
                       {requestTest.patientId.fullName}
                     </span>
@@ -326,13 +326,13 @@ export default function RequestedTests() {
                   <p className="font-semibold text-sm text-slate-700 dark:text-white">
                     Ngày yêu cầu:{" "}
                     <span className="text-muted-foreground font-normal">
-                      {formatDate(requestTest.requestDate)}
+                      {formatDate2(requestTest.requestDate)}
                     </span>
                   </p>
                 </div>
               </div>
               <Separator></Separator>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-3">
                 <div className="flex flex-row gap-2 items-center">
                   <Stethoscope className="h-4 w-4 text-blue-500"></Stethoscope>
                   <div className="font-semibold text-sm text-slate-700 dark:text-white">
@@ -356,44 +356,37 @@ export default function RequestedTests() {
                 <div className="flex flex-row gap-2 items-center">
                   <CircleHelp className="h-4 w-4 text-blue-500"></CircleHelp>
                   <span className="font-semibold text-sm text-slate-700 dark:text-white">
-                    Lý do:
+                    Lý do xét nghiệm:
                   </span>
                 </div>
-                <span className="text-sm text-muted-foreground">
+                <div className="text-sm text-muted-foreground border rounded-md p-3">
                   {requestTest.reason}
-                </span>
+                </div>
+                <div className="flex flex-row gap-2 items-center">
+                  <TestTube className="h-4 w-4 text-blue-500"></TestTube>
+                  <span className="font-semibold text-sm text-slate-700 dark:text-white">
+                    Loại xét nghiệm:
+                  </span>
+                </div>
+                <div className="flex flex-row flex-wrap gap-2">
+                  {requestTest?.testTypes?.map((test, index) => (
+                    <Badge
+                      className="bg-slate-600 dark:bg-slate-700 dark:text-white"
+                      key={index}
+                    >
+                      {test.testName}
+                    </Badge>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-row gap-2 items-center">
-                <TestTube className="h-4 w-4 text-blue-500"></TestTube>
-                <span className="font-semibold text-sm text-slate-700 dark:text-white">
-                  Loại xét nghiệm:
-                </span>
-              </div>
-              <div className="flex flex-row flex-wrap gap-2">
-                {requestTest?.testTypes?.map((test, index) => (
-                  <Badge
-                    className="bg-slate-600 dark:bg-slate-700 dark:text-white"
-                    key={index}
-                  >
-                    {test.testName}
-                  </Badge>
-                ))}
-              </div>
-              {requestTest?.isTestInvoiceCreated ? (
-                <>
-                  <div className="flex flex-row gap-2 items-center">
-                    <ReceiptText className="h-4 w-4 text-blue-500"></ReceiptText>
-                    <span className="font-semibold text-sm text-slate-700 dark:text-white">
-                      Hoá đơn:
-                    </span>
-                  </div>
-                  <Badge className="bg-blue-500 dark:bg-blue-500 pointer-events-none dark:text-white w-fit">
-                    Đã xuất hoá đơn xét nghiệm
-                  </Badge>
-                </>
-              ) : null}
             </div>
             <div className="flex-grow flex flex-col justify-end">
+              {requestTest?.isTestInvoiceCreated ? (
+                <Button className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white dark:text-white dark:bg-green-500 dark:hover:bg-green-600 pointer-events-none">
+                  Đã xuất hoá đơn
+                  <ReceiptText className="h-4 w-4" />
+                </Button>
+              ) : null}
               {userId.includes("LT") ? (
                 <Button
                   className={

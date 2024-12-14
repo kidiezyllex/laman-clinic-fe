@@ -67,13 +67,13 @@ export default function LabTestsForm({
       if (selectedTests.length === 0) {
         toast({
           variant: "destructive",
-          title: "Lỗi!",
+          title: "Thất bại!",
           description: "Vui lòng chọn ít nhất một xét nghiệm!",
         });
       } else if (reasonRequestTest.trim() === "") {
         toast({
           variant: "destructive",
-          title: "Lỗi!",
+          title: "Thất bại!",
           description: "Vui lòng điền lý do xét nghiệm!",
         });
       } else {

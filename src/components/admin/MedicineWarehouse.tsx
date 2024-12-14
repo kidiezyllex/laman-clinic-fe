@@ -29,12 +29,12 @@ import {
   Trash,
   X,
   RotateCcw,
-  MapPinCheck,
   MapPin,
   RefreshCw,
+  Save,
 } from "lucide-react";
 import axios from "axios";
-import { Medication, TestType } from "../../../lib/entity-types";
+import { Medication } from "../../../lib/entity-types";
 import {
   Pagination,
   PaginationContent,
@@ -60,11 +60,20 @@ export default function MedicineWarehouse() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isOpenMF, setIsOpenMF] = useState(false);
   const [medications, setMedications] = useState<Medication[]>([]);
-  const [newTest, setNewTest] = useState<TestType>({
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editedMedication, setEditedMedication] = useState<Medication | null>(
+    null
+  );
+  const [newMedication, setNewMedication] = useState<Medication>({
     _id: "",
-    testName: "",
-    description: "",
+    medicationName: "",
+    quantityImported: 0,
+    quantityRemaining: 0,
+    dosage: "",
     price: 0,
+    instructions: "",
+    expirationDate: new Date(),
+    quantity: 0,
   });
   const [isLoading, setIsLoading] = useState(false);
   const [filterValue, setFilterValue] = useState("all");
@@ -80,7 +89,7 @@ export default function MedicineWarehouse() {
     } catch (error) {
       toast({
         title: "Thất bại!",
-        description: error + "",
+        description: "Không thể tải danh sách thuốc.",
         variant: "destructive",
       });
     }
@@ -89,6 +98,104 @@ export default function MedicineWarehouse() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleEdit = (medication: Medication) => {
+    setEditingId(medication._id);
+    setEditedMedication({ ...medication });
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    if (editedMedication) {
+      const { name, value } = e.target;
+      setEditedMedication({
+        ...editedMedication,
+        [name]:
+          name === "price" ||
+          name === "quantityImported" ||
+          name === "quantityRemaining"
+            ? parseInt(value) || 0
+            : value,
+      });
+    }
+  };
+
+  const handleSave = async () => {
+    if (editedMedication) {
+      try {
+        await axios.put(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications/${editedMedication._id}`,
+          editedMedication
+        );
+        setMedications(
+          medications.map((med) =>
+            med._id === editedMedication._id ? editedMedication : med
+          )
+        );
+        toast({
+          title: "Thành công!",
+          description: "Đã cập nhật thuốc!",
+        });
+      } catch (error) {
+        toast({
+          title: "Thất bại!",
+          description: "Không thể cập nhật thuốc.",
+          variant: "destructive",
+        });
+      } finally {
+        setEditingId(null);
+        setEditedMedication(null);
+      }
+    }
+  };
+
+  const handleNewMedicationChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setNewMedication({
+      ...newMedication,
+      [name]:
+        name === "price" ||
+        name === "quantityImported" ||
+        name === "quantityRemaining"
+          ? parseInt(value) || 0
+          : value,
+    });
+  };
+
+  const handleCreateMedication = async () => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/medications`,
+        newMedication
+      );
+      setMedications([...medications, response.data]);
+      setIsDialogOpen(false);
+      setNewMedication({
+        _id: "",
+        medicationName: "",
+        quantityImported: 0,
+        quantityRemaining: 0,
+        dosage: "",
+        price: 0,
+        instructions: "",
+        expirationDate: new Date(),
+        quantity: 0,
+      });
+      toast({
+        title: "Thành công!",
+        description: "Đã thêm thuốc mới!",
+      });
+    } catch (error) {
+      toast({
+        title: "Thất bại!",
+        description: "Không thể thêm thuốc mới.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const filteredMedications = medications
     .filter((item) =>
@@ -117,7 +224,7 @@ export default function MedicineWarehouse() {
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
       <p className="text-base font-semibold text-blue-500">KHO THUỐC</p>
-      <div className="flex flex-col  gap-3 border rounded-md p-4 text-slate-600 dark:text-slate-300">
+      <div className="flex flex-col gap-3 border rounded-md p-4 text-slate-600 dark:text-slate-300">
         <div className="flex items-center space-x-3">
           <Hospital className="text-blue-500 h-4 w-4" />
           <span className="text-sm font-semibold">Kho thuốc số 1</span>
@@ -171,7 +278,7 @@ export default function MedicineWarehouse() {
           Biến động
           <TrendingDown className="h-4 w-4" />
         </Button>
-        {userId.includes("QTV") ? (
+        {userId.includes("QTV") && (
           <Button
             onClick={() => setIsDialogOpen(true)}
             className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
@@ -179,8 +286,7 @@ export default function MedicineWarehouse() {
             Thêm thuốc
             <CirclePlus className="h-4 w-4" />
           </Button>
-        ) : null}
-
+        )}
         <Button
           variant="outline"
           size="icon"
@@ -201,35 +307,80 @@ export default function MedicineWarehouse() {
             <TableHead>Giá</TableHead>
             <TableHead>Hướng dẫn sử dụng</TableHead>
             <TableHead>Ngày hết hạn</TableHead>
-            {userId.includes("QTV") ? <TableHead>Thao tác</TableHead> : null}
+            {userId.includes("QTV") && <TableHead>Thao tác</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
           {currentMedications.map((medication, index) => (
             <TableRow key={medication._id}>
-              <TableCell>{index + 1}</TableCell>
-              <TableCell>{medication.medicationName}</TableCell>
+              <TableCell>{startIndex + index + 1}</TableCell>
+              <TableCell>
+                {editingId === medication._id ? (
+                  <Input
+                    name="medicationName"
+                    value={editedMedication?.medicationName || ""}
+                    onChange={handleChange}
+                    className="max-w-[200px]"
+                  />
+                ) : (
+                  medication.medicationName
+                )}
+              </TableCell>
               <TableCell>{medication.quantityImported}</TableCell>
               <TableCell>{medication.quantityRemaining}</TableCell>
               <TableCell>{medication.dosage}</TableCell>
-              <TableCell>{medication.price}</TableCell>
-              <TableCell>{medication.instructions}</TableCell>
+              <TableCell>
+                {editingId === medication._id ? (
+                  <Input
+                    name="price"
+                    type="number"
+                    value={editedMedication?.price || 0}
+                    onChange={handleChange}
+                    className="max-w-[100px]"
+                  />
+                ) : (
+                  medication.price
+                )}
+              </TableCell>
+              <TableCell>
+                {editingId === medication._id ? (
+                  <Textarea
+                    name="instructions"
+                    value={editedMedication?.instructions || ""}
+                    onChange={handleChange}
+                    className="max-w-[200px]"
+                  />
+                ) : (
+                  medication.instructions
+                )}
+              </TableCell>
               <TableCell>{formatDate(medication.expirationDate)}</TableCell>
-              {userId.includes("QTV") ? (
+              {userId.includes("QTV") && (
                 <TableCell className="flex flex-row gap-2">
-                  <Button
-                    variant="secondary"
-                    className="border border-slate-300 dark:border-none"
-                  >
-                    Sửa
-                    <Edit2 className="w-4 h-4" />
-                  </Button>
+                  {editingId === medication._id ? (
+                    <Button
+                      onClick={handleSave}
+                      className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
+                    >
+                      Lưu
+                      <Save className="w-4 h-4" />
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={() => handleEdit(medication)}
+                      variant="secondary"
+                      className="border border-slate-300 dark:border-none"
+                    >
+                      Sửa
+                      <Edit2 className="w-4 h-4" />
+                    </Button>
+                  )}
                   <Button variant="destructive">
                     Xoá
                     <Trash className="w-4 h-4" />
                   </Button>
                 </TableCell>
-              ) : null}
+              )}
             </TableRow>
           ))}
         </TableBody>
@@ -274,27 +425,50 @@ export default function MedicineWarehouse() {
             THÊM THUỐC MỚI
           </DialogTitle>
           <div className="flex flex-col gap-4">
-            <p className="text-sm">Tên xét nghiệm:</p>
+            <p className="text-sm">Tên thuốc:</p>
             <Input
-              name="testName"
-              placeholder="Tên xét nghiệm"
-              value={newTest.testName}
+              name="medicationName"
+              placeholder="Tên thuốc"
+              value={newMedication.medicationName}
+              onChange={handleNewMedicationChange}
             />
-            <p className="text-sm">Mô tả xét nghiệm:</p>
-            <Textarea
-              name="description"
-              placeholder="Mô tả"
-              value={newTest.description}
-              // onChange={handleNewTestChange}
+            <p className="text-sm">Số lượng nhập:</p>
+            <Input
+              name="quantityImported"
+              type="number"
+              placeholder="Số lượng nhập"
+              value={newMedication.quantityImported}
+              onChange={handleNewMedicationChange}
+            />
+            <p className="text-sm">Số lượng tồn:</p>
+            <Input
+              name="quantityRemaining"
+              type="number"
+              placeholder="Số lượng tồn"
+              value={newMedication.quantityRemaining}
+              onChange={handleNewMedicationChange}
+            />
+            <p className="text-sm">Liều lượng:</p>
+            <Input
+              name="dosage"
+              placeholder="Liều lượng"
+              value={newMedication.dosage}
+              onChange={handleNewMedicationChange}
             />
             <p className="text-sm">Giá:</p>
-
             <Input
               name="price"
               type="number"
               placeholder="Giá (VND)"
-              value={newTest.price}
-              // onChange={handleNewTestChange}
+              value={newMedication.price}
+              onChange={handleNewMedicationChange}
+            />
+            <p className="text-sm">Hướng dẫn sử dụng:</p>
+            <Textarea
+              name="instructions"
+              placeholder="Hướng dẫn sử dụng"
+              value={newMedication.instructions}
+              onChange={handleNewMedicationChange}
             />
             <div className={"flex flex-row justify-end gap-4 items-end"}>
               <Button
@@ -307,7 +481,7 @@ export default function MedicineWarehouse() {
               <Button
                 variant="outline"
                 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
-                // onClick={handleCreateTest}
+                onClick={handleCreateMedication}
               >
                 Tạo
                 <ArrowUpFromLine className="w-4 h-4" />
@@ -316,10 +490,7 @@ export default function MedicineWarehouse() {
           </div>
         </DialogContent>
       </Dialog>
-      <MedicationFluctuations
-        isOpenMF={isOpenMF}
-        setIsOpenMF={setIsOpenMF}
-      ></MedicationFluctuations>
+      <MedicationFluctuations isOpenMF={isOpenMF} setIsOpenMF={setIsOpenMF} />
     </div>
   );
 }

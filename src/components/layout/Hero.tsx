@@ -65,7 +65,7 @@ export default function Hero() {
                 router.push("/sign-up");
               }}
             ></ArrowButton>
-            <Link href={`/${currentId}/patient/profile`}>
+            <Link href={"/sign-in"}>
               <Button
                 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
                 variant="outline"

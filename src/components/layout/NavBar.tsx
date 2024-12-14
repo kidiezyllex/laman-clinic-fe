@@ -109,7 +109,7 @@ export default function NavBar() {
   return (
     <Card className="sticky top-0 border border-b-primary/10 dark:bg-slate-800 bg-white z-50 rounded-none">
       <div className="max-w-[1920px] w-full mx-auto xl:px-14 px-4 py-4 dark:bg-slate-800 bg-white">
-        <div className="items-center justify-between flex flex-row pb-4 border-b">
+        <div className="items-center justify-between flex flex-row pb-4 border-b sm:border-none sm:pb-0">
           <Link
             className="flex flex-row items-center gap-3 justify-start"
             href={pathName.split("/")[2] === "patient" ? "/" : "#"}

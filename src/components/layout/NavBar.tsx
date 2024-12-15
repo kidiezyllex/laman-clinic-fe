@@ -10,21 +10,19 @@ import Link from "next/link";
 import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuthContext } from "@/app/auth-context";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import axios from "axios";
 export default function NavBar() {
   const { toast } = useToast();
-  const router = useRouter();
   const { userId } = useAuth();
   const pathName = usePathname();
-  const { token, setToken, role } = useAuthContext();
   const { data: session } = useSession();
-
+  const router = useRouter();
   useEffect(() => {
     renderNavBar();
-  }, [token]);
+  }, [session]);
 
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
@@ -43,7 +41,9 @@ export default function NavBar() {
         { isOnline: false, roomNumber: "000" }
       );
     }
-    setToken(null);
+    // Xoá Session
+    await signOut({ redirect: false });
+    console.log(session);
     toast({
       variant: "default",
       title: "Thành công!",
@@ -65,14 +65,10 @@ export default function NavBar() {
         </div>
       );
     // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
-    if (
-      (session?.user as any)?.jti !== "" &&
-      (session?.user as any)?.jti !== "undefined" &&
-      (session?.user as any)?.jti !== null
-    )
+    if (session !== null)
       return (
         <div>
-          {role === "patient" ? (
+          {(session?.user as any)?.role === "patient" ? (
             <div className="flex flex-row gap-3 justify-end">
               <Button
                 variant="outline"

@@ -19,8 +19,7 @@ export default function LoginPage() {
   const [trigger, setTrigger] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { setEmail2, setPassword2, setRole, setCurrentId, setToken } =
-    useAuthContext();
+  const { setEmail2, setPassword2, setRole, setCurrentId } = useAuthContext();
   const { data: session } = useSession();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,14 +50,12 @@ export default function LoginPage() {
         setEmail2((session?.user as any)?.email);
         setPassword2(password);
         setRole((session?.user as any)?.role);
-        setToken((session?.user as any)?.jti);
         // Tìm hồ sơ = email
         const res = await axios.get(
           `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
             (session?.user as any)?.role
           }s/?email=${(session?.user as any)?.email}`
         );
-
         if ((session?.user as any)?.role === "patient") {
           router.push("/");
         } else

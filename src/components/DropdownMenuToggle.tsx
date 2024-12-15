@@ -11,13 +11,17 @@ import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@clerk/nextjs";
 import axios from "axios";
 import { Calendar, LogOut, Menu, User } from "lucide-react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function UserMenu() {
   const { userId } = useAuth();
-  const { setToken, currentId, setCurrentId } = useAuthContext();
+  const { currentId, setCurrentId } = useAuthContext();
   const { toast } = useToast();
+  const { data: session } = useSession();
+  const router = useRouter();
   useEffect(() => {
     // Nếu đăng nhập bằng GG thì userId sẽ có data, currentId cũng sẽ có data trong localStorage
     const setId = async () => {
@@ -35,12 +39,15 @@ export default function UserMenu() {
     setId();
   }, [userId]);
   const handleLogOut = async () => {
-    setToken(null);
+    // Xoá Session
+    await signOut({ redirect: false });
+    console.log(session);
     toast({
       variant: "default",
       title: "Thành công!",
       description: "Đăng xuất thành công",
     });
+    router.push("/");
   };
   return (
     <DropdownMenu>

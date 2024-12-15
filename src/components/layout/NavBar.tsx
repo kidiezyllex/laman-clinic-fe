@@ -11,7 +11,6 @@ import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import { useAuthContext } from "@/app/auth-context";
 import { signOut, useSession } from "next-auth/react";
 import axios from "axios";
 export default function NavBar() {

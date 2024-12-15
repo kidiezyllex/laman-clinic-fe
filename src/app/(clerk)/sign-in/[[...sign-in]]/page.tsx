@@ -1,8 +1,8 @@
 "use client";
+
 import { SignIn } from "@clerk/nextjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -10,56 +10,29 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
 import { Loader2, LogIn } from "lucide-react";
-import { renderRole } from "../../../../../lib/utils";
-export default function Page() {
+import { signIn, useSession } from "next-auth/react";
+
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [trigger, setTrigger] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { setToken, setEmail2, setPassword2, setRole, setCurrentId } =
+  const { setEmail2, setPassword2, setRole, setCurrentId, setToken } =
     useAuthContext();
+  const { data: session } = useSession();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
-        { email, password }
-      );
-      const data = response.data;
-      const dummyToken =
-        "dummy_token_" + Math.random().toString(36).substr(2, 9);
-      setToken(dummyToken);
-      setEmail2((data as any)?.data?.email);
-      setPassword2(password);
-      setEmail2((data as any)?.data?.email);
-      setRole((data as any)?.data?.role);
-
-      if (data.status === "success") {
-        // Tìm hồ sơ = email
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
-            data.data?.role
-          }s/?email=${(data as any)?.data?.email}`
-        );
-
-        if (data.data?.role === "patient") {
-          router.push("/");
-        } else router.push(`/${res?.data?._id}/${data.data?.role}/dashboard`);
-        // Nếu có hồ sơ
-        if (res?.data?._id) {
-          setCurrentId(res?.data?._id);
-        } else {
-          setCurrentId(`user_${(data as any)?.data?.id}`);
-        }
-
-        toast({
-          variant: "default",
-          title: "Thành công!",
-          description: `Đăng nhập với quyền ${renderRole(data.data?.role)}!`,
-        });
-      }
+      const result = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+      console.log("res", result);
+      setTrigger(true);
     } catch (error) {
       toast({
         variant: "destructive",
@@ -70,6 +43,44 @@ export default function Page() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(session);
+    const redirect = async () => {
+      if (session?.user) {
+        setEmail2((session?.user as any)?.email);
+        setPassword2(password);
+        setRole((session?.user as any)?.role);
+        setToken((session?.user as any)?.jti);
+        // Tìm hồ sơ = email
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
+            (session?.user as any)?.role
+          }s/?email=${(session?.user as any)?.email}`
+        );
+
+        if ((session?.user as any)?.role === "patient") {
+          router.push("/");
+        } else
+          router.push(
+            `/${res?.data?._id}/${(session?.user as any)?.role}/dashboard`
+          );
+        // Nếu có hồ sơ
+        if (res?.data?._id) {
+          setCurrentId(res?.data?._id);
+        } else {
+          setCurrentId(`user_${(session?.user as any)?.id}`);
+        }
+
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: `Đăng nhập với quyền ${(session?.user as any)?.role}!`,
+        });
+      }
+    };
+    redirect();
+  }, [trigger]);
 
   return (
     <div className="max-w-fit bg-white sm:w-[500px] w-[340px] shadow-xl border rounded-xl p-4 py-8">

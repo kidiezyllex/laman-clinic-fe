@@ -1,16 +1,12 @@
-"use server";
+import { NextRequest } from 'next/server';
 
-import { cookies } from "next/headers";
-
-export async function getCookie(name: string): Promise<string | undefined> {
-  const cookieStore = cookies();
-  const cookie = cookieStore.get(name);
-
-  return cookie?.value;
-}
-
-export async function getSession() {
-  const session = cookies().get("session")?.value;
-  if (!session) return null;
-  return session;
+export function GET(request: NextRequest) {
+  const jwtCookie = request.cookies.get('jwt');
+  
+  if (jwtCookie) {
+    console.log('JWT value:', jwtCookie.value);
+    // Use the JWT value as needed
+  } else {
+    console.log('JWT cookie not found');
+  }
 }

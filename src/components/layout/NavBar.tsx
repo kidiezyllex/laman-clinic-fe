@@ -4,7 +4,7 @@ import { Button } from "../ui/button";
 import { LogOut, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
 import Link from "next/link";
 import SplitText from "../animata/text/split-text";
@@ -12,17 +12,20 @@ import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "@/app/auth-context";
+import { useSession } from "next-auth/react";
 import axios from "axios";
-import { Separator } from "../ui/separator";
 export default function NavBar() {
   const { toast } = useToast();
   const router = useRouter();
   const { userId } = useAuth();
   const pathName = usePathname();
   const { token, setToken, role } = useAuthContext();
+  const { data: session } = useSession();
+
   useEffect(() => {
     renderNavBar();
   }, [token]);
+
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/process", label: "QUY TRÌNH" },
@@ -62,7 +65,11 @@ export default function NavBar() {
         </div>
       );
     // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
-    if (token !== "" && token !== "undefined" && token !== null)
+    if (
+      (session?.user as any)?.jti !== "" &&
+      (session?.user as any)?.jti !== "undefined" &&
+      (session?.user as any)?.jti !== null
+    )
       return (
         <div>
           {role === "patient" ? (

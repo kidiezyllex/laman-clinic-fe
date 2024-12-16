@@ -20,8 +20,8 @@ SUPPORT AND MANAGEMENT SYSTEM FOR MULTI-SPECIALTY CLINICS</h1>
 ### 3. Teck Stack
 
 - **Front-End:** NextJS, Typescript, ShadCN/UI & TailwindCSS for styling, Clerk for authentication with Google Account, Next Auth for authentication and session handling, Zustand for state management, Uploadthing for image uploading and storage, Zod & React Hook Form for form validation and handling.
-- **Back-End:** Node.js & Express.js for building APIs, MongoDB for database management, Apache Kafka for send message and queue management, Redis for caching, Docker, AWS EC2.
-- **Deployment tools:** Vercel (FE), Nginx (BE)
+- **Back-End:** Node.js & Express.js for building APIs, MongoDB for database management, Apache Kafka for send message and queue management, Redis for caching, Docker, AWS EC2, JWT.
+- **Deployment tools:** Vercel (FE), Nginx (BE).
 
 ### 4. Use Case Diagram
 

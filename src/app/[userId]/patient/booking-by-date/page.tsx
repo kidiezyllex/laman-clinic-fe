@@ -82,7 +82,7 @@ export default function Page() {
 
   return (
     <div>
-      <Breadcrumb className="mt-4 ml-4 md:ml-0">
+      <Breadcrumb className="mt-4 ml-4 md:ml-0 ">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/" className="text-base">
@@ -106,7 +106,7 @@ export default function Page() {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-5 mt-8">
+      <div className=" grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] gap-5 mt-4 sm:mt-8">
         <div className="hidden md:block">
           <div className="border bg-background flex flex-col mb-4">
             <div className="p-3 bg-blue-500 flex flex-row gap-2 items-center">
@@ -199,7 +199,7 @@ export default function Page() {
         </div>
 
         <div className="flex flex-col rounded-md">
-          <Breadcrumb className="p-4 bg-background border rounded-md mb-4">
+          <Breadcrumb className="p-4 bg-background border rounded-md mb-4 ">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbPage

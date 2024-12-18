@@ -11,6 +11,7 @@ import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
 import { Loader2, LogIn } from "lucide-react";
 import { signIn, useSession } from "next-auth/react";
+import { renderRole } from "../../../../../lib/utils";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,7 +26,7 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await signIn("credentials", {
+      const result = await signIn("username-login", {
         email,
         password,
         redirect: false,
@@ -70,7 +71,9 @@ export default function LoginPage() {
         toast({
           variant: "default",
           title: "Thành công!",
-          description: `Đăng nhập với quyền ${(session?.user as any)?.role}!`,
+          description: `Đăng nhập với quyền ${renderRole(
+            (session?.user as any)?.role
+          )}!`,
         });
       }
     };

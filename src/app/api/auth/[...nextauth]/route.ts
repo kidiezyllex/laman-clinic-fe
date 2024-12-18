@@ -1,8 +1,7 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { NextAuthOptions } from "next-auth";
 
-const authOptions: NextAuthOptions = {
+const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
@@ -14,28 +13,18 @@ const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
-
-        try {
-          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(credentials),
-            }
-          );
-
-          const user = await res.json();
-
-          if (res.ok && user) {
-            return user.data;
-          } else {
-            console.error("API error:", user);
-            throw new Error(user.message || "Authentication failed");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(credentials),
           }
-        } catch (error) {
-          console.error("Authorization error:", error);
-          throw new Error("An error occurred during authentication");
+        );
+        const user = await res.json();
+
+        if (res.ok && user) {
+          return user.data;
         }
       },
     }),
@@ -50,7 +39,8 @@ const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: "/login",
+    signIn: "/auth/signin",
+    error: "/auth/error",
   },
   session: {
     strategy: "jwt",

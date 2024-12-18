@@ -90,7 +90,7 @@ export default function Hero() {
             </div>
             <Card className="w-[100%]">
               <CardHeader>
-                <CardDescription>
+                <CardDescription className="text-xs xl:text-sm">
                   Số lượng bệnh nhân ghé thăm (2024)
                 </CardDescription>
               </CardHeader>
@@ -123,7 +123,7 @@ export default function Hero() {
                         position="top"
                         offset={10}
                         className="fill-foreground bg-blue-400"
-                        fontSize={12}
+                        fontSize={8}
                       />
                     </Bar>
                   </BarChart>
@@ -140,7 +140,7 @@ export default function Hero() {
                 className="object-cover rounded-md"
               />
             </div>
-            <div className="w-full h-60 flex items-center justify-center py-4 relative">
+            <div className="w-full h-52 xl:h-60 flex items-center justify-center py-4 relative">
               <Image
                 layout="fill"
                 src="https://res.cloudinary.com/drqbhj6ft/image/upload/v1726219677/learning-webdev-blog/clinic/dab4d9594682ce732ebb40c4187c83d7_oqs8e6.jpg"

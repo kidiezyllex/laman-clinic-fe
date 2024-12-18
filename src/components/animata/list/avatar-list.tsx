@@ -61,7 +61,7 @@ export default function AvatarList({
 }) {
   const sizes: Record<"sm" | "md" | "lg", string> = {
     lg: "m-3 size-6",
-    md: "m-2 size-12",
+    md: "m-2 size-9",
     sm: "m-1 size-8",
   };
 

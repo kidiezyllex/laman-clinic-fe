@@ -3,13 +3,11 @@ import React, { useRef } from "react";
 import Container from "../Container";
 
 import Slider from "../Slider";
-import { Separator } from "@/components/ui/separator";
 import { PieChartCpn } from "../PieChartCpn";
 import { TabsCpn } from "../TabsCpn";
 import { DoctorsCpn } from "../DoctorsCpn";
 import { usePathname, useRouter } from "next/navigation";
 import Specialties from "../Specialties";
-import TypingText from "../animata/text/typing-text";
 
 const treatments = [
   {
@@ -124,10 +122,13 @@ export default function Section() {
     <div className="w-full mt-3">
       <Container>
         <div className="font-bold text-2xl my-5 text-blue-400">
-          <TypingText
+          {/* <TypingText
             text={"Chat với trợ lý ảo 💬🖥️⚙️🦾"}
             repeat={true}
-          ></TypingText>
+          ></TypingText> */}
+          <p className="font-bold text-2xl my-5 text-blue-400">
+            Chat với trợ lý ảo 💬🖥️⚙️🦾
+          </p>
         </div>
 
         <iframe

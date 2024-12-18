@@ -23,7 +23,7 @@ const authOptions: AuthOptions = {
               body: JSON.stringify(credentials),
             }
           );
-
+          console.log(process.env.NEXT_PUBLIC_BACKEND_API_URL);
           if (!res.ok) {
             const errorDetails = await res.json();
             throw new Error(

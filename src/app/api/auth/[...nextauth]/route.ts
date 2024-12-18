@@ -13,18 +13,33 @@ const authOptions: AuthOptions = {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Email and password are required");
         }
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(credentials),
-          }
-        );
-        const user = await res.json();
 
-        if (res.ok && user) {
+        try {
+          const res = await fetch(
+            `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(credentials),
+            }
+          );
+
+          if (!res.ok) {
+            const errorDetails = await res.json();
+            throw new Error(
+              `Failed to authorize. Server response: ${
+                res.status
+              } ${JSON.stringify(errorDetails)}`
+            );
+          }
+
+          const user = await res.json();
           return user.data;
+        } catch (error) {
+          console.error("Authorization error:", error);
+          throw new Error(
+            "Could not connect to backend. Please try again later."
+          );
         }
       },
     }),

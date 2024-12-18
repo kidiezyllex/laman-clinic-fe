@@ -30,7 +30,6 @@ export default function LoginPage() {
         password,
         redirect: false,
       });
-      console.log("res", result);
       setTrigger(true);
     } catch (error) {
       toast({
@@ -44,7 +43,6 @@ export default function LoginPage() {
   };
 
   useEffect(() => {
-    console.log(session);
     const redirect = async () => {
       if (session?.user) {
         setEmail2((session?.user as any)?.email);

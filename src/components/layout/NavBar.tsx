@@ -4,25 +4,30 @@ import { Button } from "../ui/button";
 import { LogOut, User } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { ModeToggle } from "../ModeToggle";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
 import Link from "next/link";
 import SplitText from "../animata/text/split-text";
 import DropdownMenuToggle from "../DropdownMenuToggle";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "@/app/auth-context";
 import axios from "axios";
 export default function NavBar() {
   const { toast } = useToast();
+  const router = useRouter();
   const { userId } = useAuth();
   const pathName = usePathname();
-  const { data: session } = useSession();
-  const router = useRouter();
-  useEffect(() => {
-    renderNavBar();
-  }, [session]);
+  const { token, setToken, role, setRole } = useAuthContext();
 
+  useEffect(() => {
+    console.log(token);
+    console.log(role);
+    console.log("1", token !== "");
+    console.log("2", token !== "undefined");
+    console.log("3", token !== null);
+    renderNavBar();
+  }, [token]);
   const navLinks = [
     { href: "/", label: "TRANG CHỦ" },
     { href: "/process", label: "QUY TRÌNH" },
@@ -40,9 +45,8 @@ export default function NavBar() {
         { isOnline: false, roomNumber: "000" }
       );
     }
-    // Xoá Session
-    await signOut({ redirect: false });
-    console.log(session);
+    setToken(null);
+    setRole("");
     toast({
       variant: "default",
       title: "Thành công!",
@@ -64,10 +68,10 @@ export default function NavBar() {
         </div>
       );
     // Nếu có id của User login tài khoản của phòng khám (patient, doctor, receptionist)
-    if (session !== null)
+    if (token !== "" && token !== "undefined" && token !== null) {
       return (
         <div>
-          {(session?.user as any)?.role === "patient" ? (
+          {role === "patient" ? (
             <div className="flex flex-row gap-3 justify-end">
               <Button
                 variant="outline"
@@ -93,6 +97,7 @@ export default function NavBar() {
           )}
         </div>
       );
+    }
     return (
       <div className="flex flex-row gap-3 justify-end">
         <Link href={"/sign-up"}>

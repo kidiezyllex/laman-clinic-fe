@@ -1,7 +1,6 @@
 "use client";
-
 import { SignIn } from "@clerk/nextjs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -10,28 +9,56 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useAuthContext } from "@/app/auth-context";
 import { Loader2, LogIn } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
 import { renderRole } from "../../../../../lib/utils";
-
-export default function LoginPage() {
+export default function Page() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [trigger, setTrigger] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
-  const { setEmail2, setPassword2, setRole, setCurrentId } = useAuthContext();
-  const { data: session } = useSession();
+  const { setToken, setEmail2, setPassword2, setRole, setCurrentId } =
+    useAuthContext();
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const result = await signIn("username-login", {
-        email,
-        password,
-        redirect: false,
-      });
-      setTrigger(true);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/login`,
+        { email, password }
+      );
+      const data = response.data;
+      const dummyToken =
+        "dummy_token_" + Math.random().toString(36).substr(2, 9);
+      setToken(dummyToken);
+      setEmail2((data as any)?.data?.email);
+      setPassword2(password);
+      setEmail2((data as any)?.data?.email);
+      setRole((data as any)?.data?.role);
+
+      if (data.status === "success") {
+        // Tìm hồ sơ = email
+        const res = await axios.get(
+          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
+            data.data?.role
+          }s/?email=${(data as any)?.data?.email}`
+        );
+
+        if (data.data?.role === "patient") {
+          router.push("/");
+        } else router.push(`/${res?.data?._id}/${data.data?.role}/dashboard`);
+        // Nếu có hồ sơ
+        if (res?.data?._id) {
+          setCurrentId(res?.data?._id);
+        } else {
+          setCurrentId(`user_${(data as any)?.data?.id}`);
+        }
+
+        toast({
+          variant: "default",
+          title: "Thành công!",
+          description: `Đăng nhập với quyền ${renderRole(data.data?.role)}!`,
+        });
+      }
     } catch (error) {
       toast({
         variant: "destructive",
@@ -42,43 +69,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
-  useEffect(() => {
-    const redirect = async () => {
-      if (session?.user) {
-        setEmail2((session?.user as any)?.email);
-        setPassword2(password);
-        setRole((session?.user as any)?.role);
-        // Tìm hồ sơ = email
-        const res = await axios.get(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${
-            (session?.user as any)?.role
-          }s/?email=${(session?.user as any)?.email}`
-        );
-        if ((session?.user as any)?.role === "patient") {
-          router.push("/");
-        } else
-          router.push(
-            `/${res?.data?._id}/${(session?.user as any)?.role}/dashboard`
-          );
-        // Nếu có hồ sơ
-        if (res?.data?._id) {
-          setCurrentId(res?.data?._id);
-        } else {
-          setCurrentId(`user_${(session?.user as any)?.id}`);
-        }
-
-        toast({
-          variant: "default",
-          title: "Thành công!",
-          description: `Đăng nhập với quyền ${renderRole(
-            (session?.user as any)?.role
-          )}!`,
-        });
-      }
-    };
-    redirect();
-  }, [trigger]);
 
   return (
     <div className="max-w-fit bg-white sm:w-[500px] w-[340px] shadow-xl border rounded-xl p-4 py-8">

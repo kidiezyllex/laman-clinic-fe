@@ -123,7 +123,7 @@ export default function Page() {
               ></Input>
               <Button
                 onClick={handleUpdateRoomNumber}
-                variant={"secondary"}
+                variant="secondary"
                 className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600"
               >
                 Cập nhật

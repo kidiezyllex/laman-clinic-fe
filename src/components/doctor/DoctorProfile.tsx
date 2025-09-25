@@ -11,8 +11,6 @@ import {
   UserIcon,
   SquareActivity,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Staff, Schedule } from "../../../lib/entity-types";
 import {
@@ -22,19 +20,13 @@ import {
   renderSpecialty,
 } from "../../../lib/utils";
 import { Separator } from "../ui/separator";
+import { useGetDoctorById } from "@/hooks/useDoctor";
+import { IDoctor } from "@/interface/response/doctor";
+
 export default function DoctorProfile() {
   const userId = usePathname().split("/")[1];
-  const [doctor, setDoctor] = useState<Partial<Staff>>({});
-  // Fetch Data Bác sĩ
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/doctors/${userId}`
-      );
-      setDoctor(response.data);
-    };
-    fetchData();
-  }, []);
+  const { data: doctorData, isLoading, error } = useGetDoctorById(userId);
+  const doctor: Partial<IDoctor> = doctorData?.data || {};
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
@@ -68,7 +60,7 @@ export default function DoctorProfile() {
                 Ngày sinh:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {formatDate(doctor.dateOfBirth)}
+                {doctor.dateOfBirth ? formatDate(new Date(doctor.dateOfBirth)) : 'N/A'}
               </p>
             </div>
             <div className="flex items-center space-x-2">

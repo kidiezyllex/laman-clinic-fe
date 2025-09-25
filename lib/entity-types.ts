@@ -166,7 +166,7 @@ export interface Staff {
 }
 export interface TestType {
   _id: string;
-  testName: string;
+  name: string;
   description: string;
   price: number;
 }

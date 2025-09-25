@@ -78,7 +78,7 @@ export default function RequestedTests() {
   const [isLoading, setIsLoading] = useState(false);
   const [testResults, setTestResults] = useState<
     Array<{
-      testName: string;
+      name: string;
       testResult: string;
       referenceRange: string;
       measurementUnit: string;
@@ -100,7 +100,7 @@ export default function RequestedTests() {
         item?.patientId?.email?.toLowerCase().includes(searchTermLower) ||
         item?.patientId?.phone?.toLowerCase().includes(searchTermLower) ||
         item.testTypes.some((it) => {
-          return it.testName.toLowerCase().includes(searchTermLower);
+          return it.name.toLowerCase().includes(searchTermLower);
         })
       );
     })
@@ -144,16 +144,16 @@ export default function RequestedTests() {
       const testIndex = prevTests.findIndex((t) => t._id === test._id);
       if (testIndex > -1) {
         setTestResults((prev) =>
-          prev.filter((r) => r.testName !== test.testName)
+          prev.filter((r) => r.name !== test.name)
         );
         return prevTests.filter((t) => t._id !== test._id);
       } else {
         setTestResults((prev) => {
-          if (!prev.some((r) => r.testName === test.testName)) {
+          if (!prev.some((r) => r.name === test.name)) {
             return [
               ...prev,
               {
-                testName: test.testName,
+                name: test.name,
                 testResult: "",
                 referenceRange: "",
                 measurementUnit: "",
@@ -170,12 +170,12 @@ export default function RequestedTests() {
   };
 
   const handleTestResultChange = (
-    testName: string,
+    name: string,
     field: string,
     value: string
   ) => {
     setTestResults((prev) => {
-      const existingIndex = prev.findIndex((r) => r.testName === testName);
+      const existingIndex = prev.findIndex((r) => r.name === name);
       if (existingIndex > -1) {
         // Update existing result
         const updatedResults = [...prev];
@@ -188,7 +188,7 @@ export default function RequestedTests() {
         return [
           ...prev,
           {
-            testName,
+            name,
             [field]: value,
             testResult: "",
             referenceRange: "",
@@ -374,7 +374,7 @@ export default function RequestedTests() {
                       className="bg-slate-600 dark:bg-slate-700 dark:text-white"
                       key={index}
                     >
-                      {test.testName}
+                      {test.name}
                     </Badge>
                   ))}
                 </div>
@@ -509,7 +509,7 @@ export default function RequestedTests() {
                     <div className="flex flex-row flex-wrap gap-2">
                       {selectedRequestTest.testTypes.map((test, index) => (
                         <Badge variant={"secondary"} key={index}>
-                          {test.testName}
+                          {test.name}
                         </Badge>
                       ))}
                     </div>
@@ -596,7 +596,7 @@ export default function RequestedTests() {
                               onCheckedChange={() => handleToggleCheckbox(test)}
                             />
                             <Badge className="bg-slate-600 dark:bg-slate-700 dark:text-white ml-2 cursor-pointer">
-                              {test.testName}
+                              {test.name}
                             </Badge>
                           </Label>
                           {performedTests.some((t) => t._id === test._id) && (
@@ -609,12 +609,12 @@ export default function RequestedTests() {
                                   id={`testResult-${test._id}`}
                                   value={
                                     testResults.find(
-                                      (r) => r.testName === test.testName
+                                      (r) => r.name === test.name
                                     )?.testResult || ""
                                   }
                                   onChange={(e) =>
                                     handleTestResultChange(
-                                      test.testName,
+                                      test.name,
                                       "testResult",
                                       e.target.value
                                     )
@@ -629,12 +629,12 @@ export default function RequestedTests() {
                                   id={`referenceRange-${test._id}`}
                                   value={
                                     testResults.find(
-                                      (r) => r.testName === test.testName
+                                      (r) => r.name === test.name
                                     )?.referenceRange || ""
                                   }
                                   onChange={(e) =>
                                     handleTestResultChange(
-                                      test.testName,
+                                      test.name,
                                       "referenceRange",
                                       e.target.value
                                     )
@@ -648,12 +648,12 @@ export default function RequestedTests() {
                                 <Select
                                   value={
                                     testResults.find(
-                                      (r) => r.testName === test.testName
+                                      (r) => r.name === test.name
                                     )?.measurementUnit || ""
                                   }
                                   onValueChange={(value) =>
                                     handleTestResultChange(
-                                      test.testName,
+                                      test.name,
                                       "measurementUnit",
                                       value
                                     )
@@ -685,12 +685,12 @@ export default function RequestedTests() {
                                 <Select
                                   value={
                                     testResults.find(
-                                      (r) => r.testName === test.testName
+                                      (r) => r.name === test.name
                                     )?.equipment || ""
                                   }
                                   onValueChange={(value) =>
                                     handleTestResultChange(
-                                      test.testName,
+                                      test.name,
                                       "equipment",
                                       value
                                     )

@@ -11,8 +11,6 @@ import {
   MapPinIcon,
   UserIcon,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Receptionist, Schedule } from "../../../lib/entity-types";
 import {
@@ -21,19 +19,13 @@ import {
   renderDayOfWeek,
 } from "../../../lib/utils";
 import { Separator } from "../ui/separator";
+import { useGetReceptionistById } from "@/hooks/useReceptionist";
+import { IReceptionist } from "@/interface/response/receptionist";
+
 export default function ReceptionistProfile() {
   const userId = usePathname().split("/")[1];
-  const [receptionist, setReceptionist] = useState<Partial<Receptionist>>({});
-  // Fetch Data Lễ tân
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/receptionists/${userId}`
-      );
-      setReceptionist(response.data);
-    };
-    fetchData();
-  }, []);
+  const { data: receptionistData, isLoading, error } = useGetReceptionistById(userId);
+  const receptionist: Partial<IReceptionist> = receptionistData?.data || {};
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
@@ -69,7 +61,7 @@ export default function ReceptionistProfile() {
                 Ngày sinh:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {formatDate(receptionist.dateOfBirth)}
+                {receptionist.dateOfBirth ? formatDate(new Date(receptionist.dateOfBirth)) : 'N/A'}
               </p>
             </div>
             <div className="flex items-center space-x-2">

@@ -236,7 +236,7 @@ export default function TestBill({
                 selectedTest?.testTypes.map((test, index) => (
                   <TableRow key={test._id + ""}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{test?.testName}</TableCell>
+                    <TableCell>{test?.name}</TableCell>
                     <TableCell>{test?.description}</TableCell>
                     <TableCell>{test?.price.toLocaleString("vi-VN")}</TableCell>
                   </TableRow>

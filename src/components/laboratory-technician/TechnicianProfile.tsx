@@ -10,8 +10,6 @@ import {
   MapPinIcon,
   UserIcon,
 } from "lucide-react";
-import { useState, useEffect } from "react";
-import axios from "axios";
 import { usePathname } from "next/navigation";
 import { Staff, Schedule } from "../../../lib/entity-types";
 import {
@@ -20,19 +18,13 @@ import {
   renderDayOfWeek,
 } from "../../../lib/utils";
 import { Separator } from "../ui/separator";
+import { useGetLaboratoryTechnicianById } from "@/hooks/useLaboratoryTechnician";
+import { ILaboratoryTechnician } from "@/interface/response/laboratory-technician";
+
 export default function TechnicianProfile() {
   const userId = usePathname().split("/")[1];
-  const [technician, setTechnician] = useState<Partial<Staff>>({});
-  // Fetch Data Y tá xét nghiệm
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/laboratory-technicians/${userId}`
-      );
-      setTechnician(response.data);
-    };
-    fetchData();
-  }, []);
+  const { data: technicianData, isLoading, error } = useGetLaboratoryTechnicianById(userId);
+  const technician: Partial<ILaboratoryTechnician> = technicianData?.data || {};
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%]">
@@ -68,7 +60,7 @@ export default function TechnicianProfile() {
                 Ngày sinh:
               </p>
               <p className="text-sm text-slate-600 text-start dark:text-slate-300">
-                {formatDate(technician.dateOfBirth)}
+                {technician.dateOfBirth ? formatDate(new Date(technician.dateOfBirth)) : 'N/A'}
               </p>
             </div>
             <div className="flex items-center space-x-2">

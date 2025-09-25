@@ -34,7 +34,7 @@ export default function LabTestsForm({
   const [selectedTestTypeIds, setSelectedTestTypeIds] = useState<String[]>([]);
   const [selectedTests, setSelectedTests] = useState<TestType[]>([]);
   const filteredTests = tests.filter((test) =>
-    test.testName.toLowerCase().includes(searchTerm.toLowerCase())
+    test.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function LabTestsForm({
                 key={test._id}
                 className="text-sm font-semibold cursor-pointer"
               >
-                {test.testName}
+                {test.name}
               </Label>
             </Label>
           ))}
@@ -139,7 +139,7 @@ export default function LabTestsForm({
                 key={index}
                 className="border border-slate-300 dark:border-none"
               >
-                {test.testName}
+                {test.name}
               </Badge>
             ))}
           </div>

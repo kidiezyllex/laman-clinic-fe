@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -19,7 +19,6 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import axios from "axios";
 import { TestType } from "../../../lib/entity-types";
 import {
   Pagination,
@@ -34,6 +33,12 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { usePathname } from "next/navigation";
+import { 
+  useGetTestTypes, 
+  useCreateTestType, 
+  useUpdateTestType, 
+  useDeleteTestType 
+} from "@/hooks/useTestType";
 
 export default function TestTypesManagement() {
   const { toast } = useToast();
@@ -42,35 +47,21 @@ export default function TestTypesManagement() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [tests, setTests] = useState<TestType[]>([]);
   const [editingId, setEditingId] = useState<String | null>("");
   const [editedTest, setEditedTest] = useState<TestType | null>(null);
-  const [newTest, setNewTest] = useState<TestType>({
-    _id: "",
-    testName: "",
+  const [newTest, setNewTest] = useState({
+    name: "",
     description: "",
     price: 0,
   });
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`
-      );
-      setTests(response.data);
-    } catch (error) {
-      console.error(error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch test types",
-        variant: "destructive",
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // Use hooks for data fetching
+  const { data: testTypesData, isLoading, error } = useGetTestTypes();
+  const createTestTypeMutation = useCreateTestType();
+  const updateTestTypeMutation = useUpdateTestType();
+  const deleteTestTypeMutation = useDeleteTestType();
+  
+  const tests = testTypesData?.data || [];
 
   const handleEdit = (test: TestType) => {
     setEditingId(test._id);
@@ -80,26 +71,21 @@ export default function TestTypesManagement() {
   const handleSave = async () => {
     if (editedTest) {
       try {
-        await axios.put(
-          `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types/${editedTest._id}`,
-          editedTest
-        );
-        setTests(
-          tests.map((test) => (test._id === editedTest._id ? editedTest : test))
-        );
-      } catch (error) {
-        toast({
-          title: "Thất bại!",
-          description: error + "",
-          variant: "destructive",
+        await updateTestTypeMutation.mutateAsync({
+          id: editedTest._id,
+          data: editedTest
         });
-      } finally {
-        fetchData();
         setEditingId(null);
         setEditedTest(null);
         toast({
           title: "Thành công!",
           description: "Đã cập nhật xét nghiệm!",
+        });
+      } catch (error) {
+        toast({
+          title: "Thất bại!",
+          description: error + "",
+          variant: "destructive",
         });
       }
     }
@@ -127,24 +113,10 @@ export default function TestTypesManagement() {
 
   const handleCreateTest = async () => {
     try {
-      newTest._id = (tests.length + 1).toString();
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/test-types`,
-        newTest
-      );
-      setTests([...tests, response.data]);
-    } catch (error) {
-      toast({
-        title: "Thất bại",
-        description: error + "",
-        variant: "destructive",
-      });
-    } finally {
-      fetchData();
+      await createTestTypeMutation.mutateAsync(newTest);
       setIsDialogOpen(false);
       setNewTest({
-        _id: "",
-        testName: "",
+        name: "",
         description: "",
         price: 0,
       });
@@ -152,17 +124,49 @@ export default function TestTypesManagement() {
         title: "Thành công!",
         description: "Đã thêm 1 loại xét nghiệm mới!",
       });
+    } catch (error) {
+      toast({
+        title: "Thất bại",
+        description: error + "",
+        variant: "destructive",
+      });
     }
   };
 
   const filteredTests = tests.filter((item) =>
-    item?.testName?.toLowerCase().includes(searchTerm.toLowerCase())
+    item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const totalPages = Math.ceil(filteredTests.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentTests = filteredTests.slice(startIndex, endIndex);
+
+  if (isLoading) {
+    return (
+      <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
+        <p className="text-base font-semibold text-blue-500">
+          DANH SÁCH LOẠI XÉT NGHIỆM
+        </p>
+        <div className="flex justify-center items-center h-64">
+          <p>Đang tải...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
+        <p className="text-base font-semibold text-blue-500">
+          DANH SÁCH LOẠI XÉT NGHIỆM
+        </p>
+        <div className="flex justify-center items-center h-64">
+          <p className="text-red-500">Lỗi khi tải dữ liệu</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex flex-col gap-4 bg-background border rounded-md p-4 h-[100%] overflow-auto">
@@ -217,13 +221,13 @@ export default function TestTypesManagement() {
               <TableCell>
                 {editingId === test._id ? (
                   <Input
-                    name="testName"
-                    value={editedTest?.testName || ""}
+                    name="name"
+                    value={editedTest?.name || ""}
                     onChange={handleChange}
                     className="max-w-[200px]"
                   />
                 ) : (
-                  test.testName
+                  test.name
                 )}
               </TableCell>
               <TableCell>
@@ -263,7 +267,7 @@ export default function TestTypesManagement() {
                     </Button>
                   ) : (
                     <Button
-                      onClick={() => handleEdit(test)}
+                      onClick={() => handleEdit(test as any)}
                       variant="secondary"
                       className="border border-slate-00 dark:border-none"
                     >
@@ -323,9 +327,9 @@ export default function TestTypesManagement() {
           <div className="flex flex-col gap-4">
             <p className="text-sm">Tên xét nghiệm:</p>
             <Input
-              name="testName"
+              name="name"
               placeholder="Tên xét nghiệm"
-              value={newTest.testName}
+              value={newTest.name}
               onChange={handleNewTestChange}
             />
             <p className="text-sm">Mô tả xét nghiệm:</p>

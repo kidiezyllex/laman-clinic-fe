@@ -148,7 +148,7 @@ export default function CreatePatientProfile() {
                 >
                   <Button
                     className="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600 w-full sm:w-auto"
-                    variant={"secondary"}
+                    variant="secondary"
                   >
                     Đặt lịch theo ngày
                     <Calendar className="h-4 w-4 ml-2" />
@@ -160,7 +160,7 @@ export default function CreatePatientProfile() {
                 >
                   <Button
                     className="flex items-center justify-center space-x-2 bg-blue-500 hover:bg-blue-600 dark:text-white text-white hover:text-white dark:bg-blue-500 dark:hover:bg-blue-600 w-full sm:w-auto"
-                    variant={"secondary"}
+                    variant="secondary"
                   >
                     Đặt lịch theo bác sĩ
                     <Stethoscope className="h-4 w-4 ml-2" />
